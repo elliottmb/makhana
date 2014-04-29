@@ -1,0 +1,120 @@
+package com.cogitareforma.hexrepublics.masterserver.net.listener;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import com.cogitareforma.hexrepublics.common.data.Account;
+import com.cogitareforma.hexrepublics.common.net.msg.LoginRequest;
+import com.cogitareforma.hexrepublics.common.net.msg.LoginResponse;
+import com.cogitareforma.hexrepublics.common.net.msg.LogoutRequest;
+import com.cogitareforma.hexrepublics.common.net.msg.NetworkChatMessage;
+import com.cogitareforma.hexrepublics.masterserver.db.AccountDatabase;
+import com.cogitareforma.hexrepublics.masterserver.db.DatabaseFactory;
+import com.cogitareforma.hexrepublics.masterserver.net.MasterServerManager;
+import com.jme3.network.HostedConnection;
+import com.jme3.network.Message;
+import com.jme3.network.MessageListener;
+
+/**
+ * SessionListener serves as a handler for login and logout requests.
+ * 
+ * @author Justin Kaufman
+ * @author Elliott Butler
+ */
+public class SessionListener implements MessageListener< HostedConnection >
+{
+
+	/**
+	 * The logger for this class.
+	 */
+	private final static Logger logger = Logger.getLogger( SessionListener.class.getName( ) );
+
+	/**
+	 * The master server manager for the SessionListener.
+	 */
+	private MasterServerManager serverManager;
+
+	/**
+	 * Constructor for the SessionListener. Sets its master server manager.
+	 * 
+	 * @param serverManager
+	 *            the master server manager to set.
+	 */
+	public SessionListener( MasterServerManager serverManager )
+	{
+		this.serverManager = serverManager;
+	}
+
+	@Override
+	public void messageReceived( HostedConnection source, Message message )
+	{
+		if ( message instanceof LoginRequest )
+		{
+			logger.log( Level.INFO, "Received a login request." );
+			LoginRequest request = ( LoginRequest ) message;
+			logger.log( Level.INFO, "Retrieving user account info from the User Database." );
+			AccountDatabase db = DatabaseFactory.getUserDb( );
+			Account account = db.getAccount( request.getAccountName( ) );
+			if ( account != null )
+			{
+				if ( !serverManager.getSessionManager( ).containsAccount( account ) )
+				{
+					if ( account.isValidPassword( request.getPassword( ) ) )
+					{
+						if ( request.isServer( ) == account.isServer( ) )
+						{
+							logger.log( Level.INFO, "User logged in with a valid accountName and password." );
+							account.setAddress( source.getAddress( ) );
+							serverManager.getSessionManager( ).addSession( source, account );
+							source.send( new LoginResponse( account ) );
+							if ( !account.isServer( ) )
+							{
+								for ( HostedConnection hc : serverManager.getSessionManager( ).getAllAuthedConnections( ) )
+								{
+									hc.send( new NetworkChatMessage( null, String.format( "Server Notice: %s is now online.",
+											account.getAccountName( ) ) ) );
+								}
+							}
+						}
+						else
+						{ /* login with the wrong account type */
+							logger.log( Level.INFO, "User failed to log in with the wrong account type." );
+							source.send( new LoginResponse( "Attempted to log in withthe wrong account type" ) );
+
+						}
+					}
+					else
+					{ /* login with a bad password */
+						logger.log( Level.INFO, "User failed to log in with a valid accountName but a bad password." );
+						source.send( new LoginResponse( "Attempted to log in with a bad password" ) );
+					}
+				}
+				else
+				{ /* account already online */
+					logger.log( Level.INFO, "User failed to log in to an already active account." );
+					source.send( new LoginResponse( "Attempted to log in to an already active account." ) );
+				}
+			}
+			else
+			{ /* login for a accountName that doesn't exist */
+				logger.log( Level.INFO, "User failed to log in with a bad account name." );
+				source.send( new LoginResponse( "Attempted to log in with a bad account name." ) );
+			}
+		}
+		if ( message instanceof LogoutRequest )
+		{
+			logger.log( Level.INFO, "Received a logout request." );
+			Account account = serverManager.getSessionManager( ).getAccountFromSession( source );
+			serverManager.getSessionManager( ).removeSession( source );
+			if ( account != null && !account.isServer( ) )
+			{
+				for ( HostedConnection hc : serverManager.getSessionManager( ).getAllAuthedConnections( ) )
+				{
+					hc.send( new NetworkChatMessage( null, String.format( "Server Notice: %s is now offline.", account.getAccountName( ) ) ) );
+				}
+				serverManager.broadcastUserList( );
+			}
+		}
+	}
+
+}
