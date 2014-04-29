@@ -14,14 +14,25 @@ import com.cogitareforma.hexrepublics.client.util.EntityEntryModelClass;
 import com.cogitareforma.hexrepublics.common.entities.Traits;
 import com.cogitareforma.hexrepublics.common.entities.traits.ArcherTrait;
 import com.cogitareforma.hexrepublics.common.entities.traits.ArcheryTrait;
+import com.cogitareforma.hexrepublics.common.entities.traits.AxemanTrait;
 import com.cogitareforma.hexrepublics.common.entities.traits.BarracksTrait;
+import com.cogitareforma.hexrepublics.common.entities.traits.CatapultTrait;
 import com.cogitareforma.hexrepublics.common.entities.traits.ClubmanTrait;
+import com.cogitareforma.hexrepublics.common.entities.traits.CrossbowTrait;
 import com.cogitareforma.hexrepublics.common.entities.traits.FabricatingTrait;
+import com.cogitareforma.hexrepublics.common.entities.traits.ForgeTrait;
+import com.cogitareforma.hexrepublics.common.entities.traits.KriegerTrait;
 import com.cogitareforma.hexrepublics.common.entities.traits.LocationTrait;
+import com.cogitareforma.hexrepublics.common.entities.traits.LongbowTrait;
+import com.cogitareforma.hexrepublics.common.entities.traits.MachineWorksTrait;
 import com.cogitareforma.hexrepublics.common.entities.traits.MountedTrait;
 import com.cogitareforma.hexrepublics.common.entities.traits.MoveTrait;
+import com.cogitareforma.hexrepublics.common.entities.traits.PikemanTrait;
+import com.cogitareforma.hexrepublics.common.entities.traits.SawmillTrait;
 import com.cogitareforma.hexrepublics.common.entities.traits.StablesTrait;
+import com.cogitareforma.hexrepublics.common.entities.traits.SwordsmanTrait;
 import com.cogitareforma.hexrepublics.common.entities.traits.TileTrait;
+import com.cogitareforma.hexrepublics.common.entities.traits.TrebuchetTrait;
 import com.cogitareforma.hexrepublics.common.net.msg.EntityActionRequest;
 import com.cogitareforma.hexrepublics.common.net.msg.EntityCreationRequest;
 import com.jme3.app.Application;
@@ -160,6 +171,50 @@ public class TileViewController extends AbstractAppState implements ScreenContro
 			{
 				existing += "Clubman";
 			}
+			if ( entityData.getComponent( id, AxemanTrait.class ) != null )
+			{
+				existing += "Axeman";
+			}
+			if ( entityData.getComponent( id, CatapultTrait.class ) != null )
+			{
+				existing += "Catapult";
+			}
+			if ( entityData.getComponent( id, CrossbowTrait.class ) != null )
+			{
+				existing += "Crossbowman";
+			}
+			if ( entityData.getComponent( id, ForgeTrait.class ) != null )
+			{
+				existing += "Forge";
+			}
+			if ( entityData.getComponent( id, KriegerTrait.class ) != null )
+			{
+				existing += "Krieger";
+			}
+			if ( entityData.getComponent( id, LongbowTrait.class ) != null )
+			{
+				existing += "Longbowman";
+			}
+			if ( entityData.getComponent( id, MachineWorksTrait.class ) != null )
+			{
+				existing += "Machine Works";
+			}
+			if ( entityData.getComponent( id, PikemanTrait.class ) != null )
+			{
+				existing += "Pikeman";
+			}
+			if ( entityData.getComponent( id, SawmillTrait.class ) != null )
+			{
+				existing += "Sawmill";
+			}
+			if ( entityData.getComponent( id, SwordsmanTrait.class ) != null )
+			{
+				existing += "Swordsman";
+			}
+			if ( entityData.getComponent( id, TrebuchetTrait.class ) != null )
+			{
+				existing += "Trebuchet";
+			}
 
 			// Suffix
 			if ( entityData.getComponent( id, FabricatingTrait.class ) != null )
@@ -281,6 +336,38 @@ public class TileViewController extends AbstractAppState implements ScreenContro
 					{
 						unit.setText( "MC" );
 					}
+					if ( "Axeman".equals( event.getSelection( ).get( 0 ).getName( ) ) )
+					{
+						unit.setText( "AX" );
+					}
+					if ( "Catapult".equals( event.getSelection( ).get( 0 ).getName( ) ) )
+					{
+						unit.setText( "CA" );
+					}
+					if ( "Crossbowman".equals( event.getSelection( ).get( 0 ).getName( ) ) )
+					{
+						unit.setText( "CB" );
+					}
+					if ( "Krieger".equals( event.getSelection( ).get( 0 ).getName( ) ) )
+					{
+						unit.setText( "K" );
+					}
+					if ( "Longbowman".equals( event.getSelection( ).get( 0 ).getName( ) ) )
+					{
+						unit.setText( "LB" );
+					}
+					if ( "Pikeman".equals( event.getSelection( ).get( 0 ).getName( ) ) )
+					{
+						unit.setText( "P" );
+					}
+					if ( "Swordsman".equals( event.getSelection( ).get( 0 ).getName( ) ) )
+					{
+						unit.setText( "S" );
+					}
+					if ( "Trebuchet".equals( event.getSelection( ).get( 0 ).getName( ) ) )
+					{
+						unit.setText( "T" );
+					}
 					currentUnit = event.getSelection( ).get( 0 ).getEntityId( );
 					app.getNifty( ).showPopup( app.getNifty( ).getCurrentScreen( ), "move", null );
 				}
@@ -299,17 +386,7 @@ public class TileViewController extends AbstractAppState implements ScreenContro
 			@SuppressWarnings( "unchecked" )
 			ComponentFilter< TileTrait > completeFilter = AndFilter.create( TileTrait.class, xFilter, yFilter );
 			EntityId location = app.getGameConnManager( ).getRemoteEntityData( ).findEntity( completeFilter, TileTrait.class );
-			if ( "Build Archer".equals( event.getSelection( ).get( 0 ) ) )
-			{
-				System.out.println( "Trying to build Archer" );
-				app.getGameConnManager( ).send( new EntityCreationRequest( new LocationTrait( location, ( byte ) 0 ), new ArcherTrait( ) ) );
-			}
-			if ( "Build Clubman".equals( event.getSelection( ).get( 0 ) ) )
-			{
-				System.out.println( "Trying to build Clubman" );
-				app.getGameConnManager( )
-						.send( new EntityCreationRequest( new LocationTrait( location, ( byte ) 0 ), new ClubmanTrait( ) ) );
-			}
+			// BUILDINGS
 			if ( "Build Archery".equals( event.getSelection( ).get( 0 ) ) )
 			{
 				System.out.println( "Tyring to build Archery" );
@@ -328,6 +405,36 @@ public class TileViewController extends AbstractAppState implements ScreenContro
 				app.getGameConnManager( )
 						.send( new EntityCreationRequest( new LocationTrait( location, ( byte ) 0 ), new StablesTrait( ) ) );
 			}
+			if ( "Build Forge".equals( event.getSelection( ).get( 0 ) ) )
+			{
+				System.out.println( "Trying to build Forge" );
+				app.getGameConnManager( ).send( new EntityCreationRequest( new LocationTrait( location, ( byte ) 0 ), new ForgeTrait( ) ) );
+			}
+			if ( "Build Sawmill".equals( event.getSelection( ).get( 0 ) ) )
+			{
+				System.out.println( "Trying to build Sawmill" );
+				app.getGameConnManager( )
+						.send( new EntityCreationRequest( new LocationTrait( location, ( byte ) 0 ), new SawmillTrait( ) ) );
+			}
+			if ( "Build Machine Works".equals( event.getSelection( ).get( 0 ) ) )
+			{
+				System.out.println( "Trying to build Machine Works" );
+				app.getGameConnManager( ).send(
+						new EntityCreationRequest( new LocationTrait( location, ( byte ) 0 ), new MachineWorksTrait( ) ) );
+			}
+
+			// UNITS
+			if ( "Build Archer".equals( event.getSelection( ).get( 0 ) ) )
+			{
+				System.out.println( "Trying to build Archer" );
+				app.getGameConnManager( ).send( new EntityCreationRequest( new LocationTrait( location, ( byte ) 0 ), new ArcherTrait( ) ) );
+			}
+			if ( "Build Clubman".equals( event.getSelection( ).get( 0 ) ) )
+			{
+				System.out.println( "Trying to build Clubman" );
+				app.getGameConnManager( )
+						.send( new EntityCreationRequest( new LocationTrait( location, ( byte ) 0 ), new ClubmanTrait( ) ) );
+			}
 			if ( "Build Mounted Archer".equals( event.getSelection( ).get( 0 ) ) )
 			{
 				System.out.println( "Tyring to build Mounted Archer" );
@@ -340,6 +447,53 @@ public class TileViewController extends AbstractAppState implements ScreenContro
 				app.getGameConnManager( ).send(
 						new EntityCreationRequest( new LocationTrait( location, ( byte ) 0 ), new ClubmanTrait( ), new MountedTrait( ) ) );
 			}
+			if ( "Build Axeman".equals( event.getSelection( ).get( 0 ) ) )
+			{
+				System.out.println( "Trying to build Axeman" );
+				app.getGameConnManager( ).send( new EntityCreationRequest( new LocationTrait( location, ( byte ) 0 ), new AxemanTrait( ) ) );
+			}
+			if ( "Build Catapult".equals( event.getSelection( ).get( 0 ) ) )
+			{
+				System.out.println( "Trying to build Catapult" );
+				app.getGameConnManager( )
+						.send( new EntityCreationRequest( new LocationTrait( location, ( byte ) 0 ), new CatapultTrait( ) ) );
+			}
+			if ( "Build Crossbowman".equals( event.getSelection( ).get( 0 ) ) )
+			{
+				System.out.println( "Trying to build Crossbowman" );
+				app.getGameConnManager( )
+						.send( new EntityCreationRequest( new LocationTrait( location, ( byte ) 0 ), new CrossbowTrait( ) ) );
+			}
+			if ( "Build Krieger".equals( event.getSelection( ).get( 0 ) ) )
+			{
+				System.out.println( "Trying to build Krieger" );
+				app.getGameConnManager( )
+						.send( new EntityCreationRequest( new LocationTrait( location, ( byte ) 0 ), new KriegerTrait( ) ) );
+			}
+			if ( "Build Longbowman".equals( event.getSelection( ).get( 0 ) ) )
+			{
+				System.out.println( "Trying to build Longbowman" );
+				app.getGameConnManager( )
+						.send( new EntityCreationRequest( new LocationTrait( location, ( byte ) 0 ), new LongbowTrait( ) ) );
+			}
+			if ( "Build Pikeman".equals( event.getSelection( ).get( 0 ) ) )
+			{
+				System.out.println( "Trying to build Pikeman" );
+				app.getGameConnManager( )
+						.send( new EntityCreationRequest( new LocationTrait( location, ( byte ) 0 ), new PikemanTrait( ) ) );
+			}
+			if ( "Build Swordsman".equals( event.getSelection( ).get( 0 ) ) )
+			{
+				System.out.println( "Trying to build Swordsman" );
+				app.getGameConnManager( ).send(
+						new EntityCreationRequest( new LocationTrait( location, ( byte ) 0 ), new SwordsmanTrait( ) ) );
+			}
+			if ( "Build Trebuchet".equals( event.getSelection( ).get( 0 ) ) )
+			{
+				System.out.println( "Trying to build Trebuchet" );
+				app.getGameConnManager( ).send(
+						new EntityCreationRequest( new LocationTrait( location, ( byte ) 0 ), new TrebuchetTrait( ) ) );
+			}
 		}
 	}
 
@@ -348,49 +502,85 @@ public class TileViewController extends AbstractAppState implements ScreenContro
 		if ( entityData != null )
 		{
 			Stack< String > buildables = new Stack< String >( );
-			buildables.add( "Build Barracks" );
-			buildables.add( "Build Archery" );
-			buildables.add( "Build Stables" );
-			boolean hasArcher = false;
-			boolean hasClubman = false;
 
 			if ( Traits.countBuildings( entityData, locationSet ) < 6 )
 			{
-				for ( EntityId id : locationSet )
+				if ( !Traits.hasPrerequisites( entityData, locationSet, ArcheryTrait.class ) )
 				{
-					if ( entityData.getComponent( id, ArcheryTrait.class ) != null )
-					{
-						buildables.remove( "Build Archery" );
-						hasArcher = true;
-					}
-					if ( entityData.getComponent( id, BarracksTrait.class ) != null )
-					{
-						buildables.remove( "Build Barracks" );
-						hasClubman = true;
-					}
-					if ( entityData.getComponent( id, StablesTrait.class ) != null )
-					{
-						buildables.remove( "Build Stables" );
-					}
+					buildables.add( "Build Archery" );
+				}
+				if ( !Traits.hasPrerequisites( entityData, locationSet, BarracksTrait.class ) )
+				{
+					buildables.add( "Build Barracks" );
+				}
+				if ( !Traits.hasPrerequisites( entityData, locationSet, StablesTrait.class ) )
+				{
+					buildables.add( "Build Stables" );
+				}
+				if ( !Traits.hasPrerequisites( entityData, locationSet, ForgeTrait.class ) )
+				{
+					buildables.add( "Build Forge" );
+				}
+				if ( !Traits.hasPrerequisites( entityData, locationSet, MachineWorksTrait.class ) )
+				{
+					buildables.add( "Build Machine Works" );
+				}
+				if ( !Traits.hasPrerequisites( entityData, locationSet, SawmillTrait.class ) )
+				{
+					buildables.add( "Build Sawmill" );
 				}
 			}
 			if ( Traits.countUnits( entityData, locationSet ) < 6 )
 			{
-				if ( !buildables.contains( "Build Archery" ) )
+				if ( Traits.hasPrerequisites( entityData, locationSet, ArcheryTrait.class ) )
 				{
 					buildables.add( "Build Archer" );
 				}
-				if ( !buildables.contains( "Build Barracks" ) )
+				if ( Traits.hasPrerequisites( entityData, locationSet, BarracksTrait.class ) )
 				{
 					buildables.add( "Build Clubman" );
 				}
-				if ( !buildables.contains( "Build Stable" ) && hasArcher )
+				if ( Traits.hasPrerequisites( entityData, locationSet, ArcheryTrait.class, StablesTrait.class ) )
 				{
 					buildables.add( "Build Mounted Archer" );
 				}
-				if ( !buildables.contains( "Build Stable" ) && hasClubman )
+				if ( Traits.hasPrerequisites( entityData, locationSet, BarracksTrait.class, StablesTrait.class ) )
 				{
 					buildables.add( "Build Mounted Clubman" );
+				}
+				if ( Traits.hasPrerequisites( entityData, locationSet, ForgeTrait.class, BarracksTrait.class ) )
+				{
+					buildables.add( "Build Axeman" );
+				}
+				if ( Traits.hasPrerequisites( entityData, locationSet, ArcheryTrait.class, ForgeTrait.class, SawmillTrait.class,
+						MachineWorksTrait.class ) )
+				{
+					buildables.add( "Build Catapult" );
+				}
+				if ( Traits.hasPrerequisites( entityData, locationSet, ArcheryTrait.class, ForgeTrait.class, SawmillTrait.class ) )
+				{
+					buildables.add( "Build Crossbowman" );
+				}
+				if ( Traits.countBuildings( entityData, locationSet ) == 6 )
+				{
+					buildables.add( "Build Krieger" );
+				}
+				if ( Traits.hasPrerequisites( entityData, locationSet, SawmillTrait.class, ArcheryTrait.class ) )
+				{
+					buildables.add( "Build Longbowman" );
+				}
+				if ( Traits.hasPrerequisites( entityData, locationSet, BarracksTrait.class, ForgeTrait.class, SawmillTrait.class ) )
+				{
+					buildables.add( "Build Pikeman" );
+				}
+				if ( Traits.hasPrerequisites( entityData, locationSet, BarracksTrait.class, ForgeTrait.class ) )
+				{
+					buildables.add( "Build Swordsman" );
+				}
+				if ( Traits.hasPrerequisites( entityData, locationSet, ArcheryTrait.class, ForgeTrait.class, SawmillTrait.class,
+						StablesTrait.class ) )
+				{
+					buildables.add( "Build Trebuchet" );
 				}
 			}
 			fillBuild( buildables );

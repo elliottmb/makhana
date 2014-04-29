@@ -175,6 +175,39 @@ public class Traits
 		return Collections.emptyList( );
 	}
 
+	public static < T extends EntityComponent > boolean hasPrerequisites( EntityData entityData, Set< EntityId > idSet,
+			Class< ? >... prerequisites )
+	{
+		if ( prerequisites.length > 0 )
+		{
+			boolean hasPrereq[ ] = new boolean[ prerequisites.length ];
+			for ( int i = 0; i < prerequisites.length; i++ )
+			{
+				for ( EntityId id : idSet )
+				{
+					if ( entityData.getComponent( id, ( Class< T > ) prerequisites[ i ] ) != null )
+					{
+						if ( !inAction( entityData, id ) )
+						{
+							hasPrereq[ i ] = true;
+							break;
+						}
+					}
+				}
+			}
+
+			for ( boolean prereq : hasPrereq )
+			{
+				if ( !prereq )
+				{
+					return false;
+				}
+			}
+			return true;
+		}
+		return false;
+	}
+
 	public static < T extends EntityComponent > int getMovementModifier( EntityData entityData, EntityId id )
 	{
 		int movement = 120000;
