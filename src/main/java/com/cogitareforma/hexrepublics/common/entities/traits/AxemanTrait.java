@@ -5,7 +5,7 @@ import com.jme3.network.serializing.Serializable;
 @Serializable
 public class AxemanTrait extends MoveableTrait
 {
-	//TODO Change values.
+	// TODO Change values.
 	@Override
 	public float getInitialHealth( )
 	{
