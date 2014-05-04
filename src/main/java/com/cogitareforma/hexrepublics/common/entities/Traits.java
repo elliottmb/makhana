@@ -46,6 +46,10 @@ public class Traits
 	 */
 	private final static Logger logger = Logger.getLogger( Traits.class.getName( ) );
 
+	public static final int BASE_MOVEMENT_DURATION = 60000;
+
+	public static final float BASE_FABRICATING_TIME = 0.5f;
+
 	public static final List< Class< ? >> allTypes = getAllTraits( );
 
 	public static final List< Class< ? >> actionTraits = getSubTraits( ActionTrait.class );
@@ -210,7 +214,7 @@ public class Traits
 
 	public static < T extends EntityComponent > int getMovementModifier( EntityData entityData, EntityId id )
 	{
-		int movement = 120000;
+		int movement = Traits.BASE_MOVEMENT_DURATION;
 		for ( Class< ? > c : unitTraits )
 		{
 			MoveableTrait mt = ( MoveableTrait ) entityData.getComponent( id, ( Class< T > ) c );

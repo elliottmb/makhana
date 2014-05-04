@@ -1,5 +1,6 @@
 package com.cogitareforma.hexrepublics.common.entities.traits;
 
+import com.cogitareforma.hexrepublics.common.entities.Traits;
 import com.jme3.network.serializing.Serializable;
 import com.simsilica.es.EntityComponent;
 
@@ -50,13 +51,14 @@ public abstract class TypeTrait implements EntityComponent
 	/**
 	 * Represents the amount of time complexity ( in seconds ) this trait
 	 * contributes to the fabricating of this Entity. If not > 0, will be
-	 * ignored. Default value of 1.0, override if added strength, defense, or
-	 * health should warrant specific build time other than just 1 second.
+	 * ignored. Default value specified in Traits, override if added strength,
+	 * defense, or health should warrant specific build time other than the
+	 * default duration.
 	 * 
 	 * @return time complexity ( in seconds )
 	 */
 	public float getFabricatingTime( )
 	{
-		return 1.0f;
+		return Traits.BASE_FABRICATING_TIME;
 	}
 }
