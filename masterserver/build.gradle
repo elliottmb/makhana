@@ -1,0 +1,27 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.github.jengelman.gradle.plugins:shadow:0.8'
+    }
+}
+
+apply plugin: 'shadow'
+
+jar {
+
+    manifest {
+        attributes 'Implementation-Title': 'Hex Republics - Master Server',
+                'Implementation-Version': version,
+                'Built-By': System.getProperty('user.name'),
+                'Built-Date': new Date(),
+                'Built-JDK': System.getProperty('java.version'),
+                'Main-Class': 'com.cogitareforma.hexrepublics.masterserver.MasterServer'
+    }
+}
+
+dependencies {
+        compile project(':common')
+        compile 'mysql:mysql-connector-java:5.1.30'
+}

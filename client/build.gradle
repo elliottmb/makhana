@@ -1,0 +1,26 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.github.jengelman.gradle.plugins:shadow:0.8'
+    }
+}
+
+apply plugin: 'shadow'
+
+jar {
+
+    manifest {
+        attributes 'Implementation-Title': "Hex Republics - Client",
+                'Implementation-Version': version,
+                'Built-By': System.getProperty('user.name'),
+                'Built-Date': new Date(),
+                'Built-JDK': System.getProperty('java.version'),
+                'Main-Class': 'com.cogitareforma.hexrepublics.client.ClientMain'
+    }
+}
+
+dependencies {
+        compile project(':common')
+}
