@@ -26,6 +26,7 @@ import com.jme3.renderer.Camera;
 import com.jme3.renderer.ViewPort;
 import com.jme3.renderer.queue.RenderQueue.Bucket;
 import com.jme3.scene.Geometry;
+import com.jme3.scene.Mesh;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
@@ -312,7 +313,12 @@ public class WorldManager extends AbstractAppState
 							for ( Spatial n : units.values( ) )
 							{
 								unitRoot.attachChild( n );
+								//draw based off of n and attach to unit root
+								//Mesh healthLine = new Mesh();
+								//healthLine.setMode( Mesh.Mode.Lines );
+								//TODO
 							}
+							
 
 						}
 					}

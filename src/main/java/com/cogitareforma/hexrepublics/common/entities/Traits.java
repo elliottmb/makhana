@@ -46,9 +46,11 @@ public class Traits
 	 */
 	private final static Logger logger = Logger.getLogger( Traits.class.getName( ) );
 
-	public static final int BASE_MOVEMENT_DURATION = 60000;
+	public static final int BASE_MOVEMENT_DURATION = 60000; // change back to
+															// 60000
 
-	public static final float BASE_FABRICATING_TIME = 0.5f;
+	public static final float BASE_FABRICATING_TIME = 0.5f; // change back to
+															// 0.5f
 
 	public static final List< Class< ? >> allTypes = getAllTraits( );
 
@@ -344,5 +346,31 @@ public class Traits
 		}
 		return false;
 
+	}
+
+	public static < T extends EntityComponent > float getStrength( EntityData entityData, EntityId id )
+	{
+		float str = 0f;
+		for ( Class< ? > c : unitTraits )
+		{
+			if ( entityData.getComponent( id, ( Class< T > ) c ) != null )
+			{
+				str += ( ( TypeTrait ) entityData.getComponent( id, ( Class< T > ) c ) ).getInitialStrength( );
+			}
+		}
+		return str;
+	}
+
+	public static < T extends EntityComponent > float getDefense( EntityData entityData, EntityId id )
+	{
+		float str = 0f;
+		for ( Class< ? > c : unitTraits )
+		{
+			if ( entityData.getComponent( id, ( Class< T > ) c ) != null )
+			{
+				str += ( ( TypeTrait ) entityData.getComponent( id, ( Class< T > ) c ) ).getInitialDefense( );
+			}
+		}
+		return str;
 	}
 }
