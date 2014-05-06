@@ -11,7 +11,7 @@ import java.util.logging.Logger;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-import com.cogitareforma.hexrepublics.client.util.WorldFactory;
+import com.cogitareforma.hexrepublics.common.util.WorldFactory;
 import com.cogitareforma.hexrepublics.common.entities.traits.ActionTrait;
 import com.cogitareforma.hexrepublics.common.entities.traits.DefenseTrait;
 import com.cogitareforma.hexrepublics.common.entities.traits.FabricatingTrait;

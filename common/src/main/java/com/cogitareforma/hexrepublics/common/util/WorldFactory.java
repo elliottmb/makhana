@@ -1,9 +1,8 @@
-package com.cogitareforma.hexrepublics.client.util;
+package com.cogitareforma.hexrepublics.common.util;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.cogitareforma.hexrepublics.client.DebugGlobals;
 import com.jme3.asset.AssetManager;
 import com.jme3.light.AmbientLight;
 import com.jme3.light.DirectionalLight;
@@ -242,16 +241,6 @@ public class WorldFactory
 						lineGeo.setMaterial( hexMat );
 						lineGeo.setQueueBucket( RenderQueue.Bucket.Transparent );
 
-						if ( DebugGlobals.DEBUG_HEXCLICK_VISUAL )
-						{
-							Geometry cyGeo = new Geometry( "test", new Cylinder( 20, 20, size - 1.5f, size, true ) );
-							Material cyMat = hexMat.clone( );
-							cyMat.setColor( "Color", new ColorRGBA( 0f, 0f, 1f, 0.7f ) );
-							cyGeo.setMaterial( cyMat );
-							cyGeo.setLocalTranslation( createCenterPoint( terrainSize, size, i, j ) );
-							cyGeo.rotate( 1.57079633f, 0f, 0f );
-							hexagonRoot.attachChild( cyGeo );
-						}
 						hexagonRoot.attachChild( lineGeo );
 					}
 				}

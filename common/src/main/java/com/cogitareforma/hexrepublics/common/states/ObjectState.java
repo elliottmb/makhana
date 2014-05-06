@@ -6,7 +6,6 @@ package com.cogitareforma.hexrepublics.common.states;
 
 import jme3tools.optimize.LodGenerator;
 
-import com.cogitareforma.hexrepublics.client.DebugGlobals;
 import com.jme3.app.Application;
 import com.jme3.app.SimpleApplication;
 import com.jme3.app.state.AbstractAppState;
@@ -132,24 +131,20 @@ public class ObjectState extends AbstractAppState
 
 		createTestObjects( );
 
-		if ( DebugGlobals.DEBUG_STATE_OUTPUT )
-			System.out.println( this.getClass( ).toString( ) + " - " + "Initialized" );
 	}
 
 	@Override
 	public void stateAttached( AppStateManager stateManager )
 	{
 		super.stateAttached( stateManager );
-		if ( DebugGlobals.DEBUG_STATE_OUTPUT )
-			System.out.println( this.getClass( ).toString( ) + " - " + "Attached" );
+
 	}
 
 	@Override
 	public void update( float tpf )
 	{
 		super.update( tpf );
-		if ( DebugGlobals.DEBUG_STATE_OUTPUT )
-			System.out.println( this.getClass( ).toString( ) + " - " + "update" );
+
 		// Move the sphere away! YAY!
 		Spatial sphere = getRoot( ).getChild( "Sphere" );
 		if ( sphere != null )
@@ -169,32 +164,27 @@ public class ObjectState extends AbstractAppState
 	public void render( RenderManager rm )
 	{
 		super.render( rm );
-		if ( DebugGlobals.DEBUG_STATE_OUTPUT )
-			System.out.println( this.getClass( ).toString( ) + " - " + "render" );
+
 	}
 
 	@Override
 	public void postRender( )
 	{
 		super.postRender( );
-		if ( DebugGlobals.DEBUG_STATE_OUTPUT )
-			System.out.println( this.getClass( ).toString( ) + " - " + "postRender" );
+
 	}
 
 	@Override
 	public void stateDetached( AppStateManager stateManager )
 	{
 		super.stateDetached( stateManager );
-		if ( DebugGlobals.DEBUG_STATE_OUTPUT )
-			System.out.println( this.getClass( ).toString( ) + " - " + "Detached" );
+
 	}
 
 	@Override
 	public void cleanup( )
 	{
 		super.cleanup( );
-		if ( DebugGlobals.DEBUG_STATE_OUTPUT )
-			System.out.println( this.getClass( ).toString( ) + " - " + "Cleanup" );
 		this.app.getInputManager( ).removeListener( actionListener );
 		this.app.getInputManager( ).deleteMapping( "sphereFlip" );
 	}

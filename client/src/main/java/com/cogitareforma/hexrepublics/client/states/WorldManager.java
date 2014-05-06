@@ -7,12 +7,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.cogitareforma.hexrepublics.client.ClientMain;
-import com.cogitareforma.hexrepublics.client.util.WorldFactory;
 import com.cogitareforma.hexrepublics.client.views.LoadingViewController;
 import com.cogitareforma.hexrepublics.common.entities.Traits;
 import com.cogitareforma.hexrepublics.common.entities.traits.LocationTrait;
 import com.cogitareforma.hexrepublics.common.entities.traits.MoveableTrait;
 import com.cogitareforma.hexrepublics.common.entities.traits.TileTrait;
+import com.cogitareforma.hexrepublics.common.util.WorldFactory;
 import com.jme3.app.state.AbstractAppState;
 import com.jme3.asset.AssetManager;
 import com.jme3.asset.DesktopAssetManager;
