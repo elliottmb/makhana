@@ -1,9 +1,11 @@
 package com.cogitareforma.hexrepublics.common.util;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -38,11 +40,11 @@ public class YamlConfig
 
 		try
 		{
-			FileReader input = new FileReader( "default.yml" );
+			BufferedReader input = new BufferedReader( new InputStreamReader( this.getClass( ).getResourceAsStream( "/" + "default.yml" ) ) );
 			if ( file.exists( ) )
 			{
 				input.close( );
-				input = new FileReader( file );
+				input = new BufferedReader( new FileReader( file ) );
 				logger.log( Level.INFO, "Loading yaml configuration from config.yml" );
 			}
 
