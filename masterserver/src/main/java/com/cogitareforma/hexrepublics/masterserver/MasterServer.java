@@ -50,7 +50,7 @@ public class MasterServer extends SimpleApplication
 		{
 			while ( ( line = in.readLine( ) ) != null )
 			{
-				if ( "exit".equals( line ) )
+				if ( "exit".equals( line ) || "quit".equals( line ) || "stop".equals( line ) )
 				{
 					break;
 				}
@@ -106,6 +106,13 @@ public class MasterServer extends SimpleApplication
 			logger.log( Level.SEVERE, "Error handling console input", e );
 		}
 		masterServer.stop( );
+	}
+
+	@Override
+	public void stop( )
+	{
+		getMasterServerManager( ).close( );
+		super.stop( );
 	}
 
 	private AnnotationConfigApplicationContext configContext;

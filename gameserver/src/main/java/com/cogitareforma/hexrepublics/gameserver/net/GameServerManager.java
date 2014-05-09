@@ -170,6 +170,7 @@ public class GameServerManager extends ServerManager< GameServer >
 
 	private void buildTiles( int terrainSize, float hexSize )
 	{
+		logger.log( Level.INFO, "Generating Tile Entities" );
 		for ( int i = 0; i < FastMath.floor( terrainSize / ( hexSize * 6 / 4 ) ) - 1; i++ )
 		{
 			for ( int j = 0; j < FastMath.ceil( terrainSize / ( FastMath.sqrt( 3f ) * hexSize ) ) - 1; j++ )
@@ -177,13 +178,6 @@ public class GameServerManager extends ServerManager< GameServer >
 				EntityId tile = getEntityData( ).createEntity( );
 				getEntityData( ).setComponent( tile, new TileTrait( i, j ) );
 			}
-		}
-
-		EntitySet es = getEntityData( ).getEntities( TileTrait.class );
-
-		for ( Entity e : es )
-		{
-			System.out.println( e.get( TileTrait.class ) );
 		}
 	}
 

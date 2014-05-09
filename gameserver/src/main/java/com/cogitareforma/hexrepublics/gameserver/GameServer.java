@@ -1,5 +1,9 @@
 package com.cogitareforma.hexrepublics.gameserver;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -13,6 +17,7 @@ import com.cogitareforma.hexrepublics.common.util.YamlConfig;
 import com.cogitareforma.hexrepublics.gameserver.net.GameMasterConnManager;
 import com.cogitareforma.hexrepublics.gameserver.net.GameServerManager;
 import com.jme3.app.SimpleApplication;
+import com.jme3.network.HostedConnection;
 import com.jme3.system.JmeContext;
 
 /**
@@ -64,6 +69,46 @@ public class GameServer extends SimpleApplication
 		}
 
 		gameServer.start( JmeContext.Type.Headless );
+
+		BufferedReader in = new BufferedReader( new InputStreamReader( System.in ) );
+		String line = null;
+		try
+		{
+			while ( ( line = in.readLine( ) ) != null )
+			{
+				if ( "exit".equals( line ) || "quit".equals( line ) || "stop".equals( line ) )
+				{
+					break;
+				}
+				if ( "status".equals( line ) )
+				{
+					List< HostedConnection > connections = gameServer.getGameServerManager( ).getSessionManager( )
+							.getAllAuthedConnections( );
+					if ( connections.size( ) > 0 )
+					{
+						StringBuilder sb = new StringBuilder( );
+						sb.append( connections.size( ) + " Authenticated sessions: \n" );
+						for ( HostedConnection hc : connections )
+						{
+							sb.append( String.format( "%s: %s - %s \n", hc.getId( ), hc.getAddress( ), gameServer.getGameServerManager( )
+									.getSessionManager( ).getAccountFromSession( hc ) ) );
+						}
+						logger.log( Level.INFO, sb.toString( ) );
+					}
+					else
+					{
+						logger.log( Level.INFO, "No authenticated sessions." );
+					}
+				}
+
+			}
+		}
+		catch ( IOException e )
+		{
+			logger.log( Level.SEVERE, "Error handling console input", e );
+		}
+		logger.log( Level.INFO, "Shutting down" );
+		gameServer.stop( );
 	}
 
 	/**
@@ -197,6 +242,14 @@ public class GameServer extends SimpleApplication
 
 		gameServerManager.update( tpf );
 
+	}
+
+	@Override
+	public void stop( )
+	{
+		getGameServerManager( ).close( );
+		getMasterConnManager( ).close( );
+		super.stop( );
 	}
 
 }

@@ -18,10 +18,10 @@ client:
     eastKey: 32
     console: false
 networkserver:
-  host: localhost
-  port: 1337
+  host: srv.westcoastgaming.net
+  port: 8993
 mysqldb:
-  hostname: proj-309-08.cs.iastate.edu
+  hostname: localhost
   port: 3306
   database: network
   username: network
