@@ -3,12 +3,12 @@ package com.cogitareforma.hexrepublics.masterserver.db;
 import com.cogitareforma.hexrepublics.common.data.Account;
 
 /**
- * UserDatabase is an interface which is implemented by a backing database.
+ * AccountRepository is an interface which is implemented by a backing database.
  * 
- * @author Justin Kaufman
  * @author Elliott Butler
+ * 
  */
-public interface AccountDatabase
+public interface AccountRepository
 {
 
 	/**

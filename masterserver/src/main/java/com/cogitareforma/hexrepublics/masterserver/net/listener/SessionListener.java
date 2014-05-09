@@ -8,8 +8,7 @@ import com.cogitareforma.hexrepublics.common.net.msg.LoginRequest;
 import com.cogitareforma.hexrepublics.common.net.msg.LoginResponse;
 import com.cogitareforma.hexrepublics.common.net.msg.LogoutRequest;
 import com.cogitareforma.hexrepublics.common.net.msg.NetworkChatMessage;
-import com.cogitareforma.hexrepublics.masterserver.db.AccountDatabase;
-import com.cogitareforma.hexrepublics.masterserver.db.DatabaseFactory;
+import com.cogitareforma.hexrepublics.masterserver.db.AccountRepository;
 import com.cogitareforma.hexrepublics.masterserver.net.MasterServerManager;
 import com.jme3.network.HostedConnection;
 import com.jme3.network.Message;
@@ -53,52 +52,62 @@ public class SessionListener implements MessageListener< HostedConnection >
 			logger.log( Level.INFO, "Received a login request." );
 			LoginRequest request = ( LoginRequest ) message;
 			logger.log( Level.INFO, "Retrieving user account info from the User Database." );
-			AccountDatabase db = DatabaseFactory.getUserDb( );
-			Account account = db.getAccount( request.getAccountName( ) );
-			if ( account != null )
+
+			AccountRepository acountRepository = this.serverManager.getApp( ).getAccountRepository( );
+			if ( acountRepository != null )
 			{
-				if ( !serverManager.getSessionManager( ).containsAccount( account ) )
+				Account account = acountRepository.getAccount( request.getAccountName( ) );
+				if ( account != null )
 				{
-					if ( account.isValidPassword( request.getPassword( ) ) )
+					if ( !serverManager.getSessionManager( ).containsAccount( account ) )
 					{
-						if ( request.isServer( ) == account.isServer( ) )
+						if ( account.isValidPassword( request.getPassword( ) ) )
 						{
-							logger.log( Level.INFO, "User logged in with a valid accountName and password." );
-							account.setAddress( source.getAddress( ) );
-							serverManager.getSessionManager( ).addSession( source, account );
-							source.send( new LoginResponse( account ) );
-							if ( !account.isServer( ) )
+							if ( request.isServer( ) == account.isServer( ) )
 							{
-								for ( HostedConnection hc : serverManager.getSessionManager( ).getAllAuthedConnections( ) )
+								logger.log( Level.INFO, "User logged in with a valid accountName and password." );
+								account.setAddress( source.getAddress( ) );
+								serverManager.getSessionManager( ).addSession( source, account );
+								source.send( new LoginResponse( account ) );
+								if ( !account.isServer( ) )
 								{
-									hc.send( new NetworkChatMessage( null, String.format( "Server Notice: %s is now online.",
-											account.getAccountName( ) ) ) );
+									for ( HostedConnection hc : serverManager.getSessionManager( ).getAllAuthedConnections( ) )
+									{
+										hc.send( new NetworkChatMessage( null, String.format( "Server Notice: %s is now online.",
+												account.getAccountName( ) ) ) );
+									}
 								}
+							}
+							else
+							{ /* login with the wrong account type */
+								logger.log( Level.INFO, "User failed to log in with the wrong account type." );
+								source.send( new LoginResponse( "Attempted to log in withthe wrong account type" ) );
+
 							}
 						}
 						else
-						{ /* login with the wrong account type */
-							logger.log( Level.INFO, "User failed to log in with the wrong account type." );
-							source.send( new LoginResponse( "Attempted to log in withthe wrong account type" ) );
-
+						{ /* login with a bad password */
+							logger.log( Level.INFO, "User failed to log in with a valid accountName but a bad password." );
+							source.send( new LoginResponse( "Attempted to log in with a bad password" ) );
 						}
 					}
 					else
-					{ /* login with a bad password */
-						logger.log( Level.INFO, "User failed to log in with a valid accountName but a bad password." );
-						source.send( new LoginResponse( "Attempted to log in with a bad password" ) );
+					{ /* account already online */
+						logger.log( Level.INFO, "User failed to log in to an already active account." );
+						source.send( new LoginResponse( "Attempted to log in to an already active account." ) );
 					}
 				}
 				else
-				{ /* account already online */
-					logger.log( Level.INFO, "User failed to log in to an already active account." );
-					source.send( new LoginResponse( "Attempted to log in to an already active account." ) );
+				{ /* login for a accountName that doesn't exist */
+					logger.log( Level.INFO, "User failed to log in with a bad account name." );
+					source.send( new LoginResponse( "Attempted to log in with a bad account name." ) );
 				}
 			}
 			else
-			{ /* login for a accountName that doesn't exist */
-				logger.log( Level.INFO, "User failed to log in with a bad account name." );
-				source.send( new LoginResponse( "Attempted to log in with a bad account name." ) );
+			{
+				/* Account Repository failure */
+				logger.log( Level.INFO, "Accessing the Account Repository failed." );
+				source.send( new LoginResponse( "Error verifying information." ) );
 			}
 		}
 		if ( message instanceof LogoutRequest )

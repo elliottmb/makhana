@@ -3,15 +3,22 @@ package com.cogitareforma.hexrepublics.masterserver;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.sql.DataSource;
+
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+
 import com.cogitareforma.hexrepublics.common.data.Account;
 import com.cogitareforma.hexrepublics.common.data.ServerStatus;
 import com.cogitareforma.hexrepublics.common.net.msg.ServerStatusRequest;
 import com.cogitareforma.hexrepublics.common.util.YamlConfig;
+import com.cogitareforma.hexrepublics.masterserver.db.AccountRepository;
+import com.cogitareforma.hexrepublics.masterserver.db.DatabaseConfig;
 import com.cogitareforma.hexrepublics.masterserver.net.MasterServerManager;
 import com.jme3.app.SimpleApplication;
 import com.jme3.network.HostedConnection;
@@ -101,6 +108,8 @@ public class MasterServer extends SimpleApplication
 		masterServer.stop( );
 	}
 
+	private AnnotationConfigApplicationContext configContext;
+
 	/**
 	 * Last time that servers were polled for their statuses
 	 */
@@ -110,6 +119,15 @@ public class MasterServer extends SimpleApplication
 	 * The Master Server's ServerManager
 	 */
 	private MasterServerManager serverManager;
+
+	public AccountRepository getAccountRepository( )
+	{
+		if ( configContext != null )
+		{
+			return configContext.getBean( AccountRepository.class );
+		}
+		return null;
+	}
 
 	/**
 	 * Returns the ServerManager associated with this server.
@@ -126,12 +144,33 @@ public class MasterServer extends SimpleApplication
 	{
 		serverManager = new MasterServerManager( this );
 
-		Integer port = ( Integer ) YamlConfig.DEFAULT.get( "networkserver.port" );
+		configContext = new AnnotationConfigApplicationContext( );
+		configContext.register( DatabaseConfig.class );
+		configContext.refresh( );
+
+		DataSource dataSource = configContext.getBean( DataSource.class );
+
+		try
+		{
+			System.out.println( dataSource.getConnection( ).toString( ) );
+			AccountRepository accountRepository = configContext.getBean( AccountRepository.class );
+
+			System.out.println( accountRepository.getAccount( "elliottb" ) );
+
+		}
+		catch ( SQLException e )
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace( );
+		}
+
+		YamlConfig config = YamlConfig.DEFAULT;
+		Integer port = ( Integer ) config.get( "networkserver.port" );
 		if ( port == null )
 		{
 			port = new Integer( 1337 ); /* default */
-			YamlConfig.DEFAULT.put( "networkserver.port", port );
-			YamlConfig.DEFAULT.save( );
+			config.put( "networkserver.port", port );
+			config.save( );
 		}
 
 		serverManager.run( port );
