@@ -67,19 +67,17 @@ public class ServerStatus
 	 *            Current number of players on the server.
 	 * @param currentTurn
 	 *            Current turn number.
-	 * @param address
-	 *            Ip address represented by a string.
 	 * @param serverPort
 	 *            Port to be used for connecting to the server.
 	 */
-	public ServerStatus( String serverName, int maxPlayers, int currentPlayers, int currentTurn, String address, int serverPort )
+	public ServerStatus( String serverName, int maxPlayers, int currentPlayers, int currentTurn, int serverPort )
 	{
 		this.maxPlayers = maxPlayers;
 		this.serverName = serverName;
 		this.currentPlayers = currentPlayers;
 		this.currentTurn = currentTurn;
-		this.address = address;
 		this.port = serverPort;
+		this.address = "unknown";
 		this.changed = false;
 	}
 

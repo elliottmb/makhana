@@ -189,7 +189,6 @@ public class GameServer extends SimpleApplication
 	@Override
 	public void simpleInitApp( )
 	{
-		masterConnManager = new GameMasterConnManager( this );
 		gameServerManager = new GameServerManager( this );
 
 		port = 7331; /* default */
@@ -233,15 +232,24 @@ public class GameServer extends SimpleApplication
 		}
 
 		gameServerManager.run( port );
+
+		masterConnManager = new GameMasterConnManager( this );
+	}
+
+	/**
+	 * @return the port
+	 */
+	public int getPort( )
+	{
+		return port;
 	}
 
 	@Override
 	public void simpleUpdate( float tpf )
 	{
-		super.simpleUpdate( tpf );
-
 		gameServerManager.update( tpf );
 
+		super.simpleUpdate( tpf );
 	}
 
 	@Override

@@ -60,5 +60,4 @@ public class SessionListener implements MessageListener< Client >
 			}
 		}
 	}
-
 }

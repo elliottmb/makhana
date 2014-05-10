@@ -11,7 +11,6 @@ import java.util.logging.Logger;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-import com.cogitareforma.hexrepublics.common.util.WorldFactory;
 import com.cogitareforma.hexrepublics.common.entities.traits.ActionTrait;
 import com.cogitareforma.hexrepublics.common.entities.traits.DefenseTrait;
 import com.cogitareforma.hexrepublics.common.entities.traits.FabricatingTrait;
@@ -23,6 +22,7 @@ import com.cogitareforma.hexrepublics.common.entities.traits.StrengthTrait;
 import com.cogitareforma.hexrepublics.common.entities.traits.TileTrait;
 import com.cogitareforma.hexrepublics.common.entities.traits.TypeTrait;
 import com.cogitareforma.hexrepublics.common.util.PackageUtils;
+import com.cogitareforma.hexrepublics.common.util.WorldFactory;
 import com.jme3.math.FastMath;
 import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;

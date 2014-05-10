@@ -147,9 +147,10 @@ public class GameServerManager extends ServerManager< GameServer >
 			if ( name == null )
 			{
 				name = "Default server";
+				YamlConfig.DEFAULT.put( "gameserver.name", name );
 			}
 
-			status = new ServerStatus( name, 4, 0, 0, "unknown", port );
+			status = new ServerStatus( name, 4, 0, 0, port );
 
 			// Move to when match started
 			buildTiles( 257, 10.0f );
@@ -300,6 +301,12 @@ public class GameServerManager extends ServerManager< GameServer >
 				getApp( ).getMasterConnManager( ).send( new ServerStatusResponse( act, getServerStatus( ) ) );
 				getServerStatus( ).setChanged( false );
 			}
+		}
+		else
+		{
+			logger.log( Level.INFO, "Server Status was null." );
+			status = new ServerStatus( ( String ) YamlConfig.DEFAULT.get( "gameserver.name" ), 4, 0, 0, this.getApp( ).getPort( ) );
+			getServerStatus( ).setChanged( false );
 		}
 
 		if ( getEntityDataHostService( ) != null )
