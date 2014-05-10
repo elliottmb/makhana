@@ -36,4 +36,9 @@ public class MoveTrait extends ActionTrait
 		return "MoveTrait[" + getStartTime( ) + ", " + getDuration( ) + ", " + newTile + "]";
 	}
 
+	@Override
+	public String toVerb( )
+	{
+		return "Moving";
+	}
 }

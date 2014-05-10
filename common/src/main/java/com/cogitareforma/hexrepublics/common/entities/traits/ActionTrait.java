@@ -66,4 +66,5 @@ public abstract class ActionTrait implements EntityComponent
 		return "ActionTrait[" + getStartTime( ) + ", " + getDuration( ) + "]";
 	}
 
+	public abstract String toVerb( );
 }

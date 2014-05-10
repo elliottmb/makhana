@@ -31,4 +31,9 @@ public class FabricatingTrait extends ActionTrait
 		return "FabricatingTrait[" + super.toString( ) + "]";
 	}
 
+	@Override
+	public String toVerb( )
+	{
+		return "Fabricating";
+	}
 }

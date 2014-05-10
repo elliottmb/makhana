@@ -167,6 +167,20 @@ public class Traits
 		}
 	}
 
+	public static < T extends EntityComponent > Pair< String, Double > getActionDetails( EntityData entityData, EntityId id )
+	{
+		for ( Class< ? > actionTrait : actionTraits )
+		{
+			ActionTrait at = ( ActionTrait ) entityData.getComponent( id, ( Class< T > ) actionTrait );
+			if ( at != null )
+			{
+				double time = ( at.getStartTime( ).getTime( ) + at.getDuration( ) - new Date( ).getTime( ) ) / 60000.0;
+				return Pair.of( at.toVerb( ), time );
+			}
+		}
+		return null;
+	}
+
 	private static List< Class< ? >> getAllTraits( )
 	{
 		try
@@ -181,37 +195,17 @@ public class Traits
 		return Collections.emptyList( );
 	}
 
-	public static < T extends EntityComponent > boolean hasPrerequisites( EntityData entityData, Set< EntityId > idSet,
-			Class< ? >... prerequisites )
+	public static < T extends EntityComponent > float getDefense( EntityData entityData, EntityId id )
 	{
-		if ( prerequisites.length > 0 )
+		float str = 0f;
+		for ( Class< ? > c : unitTraits )
 		{
-			boolean hasPrereq[ ] = new boolean[ prerequisites.length ];
-			for ( int i = 0; i < prerequisites.length; i++ )
+			if ( entityData.getComponent( id, ( Class< T > ) c ) != null )
 			{
-				for ( EntityId id : idSet )
-				{
-					if ( entityData.getComponent( id, ( Class< T > ) prerequisites[ i ] ) != null )
-					{
-						if ( !inAction( entityData, id ) )
-						{
-							hasPrereq[ i ] = true;
-							break;
-						}
-					}
-				}
+				str += ( ( TypeTrait ) entityData.getComponent( id, ( Class< T > ) c ) ).getInitialDefense( );
 			}
-
-			for ( boolean prereq : hasPrereq )
-			{
-				if ( !prereq )
-				{
-					return false;
-				}
-			}
-			return true;
 		}
-		return false;
+		return str;
 	}
 
 	public static < T extends EntityComponent > int getMovementModifier( EntityData entityData, EntityId id )
@@ -298,6 +292,19 @@ public class Traits
 		return new Vector3f( x, y, z );
 	}
 
+	public static < T extends EntityComponent > float getStrength( EntityData entityData, EntityId id )
+	{
+		float str = 0f;
+		for ( Class< ? > c : unitTraits )
+		{
+			if ( entityData.getComponent( id, ( Class< T > ) c ) != null )
+			{
+				str += ( ( TypeTrait ) entityData.getComponent( id, ( Class< T > ) c ) ).getInitialStrength( );
+			}
+		}
+		return str;
+	}
+
 	private static List< Class< ? > > getSubTraits( Class< ? > parent )
 	{
 		List< Class< ? >> subTraits = new LinkedList< Class< ? >>( );
@@ -309,6 +316,39 @@ public class Traits
 			}
 		}
 		return subTraits;
+	}
+
+	public static < T extends EntityComponent > boolean hasPrerequisites( EntityData entityData, Set< EntityId > idSet,
+			Class< ? >... prerequisites )
+	{
+		if ( prerequisites.length > 0 )
+		{
+			boolean hasPrereq[ ] = new boolean[ prerequisites.length ];
+			for ( int i = 0; i < prerequisites.length; i++ )
+			{
+				for ( EntityId id : idSet )
+				{
+					if ( entityData.getComponent( id, ( Class< T > ) prerequisites[ i ] ) != null )
+					{
+						if ( !inAction( entityData, id ) )
+						{
+							hasPrereq[ i ] = true;
+							break;
+						}
+					}
+				}
+			}
+
+			for ( boolean prereq : hasPrereq )
+			{
+				if ( !prereq )
+				{
+					return false;
+				}
+			}
+			return true;
+		}
+		return false;
 	}
 
 	public static < T extends EntityComponent > boolean inAction( EntityData entityData, EntityId id )
@@ -346,31 +386,5 @@ public class Traits
 		}
 		return false;
 
-	}
-
-	public static < T extends EntityComponent > float getStrength( EntityData entityData, EntityId id )
-	{
-		float str = 0f;
-		for ( Class< ? > c : unitTraits )
-		{
-			if ( entityData.getComponent( id, ( Class< T > ) c ) != null )
-			{
-				str += ( ( TypeTrait ) entityData.getComponent( id, ( Class< T > ) c ) ).getInitialStrength( );
-			}
-		}
-		return str;
-	}
-
-	public static < T extends EntityComponent > float getDefense( EntityData entityData, EntityId id )
-	{
-		float str = 0f;
-		for ( Class< ? > c : unitTraits )
-		{
-			if ( entityData.getComponent( id, ( Class< T > ) c ) != null )
-			{
-				str += ( ( TypeTrait ) entityData.getComponent( id, ( Class< T > ) c ) ).getInitialDefense( );
-			}
-		}
-		return str;
 	}
 }

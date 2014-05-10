@@ -217,17 +217,17 @@ public class TileViewController extends AbstractAppState implements ScreenContro
 			}
 
 			// Suffix
-			if ( entityData.getComponent( id, FabricatingTrait.class ) != null )
+			Pair< String, Double > action = Traits.getActionDetails( entityData, id );
+			if ( action != null )
 			{
-				FabricatingTrait ft = entityData.getComponent( id, FabricatingTrait.class );
-				double time = ( ft.getStartTime( ).getTime( ) + ft.getDuration( ) - new Date( ).getTime( ) ) / 60000.0;
-				if ( time > 1 )
+				existing += String.format( " - %s: ", action.getLeft( ) );
+				if ( action.getRight( ) > 1 )
 				{
-					existing += String.format( " (%.1f minutes)", time );
+					existing += String.format( "%.1f minutes", action.getRight( ) );
 				}
 				else
 				{
-					existing += String.format( " (%.0f seconds)", time * 60 );
+					existing += String.format( "%.0f seconds", action.getRight( ) * 60 );
 				}
 			}
 			// current.addItem( existing );
