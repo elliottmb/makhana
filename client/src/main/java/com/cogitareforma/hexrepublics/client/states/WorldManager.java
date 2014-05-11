@@ -132,6 +132,17 @@ public class WorldManager extends AbstractAppState
 		buildings = null;
 		matBuilding = null;
 		matHealthBar = null;
+		if ( locationSet != null )
+		{
+			locationSet.clear( );
+		}
+		locationSet = null;
+
+		if ( healthSet != null )
+		{
+			healthSet.clear( );
+		}
+		healthSet = null;
 
 		miniView.detachScene( worldRoot );
 		rootNode.detachChild( worldRoot );
