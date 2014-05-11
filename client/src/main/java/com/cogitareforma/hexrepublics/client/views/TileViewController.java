@@ -19,7 +19,6 @@ import com.cogitareforma.hexrepublics.common.entities.traits.BarracksTrait;
 import com.cogitareforma.hexrepublics.common.entities.traits.CatapultTrait;
 import com.cogitareforma.hexrepublics.common.entities.traits.ClubmanTrait;
 import com.cogitareforma.hexrepublics.common.entities.traits.CrossbowTrait;
-import com.cogitareforma.hexrepublics.common.entities.traits.FabricatingTrait;
 import com.cogitareforma.hexrepublics.common.entities.traits.ForgeTrait;
 import com.cogitareforma.hexrepublics.common.entities.traits.KriegerTrait;
 import com.cogitareforma.hexrepublics.common.entities.traits.LocationTrait;

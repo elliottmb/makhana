@@ -2,13 +2,13 @@ package com.cogitareforma.hexrepublics.client.states;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.cogitareforma.hexrepublics.client.ClientMain;
 import com.cogitareforma.hexrepublics.client.views.LoadingViewController;
 import com.cogitareforma.hexrepublics.common.entities.Traits;
+import com.cogitareforma.hexrepublics.common.entities.traits.HealthTrait;
 import com.cogitareforma.hexrepublics.common.entities.traits.LocationTrait;
 import com.cogitareforma.hexrepublics.common.entities.traits.MoveableTrait;
 import com.cogitareforma.hexrepublics.common.entities.traits.TileTrait;
@@ -49,22 +49,21 @@ public class WorldManager extends AbstractAppState
 
 	private final static Logger logger = Logger.getLogger( WorldManager.class.getName( ) );
 
-	private Node rootNode;
-	private Node worldRoot;
 	private ClientMain app;
 	private AssetManager assetManager;
-	private Camera minicam;
-	ViewPort miniview;
-	private Node unitRoot;
+	private Material matBuilding;
 	private Node buildingRoot;
-	private HashMap< EntityId, Spatial > unitsHealth;
-	private HashMap< EntityId, Spatial > units;
 	private HashMap< EntityId, Spatial > buildings;
-	private Material buildingMat;
-	BitmapFont myFont;
-	float updateLimiter = 0;
-	EntitySet objectSet;
-	Material mathb;
+	private Material matHealthBar;
+	private Camera miniCam;
+	private ViewPort miniView;
+	private BitmapFont myFont;
+	private EntitySet locationSet;
+	private EntitySet healthSet;
+	private Node rootNode;
+	private Node unitRoot;
+	private HashMap< EntityId, Node > units;
+	private Node worldRoot;
 
 	public WorldManager( ClientMain app, Node rootNode )
 	{
@@ -74,11 +73,10 @@ public class WorldManager extends AbstractAppState
 		this.unitRoot = new Node( "unitRoot" );
 		this.buildingRoot = new Node( "buildingRoot" );
 		this.myFont = assetManager.loadFont( "Interface/Fonts/AngerthasMoria.fnt" );
-		this.units = new LinkedHashMap< EntityId, Spatial >( );
+		this.units = new LinkedHashMap< EntityId, Node >( );
 		this.buildings = new LinkedHashMap< EntityId, Spatial >( );
-		this.unitsHealth = new LinkedHashMap< EntityId, Spatial >( );
-		this.buildingMat = new Material( assetManager, "Common/MatDefs/Misc/ShowNormals.j3md" );
-		this.mathb = new Material( assetManager, "Common/MatDefs/Misc/Unshaded.j3md" );
+		this.matBuilding = new Material( assetManager, "Common/MatDefs/Misc/ShowNormals.j3md" );
+		this.matHealthBar = new Material( assetManager, "Common/MatDefs/Misc/Unshaded.j3md" );
 	}
 
 	public void attachLevel( )
@@ -90,35 +88,34 @@ public class WorldManager extends AbstractAppState
 		this.app.getCamera( ).setLocation( new Vector3f( 0f, 100f, 100f ) );
 		this.app.getCamera( ).lookAt( new Vector3f( 0, 0, 0 ), Vector3f.UNIT_Y );
 
-		if ( minicam == null )
+		if ( miniCam == null )
 		{
-			minicam = this.app.getCamera( ).clone( );
+			miniCam = this.app.getCamera( ).clone( );
 		}
-		minicam.setViewPort( 0.75f, 1f, 0f, 0.25f );
+		miniCam.setViewPort( 0.75f, 1f, 0f, 0.25f );
 
-		minicam.setParallelProjection( true );
-		minicam.setFrustumPerspective( 10, ( float ) this.app.getContext( ).getSettings( ).getWidth( )
+		miniCam.setParallelProjection( true );
+		miniCam.setFrustumPerspective( 10, ( float ) this.app.getContext( ).getSettings( ).getWidth( )
 				/ this.app.getContext( ).getSettings( ).getHeight( ), 1, 600 );
-		minicam.setLocation( new Vector3f( 0, 500f, 0 ) );
-		minicam.lookAt( new Vector3f( 0, 0, -1f ), Vector3f.UNIT_Y );
-		minicam.update( );
+		miniCam.setLocation( new Vector3f( 0, 500f, 0 ) );
+		miniCam.lookAt( new Vector3f( 0, 0, -1f ), Vector3f.UNIT_Y );
+		miniCam.update( );
 
-		if ( miniview == null )
+		if ( miniView == null )
 		{
-			miniview = this.app.getRenderManager( ).createMainView( "Minimap", minicam );
+			miniView = this.app.getRenderManager( ).createMainView( "Minimap", miniCam );
 		}
 
-		miniview.setBackgroundColor( ColorRGBA.DarkGray );
-		miniview.setClearFlags( true, true, true );
-		miniview.attachScene( worldRoot );
+		miniView.setBackgroundColor( ColorRGBA.DarkGray );
+		miniView.setClearFlags( true, true, true );
+		miniView.attachScene( worldRoot );
 
 		unitRoot = new Node( "unitRoot" );
 		buildingRoot = new Node( "buildingRoot" );
-		units = new LinkedHashMap< EntityId, Spatial >( );
+		units = new LinkedHashMap< EntityId, Node >( );
 		buildings = new LinkedHashMap< EntityId, Spatial >( );
-		unitsHealth = new LinkedHashMap< EntityId, Spatial >( );
-		buildingMat = new Material( assetManager, "Common/MatDefs/Misc/ShowNormals.j3md" );
-		mathb = new Material( assetManager, "Common/MatDefs/Misc/Unshaded.j3md" );
+		matBuilding = new Material( assetManager, "Common/MatDefs/Misc/ShowNormals.j3md" );
+		matHealthBar = new Material( assetManager, "Common/MatDefs/Misc/Unshaded.j3md" );
 
 		worldRoot.attachChild( buildingRoot );
 		worldRoot.attachChild( unitRoot );
@@ -133,11 +130,10 @@ public class WorldManager extends AbstractAppState
 		buildingRoot = null;
 		units = null;
 		buildings = null;
-		buildingMat = null;
-		unitsHealth = null;
-		mathb = null;
+		matBuilding = null;
+		matHealthBar = null;
 
-		miniview.detachScene( worldRoot );
+		miniView.detachScene( worldRoot );
 		rootNode.detachChild( worldRoot );
 
 		( ( DesktopAssetManager ) assetManager ).clearCache( );
@@ -182,193 +178,209 @@ public class WorldManager extends AbstractAppState
 	@Override
 	public void update( float tpf )
 	{
-		if ( updateLimiter > 1 )
+		if ( app.getGameConnManager( ).isConnected( ) )
 		{
-			if ( app.getGameConnManager( ).isConnected( ) )
+			if ( worldRoot != null && unitRoot != null && buildingRoot != null )
 			{
-				if ( worldRoot != null && unitRoot != null && buildingRoot != null )
+				TerrainQuad terrain = ( TerrainQuad ) worldRoot.getChild( "terrain" );
+
+				if ( terrain != null )
 				{
-					TerrainQuad terrain = ( TerrainQuad ) worldRoot.getChild( "terrain" );
-
-					if ( terrain != null )
+					EntityData entityData = app.getGameConnManager( ).getRemoteEntityData( );
+					if ( entityData != null )
 					{
-						EntityData entityData = app.getGameConnManager( ).getRemoteEntityData( );
-						if ( entityData != null )
+						if ( locationSet != null )
 						{
-							Set< EntityId > objects = entityData.findEntities( null, LocationTrait.class );
-
-							// New!
-							if ( objectSet != null )
+							if ( locationSet.applyChanges( ) )
 							{
-								if ( objectSet.applyChanges( ) )
+								System.out.println( "There were changes!" );
+
+								for ( Entity e : locationSet.getAddedEntities( ) )
 								{
-									System.out.println( "There were changes!" );
-
-									for ( Entity e : objectSet.getAddedEntities( ) )
+									LocationTrait locationTrait = e.get( LocationTrait.class );
+									EntityId id = e.getId( );
+									System.out.println( id + ", " + locationTrait );
+									if ( Traits.isUnit( entityData, id ) )
 									{
-										LocationTrait locationTrait = e.get( LocationTrait.class );
-										EntityId id = e.getId( );
-										System.out.println( id + ", " + locationTrait );
-										if ( Traits.isUnit( entityData, id ) )
+										System.out.println( id + " is a unit!" );
+
+										TileTrait loc = entityData.getComponent( locationTrait.getTile( ), TileTrait.class );
+										CreatedBy cb = entityData.getComponent( locationTrait.getTile( ), CreatedBy.class );
+
+										String display = "";
+										float health = 0.0f;
+										for ( Class< ? extends EntityComponent > ec : Traits.unitTraits )
 										{
-											System.out.println( id + " is a unit!" );
-											Entity entityComponents = entityData.getEntity( id,
-													Traits.unitTraits.toArray( new Class< ? >[ Traits.unitTraits.size( ) ] ) );
-
-											TileTrait loc = entityData.getComponent( locationTrait.getTile( ), TileTrait.class );
-											CreatedBy cb = entityData.getComponent( locationTrait.getTile( ), CreatedBy.class );
-
-											String display = "";
-											float health = 0.0f;
-											for ( EntityComponent ec : entityComponents.getComponents( ) )
+											MoveableTrait mt = ( MoveableTrait ) entityData.getComponent( id, ec );
+											if ( mt != null )
 											{
-												if ( ec instanceof MoveableTrait )
+												display += mt.getClass( ).getSimpleName( ).charAt( 0 );
+												health += mt.getInitialHealth( );
+											}
+										}
+
+										Vector3f position = Traits.getSpatialPosition( loc.getX( ), loc.getY( ),
+												locationTrait.getPosition( ), terrain, 0f );
+
+										BitmapText unitBody = new BitmapText( myFont );
+										unitBody.setQueueBucket( Bucket.Transparent );
+										unitBody.setSize( 5 );
+										ColorRGBA color = null;
+										if ( cb != null )
+										{
+											int src = ( int ) cb.getCreatorId( ).getId( ) % 255;
+											switch ( src % 3 )
+											{
+												case 0:
 												{
-													MoveableTrait mt = ( MoveableTrait ) ec;
-													display += mt.getClass( ).getSimpleName( ).charAt( 0 );
-													health += mt.getInitialHealth( );
+													color = new ColorRGBA( ( float ) ( src * 0.003922 ), 0.5f, 0.5f, 1f );
+													break;
+												}
+												case 1:
+												{
+													color = new ColorRGBA( 0.5f, ( float ) ( src * 0.003922 ), 0.5f, 1f );
+													break;
+												}
+												default:
+												{
+													color = new ColorRGBA( 0.5f, 0.5f, ( float ) ( src * 0.003922 ), 1f );
+													break;
 												}
 											}
+										}
+										else
+										{
+											color = ColorRGBA.Gray;
+										}
+										unitBody.setColor( color );
+										unitBody.setText( display );
+										unitBody.setName( "body" );
 
+										BillboardControl billboardControl = new BillboardControl( );
+										Geometry healthBar = new Geometry( "health", new Quad( 4, 0.2f ) );
+										matHealthBar.setColor( "Color", ColorRGBA.Red );
+										healthBar.setMaterial( matHealthBar );
+
+										healthBar.addControl( billboardControl );
+										healthBar.setUserData( "initialHealth", health );
+
+										Node unitContainer = new Node( id.toString( ) );
+										unitContainer.setLocalTranslation( position.x - ( unitBody.getLineWidth( ) / 2 ), position.y,
+												position.z );
+
+										unitContainer.attachChild( unitBody );
+										unitContainer.attachChild( healthBar );
+
+										units.put( id, unitContainer );
+										unitRoot.attachChild( unitContainer );
+									}
+									else if ( Traits.isBuilding( entityData, id ) )
+									{
+										Entity entityComponents = entityData.getEntity( id,
+												Traits.buildingTraits.toArray( new Class< ? >[ Traits.buildingTraits.size( ) ] ) );
+										TileTrait loc = entityData.getComponent( locationTrait.getTile( ), TileTrait.class );
+										CreatedBy cb = entityData.getComponent( locationTrait.getTile( ), CreatedBy.class );
+
+										Box b = new Box( 1, 1, 1 );
+										Geometry geo = new Geometry( "Box", b );
+										geo.setMaterial( matBuilding );
+										geo.setLocalTranslation( Traits.getSpatialPosition( loc.getX( ), loc.getY( ),
+												locationTrait.getPosition( ), terrain, FastMath.PI / 6 ) );
+
+										buildings.put( id, geo );
+										buildingRoot.attachChild( geo );
+									}
+								}
+
+								for ( Entity e : locationSet.getChangedEntities( ) )
+								{
+									EntityId id = e.getId( );
+									if ( Traits.isUnit( entityData, id ) )
+									{
+										Node unitContainer = units.get( id );
+										if ( unitContainer != null )
+										{
+											LocationTrait locationTrait = entityData.getComponent( id, LocationTrait.class );
+											TileTrait loc = entityData.getComponent( locationTrait.getTile( ), TileTrait.class );
 											Vector3f position = Traits.getSpatialPosition( loc.getX( ), loc.getY( ),
 													locationTrait.getPosition( ), terrain, 0f );
-
-											BitmapText bitmapText = new BitmapText( myFont );
-											bitmapText.setQueueBucket( Bucket.Transparent );
-											bitmapText.setSize( 5 );
-											if ( cb != null )
+											Spatial unitSpatial = unitContainer.getChild( "body" );
+											if ( unitSpatial != null && unitSpatial instanceof BitmapText )
 											{
-												int src = ( int ) cb.getCreatorId( ).getId( ) % 255;
-												ColorRGBA color = null;
-												switch ( src % 3 )
-												{
-													case 0:
-													{
-														color = new ColorRGBA( ( float ) ( src * 0.003922 ), 0.5f, 0.5f, 1f );
-														break;
-													}
-													case 1:
-													{
-														color = new ColorRGBA( 0.5f, ( float ) ( src * 0.003922 ), 0.5f, 1f );
-														break;
-													}
-													default:
-													{
-														color = new ColorRGBA( 0.5f, 0.5f, ( float ) ( src * 0.003922 ), 1f );
-														break;
-													}
-												}
-												bitmapText.setColor( color );
+												unitContainer.setLocalTranslation(
+														position.x - ( ( ( BitmapText ) unitSpatial ).getLineWidth( ) / 2 ), position.y,
+														position.z );
 											}
 											else
 											{
-												bitmapText.setColor( ColorRGBA.Gray );
+												unitContainer.setLocalTranslation( position );
 											}
-											bitmapText.setText( display );
-											bitmapText.setLocalTranslation( position.x - ( bitmapText.getLineWidth( ) / 2 ), position.y,
-													position.z );
-
-											BillboardControl bill = new BillboardControl( );
-											Geometry healthbar = new Geometry( "healthbar", new Quad( health / 10 * 4, 0.2f ) );
-											mathb.setColor( "Color", ColorRGBA.Red );
-											healthbar.setMaterial( mathb );
-											healthbar.center( );
-											healthbar.move( position.x - ( bitmapText.getLineWidth( ) / 2 ), position.y, position.z );
-											healthbar.addControl( bill );
-
-											unitsHealth.put( id, healthbar );
-											units.put( id, bitmapText );
-											unitRoot.attachChild( healthbar );
-											unitRoot.attachChild( bitmapText );
-										}
-										else if ( Traits.isBuilding( entityData, id ) )
-										{
-											Entity entityComponents = entityData.getEntity( id,
-													Traits.buildingTraits.toArray( new Class< ? >[ Traits.buildingTraits.size( ) ] ) );
-											TileTrait loc = entityData.getComponent( locationTrait.getTile( ), TileTrait.class );
-											CreatedBy cb = entityData.getComponent( locationTrait.getTile( ), CreatedBy.class );
-
-											Box b = new Box( 1, 1, 1 );
-											Geometry geo = new Geometry( "Box", b );
-											geo.setMaterial( buildingMat );
-											geo.setLocalTranslation( Traits.getSpatialPosition( loc.getX( ), loc.getY( ),
-													locationTrait.getPosition( ), terrain, FastMath.PI / 6 ) );
-
-											buildings.put( id, geo );
-											buildingRoot.attachChild( geo );
 										}
 									}
+								}
 
-									for ( Entity e : objectSet.getChangedEntities( ) )
+								for ( Entity e : locationSet.getRemovedEntities( ) )
+								{
+									Spatial unitContainer = units.remove( e.getId( ) );
+									if ( unitContainer != null )
 									{
-										EntityId id = e.getId( );
-										if ( Traits.isUnit( entityData, id ) )
+										unitRoot.detachChild( unitContainer );
+									}
+
+									Spatial buildingSpatial = buildings.remove( e.getId( ) );
+									if ( buildingSpatial != null )
+									{
+										buildingRoot.detachChild( buildingSpatial );
+									}
+								}
+								System.out.println( "!!!" );
+							}
+						}
+						else
+						{
+							locationSet = entityData.getEntities( LocationTrait.class );
+						}
+
+						if ( healthSet != null )
+						{
+							if ( healthSet.applyChanges( ) )
+							{
+								for ( Entity e : healthSet.getChangedEntities( ) )
+								{
+									EntityId id = e.getId( );
+									if ( Traits.isUnit( entityData, id ) )
+									{
+										Node unitContainer = units.get( id );
+										if ( unitContainer != null )
 										{
-											Spatial unitSpatial = units.get( id );
-											Spatial unitHealthSpatial = unitsHealth.get( id );
-											if ( unitSpatial != null )
+											HealthTrait ht = e.get( HealthTrait.class );
+											if ( ht != null )
 											{
-												LocationTrait locationTrait = entityData.getComponent( id, LocationTrait.class );
-												TileTrait loc = entityData.getComponent( locationTrait.getTile( ), TileTrait.class );
-												Vector3f position = Traits.getSpatialPosition( loc.getX( ), loc.getY( ),
-														locationTrait.getPosition( ), terrain, 0f );
-												if ( unitSpatial instanceof BitmapText )
+												Spatial healthBar = unitContainer.getChild( "health" );
+												if ( healthBar != null )
 												{
-													unitSpatial.setLocalTranslation(
-															position.x - ( ( ( BitmapText ) unitSpatial ).getLineWidth( ) / 2 ),
-															position.y, position.z );
-													if ( unitHealthSpatial != null )
+													Vector3f currentScale = healthBar.getLocalScale( );
+													Float initialHealth = healthBar.getUserData( "initialHealth" );
+													if ( initialHealth != null )
 													{
-														unitHealthSpatial.setLocalTranslation(
-																position.x - ( ( ( BitmapText ) unitSpatial ).getLineWidth( ) / 2 ),
-																position.y, position.z );
-													}
-												}
-												else
-												{
-													unitSpatial.setLocalTranslation( position );
-													if ( unitHealthSpatial != null )
-													{
-														unitHealthSpatial.setLocalTranslation( position );
+														healthBar.setLocalScale( ( ht.getHealth( ) / initialHealth ), currentScale.y,
+																currentScale.z );
 													}
 												}
 											}
 										}
 									}
-
-									for ( Entity e : objectSet.getRemovedEntities( ) )
-									{
-										Spatial unitSpatial = units.remove( e.getId( ) );
-										if ( unitSpatial != null )
-										{
-											unitRoot.detachChild( unitSpatial );
-										}
-
-										Spatial unitHealth = unitsHealth.remove( e.getId( ) );
-										if ( unitHealth != null )
-										{
-											unitRoot.detachChild( unitHealth );
-										}
-
-										Spatial buildingSpatial = buildings.remove( e.getId( ) );
-										if ( buildingSpatial != null )
-										{
-											buildingRoot.detachChild( buildingSpatial );
-										}
-									}
-									System.out.println( "!!!" );
 								}
 							}
-							else
-							{
-								objectSet = entityData.getEntities( LocationTrait.class );
-							}
+						}
+						else
+						{
+							healthSet = entityData.getEntities( HealthTrait.class );
 						}
 					}
 				}
 			}
-			updateLimiter = 0;
 		}
-		updateLimiter += tpf;
+
 	}
 }

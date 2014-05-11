@@ -54,11 +54,11 @@ public class Traits
 
 	public static final List< Class< ? >> allTypes = getAllTraits( );
 
-	public static final List< Class< ? >> actionTraits = getSubTraits( ActionTrait.class );
+	public static final List< Class< ? extends EntityComponent >> actionTraits = getSubTraits( ActionTrait.class );
 
-	public static final List< Class< ? >> unitTraits = getSubTraits( MoveableTrait.class );
+	public static final List< Class< ? extends EntityComponent >> unitTraits = getSubTraits( MoveableTrait.class );
 
-	public static final List< Class< ? >> buildingTraits = getSubTraits( StaticTrait.class );
+	public static final List< Class< ? extends EntityComponent >> buildingTraits = getSubTraits( StaticTrait.class );
 
 	public static final List< List< Pair< Integer, Integer > >> neighbors = getNeighbors( );
 
@@ -305,14 +305,14 @@ public class Traits
 		return str;
 	}
 
-	private static List< Class< ? > > getSubTraits( Class< ? > parent )
+	private static List< Class< ? extends EntityComponent > > getSubTraits( Class< ? extends EntityComponent > parent )
 	{
-		List< Class< ? >> subTraits = new LinkedList< Class< ? >>( );
+		List< Class< ? extends EntityComponent >> subTraits = new LinkedList< Class< ? extends EntityComponent >>( );
 		for ( Class< ? > c : allTypes )
 		{
 			if ( parent.isAssignableFrom( c ) )
 			{
-				subTraits.add( c );
+				subTraits.add( ( Class< ? extends EntityComponent > ) c );
 			}
 		}
 		return subTraits;
