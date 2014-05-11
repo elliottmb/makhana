@@ -2,7 +2,6 @@ package com.cogitareforma.hexrepublics.client.views;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 import java.util.Stack;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -39,7 +38,9 @@ import com.jme3.app.state.AbstractAppState;
 import com.jme3.app.state.AppState;
 import com.jme3.app.state.AppStateManager;
 import com.simsilica.es.ComponentFilter;
+import com.simsilica.es.Entity;
 import com.simsilica.es.EntityId;
+import com.simsilica.es.EntitySet;
 import com.simsilica.es.client.RemoteEntityData;
 import com.simsilica.es.filter.AndFilter;
 import com.simsilica.es.filter.FieldFilter;
@@ -50,16 +51,16 @@ import de.lessvoid.nifty.controls.Label;
 import de.lessvoid.nifty.controls.ListBox;
 import de.lessvoid.nifty.controls.ListBoxSelectionChangedEvent;
 import de.lessvoid.nifty.elements.Element;
-import de.lessvoid.nifty.input.NiftyInputEvent;
-import de.lessvoid.nifty.screen.KeyInputHandler;
 import de.lessvoid.nifty.screen.Screen;
 import de.lessvoid.nifty.screen.ScreenController;
 
 /**
  * 
  * @author Ryan Grier
+ * @author Elliott Butler
+ * 
  */
-public class TileViewController extends AbstractAppState implements ScreenController, KeyInputHandler
+public class TileViewController extends AbstractAppState implements ScreenController
 {
 	/**
 	 * The logger for this class.
@@ -71,18 +72,11 @@ public class TileViewController extends AbstractAppState implements ScreenContro
 	private ListBox< String > build;
 	private Pair< Integer, Integer > currentTile;
 	private EntityId currentUnit;
-	public static final String[ ] realUnits =
-	{
-			"Archer", "Mounted Archer", "Clubman", "Mounted Clubman"
-	};
-
-	private Set< EntityId > locationSet;
-
+	private EntitySet locationSet;
 	private RemoteEntityData entityData;
-
 	private EntityId findTile;
 
-	float updateLimiter = 0;
+	private float refreshLimiter = 0;
 
 	private Element move;
 
@@ -109,130 +103,176 @@ public class TileViewController extends AbstractAppState implements ScreenContro
 	{
 		if ( "tile".equals( app.getNifty( ).getCurrentScreen( ).getScreenId( ) ) )
 		{
-			if ( updateLimiter > 1 )
-			{
-				updateLimiter = 0;
-				ComponentFilter< LocationTrait > locationFilter = FieldFilter.create( LocationTrait.class, "tile", findTile );
-				locationSet = entityData.findEntities( locationFilter, LocationTrait.class );
-				fillExist( );
-				getTileInfo( );
-			}
-			updateLimiter += tpf;
-		}
-	}
 
-	/**
-	 * Fills in the scroll panel with all the buildings and units you can build
-	 * here.
-	 */
-	public void fillBuild( Stack< String > buildables )
-	{
-		// build.addItem( "Things that you already have go here." );
-		build.clear( );
-		build.addAllItems( buildables );
-	}
-
-	/**
-	 * Fills in the scroll panel with all the building and units you have in the
-	 * current tile.
-	 */
-	public void fillExist( )
-	{
-		current.clear( );
-		// current.addItem( "Things you can build go here." );
-		for ( EntityId id : locationSet )
-		{
-			String existing = "";
-			// Prefixes
-			if ( entityData.getComponent( id, MountedTrait.class ) != null )
+			if ( locationSet != null )
 			{
-				existing += "Mounted ";
-			}
-
-			// Roots / Combining Forms
-			if ( entityData.getComponent( id, ArcheryTrait.class ) != null )
-			{
-				existing += "Archery";
-			}
-			if ( entityData.getComponent( id, BarracksTrait.class ) != null )
-			{
-				existing += "Barracks";
-			}
-			if ( entityData.getComponent( id, StablesTrait.class ) != null )
-			{
-				existing += "Stables";
-			}
-			if ( entityData.getComponent( id, ArcherTrait.class ) != null )
-			{
-				existing += "Archer";
-			}
-			if ( entityData.getComponent( id, ClubmanTrait.class ) != null )
-			{
-				existing += "Clubman";
-			}
-			if ( entityData.getComponent( id, AxemanTrait.class ) != null )
-			{
-				existing += "Axeman";
-			}
-			if ( entityData.getComponent( id, CatapultTrait.class ) != null )
-			{
-				existing += "Catapult";
-			}
-			if ( entityData.getComponent( id, CrossbowTrait.class ) != null )
-			{
-				existing += "Crossbowman";
-			}
-			if ( entityData.getComponent( id, ForgeTrait.class ) != null )
-			{
-				existing += "Forge";
-			}
-			if ( entityData.getComponent( id, KriegerTrait.class ) != null )
-			{
-				existing += "Krieger";
-			}
-			if ( entityData.getComponent( id, LongbowTrait.class ) != null )
-			{
-				existing += "Longbowman";
-			}
-			if ( entityData.getComponent( id, MachineWorksTrait.class ) != null )
-			{
-				existing += "Machine Works";
-			}
-			if ( entityData.getComponent( id, PikemanTrait.class ) != null )
-			{
-				existing += "Pikeman";
-			}
-			if ( entityData.getComponent( id, SawmillTrait.class ) != null )
-			{
-				existing += "Sawmill";
-			}
-			if ( entityData.getComponent( id, SwordsmanTrait.class ) != null )
-			{
-				existing += "Swordsman";
-			}
-			if ( entityData.getComponent( id, TrebuchetTrait.class ) != null )
-			{
-				existing += "Trebuchet";
-			}
-
-			// Suffix
-			Pair< String, Double > action = Traits.getActionDetails( entityData, id );
-			if ( action != null )
-			{
-				existing += String.format( " - %s: ", action.getLeft( ) );
-				if ( action.getRight( ) > 1 )
+				if ( refreshLimiter > 1 )
 				{
-					existing += String.format( "%.1f minutes", action.getRight( ) );
+					for ( Entity e : locationSet )
+					{
+						updateExisting( e );
+					}
+					current.refresh( );
+					refreshLimiter = 0;
 				}
 				else
 				{
-					existing += String.format( "%.0f seconds", action.getRight( ) * 60 );
+					refreshLimiter += tpf;
 				}
+
+				if ( locationSet.applyChanges( ) )
+				{
+					for ( Entity e : locationSet.getAddedEntities( ) )
+					{
+						addToExisting( e );
+					}
+					for ( Entity e : locationSet.getRemovedEntities( ) )
+					{
+						removeFromExisting( e );
+					}
+
+					fillBuildables( );
+				}
+
 			}
-			// current.addItem( existing );
-			EntityEntryModelClass entity = new EntityEntryModelClass( id, existing );
-			current.addItem( entity );
+			else
+			{
+				ComponentFilter< LocationTrait > locationFilter = FieldFilter.create( LocationTrait.class, "tile", findTile );
+				locationSet = entityData.getEntities( locationFilter, LocationTrait.class );
+			}
+
 		}
+	}
+
+	public void updateExisting( Entity entity )
+	{
+		for ( EntityEntryModelClass eemc : current.getItems( ) )
+		{
+			if ( eemc.getEntityId( ).equals( entity.getId( ) ) )
+			{
+				eemc.setName( createDisplayText( entity.getId( ) ) );
+			}
+		}
+	}
+
+	public void removeFromExisting( Entity entity )
+	{
+		EntityEntryModelClass toRemove = null;
+		for ( EntityEntryModelClass eemc : current.getItems( ) )
+		{
+			if ( eemc.getEntityId( ).equals( entity.getId( ) ) )
+			{
+				toRemove = eemc;
+				break;
+			}
+		}
+
+		if ( toRemove != null )
+		{
+			current.removeItem( toRemove );
+		}
+	}
+
+	public String createDisplayText( EntityId id )
+	{
+		String existing = "";
+
+		// Prefixes
+		if ( entityData.getComponent( id, MountedTrait.class ) != null )
+		{
+			existing += "Mounted ";
+		}
+
+		// Roots / Combining Forms
+		if ( entityData.getComponent( id, ArcheryTrait.class ) != null )
+		{
+			existing += "Archery";
+		}
+		if ( entityData.getComponent( id, BarracksTrait.class ) != null )
+		{
+			existing += "Barracks";
+		}
+		if ( entityData.getComponent( id, StablesTrait.class ) != null )
+		{
+			existing += "Stables";
+		}
+		if ( entityData.getComponent( id, ArcherTrait.class ) != null )
+		{
+			existing += "Archer";
+		}
+		if ( entityData.getComponent( id, ClubmanTrait.class ) != null )
+		{
+			existing += "Clubman";
+		}
+		if ( entityData.getComponent( id, AxemanTrait.class ) != null )
+		{
+			existing += "Axeman";
+		}
+		if ( entityData.getComponent( id, CatapultTrait.class ) != null )
+		{
+			existing += "Catapult";
+		}
+		if ( entityData.getComponent( id, CrossbowTrait.class ) != null )
+		{
+			existing += "Crossbowman";
+		}
+		if ( entityData.getComponent( id, ForgeTrait.class ) != null )
+		{
+			existing += "Forge";
+		}
+		if ( entityData.getComponent( id, KriegerTrait.class ) != null )
+		{
+			existing += "Krieger";
+		}
+		if ( entityData.getComponent( id, LongbowTrait.class ) != null )
+		{
+			existing += "Longbowman";
+		}
+		if ( entityData.getComponent( id, MachineWorksTrait.class ) != null )
+		{
+			existing += "Machine Works";
+		}
+		if ( entityData.getComponent( id, PikemanTrait.class ) != null )
+		{
+			existing += "Pikeman";
+		}
+		if ( entityData.getComponent( id, SawmillTrait.class ) != null )
+		{
+			existing += "Sawmill";
+		}
+		if ( entityData.getComponent( id, SwordsmanTrait.class ) != null )
+		{
+			existing += "Swordsman";
+		}
+		if ( entityData.getComponent( id, TrebuchetTrait.class ) != null )
+		{
+			existing += "Trebuchet";
+		}
+
+		// Suffix
+		Pair< String, Double > action = Traits.getActionDetails( entityData, id );
+		if ( action != null )
+		{
+			existing += String.format( " - %s: ", action.getLeft( ) );
+			if ( action.getRight( ) > 1 )
+			{
+				existing += String.format( "%.1f minutes", action.getRight( ) );
+			}
+			else
+			{
+				existing += String.format( "%.0f seconds", action.getRight( ) * 60 );
+			}
+		}
+
+		return existing;
+	}
+
+	public void addToExisting( Entity entity )
+	{
+		EntityId id = entity.getId( );
+
+		EntityEntryModelClass eemc = new EntityEntryModelClass( id, createDisplayText( id ) );
+		current.addItem( eemc );
 	}
 
 	@SuppressWarnings( "unchecked" )
@@ -496,7 +536,7 @@ public class TileViewController extends AbstractAppState implements ScreenContro
 		}
 	}
 
-	public void getTileInfo( )
+	public void fillBuildables( )
 	{
 		if ( entityData != null )
 		{
@@ -582,7 +622,9 @@ public class TileViewController extends AbstractAppState implements ScreenContro
 					buildables.add( "Build Trebuchet" );
 				}
 			}
-			fillBuild( buildables );
+
+			build.clear( );
+			build.addAllItems( buildables );
 		}
 	}
 
@@ -605,11 +647,23 @@ public class TileViewController extends AbstractAppState implements ScreenContro
 		findTile = entityData.findEntity( completeFilter, TileTrait.class );
 
 		ComponentFilter< LocationTrait > locationFilter = FieldFilter.create( LocationTrait.class, "tile", findTile );
-		locationSet = entityData.findEntities( locationFilter, LocationTrait.class );
-		fillExist( );
+		locationSet = entityData.getEntities( locationFilter, LocationTrait.class );
+
+		if ( locationSet != null )
+		{
+			if ( locationSet.applyChanges( ) )
+			{
+				for ( Entity e : locationSet.getAddedEntities( ) )
+				{
+					addToExisting( e );
+				}
+			}
+		}
+
 		logger.log( Level.INFO, "Initialised " + this.getClass( ) );
 		this.app.currentScreen = "tile";
-		getTileInfo( );
+
+		fillBuildables( );
 	}
 
 	public void setCoords( Pair< Integer, Integer > coords )
@@ -627,18 +681,12 @@ public class TileViewController extends AbstractAppState implements ScreenContro
 		return this.currentTile;
 	}
 
-	public boolean keyEvent( NiftyInputEvent inputEvent )
-	{
-		return false;
-	}
-
-	public void nextScreen( String screen )
-	{
-		this.app.getNifty( ).gotoScreen( screen );
-	}
-
 	public void onEndScreen( )
 	{
+		if ( locationSet != null )
+		{
+			locationSet.clear( );
+		}
 		logger.log( Level.INFO, "Tile Screen Stopped" );
 	}
 

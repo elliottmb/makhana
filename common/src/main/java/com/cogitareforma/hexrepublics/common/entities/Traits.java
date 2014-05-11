@@ -3,6 +3,7 @@ package com.cogitareforma.hexrepublics.common.entities;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -32,6 +33,7 @@ import com.simsilica.es.Entity;
 import com.simsilica.es.EntityComponent;
 import com.simsilica.es.EntityData;
 import com.simsilica.es.EntityId;
+import com.simsilica.es.EntitySet;
 
 /**
  * 
@@ -81,14 +83,14 @@ public class Traits
 		return false;
 	}
 
-	public static < T extends EntityComponent > int countBuildings( EntityData entityData, Set< EntityId > idSet )
+	public static int countBuildings( EntityData entityData, Set< EntityId > idSet )
 	{
 		int count = 0;
 		for ( EntityId id : idSet )
 		{
-			for ( Class< ? > c : buildingTraits )
+			for ( Class< ? extends EntityComponent > c : buildingTraits )
 			{
-				if ( entityData.getComponent( id, ( Class< T > ) c ) != null )
+				if ( entityData.getComponent( id, c ) != null )
 				{
 					count++;
 					break;
@@ -98,14 +100,14 @@ public class Traits
 		return count;
 	}
 
-	public static < T extends EntityComponent > int countUnits( EntityData entityData, Set< EntityId > idSet )
+	public static int countUnits( EntityData entityData, Set< EntityId > idSet )
 	{
 		int count = 0;
 		for ( EntityId id : idSet )
 		{
-			for ( Class< ? > c : unitTraits )
+			for ( Class< ? extends EntityComponent > c : unitTraits )
 			{
-				if ( entityData.getComponent( id, ( Class< T > ) c ) != null )
+				if ( entityData.getComponent( id, c ) != null )
 				{
 					count++;
 					break;
@@ -113,6 +115,26 @@ public class Traits
 			}
 		}
 		return count;
+	}
+
+	public static int countBuildings( EntityData entityData, EntitySet entitySet )
+	{
+		Set< EntityId > idSet = new HashSet< EntityId >( entitySet.size( ) );
+		for ( Entity e : entitySet )
+		{
+			idSet.add( e.getId( ) );
+		}
+		return countBuildings( entityData, idSet );
+	}
+
+	public static int countUnits( EntityData entityData, EntitySet entitySet )
+	{
+		Set< EntityId > idSet = new HashSet< EntityId >( entitySet.size( ) );
+		for ( Entity e : entitySet )
+		{
+			idSet.add( e.getId( ) );
+		}
+		return countUnits( entityData, idSet );
 	}
 
 	/**
@@ -167,11 +189,11 @@ public class Traits
 		}
 	}
 
-	public static < T extends EntityComponent > Pair< String, Double > getActionDetails( EntityData entityData, EntityId id )
+	public static Pair< String, Double > getActionDetails( EntityData entityData, EntityId id )
 	{
-		for ( Class< ? > actionTrait : actionTraits )
+		for ( Class< ? extends EntityComponent > actionTrait : actionTraits )
 		{
-			ActionTrait at = ( ActionTrait ) entityData.getComponent( id, ( Class< T > ) actionTrait );
+			ActionTrait at = ( ActionTrait ) entityData.getComponent( id, actionTrait );
 			if ( at != null )
 			{
 				double time = ( at.getStartTime( ).getTime( ) + at.getDuration( ) - new Date( ).getTime( ) ) / 60000.0;
@@ -198,11 +220,12 @@ public class Traits
 	public static < T extends EntityComponent > float getDefense( EntityData entityData, EntityId id )
 	{
 		float str = 0f;
-		for ( Class< ? > c : unitTraits )
+		for ( Class< ? extends EntityComponent > c : unitTraits )
 		{
-			if ( entityData.getComponent( id, ( Class< T > ) c ) != null )
+			TypeTrait tt = ( TypeTrait ) entityData.getComponent( id, c );
+			if ( tt != null )
 			{
-				str += ( ( TypeTrait ) entityData.getComponent( id, ( Class< T > ) c ) ).getInitialDefense( );
+				str += tt.getInitialDefense( );
 			}
 		}
 		return str;
@@ -257,17 +280,21 @@ public class Traits
 
 			if ( theEntity != null )
 			{
-				if ( theEntity.get( CreatedBy.class ) != null )
+				CreatedBy createdBy = theEntity.get( CreatedBy.class );
+				if ( createdBy != null )
 				{
-					ownerId = theEntity.get( CreatedBy.class ).getCreatorId( );
+					ownerId = createdBy.getCreatorId( );
 				}
 
-				if ( ownerId == null && theEntity.get( LocationTrait.class ) != null )
+				if ( ownerId == null )
 				{
 					LocationTrait location = theEntity.get( LocationTrait.class );
-					if ( location.getTile( ) != null )
+					if ( location != null )
 					{
-						ownerId = getOwner( entityData, location.getTile( ) );
+						if ( location.getTile( ) != null )
+						{
+							ownerId = getOwner( entityData, location.getTile( ) );
+						}
 					}
 				}
 			}
@@ -292,14 +319,15 @@ public class Traits
 		return new Vector3f( x, y, z );
 	}
 
-	public static < T extends EntityComponent > float getStrength( EntityData entityData, EntityId id )
+	public static float getStrength( EntityData entityData, EntityId id )
 	{
 		float str = 0f;
-		for ( Class< ? > c : unitTraits )
+		for ( Class< ? extends EntityComponent > c : unitTraits )
 		{
-			if ( entityData.getComponent( id, ( Class< T > ) c ) != null )
+			TypeTrait tt = ( TypeTrait ) entityData.getComponent( id, c );
+			if ( tt != null )
 			{
-				str += ( ( TypeTrait ) entityData.getComponent( id, ( Class< T > ) c ) ).getInitialStrength( );
+				str += tt.getInitialStrength( );
 			}
 		}
 		return str;
@@ -318,8 +346,23 @@ public class Traits
 		return subTraits;
 	}
 
-	public static < T extends EntityComponent > boolean hasPrerequisites( EntityData entityData, Set< EntityId > idSet,
-			Class< ? >... prerequisites )
+	@SafeVarargs
+	public static boolean hasPrerequisites( EntityData entityData, EntitySet entitySet, Class< ? extends EntityComponent >... prerequisites )
+	{
+		if ( prerequisites.length > 0 )
+		{
+			Set< EntityId > idSet = new HashSet< EntityId >( entitySet.size( ) );
+			for ( Entity e : entitySet )
+			{
+				idSet.add( e.getId( ) );
+			}
+			return hasPrerequisites( entityData, idSet, prerequisites );
+		}
+		return false;
+	}
+
+	public static boolean hasPrerequisites( EntityData entityData, Set< EntityId > idSet,
+			Class< ? extends EntityComponent >... prerequisites )
 	{
 		if ( prerequisites.length > 0 )
 		{
@@ -328,7 +371,7 @@ public class Traits
 			{
 				for ( EntityId id : idSet )
 				{
-					if ( entityData.getComponent( id, ( Class< T > ) prerequisites[ i ] ) != null )
+					if ( entityData.getComponent( id, prerequisites[ i ] ) != null )
 					{
 						if ( !inAction( entityData, id ) )
 						{
@@ -351,11 +394,11 @@ public class Traits
 		return false;
 	}
 
-	public static < T extends EntityComponent > boolean inAction( EntityData entityData, EntityId id )
+	public static boolean inAction( EntityData entityData, EntityId id )
 	{
-		for ( Class< ? > c : actionTraits )
+		for ( Class< ? extends EntityComponent > c : actionTraits )
 		{
-			if ( entityData.getComponent( id, ( Class< T > ) c ) != null )
+			if ( entityData.getComponent( id, c ) != null )
 			{
 				return true;
 			}
@@ -363,11 +406,11 @@ public class Traits
 		return false;
 	}
 
-	public static < T extends EntityComponent > boolean isBuilding( EntityData entityData, EntityId id )
+	public static boolean isBuilding( EntityData entityData, EntityId id )
 	{
-		for ( Class< ? > c : buildingTraits )
+		for ( Class< ? extends EntityComponent > c : buildingTraits )
 		{
-			if ( entityData.getComponent( id, ( Class< T > ) c ) != null )
+			if ( entityData.getComponent( id, c ) != null )
 			{
 				return true;
 			}
@@ -375,11 +418,11 @@ public class Traits
 		return false;
 	}
 
-	public static < T extends EntityComponent > boolean isUnit( EntityData entityData, EntityId id )
+	public static boolean isUnit( EntityData entityData, EntityId id )
 	{
-		for ( Class< ? > c : unitTraits )
+		for ( Class< ? extends EntityComponent > c : unitTraits )
 		{
-			if ( entityData.getComponent( id, ( Class< T > ) c ) != null )
+			if ( entityData.getComponent( id, c ) != null )
 			{
 				return true;
 			}
