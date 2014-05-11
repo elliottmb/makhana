@@ -112,7 +112,9 @@ public class TileViewController extends AbstractAppState implements ScreenContro
 					{
 						updateExisting( e );
 					}
+					
 					current.refresh( );
+					fillBuildables( );
 					refreshLimiter = 0;
 				}
 				else
