@@ -1,5 +1,6 @@
 package com.cogitareforma.hexrepublics.client.views;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Stack;
@@ -8,7 +9,6 @@ import java.util.logging.Logger;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-import com.cogitareforma.hexrepublics.client.ClientMain;
 import com.cogitareforma.hexrepublics.client.util.EntityEntryModelClass;
 import com.cogitareforma.hexrepublics.common.entities.Traits;
 import com.cogitareforma.hexrepublics.common.entities.traits.ArcherTrait;
@@ -34,7 +34,6 @@ import com.cogitareforma.hexrepublics.common.entities.traits.TrebuchetTrait;
 import com.cogitareforma.hexrepublics.common.net.msg.EntityActionRequest;
 import com.cogitareforma.hexrepublics.common.net.msg.EntityCreationRequest;
 import com.jme3.app.Application;
-import com.jme3.app.state.AbstractAppState;
 import com.jme3.app.state.AppState;
 import com.jme3.app.state.AppStateManager;
 import com.simsilica.es.ComponentFilter;
@@ -45,14 +44,11 @@ import com.simsilica.es.client.RemoteEntityData;
 import com.simsilica.es.filter.AndFilter;
 import com.simsilica.es.filter.FieldFilter;
 
-import de.lessvoid.nifty.Nifty;
 import de.lessvoid.nifty.NiftyEventSubscriber;
 import de.lessvoid.nifty.controls.Label;
 import de.lessvoid.nifty.controls.ListBox;
 import de.lessvoid.nifty.controls.ListBoxSelectionChangedEvent;
 import de.lessvoid.nifty.elements.Element;
-import de.lessvoid.nifty.screen.Screen;
-import de.lessvoid.nifty.screen.ScreenController;
 
 /**
  * 
@@ -60,119 +56,37 @@ import de.lessvoid.nifty.screen.ScreenController;
  * @author Elliott Butler
  * 
  */
-public class TileViewController extends AbstractAppState implements ScreenController
+public class TileViewController extends GeneralPlayingController
 {
+
 	/**
 	 * The logger for this class.
 	 */
 	private final static Logger logger = Logger.getLogger( TileViewController.class.getName( ) );
 
-	private ClientMain app;
 	private ListBox< EntityEntryModelClass > current;
+
 	private ListBox< String > build;
 	private Pair< Integer, Integer > currentTile;
 	private EntityId currentUnit;
 	private EntitySet locationSet;
 	private RemoteEntityData entityData;
 	private EntityId findTile;
-
+	private ArrayList< Entity > inAction;
 	private float refreshLimiter = 0;
-
 	private Element move;
 
-	public void bind( Nifty nifty, Screen screen )
+	public void addToExisting( Entity entity )
 	{
+		EntityId id = entity.getId( );
+
+		EntityEntryModelClass eemc = new EntityEntryModelClass( id, createDisplayText( id ) );
+		current.addItem( eemc );
 	}
 
-	/**
-	 * Close the tile view and return to the hud view.
-	 */
-	public void exitView( )
+	public void closeMove( )
 	{
-		app.enqueue( ( ) ->
-		{
-			app.getStateManager( ).detach( ( AppState ) app.getNifty( ).getCurrentScreen( ).getScreenController( ) );
-			app.getNifty( ).removeScreen( "tile" );
-			app.getNifty( ).gotoScreen( "hud" );
-			return null;
-		} );
-	}
-
-	@Override
-	public void update( float tpf )
-	{
-		if ( "tile".equals( app.getNifty( ).getCurrentScreen( ).getScreenId( ) ) )
-		{
-
-			if ( locationSet != null )
-			{
-				if ( refreshLimiter > 1 )
-				{
-					for ( Entity e : locationSet )
-					{
-						updateExisting( e );
-					}
-					
-					current.refresh( );
-					fillBuildables( );
-					refreshLimiter = 0;
-				}
-				else
-				{
-					refreshLimiter += tpf;
-				}
-
-				if ( locationSet.applyChanges( ) )
-				{
-					for ( Entity e : locationSet.getAddedEntities( ) )
-					{
-						addToExisting( e );
-					}
-					for ( Entity e : locationSet.getRemovedEntities( ) )
-					{
-						removeFromExisting( e );
-					}
-
-					fillBuildables( );
-				}
-
-			}
-			else
-			{
-				ComponentFilter< LocationTrait > locationFilter = FieldFilter.create( LocationTrait.class, "tile", findTile );
-				locationSet = entityData.getEntities( locationFilter, LocationTrait.class );
-			}
-
-		}
-	}
-
-	public void updateExisting( Entity entity )
-	{
-		for ( EntityEntryModelClass eemc : current.getItems( ) )
-		{
-			if ( eemc.getEntityId( ).equals( entity.getId( ) ) )
-			{
-				eemc.setName( createDisplayText( entity.getId( ) ) );
-			}
-		}
-	}
-
-	public void removeFromExisting( Entity entity )
-	{
-		EntityEntryModelClass toRemove = null;
-		for ( EntityEntryModelClass eemc : current.getItems( ) )
-		{
-			if ( eemc.getEntityId( ).equals( entity.getId( ) ) )
-			{
-				toRemove = eemc;
-				break;
-			}
-		}
-
-		if ( toRemove != null )
-		{
-			current.removeItem( toRemove );
-		}
+		getApp( ).getNifty( ).closePopup( "move" );
 	}
 
 	public String createDisplayText( EntityId id )
@@ -269,273 +183,12 @@ public class TileViewController extends AbstractAppState implements ScreenContro
 		return existing;
 	}
 
-	public void addToExisting( Entity entity )
+	/**
+	 * Close the tile view and return to the hud view.
+	 */
+	public void exitView( )
 	{
-		EntityId id = entity.getId( );
-
-		EntityEntryModelClass eemc = new EntityEntryModelClass( id, createDisplayText( id ) );
-		current.addItem( eemc );
-	}
-
-	@SuppressWarnings( "unchecked" )
-	public void moveCommand( String direction )
-	{
-		String unit = move.findNiftyControl( "unit", Label.class ).getText( );
-		System.out.println( "Trying to move " + unit + " with EntityId of " + currentUnit + " " + direction );
-		if ( currentUnit != null )
-		{
-			int x = this.currentTile.getLeft( );
-			int y = this.currentTile.getRight( );
-
-			List< List< Pair< Integer, Integer > >> neighbors = Traits.neighbors;
-
-			int parity = x % 2;
-			switch ( direction )
-			{
-
-				case "NW":
-				{
-					x += neighbors.get( parity ).get( 0 ).getLeft( );
-					y += neighbors.get( parity ).get( 0 ).getRight( );
-					break;
-				}
-				case "SW":
-				{
-					x += neighbors.get( parity ).get( 1 ).getLeft( );
-					y += neighbors.get( parity ).get( 1 ).getRight( );
-					break;
-				}
-				case "S":
-				{
-					x += neighbors.get( parity ).get( 2 ).getLeft( );
-					y += neighbors.get( parity ).get( 2 ).getRight( );
-					break;
-				}
-
-				case "SE":
-				{
-					x += neighbors.get( parity ).get( 3 ).getLeft( );
-					y += neighbors.get( parity ).get( 3 ).getRight( );
-					break;
-				}
-				case "NE":
-				{
-					x += neighbors.get( parity ).get( 4 ).getLeft( );
-					y += neighbors.get( parity ).get( 4 ).getRight( );
-					break;
-				}
-				case "N":
-				{
-					x += neighbors.get( parity ).get( 5 ).getLeft( );
-					y += neighbors.get( parity ).get( 5 ).getRight( );
-					break;
-				}
-			}
-
-			if ( x >= 0 && y >= 0 && x < 16 && y < 14 )
-			{
-				ComponentFilter< TileTrait > xFilter = FieldFilter.create( TileTrait.class, "x", x );
-				ComponentFilter< TileTrait > yFilter = FieldFilter.create( TileTrait.class, "y", y );
-				ComponentFilter< TileTrait > completeFilter = AndFilter.create( TileTrait.class, xFilter, yFilter );
-				EntityId nextTile = entityData.findEntity( completeFilter, TileTrait.class );
-
-				if ( nextTile != null )
-				{
-					app.getGameConnManager( ).send(
-							new EntityActionRequest( currentUnit, new MoveTrait( new Date( ), Traits.getMovementModifier( entityData,
-									currentUnit ), nextTile ) ) );
-				}
-			}
-		}
-
-		app.getNifty( ).closePopup( "move" );
-	}
-
-	@NiftyEventSubscriber( id = "existBox" )
-	public void onListBoxSelectionChanged2( final String id, final ListBoxSelectionChangedEvent< EntityEntryModelClass > event )
-	{
-		if ( event != null && event.getSelection( ) != null && event.getSelection( ).size( ) > 0 )
-		{
-			if ( Traits.isUnit( entityData, event.getSelection( ).get( 0 ).getEntityId( ) ) )
-			{
-				if ( !Traits.inAction( entityData, event.getSelection( ).get( 0 ).getEntityId( ) ) )
-				{
-					Label unit = move.findNiftyControl( "unit", Label.class );
-					if ( "Archer".equals( event.getSelection( ).get( 0 ).getName( ) ) )
-					{
-						unit.setText( "A" );
-					}
-					if ( "Mounted Archer".equals( event.getSelection( ).get( 0 ).getName( ) ) )
-					{
-						unit.setText( "MA" );
-					}
-					if ( "Clubman".equals( event.getSelection( ).get( 0 ).getName( ) ) )
-					{
-						unit.setText( "C" );
-					}
-					if ( "Mounted Clubman".equals( event.getSelection( ).get( 0 ).getName( ) ) )
-					{
-						unit.setText( "MC" );
-					}
-					if ( "Axeman".equals( event.getSelection( ).get( 0 ).getName( ) ) )
-					{
-						unit.setText( "AX" );
-					}
-					if ( "Catapult".equals( event.getSelection( ).get( 0 ).getName( ) ) )
-					{
-						unit.setText( "CA" );
-					}
-					if ( "Crossbowman".equals( event.getSelection( ).get( 0 ).getName( ) ) )
-					{
-						unit.setText( "CB" );
-					}
-					if ( "Krieger".equals( event.getSelection( ).get( 0 ).getName( ) ) )
-					{
-						unit.setText( "K" );
-					}
-					if ( "Longbowman".equals( event.getSelection( ).get( 0 ).getName( ) ) )
-					{
-						unit.setText( "LB" );
-					}
-					if ( "Pikeman".equals( event.getSelection( ).get( 0 ).getName( ) ) )
-					{
-						unit.setText( "P" );
-					}
-					if ( "Swordsman".equals( event.getSelection( ).get( 0 ).getName( ) ) )
-					{
-						unit.setText( "S" );
-					}
-					if ( "Trebuchet".equals( event.getSelection( ).get( 0 ).getName( ) ) )
-					{
-						unit.setText( "T" );
-					}
-					currentUnit = event.getSelection( ).get( 0 ).getEntityId( );
-					app.getNifty( ).showPopup( app.getNifty( ).getCurrentScreen( ), "move", null );
-				}
-			}
-		}
-
-	}
-
-	@NiftyEventSubscriber( id = "buildBox" )
-	public void onListBoxSelectionChanged( final String id, final ListBoxSelectionChangedEvent< String > event )
-	{
-		if ( event != null && event.getSelection( ) != null && event.getSelection( ).size( ) > 0 )
-		{
-			ComponentFilter< TileTrait > xFilter = FieldFilter.create( TileTrait.class, "x", this.currentTile.getLeft( ) );
-			ComponentFilter< TileTrait > yFilter = FieldFilter.create( TileTrait.class, "y", this.currentTile.getRight( ) );
-			@SuppressWarnings( "unchecked" )
-			ComponentFilter< TileTrait > completeFilter = AndFilter.create( TileTrait.class, xFilter, yFilter );
-			EntityId location = app.getGameConnManager( ).getRemoteEntityData( ).findEntity( completeFilter, TileTrait.class );
-			// BUILDINGS
-			if ( "Build Archery".equals( event.getSelection( ).get( 0 ) ) )
-			{
-				System.out.println( "Tyring to build Archery" );
-				app.getGameConnManager( )
-						.send( new EntityCreationRequest( new LocationTrait( location, ( byte ) 0 ), new ArcheryTrait( ) ) );
-			}
-			if ( "Build Barracks".equals( event.getSelection( ).get( 0 ) ) )
-			{
-				System.out.println( "Trying to build Barracks" );
-				app.getGameConnManager( )
-						.send( new EntityCreationRequest( new LocationTrait( location, ( byte ) 0 ), new BarracksTrait( ) ) );
-			}
-			if ( "Build Stables".equals( event.getSelection( ).get( 0 ) ) )
-			{
-				System.out.println( "Trying to build Stables" );
-				app.getGameConnManager( )
-						.send( new EntityCreationRequest( new LocationTrait( location, ( byte ) 0 ), new StablesTrait( ) ) );
-			}
-			if ( "Build Forge".equals( event.getSelection( ).get( 0 ) ) )
-			{
-				System.out.println( "Trying to build Forge" );
-				app.getGameConnManager( ).send( new EntityCreationRequest( new LocationTrait( location, ( byte ) 0 ), new ForgeTrait( ) ) );
-			}
-			if ( "Build Sawmill".equals( event.getSelection( ).get( 0 ) ) )
-			{
-				System.out.println( "Trying to build Sawmill" );
-				app.getGameConnManager( )
-						.send( new EntityCreationRequest( new LocationTrait( location, ( byte ) 0 ), new SawmillTrait( ) ) );
-			}
-			if ( "Build Machine Works".equals( event.getSelection( ).get( 0 ) ) )
-			{
-				System.out.println( "Trying to build Machine Works" );
-				app.getGameConnManager( ).send(
-						new EntityCreationRequest( new LocationTrait( location, ( byte ) 0 ), new MachineWorksTrait( ) ) );
-			}
-
-			// UNITS
-			if ( "Build Archer".equals( event.getSelection( ).get( 0 ) ) )
-			{
-				System.out.println( "Trying to build Archer" );
-				app.getGameConnManager( ).send( new EntityCreationRequest( new LocationTrait( location, ( byte ) 0 ), new ArcherTrait( ) ) );
-			}
-			if ( "Build Clubman".equals( event.getSelection( ).get( 0 ) ) )
-			{
-				System.out.println( "Trying to build Clubman" );
-				app.getGameConnManager( )
-						.send( new EntityCreationRequest( new LocationTrait( location, ( byte ) 0 ), new ClubmanTrait( ) ) );
-			}
-			if ( "Build Mounted Archer".equals( event.getSelection( ).get( 0 ) ) )
-			{
-				System.out.println( "Tyring to build Mounted Archer" );
-				app.getGameConnManager( ).send(
-						new EntityCreationRequest( new LocationTrait( location, ( byte ) 0 ), new ArcherTrait( ), new MountedTrait( ) ) );
-			}
-			if ( "Build Mounted Clubman".equals( event.getSelection( ).get( 0 ) ) )
-			{
-				System.out.println( "Trying to build Mounted Clubman" );
-				app.getGameConnManager( ).send(
-						new EntityCreationRequest( new LocationTrait( location, ( byte ) 0 ), new ClubmanTrait( ), new MountedTrait( ) ) );
-			}
-			if ( "Build Axeman".equals( event.getSelection( ).get( 0 ) ) )
-			{
-				System.out.println( "Trying to build Axeman" );
-				app.getGameConnManager( ).send( new EntityCreationRequest( new LocationTrait( location, ( byte ) 0 ), new AxemanTrait( ) ) );
-			}
-			if ( "Build Catapult".equals( event.getSelection( ).get( 0 ) ) )
-			{
-				System.out.println( "Trying to build Catapult" );
-				app.getGameConnManager( )
-						.send( new EntityCreationRequest( new LocationTrait( location, ( byte ) 0 ), new CatapultTrait( ) ) );
-			}
-			if ( "Build Crossbowman".equals( event.getSelection( ).get( 0 ) ) )
-			{
-				System.out.println( "Trying to build Crossbowman" );
-				app.getGameConnManager( )
-						.send( new EntityCreationRequest( new LocationTrait( location, ( byte ) 0 ), new CrossbowTrait( ) ) );
-			}
-			if ( "Build Krieger".equals( event.getSelection( ).get( 0 ) ) )
-			{
-				System.out.println( "Trying to build Krieger" );
-				app.getGameConnManager( )
-						.send( new EntityCreationRequest( new LocationTrait( location, ( byte ) 0 ), new KriegerTrait( ) ) );
-			}
-			if ( "Build Longbowman".equals( event.getSelection( ).get( 0 ) ) )
-			{
-				System.out.println( "Trying to build Longbowman" );
-				app.getGameConnManager( )
-						.send( new EntityCreationRequest( new LocationTrait( location, ( byte ) 0 ), new LongbowTrait( ) ) );
-			}
-			if ( "Build Pikeman".equals( event.getSelection( ).get( 0 ) ) )
-			{
-				System.out.println( "Trying to build Pikeman" );
-				app.getGameConnManager( )
-						.send( new EntityCreationRequest( new LocationTrait( location, ( byte ) 0 ), new PikemanTrait( ) ) );
-			}
-			if ( "Build Swordsman".equals( event.getSelection( ).get( 0 ) ) )
-			{
-				System.out.println( "Trying to build Swordsman" );
-				app.getGameConnManager( ).send(
-						new EntityCreationRequest( new LocationTrait( location, ( byte ) 0 ), new SwordsmanTrait( ) ) );
-			}
-			if ( "Build Trebuchet".equals( event.getSelection( ).get( 0 ) ) )
-			{
-				System.out.println( "Trying to build Trebuchet" );
-				app.getGameConnManager( ).send(
-						new EntityCreationRequest( new LocationTrait( location, ( byte ) 0 ), new TrebuchetTrait( ) ) );
-			}
-		}
+		gotoScreen( "hud", true, false, true, null, null );
 	}
 
 	public void fillBuildables( )
@@ -630,6 +283,11 @@ public class TileViewController extends AbstractAppState implements ScreenContro
 		}
 	}
 
+	public Pair< Integer, Integer > getCoords( )
+	{
+		return this.currentTile;
+	}
+
 	/**
 	 * Updates and displays selected tile info.
 	 */
@@ -637,12 +295,13 @@ public class TileViewController extends AbstractAppState implements ScreenContro
 	@Override
 	public void initialize( AppStateManager stateManager, Application app )
 	{
+		setScreenId( "tile" );
 		super.initialize( stateManager, app );
-		this.app = ( ClientMain ) app;
-		current = this.app.getNifty( ).getCurrentScreen( ).findNiftyControl( "existBox", ListBox.class );
-		build = this.app.getNifty( ).getScreen( "tile" ).findNiftyControl( "buildBox", ListBox.class );
-		move = this.app.getNifty( ).createPopupWithId( "move", "move" );
-		entityData = this.app.getGameConnManager( ).getRemoteEntityData( );
+
+		current = getApp( ).getNifty( ).getCurrentScreen( ).findNiftyControl( "existBox", ListBox.class );
+		build = getApp( ).getNifty( ).getScreen( "tile" ).findNiftyControl( "buildBox", ListBox.class );
+		move = getApp( ).getNifty( ).createPopupWithId( "move", "move" );
+		entityData = getApp( ).getGameConnManager( ).getRemoteEntityData( );
 		ComponentFilter< TileTrait > xFilter = FieldFilter.create( TileTrait.class, "x", this.currentTile.getLeft( ) );
 		ComponentFilter< TileTrait > yFilter = FieldFilter.create( TileTrait.class, "y", this.currentTile.getRight( ) );
 		ComponentFilter< TileTrait > completeFilter = AndFilter.create( TileTrait.class, xFilter, yFilter );
@@ -650,6 +309,8 @@ public class TileViewController extends AbstractAppState implements ScreenContro
 
 		ComponentFilter< LocationTrait > locationFilter = FieldFilter.create( LocationTrait.class, "tile", findTile );
 		locationSet = entityData.getEntities( locationFilter, LocationTrait.class );
+
+		inAction = new ArrayList< Entity >( );
 
 		if ( locationSet != null )
 		{
@@ -663,9 +324,321 @@ public class TileViewController extends AbstractAppState implements ScreenContro
 		}
 
 		logger.log( Level.INFO, "Initialised " + this.getClass( ) );
-		this.app.currentScreen = "tile";
+		getApp( ).currentScreen = "tile";
 
 		fillBuildables( );
+	}
+
+	@SuppressWarnings( "unchecked" )
+	public void moveCommand( String direction )
+	{
+		String unit = move.findNiftyControl( "unit", Label.class ).getText( );
+		System.out.println( "Trying to move " + unit + " with EntityId of " + currentUnit + " " + direction );
+		if ( currentUnit != null )
+		{
+			int x = this.currentTile.getLeft( );
+			int y = this.currentTile.getRight( );
+
+			List< List< Pair< Integer, Integer > >> neighbors = Traits.neighbors;
+
+			int parity = x % 2;
+			switch ( direction )
+			{
+
+				case "NW":
+				{
+					x += neighbors.get( parity ).get( 0 ).getLeft( );
+					y += neighbors.get( parity ).get( 0 ).getRight( );
+					break;
+				}
+				case "SW":
+				{
+					x += neighbors.get( parity ).get( 1 ).getLeft( );
+					y += neighbors.get( parity ).get( 1 ).getRight( );
+					break;
+				}
+				case "S":
+				{
+					x += neighbors.get( parity ).get( 2 ).getLeft( );
+					y += neighbors.get( parity ).get( 2 ).getRight( );
+					break;
+				}
+
+				case "SE":
+				{
+					x += neighbors.get( parity ).get( 3 ).getLeft( );
+					y += neighbors.get( parity ).get( 3 ).getRight( );
+					break;
+				}
+				case "NE":
+				{
+					x += neighbors.get( parity ).get( 4 ).getLeft( );
+					y += neighbors.get( parity ).get( 4 ).getRight( );
+					break;
+				}
+				case "N":
+				{
+					x += neighbors.get( parity ).get( 5 ).getLeft( );
+					y += neighbors.get( parity ).get( 5 ).getRight( );
+					break;
+				}
+			}
+
+			if ( x >= 0 && y >= 0 && x < 16 && y < 14 )
+			{
+				ComponentFilter< TileTrait > xFilter = FieldFilter.create( TileTrait.class, "x", x );
+				ComponentFilter< TileTrait > yFilter = FieldFilter.create( TileTrait.class, "y", y );
+				ComponentFilter< TileTrait > completeFilter = AndFilter.create( TileTrait.class, xFilter, yFilter );
+				EntityId nextTile = entityData.findEntity( completeFilter, TileTrait.class );
+
+				if ( nextTile != null )
+				{
+					getApp( ).getGameConnManager( ).send(
+							new EntityActionRequest( currentUnit, new MoveTrait( new Date( ), Traits.getMovementModifier( entityData,
+									currentUnit ), nextTile ) ) );
+				}
+			}
+		}
+
+		getApp( ).getNifty( ).closePopup( "move" );
+	}
+
+	public void onEndScreen( )
+	{
+		super.onEndScreen( );
+		if ( locationSet != null )
+		{
+			locationSet.clear( );
+		}
+	}
+
+	@NiftyEventSubscriber( id = "buildBox" )
+	public void onListBoxSelectionChanged( final String id, final ListBoxSelectionChangedEvent< String > event )
+	{
+		if ( event != null && event.getSelection( ) != null && event.getSelection( ).size( ) > 0 )
+		{
+			ComponentFilter< TileTrait > xFilter = FieldFilter.create( TileTrait.class, "x", this.currentTile.getLeft( ) );
+			ComponentFilter< TileTrait > yFilter = FieldFilter.create( TileTrait.class, "y", this.currentTile.getRight( ) );
+			@SuppressWarnings( "unchecked" )
+			ComponentFilter< TileTrait > completeFilter = AndFilter.create( TileTrait.class, xFilter, yFilter );
+			EntityId location = getApp( ).getGameConnManager( ).getRemoteEntityData( ).findEntity( completeFilter, TileTrait.class );
+			// BUILDINGS
+			if ( "Build Archery".equals( event.getSelection( ).get( 0 ) ) )
+			{
+				System.out.println( "Tyring to build Archery" );
+				getApp( ).getGameConnManager( ).send(
+						new EntityCreationRequest( new LocationTrait( location, ( byte ) 0 ), new ArcheryTrait( ) ) );
+			}
+			if ( "Build Barracks".equals( event.getSelection( ).get( 0 ) ) )
+			{
+				System.out.println( "Trying to build Barracks" );
+				getApp( ).getGameConnManager( ).send(
+						new EntityCreationRequest( new LocationTrait( location, ( byte ) 0 ), new BarracksTrait( ) ) );
+			}
+			if ( "Build Stables".equals( event.getSelection( ).get( 0 ) ) )
+			{
+				System.out.println( "Trying to build Stables" );
+				getApp( ).getGameConnManager( ).send(
+						new EntityCreationRequest( new LocationTrait( location, ( byte ) 0 ), new StablesTrait( ) ) );
+			}
+			if ( "Build Forge".equals( event.getSelection( ).get( 0 ) ) )
+			{
+				System.out.println( "Trying to build Forge" );
+				getApp( ).getGameConnManager( ).send(
+						new EntityCreationRequest( new LocationTrait( location, ( byte ) 0 ), new ForgeTrait( ) ) );
+			}
+			if ( "Build Sawmill".equals( event.getSelection( ).get( 0 ) ) )
+			{
+				System.out.println( "Trying to build Sawmill" );
+				getApp( ).getGameConnManager( ).send(
+						new EntityCreationRequest( new LocationTrait( location, ( byte ) 0 ), new SawmillTrait( ) ) );
+			}
+			if ( "Build Machine Works".equals( event.getSelection( ).get( 0 ) ) )
+			{
+				System.out.println( "Trying to build Machine Works" );
+				getApp( ).getGameConnManager( ).send(
+						new EntityCreationRequest( new LocationTrait( location, ( byte ) 0 ), new MachineWorksTrait( ) ) );
+			}
+
+			// UNITS
+			if ( "Build Archer".equals( event.getSelection( ).get( 0 ) ) )
+			{
+				System.out.println( "Trying to build Archer" );
+				getApp( ).getGameConnManager( ).send(
+						new EntityCreationRequest( new LocationTrait( location, ( byte ) 0 ), new ArcherTrait( ) ) );
+			}
+			if ( "Build Clubman".equals( event.getSelection( ).get( 0 ) ) )
+			{
+				System.out.println( "Trying to build Clubman" );
+				getApp( ).getGameConnManager( ).send(
+						new EntityCreationRequest( new LocationTrait( location, ( byte ) 0 ), new ClubmanTrait( ) ) );
+			}
+			if ( "Build Mounted Archer".equals( event.getSelection( ).get( 0 ) ) )
+			{
+				System.out.println( "Tyring to build Mounted Archer" );
+				getApp( ).getGameConnManager( ).send(
+						new EntityCreationRequest( new LocationTrait( location, ( byte ) 0 ), new ArcherTrait( ), new MountedTrait( ) ) );
+			}
+			if ( "Build Mounted Clubman".equals( event.getSelection( ).get( 0 ) ) )
+			{
+				System.out.println( "Trying to build Mounted Clubman" );
+				getApp( ).getGameConnManager( ).send(
+						new EntityCreationRequest( new LocationTrait( location, ( byte ) 0 ), new ClubmanTrait( ), new MountedTrait( ) ) );
+			}
+			if ( "Build Axeman".equals( event.getSelection( ).get( 0 ) ) )
+			{
+				System.out.println( "Trying to build Axeman" );
+				getApp( ).getGameConnManager( ).send(
+						new EntityCreationRequest( new LocationTrait( location, ( byte ) 0 ), new AxemanTrait( ) ) );
+			}
+			if ( "Build Catapult".equals( event.getSelection( ).get( 0 ) ) )
+			{
+				System.out.println( "Trying to build Catapult" );
+				getApp( ).getGameConnManager( ).send(
+						new EntityCreationRequest( new LocationTrait( location, ( byte ) 0 ), new CatapultTrait( ) ) );
+			}
+			if ( "Build Crossbowman".equals( event.getSelection( ).get( 0 ) ) )
+			{
+				System.out.println( "Trying to build Crossbowman" );
+				getApp( ).getGameConnManager( ).send(
+						new EntityCreationRequest( new LocationTrait( location, ( byte ) 0 ), new CrossbowTrait( ) ) );
+			}
+			if ( "Build Krieger".equals( event.getSelection( ).get( 0 ) ) )
+			{
+				System.out.println( "Trying to build Krieger" );
+				getApp( ).getGameConnManager( ).send(
+						new EntityCreationRequest( new LocationTrait( location, ( byte ) 0 ), new KriegerTrait( ) ) );
+			}
+			if ( "Build Longbowman".equals( event.getSelection( ).get( 0 ) ) )
+			{
+				System.out.println( "Trying to build Longbowman" );
+				getApp( ).getGameConnManager( ).send(
+						new EntityCreationRequest( new LocationTrait( location, ( byte ) 0 ), new LongbowTrait( ) ) );
+			}
+			if ( "Build Pikeman".equals( event.getSelection( ).get( 0 ) ) )
+			{
+				System.out.println( "Trying to build Pikeman" );
+				getApp( ).getGameConnManager( ).send(
+						new EntityCreationRequest( new LocationTrait( location, ( byte ) 0 ), new PikemanTrait( ) ) );
+			}
+			if ( "Build Swordsman".equals( event.getSelection( ).get( 0 ) ) )
+			{
+				System.out.println( "Trying to build Swordsman" );
+				getApp( ).getGameConnManager( ).send(
+						new EntityCreationRequest( new LocationTrait( location, ( byte ) 0 ), new SwordsmanTrait( ) ) );
+			}
+			if ( "Build Trebuchet".equals( event.getSelection( ).get( 0 ) ) )
+			{
+				System.out.println( "Trying to build Trebuchet" );
+				getApp( ).getGameConnManager( ).send(
+						new EntityCreationRequest( new LocationTrait( location, ( byte ) 0 ), new TrebuchetTrait( ) ) );
+			}
+		}
+	}
+
+	@NiftyEventSubscriber( id = "existBox" )
+	public void onListBoxSelectionChanged2( final String id, final ListBoxSelectionChangedEvent< EntityEntryModelClass > event )
+	{
+		if ( event != null && event.getSelection( ) != null && event.getSelection( ).size( ) > 0 )
+		{
+			if ( Traits.isUnit( entityData, event.getSelection( ).get( 0 ).getEntityId( ) ) )
+			{
+				if ( !Traits.inAction( entityData, event.getSelection( ).get( 0 ).getEntityId( ) ) )
+				{
+					Label unit = move.findNiftyControl( "unit", Label.class );
+					if ( "Archer".equals( event.getSelection( ).get( 0 ).getName( ) ) )
+					{
+						unit.setText( "A" );
+					}
+					if ( "Mounted Archer".equals( event.getSelection( ).get( 0 ).getName( ) ) )
+					{
+						unit.setText( "MA" );
+					}
+					if ( "Clubman".equals( event.getSelection( ).get( 0 ).getName( ) ) )
+					{
+						unit.setText( "C" );
+					}
+					if ( "Mounted Clubman".equals( event.getSelection( ).get( 0 ).getName( ) ) )
+					{
+						unit.setText( "MC" );
+					}
+					if ( "Axeman".equals( event.getSelection( ).get( 0 ).getName( ) ) )
+					{
+						unit.setText( "AX" );
+					}
+					if ( "Catapult".equals( event.getSelection( ).get( 0 ).getName( ) ) )
+					{
+						unit.setText( "CA" );
+					}
+					if ( "Crossbowman".equals( event.getSelection( ).get( 0 ).getName( ) ) )
+					{
+						unit.setText( "CB" );
+					}
+					if ( "Krieger".equals( event.getSelection( ).get( 0 ).getName( ) ) )
+					{
+						unit.setText( "K" );
+					}
+					if ( "Longbowman".equals( event.getSelection( ).get( 0 ).getName( ) ) )
+					{
+						unit.setText( "LB" );
+					}
+					if ( "Pikeman".equals( event.getSelection( ).get( 0 ).getName( ) ) )
+					{
+						unit.setText( "P" );
+					}
+					if ( "Swordsman".equals( event.getSelection( ).get( 0 ).getName( ) ) )
+					{
+						unit.setText( "S" );
+					}
+					if ( "Trebuchet".equals( event.getSelection( ).get( 0 ).getName( ) ) )
+					{
+						unit.setText( "T" );
+					}
+					currentUnit = event.getSelection( ).get( 0 ).getEntityId( );
+					getApp( ).getNifty( ).showPopup( getApp( ).getNifty( ).getCurrentScreen( ), "move", null );
+				}
+			}
+		}
+
+	}
+
+	@Override
+	protected void postExitToNetwork( )
+	{
+		if ( getApp( ).getNifty( ).getScreen( "hud" ) != null )
+		{
+			AppState hudState = ( AppState ) getApp( ).getNifty( ).getCurrentScreen( ).getScreenController( );
+			if ( hudState != null && getApp( ).getStateManager( ).hasState( hudState ) )
+			{
+				getApp( ).getStateManager( ).detach( hudState );
+			}
+			getApp( ).getNifty( ).removeScreen( "hud" );
+		}
+	}
+
+	@Override
+	protected void preExitToNetwork( )
+	{
+		// TODO Auto-generated method stub
+
+	}
+
+	public void removeFromExisting( Entity entity )
+	{
+		EntityEntryModelClass toRemove = null;
+		for ( EntityEntryModelClass eemc : current.getItems( ) )
+		{
+			if ( eemc.getEntityId( ).equals( entity.getId( ) ) )
+			{
+				toRemove = eemc;
+				break;
+			}
+		}
+
+		if ( toRemove != null )
+		{
+			current.removeItem( toRemove );
+		}
 	}
 
 	public void setCoords( Pair< Integer, Integer > coords )
@@ -673,28 +646,73 @@ public class TileViewController extends AbstractAppState implements ScreenContro
 		this.currentTile = coords;
 	}
 
-	public void closeMove( )
+	@Override
+	public void update( float tpf )
 	{
-		this.app.getNifty( ).closePopup( "move" );
-	}
-
-	public Pair< Integer, Integer > getCoords( )
-	{
-		return this.currentTile;
-	}
-
-	public void onEndScreen( )
-	{
-		if ( locationSet != null )
+		if ( "tile".equals( getApp( ).getNifty( ).getCurrentScreen( ).getScreenId( ) ) )
 		{
-			locationSet.clear( );
+
+			if ( locationSet != null )
+			{
+				if ( locationSet.applyChanges( ) )
+				{
+					for ( Entity e : locationSet.getAddedEntities( ) )
+					{
+						addToExisting( e );
+					}
+					for ( Entity e : locationSet.getRemovedEntities( ) )
+					{
+						removeFromExisting( e );
+					}
+				}
+
+				if ( refreshLimiter > 1 )
+				{
+					for ( Entity e : locationSet )
+					{
+						if ( Traits.inAction( entityData, e.getId( ) ) )
+						{
+							inAction.add( e );
+						}
+						if ( inAction.contains( e ) )
+						{
+							updateExisting( e );
+						}
+						if ( !Traits.inAction( entityData, e.getId( ) ) )
+						{
+							inAction.remove( e );
+						}
+					}
+
+					current.refresh( );
+					fillBuildables( );
+
+					refreshLimiter = 0;
+				}
+				else
+				{
+					refreshLimiter += tpf;
+				}
+
+			}
+			else
+			{
+				ComponentFilter< LocationTrait > locationFilter = FieldFilter.create( LocationTrait.class, "tile", findTile );
+				locationSet = entityData.getEntities( locationFilter, LocationTrait.class );
+			}
+
 		}
-		logger.log( Level.INFO, "Tile Screen Stopped" );
 	}
 
-	public void onStartScreen( )
+	public void updateExisting( Entity entity )
 	{
-		logger.log( Level.INFO, "Tile Screen Started" );
+		for ( EntityEntryModelClass eemc : current.getItems( ) )
+		{
+			if ( eemc.getEntityId( ).equals( entity.getId( ) ) )
+			{
+				eemc.setName( createDisplayText( entity.getId( ) ) );
+			}
+		}
 	}
 
 }

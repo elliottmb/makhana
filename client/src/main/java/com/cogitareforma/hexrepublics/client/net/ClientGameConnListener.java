@@ -62,5 +62,6 @@ public class ClientGameConnListener implements ClientStateListener
 			}
 		}
 
+		manager.setRemoteEntityData( null );
 	}
 }

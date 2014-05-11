@@ -7,30 +7,24 @@ import java.util.logging.Logger;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-import com.cogitareforma.hexrepublics.client.ClientMain;
 import com.cogitareforma.hexrepublics.client.util.NiftyFactory;
 import com.cogitareforma.hexrepublics.common.entities.traits.PlayerTrait;
 import com.jme3.app.Application;
-import com.jme3.app.state.AbstractAppState;
-import com.jme3.app.state.AppState;
 import com.jme3.app.state.AppStateManager;
 import com.simsilica.es.EntityId;
 import com.simsilica.es.client.RemoteEntityData;
 
-import de.lessvoid.nifty.Nifty;
 import de.lessvoid.nifty.NiftyEventSubscriber;
 import de.lessvoid.nifty.controls.Chat;
 import de.lessvoid.nifty.controls.ChatTextSendEvent;
 import de.lessvoid.nifty.controls.Label;
 import de.lessvoid.nifty.screen.Screen;
-import de.lessvoid.nifty.screen.ScreenController;
 
-public class LobbyViewController extends AbstractAppState implements ScreenController
+public class LobbyViewController extends GeneralPlayingController
 {
 	private final static Logger logger = Logger.getLogger( LobbyViewController.class.getName( ) );
 	private final static int chatInterval = 1000;
 
-	private ClientMain app;
 	private Pair< Date, Boolean > lastMessage;
 	private Chat chat;
 	float updateLimiter = 0;
@@ -38,60 +32,17 @@ public class LobbyViewController extends AbstractAppState implements ScreenContr
 
 	public void back( )
 	{
-		app.enqueue( ( ) ->
-		{
-			NiftyFactory.createNetworkView( app.getNifty( ) );
-			app.getStateManager( ).detach( ( AppState ) app.getNifty( ).getScreen( "lobby" ).getScreenController( ) );
-			app.getStateManager( ).attach( ( AppState ) app.getNifty( ).getScreen( "network" ).getScreenController( ) );
-			app.getNifty( ).removeScreen( "lobby" );
-			app.getNifty( ).gotoScreen( "network" );
-			app.getGameConnManager( ).close( );
-			return null;
-		} );
-	}
-
-	public void showPlayers( )
-	{
-		RemoteEntityData entityData = this.app.getGameConnManager( ).getRemoteEntityData( );
-		if ( entityData != null )
-		{
-			Set< EntityId > playerSet = entityData.findEntities( null, PlayerTrait.class );
-			int playerCount = 1;
-			for ( EntityId id : playerSet )
-			{
-				String name = entityData.getComponent( id, PlayerTrait.class ).getAccount( ).getAccountName( );
-				players.findNiftyControl( String.format( "player%sname", playerCount ), Label.class ).setText( name );
-				playerCount++;
-			}
-		}
-	}
-
-	@Override
-	public void update( float tpf )
-	{
-		if ( "lobby".equals( app.getNifty( ).getCurrentScreen( ).getScreenId( ) ) )
-		{
-			if ( updateLimiter > 1 )
-			{
-				updateLimiter = 0;
-				showPlayers( );
-			}
-			updateLimiter += tpf;
-		}
-	}
-
-	@Override
-	public void bind( Nifty nifty, Screen screen )
-	{
+		exitToNetwork( );
 	}
 
 	public void initialize( AppStateManager stateManager, Application app )
 	{
+		setScreenId( "lobby" );
 		super.initialize( stateManager, app );
-		this.app = ( ClientMain ) app;
-		players = this.app.getNifty( ).getCurrentScreen( );
+
+		players = getApp( ).getNifty( ).getCurrentScreen( );
 		logger.log( Level.INFO, "Initialised " + this.getClass( ) );
-		chat = this.app.getNifty( ).getCurrentScreen( ).findNiftyControl( "lobbyChat", Chat.class );
+		chat = getApp( ).getNifty( ).getCurrentScreen( ).findNiftyControl( "lobbyChat", Chat.class );
 		showPlayers( );
 	}
 
@@ -109,19 +60,21 @@ public class LobbyViewController extends AbstractAppState implements ScreenContr
 		 * "Client Warning: You are spamming the chat", null ); lastMessage =
 		 * Pair.of( lastMessage.getLeft( ), true ); } }
 		 */
-		app.sendLobbyChat( event.getText( ) );
+		getApp( ).sendLobbyChat( event.getText( ) );
 	}
 
 	@Override
-	public void onEndScreen( )
+	protected void postExitToNetwork( )
 	{
-		logger.log( Level.INFO, "Lobby Screen Stopped" );
+		// TODO Auto-generated method stub
+
 	}
 
 	@Override
-	public void onStartScreen( )
+	protected void preExitToNetwork( )
 	{
-		logger.log( Level.INFO, "Lobby Screen Started" );
+		// TODO Auto-generated method stub
+
 	}
 
 	public void readyUp( )
@@ -130,17 +83,44 @@ public class LobbyViewController extends AbstractAppState implements ScreenContr
 		start( );
 	}
 
+	public void showPlayers( )
+	{
+		if ( getApp( ).getGameConnManager( ).isConnected( ) )
+		{
+			RemoteEntityData entityData = getApp( ).getGameConnManager( ).getRemoteEntityData( );
+			if ( entityData != null )
+			{
+				Set< EntityId > playerSet = entityData.findEntities( null, PlayerTrait.class );
+				int playerCount = 1;
+				for ( EntityId id : playerSet )
+				{
+					String name = entityData.getComponent( id, PlayerTrait.class ).getAccount( ).getAccountName( );
+					players.findNiftyControl( String.format( "player%sname", playerCount ), Label.class ).setText( name );
+					playerCount++;
+				}
+			}
+		}
+	}
+
 	public void start( )
 	{
-		app.enqueue( ( ) ->
+		NiftyFactory.createLoadingScreen( getApp( ).getNifty( ) );
+		gotoScreen( "loading", true, true, true, null, null );
+
+	}
+
+	@Override
+	public void update( float tpf )
+	{
+		if ( "lobby".equals( getApp( ).getNifty( ).getCurrentScreen( ).getScreenId( ) ) )
 		{
-			NiftyFactory.createLoadingScreen( app.getNifty( ) );
-			app.getStateManager( ).detach( ( AppState ) app.getNifty( ).getScreen( "lobby" ).getScreenController( ) );
-			app.getStateManager( ).attach( ( AppState ) app.getNifty( ).getScreen( "loading" ).getScreenController( ) );
-			app.getNifty( ).removeScreen( "lobby" );
-			app.getNifty( ).gotoScreen( "loading" );
-			return null;
-		} );
+			if ( updateLimiter > 1 )
+			{
+				updateLimiter = 0;
+				showPlayers( );
+			}
+			updateLimiter += tpf;
+		}
 	}
 
 }
