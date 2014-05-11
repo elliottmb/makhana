@@ -193,9 +193,11 @@ public class GameServer extends SimpleApplication
 
 		port = 7331; /* default */
 
-		if ( YamlConfig.DEFAULT.containsKey( "gameserver.port" ) )
+		YamlConfig config = YamlConfig.DEFAULT;
+
+		if ( config.containsKey( "gameserver.port" ) )
 		{
-			if ( YamlConfig.DEFAULT.get( "gameserver.port" ) instanceof Integer )
+			if ( config.get( "gameserver.port" ) instanceof Integer )
 			{
 				port = ( Integer ) YamlConfig.DEFAULT.get( "gameserver.port" );
 			}
@@ -208,6 +210,8 @@ public class GameServer extends SimpleApplication
 		{
 			logger.log( Level.WARNING, "Configuration port value not set, defaulting to 7331" );
 		}
+		config.put( "gameserver.port", port );
+		config.save( );
 
 		if ( getArguments( ).hasOption( "p" ) )
 		{
