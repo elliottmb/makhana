@@ -1,6 +1,5 @@
 package com.cogitareforma.hexrepublics.client.views;
 
-import java.util.HashMap;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -388,6 +387,11 @@ public class HudViewController extends GeneralPlayingController implements KeyIn
 			return false;
 		}
 		return true;
+	}
+	
+	public void openOptions( )
+	{
+		gotoScreen( "options", false, false, false, null, null );
 	}
 
 	@Override

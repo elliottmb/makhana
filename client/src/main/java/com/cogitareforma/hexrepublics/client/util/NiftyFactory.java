@@ -1078,7 +1078,7 @@ public class NiftyFactory
 										alignRight( );
 										valignTop( );
 										visibleToMouse( true );
-										interactOnClick( "nextScreen(options)" );
+										interactOnClick( "openOptions()" );
 									}
 								} );
 								control( new ButtonBuilder( "ingameMenu", "Menu" )
