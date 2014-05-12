@@ -2,63 +2,108 @@
 <nifty-styles>
 
 	<style id="nifty-panel">
-		<attributes padding="32px" backgroundImage="panel/nifty-panel.png" imageMode="resize:28,184,28,28,28,184,28,154,28,184,28,58" />
+		<attributes
+			padding="32px"
+			backgroundImage="panel/nifty-panel.png"
+			imageMode="resize:28,184,28,28,28,184,28,154,28,184,28,58" />
 	</style>
 
 	<style id="nifty-panel-red">
-		<attributes padding="8px,16px,24px,16px" backgroundImage="panel/nifty-panel-red.png" imageMode="resize:28,184,28,8,28,184,28,174,28,184,28,58" />
+		<attributes
+			padding="8px,16px,24px,16px"
+			backgroundImage="panel/nifty-panel-red.png"
+			imageMode="resize:28,184,28,8,28,184,28,174,28,184,28,58" />
 	</style>
 
 	<style id="nifty-panel-no-shadow">
-		<attributes padding="8px" backgroundImage="panel/nifty-panel-no-shadow.png" imageMode="resize:8,210,8,8,8,210,8,209,8,210,8,8" />
+		<attributes
+			padding="8px"
+			backgroundImage="panel/nifty-panel-no-shadow.png"
+			imageMode="resize:8,210,8,8,8,210,8,209,8,210,8,8" />
 	</style>
 
 	<style id="nifty-panel-red-no-shadow">
-		<attributes padding="8px" backgroundImage="panel/nifty-panel-red-no-shadow.png" imageMode="resize:8,210,8,8,8,210,8,209,8,210,8,8" />
+		<attributes
+			padding="8px"
+			backgroundImage="panel/nifty-panel-red-no-shadow.png"
+			imageMode="resize:8,210,8,8,8,210,8,209,8,210,8,8" />
 	</style>
 
 	<style id="nifty-panel-simple">
-		<attributes padding="5px" backgroundImage="panel/nifty-panel-simple.png" imageMode="resize:9,2,9,9,9,2,9,2,9,2,9,9" />
+		<attributes
+			padding="5px"
+			backgroundImage="panel/nifty-panel-simple.png"
+			imageMode="resize:9,2,9,9,9,2,9,2,9,2,9,9" />
 	</style>
 
 	<style id="nifty-panel-bright">
-		<attributes padding="5px" backgroundImage="panel/nifty-panel-hint.png" imageMode="resize:8,210,8,8,8,210,8,209,8,210,8,8" />
+		<attributes
+			padding="5px"
+			backgroundImage="panel/nifty-panel-hint.png"
+			imageMode="resize:8,210,8,8,8,210,8,209,8,210,8,8" />
 	</style>
-	
+
 	<!-- Custom: -->
 	<style id="nifty-panel-paper">
-		<attributes padding="32px" backgroundImage="Interface/Styles/panel/nifty-panel-paper.png" imageMode="resize:24,208,24,24,24,208,24,208,24,208,24,24" />
+		<attributes
+			padding="32px"
+			backgroundImage="Interface/Styles/panel/nifty-panel-paper.png"
+			imageMode="resize:24,208,24,24,24,208,24,208,24,208,24,24" />
 	</style>
-	
+
 	<style id="nifty-panel-beige">
-		<attributes padding="16px" backgroundImage="Interface/Art/panel_beige.png" imageMode="resize:8,84,8,8,8,84,8,84,8,84,8,8" />
+		<attributes
+			padding="16px"
+			backgroundImage="Interface/Art/panel_beige.png"
+			imageMode="resize:8,84,8,8,8,84,8,84,8,84,8,8" />
 	</style>
-	
+
 	<style id="nifty-panel-beige-light">
-		<attributes padding="16px" backgroundImage="Interface/Art/panel_beigeLight.png" imageMode="resize:8,84,8,8,8,84,8,84,8,84,8,8" />
+		<attributes
+			padding="16px"
+			backgroundImage="Interface/Art/panel_beigeLight.png"
+			imageMode="resize:8,84,8,8,8,84,8,84,8,84,8,8" />
 	</style>
-	
+
 	<style id="nifty-panel-blue">
-		<attributes padding="16px" backgroundImage="Interface/Art/panel_blue.png" imageMode="resize:8,84,8,8,8,84,8,84,8,84,8,8" />
+		<attributes
+			padding="16px"
+			backgroundImage="Interface/Art/panel_blue.png"
+			imageMode="resize:8,84,8,8,8,84,8,84,8,84,8,8" />
 	</style>
-	
+
 	<style id="nifty-panel-brown">
-		<attributes padding="16px" backgroundImage="Interface/Art/panel_brown.png" imageMode="resize:8,84,8,8,8,84,8,84,8,84,8,8" />
+		<attributes
+			padding="16px"
+			backgroundImage="Interface/Art/panel_brown.png"
+			imageMode="resize:8,84,8,8,8,84,8,84,8,84,8,8" />
 	</style>
-	
+
 	<style id="nifty-panel-inset-beige">
-		<attributes padding="8px" backgroundImage="Interface/Art/panelInset_beige.png" imageMode="resize:6,81,6,6,6,81,6,82,6,81,6,6" />
+		<attributes
+			padding="8px"
+			backgroundImage="Interface/Art/panelInset_beige.png"
+			imageMode="resize:6,81,6,6,6,81,6,82,6,81,6,6" />
 	</style>
-	
+
 	<style id="nifty-panel-inset-beige-light">
-		<attributes padding="8px" backgroundImage="Interface/Art/panelInset_beigeLight.png" imageMode="resize:6,81,6,6,6,81,6,82,6,81,6,6" />
+		<attributes
+			padding="8px"
+			backgroundImage="Interface/Art/panelInset_beigeLight.png"
+			imageMode="resize:6,81,6,6,6,81,6,82,6,81,6,6" />
 	</style>
-	
+
 	<style id="nifty-panel-inset-blue">
-		<attributes padding="8px" backgroundImage="Interface/Art/panelInset_blue.png" imageMode="resize:6,81,6,6,6,81,6,82,6,81,6,6" />
+		<attributes
+			padding="8px"
+			backgroundImage="Interface/Art/panelInset_blue.png"
+			imageMode="resize:6,81,6,6,6,81,6,82,6,81,6,6" />
 	</style>
-	
+
 	<style id="nifty-panel-inset-brown">
-		<attributes padding="8px" backgroundImage="Interface/Art/panelInset_brown.png" imageMode="resize:6,81,6,6,6,81,6,82,6,81,6,6" />
+		<attributes
+			padding="8px"
+			backgroundImage="Interface/Art/panelInset_brown.png"
+			imageMode="resize:6,81,6,6,6,81,6,82,6,81,6,6" />
 	</style>
 </nifty-styles>

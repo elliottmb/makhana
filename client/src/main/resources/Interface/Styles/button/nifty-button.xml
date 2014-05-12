@@ -4,26 +4,67 @@
 	<!-- style for the button background panel -->
 	<!-- +++++++++++++++++++++++++++++++++++++ -->
 	<style id="nifty-button#panel">
-		<attributes backgroundImage="Interface/Styles/button/button.png" imageMode="sprite-resize:128,32,0,4,120,4,4,4,120,4,24,4,120,4,4"
-			paddingLeft="7px" paddingRight="7px" width="128px" height="32px" childLayout="center" visibleToMouse="true" />
+		<attributes
+			backgroundImage="Interface/Styles/button/button.png"
+			imageMode="sprite-resize:128,32,0,4,120,4,4,4,120,4,24,4,120,4,4"
+			paddingLeft="7px"
+			paddingRight="7px"
+			width="128px"
+			height="32px"
+			childLayout="center"
+			visibleToMouse="true" />
 		<effect>
 			<!-- <onHover name="border" color="#822f" post="true" /> -->
-			<onHover name="imageOverlay" filename="Interface/Styles/button/button.png" imageMode="sprite-resize:128,32,2,4,120,4,4,4,120,4,24,4,120,4,4" post="true" />
-			<onFocus name="imageOverlay" filename="Interface/Styles/button/button.png" imageMode="sprite-resize:128,32,1,4,120,4,4,4,120,4,24,4,120,4,4"
+			<onHover
+				name="imageOverlay"
+				filename="Interface/Styles/button/button.png"
+				imageMode="sprite-resize:128,32,2,4,120,4,4,4,120,4,24,4,120,4,4"
 				post="true" />
-			<onEnabled name="renderQuad" startColor="#2228" endColor="#2220" post="true" length="150" />
-			<onDisabled name="renderQuad" startColor="#2220" endColor="#2228" post="true" length="150" />
+			<onFocus
+				name="imageOverlay"
+				filename="Interface/Styles/button/button.png"
+				imageMode="sprite-resize:128,32,1,4,120,4,4,4,120,4,24,4,120,4,4"
+				post="true" />
+			<onEnabled
+				name="renderQuad"
+				startColor="#2228"
+				endColor="#2220"
+				post="true"
+				length="150" />
+			<onDisabled
+				name="renderQuad"
+				startColor="#2220"
+				endColor="#2228"
+				post="true"
+				length="150" />
 		</effect>
 	</style>
 
 	<!-- +++++++++++++++++++++++++++++++++++++ -->
 	<!-- style for the button text -->
 	<!-- +++++++++++++++++++++++++++++++++++++ -->
-	<style id="nifty-button#text" base="button-font">
-		<attributes align="center" valign="center" textHAlign="center" textVAlign="center" visibleToMouse="false" />
+	<style
+		id="nifty-button#text"
+		base="button-font">
+		<attributes
+			align="center"
+			valign="center"
+			textHAlign="center"
+			textVAlign="center"
+			visibleToMouse="false" />
 		<effect>
-			<onEnabled name="textColorAnimated" startColor="#8886" endColor="#eeef" post="false" length="150" />
-			<onDisabled name="textColorAnimated" startColor="#eeef" endColor="#8886" post="false" length="150" />
+			<onEnabled
+				name="textColorAnimated"
+				startColor="#8886"
+				endColor="#eeef"
+				post="false"
+				length="150" />
+			<onDisabled
+				name="textColorAnimated"
+				startColor="#eeef"
+				endColor="#8886"
+				post="false"
+				length="150" />
 		</effect>
 	</style>
 </nifty-styles>
