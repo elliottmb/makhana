@@ -123,36 +123,206 @@ public class NiftyFactory
 				{
 
 					{
-						childLayoutHorizontal( );
-						backgroundColor( "#404040ff" );
+						childLayoutVertical( );
+						backgroundColor( "#838796ff" );
 
-						panel( new PanelBuilder( "navigation" )
+						panel( new PanelBuilder( "lobbyHeader" )
 						{
-
 							{
-								childLayoutVertical( );
-								width( "25%" );
-								height( "100%" );
+								width( "100%" );
+								height( "32px" );
+								valignBottom( );
+								childLayoutHorizontal( );
+								backgroundColor( "#616374ff" );
+								paddingLeft( "32px" );
+								paddingRight( "32px" );
 
-								panel( new PanelBuilder( "buttons" )
+								text( new TextBuilder( "lobbyTitle" )
 								{
-
 									{
-										childLayoutCenter( );
-										backgroundColor( "#303030ff" );
-										width( "100%" );
-										height( "20%" );
+										width( "50%" );
+										height( "100%" );
+										text( "Game Lobby" );
+										textHAlignLeft( );
+										textVAlignCenter( );
+										font( "Interface/Fonts/Default.fnt" );
 
-										panel( new PanelBuilder( "startButton" )
+									}
+								} );
+
+								panel( new PanelBuilder( "lobbyButtons" )
+								{
+									{
+										width( "50%" );
+										childLayoutHorizontal( );
+
+										panel( new PanelBuilder( "spacer" )
+										{
+											{
+												width( "*" );
+											}
+										} );
+
+										control( new ButtonBuilder( "leave", "Leave" )
 										{
 
 											{
-												backgroundColor( "#fff2" );
-												width( "100%" );
-												height( "50%" );
 												alignCenter( );
-												valignTop( );
-												childLayoutCenter( );
+												valignCenter( );
+												visibleToMouse( true );
+												interactOnClick( "back()" );
+											}
+										} );
+
+									}
+								} );
+
+							}
+						} );
+
+						panel( new PanelBuilder( "mainPanel" )
+						{
+
+							{
+								width( "66%" );
+								height( "100%" );
+								padding( "32px" );
+								alignCenter( );
+								valignCenter( );
+								childLayoutVertical( );
+
+								panel( new PanelBuilder( "playerList" )
+								{
+									{
+										style( "nifty-panel-brown" );
+										childLayoutVertical( );
+
+										control( new LabelBuilder( "labelPlayers", "Players" )
+										{
+											{
+												textHAlignLeft( );
+												textVAlignBottom( );
+												width( "100%" );
+											}
+										} );
+
+										panel( new PanelBuilder( "players" )
+										{
+											{
+												childLayoutHorizontal( );
+												style( "nifty-panel-inset-beige" );
+												width( "100%" );
+
+												panel( new PanelBuilder( "player1" )
+												{
+													{
+														backgroundColor( "#404040ff" );
+														width( "25%" );
+														childLayoutVertical( );
+
+														control( new LabelBuilder( "player1name" )
+														{
+															{
+																if ( DebugGlobals.EASTEREGGFONT == true )
+																{
+																	font( "Interface/Fonts/AngerthasMoria.fnt" );
+																}
+																alignCenter( );
+																valignBottom( );
+																width( "100%" );
+																wrap( true );
+																color( "#f2f2f2ff" );
+															}
+														} );
+													}
+												} );
+												panel( new PanelBuilder( "player2" )
+												{
+													{
+														backgroundColor( "#303030ff" );
+														width( "25%" );
+														childLayoutVertical( );
+
+														control( new LabelBuilder( "player2name" )
+														{
+															{
+																if ( DebugGlobals.EASTEREGGFONT == true )
+																{
+																	font( "Interface/Fonts/AngerthasMoria.fnt" );
+																}
+																alignCenter( );
+																valignBottom( );
+																width( "100%" );
+																wrap( true );
+																color( "#f2f2f2ff" );
+															}
+														} );
+													}
+												} );
+												panel( new PanelBuilder( "player3" )
+												{
+													{
+														backgroundColor( "#404040ff" );
+														width( "25%" );
+														childLayoutVertical( );
+
+														control( new LabelBuilder( "player3name" )
+														{
+															{
+																if ( DebugGlobals.EASTEREGGFONT == true )
+																{
+																	font( "Interface/Fonts/AngerthasMoria.fnt" );
+																}
+																alignCenter( );
+																valignBottom( );
+																width( "100%" );
+																wrap( true );
+																color( "#f2f2f2ff" );
+															}
+														} );
+													}
+												} );
+												panel( new PanelBuilder( "player4" )
+												{
+													{
+														backgroundColor( "#303030ff" );
+														width( "25%" );
+														childLayoutVertical( );
+
+														control( new LabelBuilder( "player4name" )
+														{
+															{
+																if ( DebugGlobals.EASTEREGGFONT == true )
+																{
+																	font( "Interface/Fonts/AngerthasMoria.fnt" );
+																}
+																alignCenter( );
+																valignBottom( );
+																width( "100%" );
+																wrap( true );
+																color( "#f2f2f2ff" );
+															}
+														} );
+													}
+												} );
+											}
+										} );
+
+										control( new LabelBuilder( "labelOptions", "Options" )
+										{
+											{
+												textHAlignLeft( );
+												textVAlignBottom( );
+												width( "100%" );
+											}
+										} );
+
+										panel( new PanelBuilder( "lobbyButtons" )
+										{
+											{
+												childLayoutHorizontal( );
+												style( "nifty-panel-inset-beige" );
+												width( "100%" );
 
 												control( new ButtonBuilder( "readyup", "Ready Up" )
 												{
@@ -164,149 +334,10 @@ public class NiftyFactory
 														interactOnClick( "readyUp()" );
 													}
 												} );
+
 											}
 										} );
-									}
-								} );
 
-								panel( new PanelBuilder( )
-								{
-
-									{
-										backgroundColor( "#404040ff" );
-										width( "100%" );
-										height( "10%" );
-										alignCenter( );
-										valignTop( );
-										childLayoutCenter( );
-
-										control( new ButtonBuilder( "back", "Back" )
-										{
-
-											{
-												alignCenter( );
-												valignCenter( );
-												visibleToMouse( true );
-												interactOnClick( "back()" );
-											}
-										} );
-									}
-								} );
-							}
-						} );
-
-						panel( new PanelBuilder( "mainPanel" )
-						{
-
-							{
-								width( "75%" );
-								height( "100%" );
-								childLayoutVertical( );
-
-								panel( new PanelBuilder( "options" )
-								{
-									{
-										childLayoutHorizontal( );
-										backgroundColor( "#303030ff" );
-										width( "100%" );
-										height( "50%" );
-
-										panel( new PanelBuilder( "player1" )
-										{
-											{
-												backgroundColor( "#404040ff" );
-												width( "25%" );
-												height( "100%" );
-												childLayoutVertical( );
-
-												control( new LabelBuilder( "player1name" )
-												{
-													{
-														if ( DebugGlobals.EASTEREGGFONT == true )
-														{
-															font( "Interface/Fonts/AngerthasMoria.fnt" );
-														}
-														alignCenter( );
-														valignBottom( );
-														width( "100%" );
-														wrap( true );
-														color( "#f2f2f2ff" );
-													}
-												} );
-											}
-										} );
-										panel( new PanelBuilder( "player2" )
-										{
-											{
-												backgroundColor( "#303030ff" );
-												width( "25%" );
-												height( "100%" );
-												childLayoutVertical( );
-
-												control( new LabelBuilder( "player2name" )
-												{
-													{
-														if ( DebugGlobals.EASTEREGGFONT == true )
-														{
-															font( "Interface/Fonts/AngerthasMoria.fnt" );
-														}
-														alignCenter( );
-														valignBottom( );
-														width( "100%" );
-														wrap( true );
-														color( "#f2f2f2ff" );
-													}
-												} );
-											}
-										} );
-										panel( new PanelBuilder( "player3" )
-										{
-											{
-												backgroundColor( "#404040ff" );
-												width( "25%" );
-												height( "100%" );
-												childLayoutVertical( );
-
-												control( new LabelBuilder( "player3name" )
-												{
-													{
-														if ( DebugGlobals.EASTEREGGFONT == true )
-														{
-															font( "Interface/Fonts/AngerthasMoria.fnt" );
-														}
-														alignCenter( );
-														valignBottom( );
-														width( "100%" );
-														wrap( true );
-														color( "#f2f2f2ff" );
-													}
-												} );
-											}
-										} );
-										panel( new PanelBuilder( "player4" )
-										{
-											{
-												backgroundColor( "#303030ff" );
-												width( "25%" );
-												height( "100%" );
-												childLayoutVertical( );
-
-												control( new LabelBuilder( "player4name" )
-												{
-													{
-														if ( DebugGlobals.EASTEREGGFONT == true )
-														{
-															font( "Interface/Fonts/AngerthasMoria.fnt" );
-														}
-														alignCenter( );
-														valignBottom( );
-														width( "100%" );
-														wrap( true );
-														color( "#f2f2f2ff" );
-													}
-												} );
-											}
-										} );
 									}
 								} );
 
@@ -314,10 +345,8 @@ public class NiftyFactory
 								{
 
 									{
-										backgroundColor( "#fffd" );
+										style( "nifty-panel-brown" );
 										width( "100%" );
-										height( "50%" );
-
 										childLayoutCenter( );
 
 										control( new ChatBuilder( "lobbyChat", 8 )
@@ -1615,7 +1644,7 @@ public class NiftyFactory
 
 					{
 						childLayoutVertical( );
-						backgroundColor( "#1a1a1aff" );
+						backgroundColor( "#838796ff" );
 
 						panel( new PanelBuilder( "networkHeader" )
 						{

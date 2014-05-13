@@ -388,7 +388,7 @@ public class HudViewController extends GeneralPlayingController implements KeyIn
 		}
 		return true;
 	}
-	
+
 	public void openOptions( )
 	{
 		gotoScreen( "options", false, false, false, null, null );
