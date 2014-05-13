@@ -405,19 +405,24 @@ public class NiftyFactory
 
 									{
 										style( "nifty-panel-beige" );
-										// backgroundColor( "#3e3e3eff" );
-										// height( "60%" );
-										// padding( "32px" );
 										alignCenter( );
 										childLayoutVertical( );
 
-										control( new ButtonBuilder( "startLogin", "Login" )
+										control( new ButtonBuilder( "startSingle", "Singleplayer" )
 										{
 
 											{
 												alignCenter( );
 												visibleToMouse( true );
-												// interactOnClick("startGame()");
+											}
+										} );
+
+										control( new ButtonBuilder( "startLogin", "Multiplayer" )
+										{
+
+											{
+												alignCenter( );
+												visibleToMouse( true );
 												interactOnClick( "openLogin()" );
 											}
 										} );
@@ -456,7 +461,6 @@ public class NiftyFactory
 				panel( new PanelBuilder( "loginPanel" )
 				{
 					{
-						// backgroundColor( "#202020ff" );
 						style( "nifty-panel-brown" );
 						childLayoutVertical( );
 						width( "320px" );
@@ -1610,189 +1614,45 @@ public class NiftyFactory
 				{
 
 					{
-						childLayoutHorizontal( );
+						childLayoutVertical( );
 						backgroundColor( "#1a1a1aff" );
 
-						panel( new PanelBuilder( "navigation" )
+						panel( new PanelBuilder( "networkHeader" )
 						{
-
 							{
-								childLayoutVertical( );
-								width( "25%" );
-								height( "100%" );
+								width( "100%" );
+								height( "32px" );
+								valignBottom( );
+								childLayoutHorizontal( );
+								backgroundColor( "#616374ff" );
+								paddingLeft( "32px" );
+								paddingRight( "32px" );
 
-								panel( new PanelBuilder( "buttons" )
+								text( new TextBuilder( "networkTitle" )
 								{
-
 									{
-										childLayoutCenter( );
-										backgroundColor( "#1a1a1aff" );
-										width( "100%" );
-										height( "20%" );
+										width( "50%" );
+										height( "100%" );
+										text( "Network Lobby" );
+										textHAlignLeft( );
+										textVAlignCenter( );
+										font( "Interface/Fonts/Default.fnt" );
 
-										panel( new PanelBuilder( "joinButton" )
-										{
-
-											{
-												backgroundColor( "#fff2" );
-												width( "100%" );
-												height( "50%" );
-												alignCenter( );
-												valignTop( );
-												childLayoutCenter( );
-
-												control( new ButtonBuilder( "join", "Join" )
-												{
-
-													{
-														alignCenter( );
-														valignCenter( );
-														visibleToMouse( true );
-														interactOnClick( "joinServer( )" );
-													}
-												} );
-											}
-										} );
 									}
 								} );
 
-								panel( new PanelBuilder( "netOptions" )
+								panel( new PanelBuilder( "networkButtons" )
 								{
-
 									{
-										backgroundColor( "#fffa" );
-										width( "100%" );
-										height( "70%" );
-										alignCenter( );
-										valignTop( );
-										childLayoutVertical( );
+										width( "50%" );
+										childLayoutHorizontal( );
 
-										control( new RadioGroupBuilder( "RadioGroup-1" ) );
-										panel( new PanelBuilder( )
+										panel( new PanelBuilder( "spacer" )
 										{
 											{
-												childLayoutHorizontal( );
-												alignRight( );
-												control( new LabelBuilder( "filterButtons", "Filters" ) );
-												// childLayoutHorizontal( );
-												panel( new PanelBuilder( )
-												{
-													{
-														childLayoutVertical( );
-														backgroundColor( "#8001" );
-														paddingLeft( "7px" );
-														paddingRight( "7px" );
-														paddingTop( "4px" );
-														paddingBottom( "4px" );
-														width( "105px" );
-														alignRight( );
-														valignTop( );
-														onActiveEffect( new EffectBuilder( "border" )
-														{
-															{
-																effectParameter( "color", "#0008" );
-															}
-														} );
-														panel( new PanelBuilder( )
-														{
-															{
-																childLayoutHorizontal( );
-																alignRight( );
-																control( new LabelBuilder( "all", "All" ) );
-																control( new RadioButtonBuilder( "option-1" )
-																{
-																	{
-																		group( "RadioGroup-1" );
-																	}
-																} );
-															}
-														} );
-														panel( new PanelBuilder( )
-														{
-															{
-																childLayoutHorizontal( );
-																alignRight( );
-																control( new LabelBuilder( "isFull", "Full" ) );
-																control( new RadioButtonBuilder( "option-2" )
-																{
-																	{
-																		group( "RadioGroup-1" );
-																	}
-																} );
-															}
-														} );
-														panel( new PanelBuilder( )
-														{
-															{
-																childLayoutHorizontal( );
-																alignRight( );
-																control( new LabelBuilder( "isEmpty", "Empty" ) );
-																control( new RadioButtonBuilder( "option-3" )
-																{
-																	{
-																		group( "RadioGroup-1" );
-																	}
-																} );
-															}
-														} );
-													}
-												} );
+												width( "*" );
 											}
 										} );
-										panel( new PanelBuilder( )
-										{
-											{
-												childLayoutHorizontal( );
-												alignRight( );
-												control( new LabelBuilder( "hasPlayerLabel", "Has Players" ) );
-												control( new CheckboxBuilder( "hasPlayer" ) );
-											}
-										} );
-										panel( new PanelBuilder( )
-										{
-											{
-												childLayoutHorizontal( );
-												control( new LabelBuilder( "labelSearch", "Search" ) );
-												control( new TextFieldBuilder( "search", "" )
-												{
-													{
-														alignRight( );
-														maxLength( 32 );
-														width( "75%" );
-													}
-												} );
-											}
-										} );
-
-										control( new ButtonBuilder( "refresh", "Refresh List" )
-										{
-											{
-												alignCenter( );
-												visibleToMouse( true );
-												interactOnClick( "refreshServerList()" );
-											}
-										} );
-										control( new ButtonBuilder( "filters", "Apply" )
-										{
-											{
-												alignCenter( );
-												visibleToMouse( true );
-												interactOnClick( "applyFilters( )" );
-											}
-										} );
-									}
-								} );
-
-								panel( new PanelBuilder( "back" )
-								{
-
-									{
-										backgroundColor( "#ffff" );
-										width( "100%" );
-										height( "10%" );
-										alignCenter( );
-										valignTop( );
-										childLayoutCenter( );
 
 										control( new ButtonBuilder( "Logout", "Logout" )
 										{
@@ -1804,8 +1664,10 @@ public class NiftyFactory
 												interactOnClick( "logout()" );
 											}
 										} );
+
 									}
 								} );
+
 							}
 						} );
 
@@ -1813,41 +1675,203 @@ public class NiftyFactory
 						{
 
 							{
-								width( "75%" );
+								width( "66%" );
 								height( "100%" );
+								padding( "32px" );
+								alignCenter( );
+								valignCenter( );
 								childLayoutVertical( );
 
 								panel( new PanelBuilder( "networkList" )
 								{
-
 									{
-										backgroundColor( "#fff3" );
+										childLayoutVertical( );
 										width( "100%" );
-										height( "50%" );
-										childLayoutCenter( );
+										style( "nifty-panel-brown" );
+
+										panel( new PanelBuilder( "networkControls" )
+										{
+											{
+												childLayoutHorizontal( );
+												width( "100%" );
+												style( "nifty-panel-inset-beige" );
+
+												control( new ButtonBuilder( "join", "Join" )
+												{
+
+													{
+														alignCenter( );
+														valignCenter( );
+														visibleToMouse( true );
+														interactOnClick( "joinServer( )" );
+													}
+												} );
+
+												control( new ButtonBuilder( "refresh", "Refresh List" )
+												{
+													{
+														alignCenter( );
+														visibleToMouse( true );
+														interactOnClick( "refreshServerList()" );
+													}
+												} );
+
+											}
+										} );
 
 										control( new ListBoxBuilder( "networkScroll" )
 										{
 
 											{
-												displayItems( 14 );
+												displayItems( 10 );
 												showVerticalScrollbar( );
 												hideHorizontalScrollbar( );
-												width( "100%" );
-												height( "100%" );
+											}
+										} );
+
+										panel( new PanelBuilder( "networkOptions" )
+										{
+											{
+												childLayoutHorizontal( );
+												style( "nifty-panel-inset-beige" );
+
+												panel( new PanelBuilder( "netOptions" )
+												{
+
+													{
+														alignCenter( );
+														valignTop( );
+														childLayoutVertical( );
+
+														control( new RadioGroupBuilder( "RadioGroup-1" ) );
+														panel( new PanelBuilder( )
+														{
+															{
+																childLayoutHorizontal( );
+																alignRight( );
+																control( new LabelBuilder( "filterButtons", "Filters" ) );
+
+																panel( new PanelBuilder( )
+																{
+																	{
+																		childLayoutVertical( );
+																		backgroundColor( "#8001" );
+																		paddingLeft( "7px" );
+																		paddingRight( "7px" );
+																		paddingTop( "4px" );
+																		paddingBottom( "4px" );
+																		width( "105px" );
+																		alignRight( );
+																		valignTop( );
+																		onActiveEffect( new EffectBuilder( "border" )
+																		{
+																			{
+																				effectParameter( "color", "#0008" );
+																			}
+																		} );
+																		panel( new PanelBuilder( )
+																		{
+																			{
+																				childLayoutHorizontal( );
+																				alignRight( );
+																				control( new LabelBuilder( "all", "All" ) );
+																				control( new RadioButtonBuilder( "option-1" )
+																				{
+																					{
+																						group( "RadioGroup-1" );
+																					}
+																				} );
+																			}
+																		} );
+																		panel( new PanelBuilder( )
+																		{
+																			{
+																				childLayoutHorizontal( );
+																				alignRight( );
+																				control( new LabelBuilder( "isFull", "Full" ) );
+																				control( new RadioButtonBuilder( "option-2" )
+																				{
+																					{
+																						group( "RadioGroup-1" );
+																					}
+																				} );
+																			}
+																		} );
+																		panel( new PanelBuilder( )
+																		{
+																			{
+																				childLayoutHorizontal( );
+																				alignRight( );
+																				control( new LabelBuilder( "isEmpty", "Empty" ) );
+																				control( new RadioButtonBuilder( "option-3" )
+																				{
+																					{
+																						group( "RadioGroup-1" );
+																					}
+																				} );
+																			}
+																		} );
+																	}
+																} );
+															}
+														} );
+														panel( new PanelBuilder( )
+														{
+															{
+																childLayoutHorizontal( );
+																alignRight( );
+																control( new LabelBuilder( "hasPlayerLabel", "Has Players" ) );
+																control( new CheckboxBuilder( "hasPlayer" ) );
+															}
+														} );
+
+													}
+												} );
+
+												panel( new PanelBuilder( "netOptions" )
+												{
+
+													{
+														childLayoutVertical( );
+														panel( new PanelBuilder( )
+														{
+															{
+																childLayoutHorizontal( );
+																control( new LabelBuilder( "labelSearch", "Search" ) );
+																control( new TextFieldBuilder( "search", "" )
+																{
+																	{
+																		alignRight( );
+																		maxLength( 32 );
+																		width( "75%" );
+																	}
+																} );
+															}
+														} );
+
+														control( new ButtonBuilder( "filters", "Apply" )
+														{
+															{
+																alignCenter( );
+																visibleToMouse( true );
+																interactOnClick( "applyFilters( )" );
+															}
+														} );
+
+													}
+												} );
+
 											}
 										} );
 									}
 								} );
-								panel( new PanelBuilder( "chat" )
+
+								panel( new PanelBuilder( "networkList" )
 								{
-
 									{
-										backgroundColor( "#fffd" );
+										childLayoutVertical( );
 										width( "100%" );
-										height( "50%" );
-
-										childLayoutCenter( );
+										style( "nifty-panel-brown" );
 
 										control( new ChatBuilder( "networkChat", 8 )
 										{
