@@ -24,10 +24,12 @@ public class InstanceOfFilter< T extends EntityComponent > implements ComponentF
 	@Override
 	public boolean evaluate( EntityComponent c )
 	{
-		System.out.println( c + ", " + type );
-		if ( type.isInstance( c ) )
+		if ( c != null && type != null )
 		{
-			return true;
+			if ( type.isInstance( c ) )
+			{
+				return true;
+			}
 		}
 		return false;
 	}

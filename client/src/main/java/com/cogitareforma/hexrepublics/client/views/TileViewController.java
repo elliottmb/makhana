@@ -2,6 +2,7 @@ package com.cogitareforma.hexrepublics.client.views;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Stack;
 import java.util.logging.Level;
@@ -10,7 +11,9 @@ import java.util.logging.Logger;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.cogitareforma.hexrepublics.client.util.EntityEntryModelClass;
+import com.cogitareforma.hexrepublics.common.entities.ActionType;
 import com.cogitareforma.hexrepublics.common.entities.Traits;
+import com.cogitareforma.hexrepublics.common.entities.traits.ActionTrait;
 import com.cogitareforma.hexrepublics.common.entities.traits.ArcherTrait;
 import com.cogitareforma.hexrepublics.common.entities.traits.ArcheryTrait;
 import com.cogitareforma.hexrepublics.common.entities.traits.AxemanTrait;
@@ -24,7 +27,6 @@ import com.cogitareforma.hexrepublics.common.entities.traits.LocationTrait;
 import com.cogitareforma.hexrepublics.common.entities.traits.LongbowTrait;
 import com.cogitareforma.hexrepublics.common.entities.traits.MachineWorksTrait;
 import com.cogitareforma.hexrepublics.common.entities.traits.MountedTrait;
-import com.cogitareforma.hexrepublics.common.entities.traits.MoveTrait;
 import com.cogitareforma.hexrepublics.common.entities.traits.PikemanTrait;
 import com.cogitareforma.hexrepublics.common.entities.traits.SawmillTrait;
 import com.cogitareforma.hexrepublics.common.entities.traits.StablesTrait;
@@ -166,7 +168,7 @@ public class TileViewController extends GeneralPlayingController
 		}
 
 		// Suffix
-		Pair< String, Double > action = Traits.getActionDetails( entityData, id );
+		Pair< String, Double > action = Traits.getActionRemainingTime( entityData, id );
 		if ( action != null )
 		{
 			existing += String.format( " - %s: ", action.getLeft( ) );
@@ -393,9 +395,11 @@ public class TileViewController extends GeneralPlayingController
 
 				if ( nextTile != null )
 				{
+					HashMap< String, Object > data = new HashMap< String, Object >( );
+					data.put( "newTile", nextTile );
 					getApp( ).getGameConnManager( ).send(
-							new EntityActionRequest( currentUnit, new MoveTrait( new Date( ), Traits.getMovementModifier( entityData,
-									currentUnit ), nextTile ) ) );
+							new EntityActionRequest( currentUnit, new ActionTrait( new Date( ), Traits.getMovementModifier( entityData,
+									currentUnit ), ActionType.MOVE, data ) ) );
 				}
 			}
 		}

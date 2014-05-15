@@ -14,7 +14,6 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import com.cogitareforma.hexrepublics.common.entities.traits.ActionTrait;
 import com.cogitareforma.hexrepublics.common.entities.traits.DefenseTrait;
-import com.cogitareforma.hexrepublics.common.entities.traits.FabricatingTrait;
 import com.cogitareforma.hexrepublics.common.entities.traits.HealthTrait;
 import com.cogitareforma.hexrepublics.common.entities.traits.LocationTrait;
 import com.cogitareforma.hexrepublics.common.entities.traits.MoveableTrait;
@@ -55,8 +54,6 @@ public class Traits
 															// 0.5f
 
 	public static final List< Class< ? >> allTypes = getAllTraits( );
-
-	public static final List< Class< ? extends EntityComponent >> actionTraits = getSubTraits( ActionTrait.class );
 
 	public static final List< Class< ? extends EntityComponent >> unitTraits = getSubTraits( MoveableTrait.class );
 
@@ -185,20 +182,19 @@ public class Traits
 		if ( complexity > 0 )
 		{
 			logger.log( Level.INFO, String.format( "Adding FabricatingTrait(%d) to entity %s", ( long ) ( complexity * 60000 ), id ) );
-			entityData.setComponent( id, new FabricatingTrait( new Date( ), ( long ) ( complexity * 60000 ) ) );
+
+			entityData.setComponent( id,
+					new ActionTrait( new Date( ), ( long ) ( complexity * 60000 ), ActionType.FABRICATING, Collections.emptyMap( ) ) );
 		}
 	}
 
-	public static Pair< String, Double > getActionDetails( EntityData entityData, EntityId id )
+	public static Pair< String, Double > getActionRemainingTime( EntityData entityData, EntityId id )
 	{
-		for ( Class< ? extends EntityComponent > actionTrait : actionTraits )
+		ActionTrait at = entityData.getComponent( id, ActionTrait.class );
+		if ( at != null )
 		{
-			ActionTrait at = ( ActionTrait ) entityData.getComponent( id, actionTrait );
-			if ( at != null )
-			{
-				double time = ( at.getStartTime( ).getTime( ) + at.getDuration( ) - new Date( ).getTime( ) ) / 60000.0;
-				return Pair.of( at.toVerb( ), time );
-			}
+			double time = ( at.getStartTime( ).getTime( ) + at.getDuration( ) - new Date( ).getTime( ) ) / 60000.0;
+			return Pair.of( at.toVerb( ), time );
 		}
 		return null;
 	}
@@ -396,14 +392,7 @@ public class Traits
 
 	public static boolean inAction( EntityData entityData, EntityId id )
 	{
-		for ( Class< ? extends EntityComponent > c : actionTraits )
-		{
-			if ( entityData.getComponent( id, c ) != null )
-			{
-				return true;
-			}
-		}
-		return false;
+		return entityData.getComponent( id, ActionTrait.class ) != null;
 	}
 
 	public static boolean isBuilding( EntityData entityData, EntityId id )
