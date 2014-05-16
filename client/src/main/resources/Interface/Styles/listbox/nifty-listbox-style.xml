@@ -1,28 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <nifty-styles>
 	<style id="nifty-listbox">
-		<attributes />
+		<attributes
+			padding="8px"
+			backgroundImage="Interface/Art/panelInset_beigeLight.png"
+			imageMode="resize:6,81,6,6,6,81,6,82,6,81,6,6" />
 	</style>
 	<style id="nifty-listbox#scrollpanel">
 		<attributes
 			focusable="true"
 			padding="1px" />
 		<effect overlay="true">
-			<onActive
-				name="colorBar"
-				color="#666f"
-				post="false"
-				neverStopRendering="true"
-				timeType="infinite" />
-			<onActive
-				name="border"
-				border="1px"
-				color="#222f"
-				inset="1px,0px,0px,1px" />
-			<onFocus
-				name="border"
-				border="1px"
-				color="#f006" />
+			<!-- <onActive name="colorBar" color="#666f" post="false" neverStopRendering="true" timeType="infinite" /> <onActive name="border" border="1px" 
+				color="#222f" inset="1px,0px,0px,1px" /> <onFocus name="border" border="1px" color="#f006" /> -->
 			<onEnabled
 				name="renderQuad"
 				startColor="#2228"

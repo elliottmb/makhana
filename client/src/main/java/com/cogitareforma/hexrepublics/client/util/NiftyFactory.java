@@ -341,38 +341,13 @@ public class NiftyFactory
 									}
 								} );
 
-								panel( new PanelBuilder( "chat" )
+								control( new ChatBuilder( "lobbyChat", 8 )
 								{
-
 									{
-										style( "nifty-panel-brown" );
-										width( "100%" );
-										childLayoutCenter( );
-
-										control( new ChatBuilder( "lobbyChat", 8 )
-										{
-
-											{
-												width( "100%" );
-												sendLabel( "Send Message" );
-												control( new TextFieldBuilder( "textField", "textField" )
-												{
-													{
-														width( "70%" );
-													}
-												} );
-												control( new ButtonBuilder( "Send", "send" )
-												{
-													{
-														visibleToMouse( true );
-														interactOnClick( "sendMessage()" );
-													}
-												} );
-
-											}
-										} );
+										sendLabel( "Send Message" );
 									}
 								} );
+
 							}
 						} );
 					}
@@ -1202,24 +1177,8 @@ public class NiftyFactory
 
 						control( new ChatBuilder( "gameChat", 8 )
 						{
-
 							{
-								width( "100%" );
 								sendLabel( "Send Message" );
-								control( new TextFieldBuilder( "textField", "textField" )
-								{
-									{
-										width( "70%" );
-									}
-								} );
-								control( new ButtonBuilder( "Send", "send" )
-								{
-									{
-										visibleToMouse( true );
-										interactOnClick( "sendMessage()" );
-									}
-								} );
-
 							}
 						} );
 					}
@@ -1895,37 +1854,13 @@ public class NiftyFactory
 									}
 								} );
 
-								panel( new PanelBuilder( "networkList" )
+								control( new ChatBuilder( "networkChat", 8 )
 								{
 									{
-										childLayoutVertical( );
-										width( "100%" );
-										style( "nifty-panel-brown" );
-
-										control( new ChatBuilder( "networkChat", 8 )
-										{
-
-											{
-												width( "100%" );
-												sendLabel( "Send Message" );
-												control( new TextFieldBuilder( "textField", "textField" )
-												{
-													{
-														width( "70%" );
-													}
-												} );
-												control( new ButtonBuilder( "Send", "send" )
-												{
-													{
-														visibleToMouse( true );
-														interactOnClick( "sendMessage()" );
-													}
-												} );
-
-											}
-										} );
+										sendLabel( "Send Message" );
 									}
 								} );
+
 							}
 						} );
 					}
