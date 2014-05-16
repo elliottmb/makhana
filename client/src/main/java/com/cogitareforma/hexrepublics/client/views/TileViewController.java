@@ -1,8 +1,8 @@
 package com.cogitareforma.hexrepublics.client.views;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Stack;
 import java.util.logging.Level;
@@ -72,11 +72,12 @@ public class TileViewController extends GeneralPlayingController
 	private Pair< Integer, Integer > currentTile;
 	private EntityId currentUnit;
 	private EntitySet locationSet;
+	private EntitySet actionSet;
 	private RemoteEntityData entityData;
 	private EntityId findTile;
-	private ArrayList< Entity > inAction;
-	private float refreshLimiter = 0;
+	private LinkedList< EntityId > toUpdate;
 	private Element move;
+	private boolean justUpdated = false;
 
 	public void addToExisting( Entity entity )
 	{
@@ -195,93 +196,101 @@ public class TileViewController extends GeneralPlayingController
 
 	public void fillBuildables( )
 	{
-		if ( entityData != null )
+		if ( !justUpdated )
 		{
-			Stack< String > buildables = new Stack< String >( );
-
-			if ( Traits.countBuildings( entityData, locationSet ) < 6 )
+			if ( entityData != null )
 			{
-				if ( !Traits.hasPrerequisites( entityData, locationSet, ArcheryTrait.class ) )
-				{
-					buildables.add( "Build Archery" );
-				}
-				if ( !Traits.hasPrerequisites( entityData, locationSet, BarracksTrait.class ) )
-				{
-					buildables.add( "Build Barracks" );
-				}
-				if ( !Traits.hasPrerequisites( entityData, locationSet, StablesTrait.class ) )
-				{
-					buildables.add( "Build Stables" );
-				}
-				if ( !Traits.hasPrerequisites( entityData, locationSet, ForgeTrait.class ) )
-				{
-					buildables.add( "Build Forge" );
-				}
-				if ( !Traits.hasPrerequisites( entityData, locationSet, MachineWorksTrait.class ) )
-				{
-					buildables.add( "Build Machine Works" );
-				}
-				if ( !Traits.hasPrerequisites( entityData, locationSet, SawmillTrait.class ) )
-				{
-					buildables.add( "Build Sawmill" );
-				}
-			}
-			if ( Traits.countUnits( entityData, locationSet ) < 6 )
-			{
-				if ( Traits.hasPrerequisites( entityData, locationSet, ArcheryTrait.class ) )
-				{
-					buildables.add( "Build Archer" );
-				}
-				if ( Traits.hasPrerequisites( entityData, locationSet, BarracksTrait.class ) )
-				{
-					buildables.add( "Build Clubman" );
-				}
-				if ( Traits.hasPrerequisites( entityData, locationSet, ArcheryTrait.class, StablesTrait.class ) )
-				{
-					buildables.add( "Build Mounted Archer" );
-				}
-				if ( Traits.hasPrerequisites( entityData, locationSet, BarracksTrait.class, StablesTrait.class ) )
-				{
-					buildables.add( "Build Mounted Clubman" );
-				}
-				if ( Traits.hasPrerequisites( entityData, locationSet, ForgeTrait.class, BarracksTrait.class ) )
-				{
-					buildables.add( "Build Axeman" );
-				}
-				if ( Traits.hasPrerequisites( entityData, locationSet, ArcheryTrait.class, ForgeTrait.class, SawmillTrait.class,
-						MachineWorksTrait.class ) )
-				{
-					buildables.add( "Build Catapult" );
-				}
-				if ( Traits.hasPrerequisites( entityData, locationSet, ArcheryTrait.class, ForgeTrait.class, SawmillTrait.class ) )
-				{
-					buildables.add( "Build Crossbowman" );
-				}
-				if ( Traits.countBuildings( entityData, locationSet ) == 6 )
-				{
-					buildables.add( "Build Krieger" );
-				}
-				if ( Traits.hasPrerequisites( entityData, locationSet, SawmillTrait.class, ArcheryTrait.class ) )
-				{
-					buildables.add( "Build Longbowman" );
-				}
-				if ( Traits.hasPrerequisites( entityData, locationSet, BarracksTrait.class, ForgeTrait.class, SawmillTrait.class ) )
-				{
-					buildables.add( "Build Pikeman" );
-				}
-				if ( Traits.hasPrerequisites( entityData, locationSet, BarracksTrait.class, ForgeTrait.class ) )
-				{
-					buildables.add( "Build Swordsman" );
-				}
-				if ( Traits.hasPrerequisites( entityData, locationSet, ArcheryTrait.class, ForgeTrait.class, SawmillTrait.class,
-						StablesTrait.class ) )
-				{
-					buildables.add( "Build Trebuchet" );
-				}
-			}
+				Stack< String > buildables = new Stack< String >( );
 
-			build.clear( );
-			build.addAllItems( buildables );
+				if ( Traits.countBuildings( entityData, locationSet ) < 6 )
+				{
+					if ( !Traits.hasPrerequisites( entityData, locationSet, ArcheryTrait.class ) )
+					{
+						buildables.add( "Build Archery" );
+					}
+					if ( !Traits.hasPrerequisites( entityData, locationSet, BarracksTrait.class ) )
+					{
+						buildables.add( "Build Barracks" );
+					}
+					if ( !Traits.hasPrerequisites( entityData, locationSet, StablesTrait.class ) )
+					{
+						buildables.add( "Build Stables" );
+					}
+					if ( !Traits.hasPrerequisites( entityData, locationSet, ForgeTrait.class ) )
+					{
+						buildables.add( "Build Forge" );
+					}
+					if ( !Traits.hasPrerequisites( entityData, locationSet, MachineWorksTrait.class ) )
+					{
+						buildables.add( "Build Machine Works" );
+					}
+					if ( !Traits.hasPrerequisites( entityData, locationSet, SawmillTrait.class ) )
+					{
+						buildables.add( "Build Sawmill" );
+					}
+				}
+				if ( Traits.countUnits( entityData, locationSet ) < 6 )
+				{
+					if ( Traits.hasPrerequisites( entityData, locationSet, ArcheryTrait.class ) )
+					{
+						buildables.add( "Build Archer" );
+					}
+					if ( Traits.hasPrerequisites( entityData, locationSet, BarracksTrait.class ) )
+					{
+						buildables.add( "Build Clubman" );
+					}
+					if ( Traits.hasPrerequisites( entityData, locationSet, ArcheryTrait.class, StablesTrait.class ) )
+					{
+						buildables.add( "Build Mounted Archer" );
+					}
+					if ( Traits.hasPrerequisites( entityData, locationSet, BarracksTrait.class, StablesTrait.class ) )
+					{
+						buildables.add( "Build Mounted Clubman" );
+					}
+					if ( Traits.hasPrerequisites( entityData, locationSet, ForgeTrait.class, BarracksTrait.class ) )
+					{
+						buildables.add( "Build Axeman" );
+					}
+					if ( Traits.hasPrerequisites( entityData, locationSet, ArcheryTrait.class, ForgeTrait.class, SawmillTrait.class,
+							MachineWorksTrait.class ) )
+					{
+						buildables.add( "Build Catapult" );
+					}
+					if ( Traits.hasPrerequisites( entityData, locationSet, ArcheryTrait.class, ForgeTrait.class, SawmillTrait.class ) )
+					{
+						buildables.add( "Build Crossbowman" );
+					}
+					if ( Traits.countBuildings( entityData, locationSet ) == 6 )
+					{
+						buildables.add( "Build Krieger" );
+					}
+					if ( Traits.hasPrerequisites( entityData, locationSet, SawmillTrait.class, ArcheryTrait.class ) )
+					{
+						buildables.add( "Build Longbowman" );
+					}
+					if ( Traits.hasPrerequisites( entityData, locationSet, BarracksTrait.class, ForgeTrait.class, SawmillTrait.class ) )
+					{
+						buildables.add( "Build Pikeman" );
+					}
+					if ( Traits.hasPrerequisites( entityData, locationSet, BarracksTrait.class, ForgeTrait.class ) )
+					{
+						buildables.add( "Build Swordsman" );
+					}
+					if ( Traits.hasPrerequisites( entityData, locationSet, ArcheryTrait.class, ForgeTrait.class, SawmillTrait.class,
+							StablesTrait.class ) )
+					{
+						buildables.add( "Build Trebuchet" );
+					}
+				}
+
+				build.clear( );
+				build.addAllItems( buildables );
+				justUpdated = true;
+			}
+		}
+		else
+		{
+			justUpdated = false;
 		}
 	}
 
@@ -312,7 +321,7 @@ public class TileViewController extends GeneralPlayingController
 		ComponentFilter< LocationTrait > locationFilter = FieldFilter.create( LocationTrait.class, "tile", findTile );
 		locationSet = entityData.getEntities( locationFilter, LocationTrait.class );
 
-		inAction = new ArrayList< Entity >( );
+		toUpdate = new LinkedList< EntityId >( );
 
 		if ( locationSet != null )
 		{
@@ -413,6 +422,12 @@ public class TileViewController extends GeneralPlayingController
 		if ( locationSet != null )
 		{
 			locationSet.clear( );
+			locationSet = null;
+		}
+		if ( actionSet != null )
+		{
+			actionSet.clear( );
+			actionSet = null;
 		}
 	}
 
@@ -668,36 +683,9 @@ public class TileViewController extends GeneralPlayingController
 					{
 						removeFromExisting( e );
 					}
-				}
 
-				if ( refreshLimiter > 1 )
-				{
-					for ( Entity e : locationSet )
-					{
-						if ( Traits.inAction( entityData, e.getId( ) ) )
-						{
-							inAction.add( e );
-						}
-						if ( inAction.contains( e ) )
-						{
-							updateExisting( e );
-						}
-						if ( !Traits.inAction( entityData, e.getId( ) ) )
-						{
-							inAction.remove( e );
-						}
-					}
-
-					current.refresh( );
 					fillBuildables( );
-
-					refreshLimiter = 0;
 				}
-				else
-				{
-					refreshLimiter += tpf;
-				}
-
 			}
 			else
 			{
@@ -705,18 +693,58 @@ public class TileViewController extends GeneralPlayingController
 				locationSet = entityData.getEntities( locationFilter, LocationTrait.class );
 			}
 
+			if ( actionSet != null )
+			{
+				if ( actionSet.applyChanges( ) )
+				{
+					System.out.println( actionSet.size( ) );
+					for ( Entity e : actionSet.getAddedEntities( ) )
+					{
+						if ( !toUpdate.contains( e ) )
+						{
+							toUpdate.add( e.getId( ) );
+						}
+					}
+
+					for ( Entity e : actionSet.getChangedEntities( ) )
+					{
+						// TODO: For when we go turned based
+					}
+
+					for ( Entity e : actionSet.getRemovedEntities( ) )
+					{
+						if ( !toUpdate.contains( e ) )
+						{
+							toUpdate.add( e.getId( ) );
+						}
+					}
+
+					updateExisting( toUpdate );
+
+					current.refresh( );
+					fillBuildables( );
+
+				}
+			}
+			else
+			{
+				ComponentFilter< LocationTrait > locationFilter = FieldFilter.create( LocationTrait.class, "tile", findTile );
+				actionSet = entityData.getEntities( locationFilter, ActionTrait.class );
+			}
 		}
 	}
 
-	public void updateExisting( Entity entity )
+	public void updateExisting( LinkedList< EntityId > entities )
 	{
 		for ( EntityEntryModelClass eemc : current.getItems( ) )
 		{
-			if ( eemc.getEntityId( ).equals( entity.getId( ) ) )
+			if ( entities.contains( eemc.getEntityId( ) ) )
 			{
-				eemc.setName( createDisplayText( entity.getId( ) ) );
+				eemc.setName( createDisplayText( eemc.getEntityId( ) ) );
 			}
 		}
+
+		entities.clear( );
 	}
 
 }

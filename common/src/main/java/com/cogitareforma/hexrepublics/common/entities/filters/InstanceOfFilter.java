@@ -26,10 +26,7 @@ public class InstanceOfFilter< T extends EntityComponent > implements ComponentF
 	{
 		if ( c != null && type != null )
 		{
-			if ( type.isInstance( c ) )
-			{
-				return true;
-			}
+			return type.isInstance( c );
 		}
 		return false;
 	}
