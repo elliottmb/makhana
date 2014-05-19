@@ -68,6 +68,96 @@ public class GameServerManager extends ServerManager< GameServer >
 		super( app );
 	}
 
+	private void buildTiles( int terrainSize, float hexSize )
+	{
+		logger.log( Level.INFO, "Generating Tile Entities" );
+		for ( int i = 0; i < FastMath.floor( terrainSize / ( hexSize * 6 / 4 ) ) - 1; i++ )
+		{
+			for ( int j = 0; j < FastMath.ceil( terrainSize / ( FastMath.sqrt( 3f ) * hexSize ) ) - 1; j++ )
+			{
+				EntityId tile = getEntityData( ).createEntity( );
+				getEntityData( ).setComponent( tile, new TileTrait( i, j ) );
+			}
+		}
+	}
+
+	private void constructWorld( )
+	{
+		buildTiles( 257, 10.0f );
+
+		logger.log( Level.INFO, "Constructing initial world state" );
+		EntityId core = getEntityData( ).createEntity( );
+	}
+
+	public void createPlayerEntity( Account account )
+	{
+		if ( getEntityData( ) != null )
+		{
+			if ( account != null )
+			{
+				// Check if already exists
+				for ( Entity e : entityData.getEntities( PlayerTrait.class ) )
+				{
+					if ( e.get( PlayerTrait.class ).getAccount( ).equals( account ) )
+					{
+						return;
+					}
+				}
+				EntityId playerEntity = entityData.createEntity( );
+				logger.log( Level.INFO, "Creating an Entity for player: " + account.getAccountName( ) + ", " + playerEntity );
+				getEntityData( ).setComponent( playerEntity, new PlayerTrait( account ) );
+
+				int x = 0;
+				int y = 0;
+
+				switch ( getSessionManager( ).getAllSessions( ).size( ) )
+				{
+					case 1:
+					{
+						x = 3;
+						y = 3;
+						break;
+					}
+					case 2:
+					{
+						x = 12;
+						y = 10;
+						break;
+					}
+					case 3:
+					{
+						x = 3;
+						y = 10;
+						break;
+					}
+					default:
+					{
+						x = 12;
+						y = 3;
+						break;
+					}
+				}
+				ComponentFilter< TileTrait > xFilter = FieldFilter.create( TileTrait.class, "x", x );
+				ComponentFilter< TileTrait > yFilter = FieldFilter.create( TileTrait.class, "y", y );
+				@SuppressWarnings( "unchecked" )
+				ComponentFilter< TileTrait > completeFilter = AndFilter.create( TileTrait.class, xFilter, yFilter );
+
+				EntityId tileId = getEntityData( ).findEntity( completeFilter, TileTrait.class );
+
+				getEntityData( ).removeComponent( tileId, CreatedBy.class );
+				getEntityData( ).setComponent( tileId, new CreatedBy( playerEntity ) );
+			}
+			else
+			{
+				logger.log( Level.WARNING, "Could not create an Entity for a null player" );
+			}
+		}
+		else
+		{
+			logger.log( Level.WARNING, "Could not create an Entity for a player, Entity Data is null" );
+		}
+	}
+
 	/**
 	 * Returns the managed EntityData instance
 	 * 
@@ -96,6 +186,36 @@ public class GameServerManager extends ServerManager< GameServer >
 	public ServerStatus getServerStatus( )
 	{
 		return status;
+	}
+
+	public void removePlayerEntity( Account account )
+	{
+		if ( getEntityData( ) != null )
+		{
+			if ( account != null )
+			{
+
+				ComponentFilter< PlayerTrait > accountFilter = FieldFilter.create( PlayerTrait.class, "account", account );
+				EntityId tileId = getEntityData( ).findEntity( accountFilter, PlayerTrait.class );
+				if ( tileId != null )
+				{
+					logger.log( Level.INFO, "Removing Entity for Account: " + account.getAccountName( ) );
+					getEntityData( ).removeEntity( tileId );
+				}
+				else
+				{
+					logger.log( Level.WARNING, "Could not remove Entity for given Account, Entity may not exist" );
+				}
+			}
+			else
+			{
+				logger.log( Level.WARNING, "Could not remove Entity for a null Account" );
+			}
+		}
+		else
+		{
+			logger.log( Level.WARNING, "Could not remove Entity for Account, Entity Data is null" );
+		}
 	}
 
 	@SuppressWarnings(
@@ -168,126 +288,6 @@ public class GameServerManager extends ServerManager< GameServer >
 		}
 
 		return false;
-	}
-
-	private void constructWorld( )
-	{
-		logger.log( Level.INFO, "Constructing initial world state" );
-		EntityId core = getEntityData( ).createEntity( );
-
-		buildTiles( 257, 10.0f );
-	}
-
-	private void buildTiles( int terrainSize, float hexSize )
-	{
-		logger.log( Level.INFO, "Generating Tile Entities" );
-		for ( int i = 0; i < FastMath.floor( terrainSize / ( hexSize * 6 / 4 ) ) - 1; i++ )
-		{
-			for ( int j = 0; j < FastMath.ceil( terrainSize / ( FastMath.sqrt( 3f ) * hexSize ) ) - 1; j++ )
-			{
-				EntityId tile = getEntityData( ).createEntity( );
-				getEntityData( ).setComponent( tile, new TileTrait( i, j ) );
-			}
-		}
-	}
-
-	public void createPlayerEntity( Account account )
-	{
-		if ( getEntityData( ) != null )
-		{
-			if ( account != null )
-			{
-				// Check if already exists
-				for ( Entity e : entityData.getEntities( PlayerTrait.class ) )
-				{
-					if ( e.get( PlayerTrait.class ).getAccount( ).equals( account ) )
-					{
-						return;
-					}
-				}
-				EntityId playerEntity = entityData.createEntity( );
-				logger.log( Level.INFO, "Creating an Entity for player: " + account.getAccountName( ) + ", " + playerEntity );
-				getEntityData( ).setComponent( playerEntity, new PlayerTrait( account ) );
-
-				int x = 0;
-				int y = 0;
-
-				switch ( getSessionManager( ).getAllSessions( ).size( ) )
-				{
-					case 1:
-					{
-						x = 3;
-						y = 3;
-						break;
-					}
-					case 2:
-					{
-						x = 12;
-						y = 10;
-						break;
-					}
-					case 3:
-					{
-						x = 3;
-						y = 10;
-						break;
-					}
-					default:
-					{
-						x = 12;
-						y = 3;
-						break;
-					}
-				}
-				ComponentFilter< TileTrait > xFilter = FieldFilter.create( TileTrait.class, "x", x );
-				ComponentFilter< TileTrait > yFilter = FieldFilter.create( TileTrait.class, "y", y );
-				@SuppressWarnings( "unchecked" )
-				ComponentFilter< TileTrait > completeFilter = AndFilter.create( TileTrait.class, xFilter, yFilter );
-
-				EntityId tileId = getEntityData( ).findEntity( completeFilter, TileTrait.class );
-
-				getEntityData( ).removeComponent( tileId, CreatedBy.class );
-				getEntityData( ).setComponent( tileId, new CreatedBy( playerEntity ) );
-			}
-			else
-			{
-				logger.log( Level.WARNING, "Could not create an Entity for a null player" );
-			}
-		}
-		else
-		{
-			logger.log( Level.WARNING, "Could not create an Entity for a player, Entity Data is null" );
-		}
-	}
-
-	public void removePlayerEntity( Account account )
-	{
-		if ( getEntityData( ) != null )
-		{
-			if ( account != null )
-			{
-
-				ComponentFilter< PlayerTrait > accountFilter = FieldFilter.create( PlayerTrait.class, "account", account );
-				EntityId tileId = getEntityData( ).findEntity( accountFilter, PlayerTrait.class );
-				if ( tileId != null )
-				{
-					logger.log( Level.INFO, "Removing Entity for Account: " + account.getAccountName( ) );
-					getEntityData( ).removeEntity( tileId );
-				}
-				else
-				{
-					logger.log( Level.WARNING, "Could not remove Entity for given Account, Entity may not exist" );
-				}
-			}
-			else
-			{
-				logger.log( Level.WARNING, "Could not remove Entity for a null Account" );
-			}
-		}
-		else
-		{
-			logger.log( Level.WARNING, "Could not remove Entity for Account, Entity Data is null" );
-		}
 	}
 
 	@Override

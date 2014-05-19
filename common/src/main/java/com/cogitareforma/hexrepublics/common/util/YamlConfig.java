@@ -63,18 +63,115 @@ public class YamlConfig
 
 	}
 
-	public void save( )
+	public void buildAppSettings( AppSettings settings )
 	{
-		try
+		if ( settings == null )
 		{
-			FileWriter output = new FileWriter( this.file );
-			yaml.dump( this.data, output );
-			output.close( );
+			throw new NullPointerException( );
 		}
-		catch ( IOException e )
+
+		settings.setHeight( 768 );
+		settings.setWidth( 1024 );
+
+		if ( containsKey( "client.graphics.height" ) && containsKey( "client.graphics.width" ) )
 		{
-			logger.log( Level.SEVERE, "Error saving yaml configuration file.", e );
+			Object height = get( "client.graphics.height" );
+			Object width = get( "client.graphics.width" );
+			if ( height != null && width != null )
+			{
+				if ( height instanceof Integer && width instanceof Integer )
+				{
+					settings.setResolution( ( Integer ) width, ( Integer ) height );
+				}
+				else
+				{
+					logger.log( Level.WARNING, "Error setting resolution, expected ( Integer, Integer ), got ( "
+							+ height.getClass( ).getSimpleName( ) + ", " + width.getClass( ).getSimpleName( ) + " )" );
+				}
+			}
 		}
+		if ( containsKey( "client.graphics.fullscreen" ) )
+		{
+			Object value = get( "client.graphics.fullscreen" );
+			if ( value != null )
+			{
+				if ( value instanceof Boolean )
+				{
+					settings.setFullscreen( ( Boolean ) value );
+				}
+				else
+				{
+					logger.log( Level.WARNING, "Error setting fullscreen, expected Boolean, got " + value.getClass( ).getSimpleName( ) );
+				}
+			}
+		}
+		if ( containsKey( "client.graphics.vsync" ) )
+		{
+			Object value = get( "client.graphics.vsync" );
+			if ( value != null )
+			{
+				if ( value instanceof Boolean )
+				{
+					settings.setVSync( ( Boolean ) value );
+				}
+				else
+				{
+					logger.log( Level.WARNING, "Error setting vsync, expected Boolean, got " + value.getClass( ).getSimpleName( ) );
+				}
+			}
+		}
+		if ( containsKey( "client.graphics.samples" ) )
+		{
+			Object value = get( "client.graphics.samples" );
+			if ( value != null )
+			{
+				if ( value instanceof Integer )
+				{
+					settings.setSamples( ( Integer ) value );
+				}
+				else
+				{
+					logger.log( Level.WARNING, "Error setting samples, expected Integer, got " + value.getClass( ).getSimpleName( ) );
+				}
+			}
+		}
+	}
+
+	public void buildAudioSettings( Listener listener )
+	{
+		if ( listener == null )
+		{
+			throw new NullPointerException( );
+		}
+
+		if ( containsKey( "client.audio.mainvolume" ) )
+		{
+			Object value = get( "client.audio.mainvolume" );
+			if ( value != null )
+			{
+				if ( value instanceof Double )
+				{
+					listener.setVolume( ( ( Double ) value ).floatValue( ) / 50.0f );
+				}
+				else
+				{
+					logger.log( Level.WARNING, "Error setting main volume, expected Double, got " + value.getClass( ).getSimpleName( ) );
+				}
+			}
+		}
+	}
+
+	public void buildInputSettings( )
+	{
+
+		putInputSettings( "console", KeyInput.KEY_GRAVE );
+		putInputSettings( "score", KeyInput.KEY_TAB );
+		putInputSettings( "chat", KeyInput.KEY_T );
+		putInputSettings( "north", KeyInput.KEY_W );
+		putInputSettings( "south", KeyInput.KEY_S );
+		putInputSettings( "west", KeyInput.KEY_A );
+		putInputSettings( "east", KeyInput.KEY_D );
+		save( );
 	}
 
 	@SuppressWarnings( "unchecked" )
@@ -193,62 +290,6 @@ public class YamlConfig
 		}
 	}
 
-	public void putInputSettings( String name, int key )
-	{
-		if ( name == null )
-		{
-			throw new NullPointerException( );
-		}
-		put( "client.input." + name + "Key", key );
-	}
-
-	public void buildInputSettings( )
-	{
-
-		putInputSettings( "console", KeyInput.KEY_GRAVE );
-		putInputSettings( "score", KeyInput.KEY_TAB );
-		putInputSettings( "chat", KeyInput.KEY_T );
-		putInputSettings( "north", KeyInput.KEY_W );
-		putInputSettings( "south", KeyInput.KEY_S );
-		putInputSettings( "west", KeyInput.KEY_A );
-		putInputSettings( "east", KeyInput.KEY_D );
-		save( );
-	}
-
-	public void putAudioSettings( Listener listener )
-	{
-		if ( listener == null )
-		{
-			throw new NullPointerException( );
-		}
-
-		put( "client.audio.mainvolume", new Double( listener.getVolume( ) ) );
-	}
-
-	public void buildAudioSettings( Listener listener )
-	{
-		if ( listener == null )
-		{
-			throw new NullPointerException( );
-		}
-
-		if ( containsKey( "client.audio.mainvolume" ) )
-		{
-			Object value = get( "client.audio.mainvolume" );
-			if ( value != null )
-			{
-				if ( value instanceof Double )
-				{
-					listener.setVolume( ( ( Double ) value ).floatValue( ) / 50.0f );
-				}
-				else
-				{
-					logger.log( Level.WARNING, "Error setting main volume, expected Double, got " + value.getClass( ).getSimpleName( ) );
-				}
-			}
-		}
-	}
-
 	public void putAppSettings( AppSettings settings )
 	{
 		if ( settings == null )
@@ -264,77 +305,36 @@ public class YamlConfig
 		put( "client.graphics.frequency", settings.getFrequency( ) );
 	}
 
-	public void buildAppSettings( AppSettings settings )
+	public void putAudioSettings( Listener listener )
 	{
-		if ( settings == null )
+		if ( listener == null )
 		{
 			throw new NullPointerException( );
 		}
 
-		settings.setHeight( 768 );
-		settings.setWidth( 1024 );
+		put( "client.audio.mainvolume", new Double( listener.getVolume( ) ) );
+	}
 
-		if ( containsKey( "client.graphics.height" ) && containsKey( "client.graphics.width" ) )
+	public void putInputSettings( String name, int key )
+	{
+		if ( name == null )
 		{
-			Object height = get( "client.graphics.height" );
-			Object width = get( "client.graphics.width" );
-			if ( height != null && width != null )
-			{
-				if ( height instanceof Integer && width instanceof Integer )
-				{
-					settings.setResolution( ( Integer ) width, ( Integer ) height );
-				}
-				else
-				{
-					logger.log( Level.WARNING, "Error setting resolution, expected ( Integer, Integer ), got ( "
-							+ height.getClass( ).getSimpleName( ) + ", " + width.getClass( ).getSimpleName( ) + " )" );
-				}
-			}
+			throw new NullPointerException( );
 		}
-		if ( containsKey( "client.graphics.fullscreen" ) )
+		put( "client.input." + name + "Key", key );
+	}
+
+	public void save( )
+	{
+		try
 		{
-			Object value = get( "client.graphics.fullscreen" );
-			if ( value != null )
-			{
-				if ( value instanceof Boolean )
-				{
-					settings.setFullscreen( ( Boolean ) value );
-				}
-				else
-				{
-					logger.log( Level.WARNING, "Error setting fullscreen, expected Boolean, got " + value.getClass( ).getSimpleName( ) );
-				}
-			}
+			FileWriter output = new FileWriter( this.file );
+			yaml.dump( this.data, output );
+			output.close( );
 		}
-		if ( containsKey( "client.graphics.vsync" ) )
+		catch ( IOException e )
 		{
-			Object value = get( "client.graphics.vsync" );
-			if ( value != null )
-			{
-				if ( value instanceof Boolean )
-				{
-					settings.setVSync( ( Boolean ) value );
-				}
-				else
-				{
-					logger.log( Level.WARNING, "Error setting vsync, expected Boolean, got " + value.getClass( ).getSimpleName( ) );
-				}
-			}
-		}
-		if ( containsKey( "client.graphics.samples" ) )
-		{
-			Object value = get( "client.graphics.samples" );
-			if ( value != null )
-			{
-				if ( value instanceof Integer )
-				{
-					settings.setSamples( ( Integer ) value );
-				}
-				else
-				{
-					logger.log( Level.WARNING, "Error setting samples, expected Integer, got " + value.getClass( ).getSimpleName( ) );
-				}
-			}
+			logger.log( Level.SEVERE, "Error saving yaml configuration file.", e );
 		}
 	}
 }

@@ -56,7 +56,7 @@ public class MasterServerManager extends ServerManager< MasterServer >
 			for ( HostedConnection hc : connections )
 			{
 				Account act = getSessionManager( ).getFromSession( hc );
-				if ( act.isServer( ) == false )
+				if ( !act.isServer( ) && !act.isInGame( ) )
 				{
 					users.add( act.getAccountName( ) );
 				}
@@ -64,7 +64,7 @@ public class MasterServerManager extends ServerManager< MasterServer >
 			for ( HostedConnection hc : connections )
 			{
 				Account act = getSessionManager( ).getFromSession( hc );
-				if ( act.isServer( ) == false )
+				if ( !act.isServer( ) && !act.isInGame( ) )
 				{
 					hc.send( new UserListResponse( users ) );
 				}

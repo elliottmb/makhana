@@ -41,9 +41,12 @@ public class ObjectState extends AbstractAppState
 
 	// private TerrainState terrainState;
 
-	public Node getRoot( )
+	@Override
+	public void cleanup( )
 	{
-		return objectRoot;
+		super.cleanup( );
+		this.app.getInputManager( ).removeListener( actionListener );
+		this.app.getInputManager( ).deleteMapping( "sphereFlip" );
 	}
 
 	private void createTestObjects( )
@@ -103,6 +106,11 @@ public class ObjectState extends AbstractAppState
 
 	}
 
+	public Node getRoot( )
+	{
+		return objectRoot;
+	}
+
 	@Override
 	public void initialize( AppStateManager stateManager, Application app )
 	{
@@ -134,9 +142,30 @@ public class ObjectState extends AbstractAppState
 	}
 
 	@Override
+	public void postRender( )
+	{
+		super.postRender( );
+
+	}
+
+	@Override
+	public void render( RenderManager rm )
+	{
+		super.render( rm );
+
+	}
+
+	@Override
 	public void stateAttached( AppStateManager stateManager )
 	{
 		super.stateAttached( stateManager );
+
+	}
+
+	@Override
+	public void stateDetached( AppStateManager stateManager )
+	{
+		super.stateDetached( stateManager );
 
 	}
 
@@ -158,34 +187,5 @@ public class ObjectState extends AbstractAppState
 			 */
 			sphere.move( 0.3f * tpf * sphereDirection, newY, 0.3f * tpf * sphereDirection );
 		}
-	}
-
-	@Override
-	public void render( RenderManager rm )
-	{
-		super.render( rm );
-
-	}
-
-	@Override
-	public void postRender( )
-	{
-		super.postRender( );
-
-	}
-
-	@Override
-	public void stateDetached( AppStateManager stateManager )
-	{
-		super.stateDetached( stateManager );
-
-	}
-
-	@Override
-	public void cleanup( )
-	{
-		super.cleanup( );
-		this.app.getInputManager( ).removeListener( actionListener );
-		this.app.getInputManager( ).deleteMapping( "sphereFlip" );
 	}
 }

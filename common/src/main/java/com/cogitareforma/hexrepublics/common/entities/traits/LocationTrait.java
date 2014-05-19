@@ -29,14 +29,14 @@ public class LocationTrait implements EntityComponent
 		this.position = position;
 	}
 
-	public EntityId getTile( )
-	{
-		return tile;
-	}
-
 	public byte getPosition( )
 	{
 		return position;
+	}
+
+	public EntityId getTile( )
+	{
+		return tile;
 	}
 
 	@Override

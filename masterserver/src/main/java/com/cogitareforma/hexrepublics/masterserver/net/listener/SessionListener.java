@@ -76,8 +76,12 @@ public class SessionListener implements MessageListener< HostedConnection >
 								{
 									for ( HostedConnection hc : sm.getAllSessions( ) )
 									{
-										hc.send( new NetworkChatMessage( null, String.format( "Server Notice: %s is now online.",
-												account.getAccountName( ) ) ) );
+										Account act = sm.getFromSession( hc );
+										if ( !act.isServer( ) && !act.isInGame( ) )
+										{
+											hc.send( new NetworkChatMessage( null, String.format( "Server Notice: %s is now online.",
+													account.getAccountName( ) ) ) );
+										}
 									}
 								}
 							}
@@ -122,7 +126,12 @@ public class SessionListener implements MessageListener< HostedConnection >
 			{
 				for ( HostedConnection hc : sm.getAllSessions( ) )
 				{
-					hc.send( new NetworkChatMessage( null, String.format( "Server Notice: %s is now offline.", account.getAccountName( ) ) ) );
+					Account act = sm.getFromSession( hc );
+					if ( !act.isServer( ) && !act.isInGame( ) )
+					{
+						hc.send( new NetworkChatMessage( null,
+								String.format( "Server Notice: %s is now offline.", account.getAccountName( ) ) ) );
+					}
 				}
 				serverManager.broadcastUserList( );
 			}

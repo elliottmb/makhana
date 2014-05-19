@@ -5,7 +5,6 @@ import java.util.logging.Logger;
 
 import com.cogitareforma.hexrepublics.client.views.HudViewController;
 import com.cogitareforma.hexrepublics.client.views.LobbyViewController;
-import com.cogitareforma.hexrepublics.common.data.Account;
 import com.cogitareforma.hexrepublics.common.net.msg.ClientStatusMessage;
 import com.jme3.network.Client;
 import com.jme3.network.ClientStateListener;
@@ -44,8 +43,11 @@ public class ClientGameConnListener implements ClientStateListener, ErrorListene
 		manager.setRemoteEntityData( new RemoteEntityData( manager.getClient( ), 0 ) );
 
 		logger.log( Level.INFO, "Informing Master Server of in game status" );
-		Account account = manager.getApp( ).getMasterConnManager( ).getAccount( );
-		manager.getApp( ).getMasterConnManager( ).send( new ClientStatusMessage( true ) );
+		ClientMasterConnManager masterConnManager = manager.getApp( ).getMasterConnManager( );
+		if ( masterConnManager.isConnected( ) )
+		{
+			manager.getApp( ).getMasterConnManager( ).send( new ClientStatusMessage( true ) );
+		}
 	}
 
 	@Override
@@ -70,8 +72,11 @@ public class ClientGameConnListener implements ClientStateListener, ErrorListene
 		manager.setRemoteEntityData( null );
 
 		logger.log( Level.INFO, "Informing Master Server of out of game status" );
-		Account account = manager.getApp( ).getMasterConnManager( ).getAccount( );
-		manager.getApp( ).getMasterConnManager( ).send( new ClientStatusMessage( false ) );
+		ClientMasterConnManager masterConnManager = manager.getApp( ).getMasterConnManager( );
+		if ( masterConnManager.isConnected( ) )
+		{
+			manager.getApp( ).getMasterConnManager( ).send( new ClientStatusMessage( false ) );
+		}
 	}
 
 	@Override

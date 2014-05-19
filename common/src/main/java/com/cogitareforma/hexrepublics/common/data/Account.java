@@ -43,7 +43,12 @@ public class Account
 	/**
 	 * The account's type (false = user, true = server)
 	 */
-	private boolean isServer;
+	private transient boolean isServer;
+
+	/**
+	 * If the account is currently in game (trivially true for servers)
+	 */
+	private transient boolean inGame;
 
 	/**
 	 * Used by the serializer.
@@ -110,6 +115,19 @@ public class Account
 		return hashedPassword;
 	}
 
+	public int hashCode( )
+	{
+		return new HashCodeBuilder( ).append( accountName ).toHashCode( );
+	}
+
+	/**
+	 * @return the inGame
+	 */
+	public boolean isInGame( )
+	{
+		return inGame;
+	}
+
 	/**
 	 * Returns this account's type.
 	 * 
@@ -118,11 +136,6 @@ public class Account
 	public boolean isServer( )
 	{
 		return isServer;
-	}
-
-	public int hashCode( )
-	{
-		return new HashCodeBuilder( ).append( accountName ).toHashCode( );
 	}
 
 	/**
@@ -177,6 +190,15 @@ public class Account
 	public void setHashedPassword( String hashedPassword )
 	{
 		this.hashedPassword = hashedPassword;
+	}
+
+	/**
+	 * @param inGame
+	 *            the inGame to set
+	 */
+	public void setInGame( boolean inGame )
+	{
+		this.inGame = inGame;
 	}
 
 	/**

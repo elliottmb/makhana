@@ -109,10 +109,9 @@ public class HeightBasedAlphaMapGenerator
 		return heightmap;
 	}
 
-	public void setHeightmap( HeightMap heightmap )
+	public float getMaxHeight( )
 	{
-		rendered = rendered && ( heightmap == this.heightmap );
-		this.heightmap = heightmap;
+		return maxHeight;
 	}
 
 	public float getTex1Height( )
@@ -120,43 +119,14 @@ public class HeightBasedAlphaMapGenerator
 		return tex1Height;
 	}
 
-	public void setTex1Height( float tex1Height )
-	{
-		rendered = rendered && ( this.tex1Height == tex1Height );
-		this.tex1Height = tex1Height;
-	}
-
 	public float getTex2Height( )
 	{
 		return tex2Height;
 	}
 
-	public void setTex2Height( float tex2Height )
-	{
-		rendered = rendered && ( this.tex2Height == tex2Height );
-		this.tex2Height = tex2Height;
-	}
-
 	public float getTex3Height( )
 	{
 		return tex3Height;
-	}
-
-	public void setTex3Height( float tex3Height )
-	{
-		rendered = rendered && ( this.tex3Height == tex3Height );
-		this.tex3Height = tex3Height;
-	}
-
-	public float getMaxHeight( )
-	{
-		return maxHeight;
-	}
-
-	public void setMaxHeight( float maxHeight )
-	{
-		rendered = rendered && ( this.maxHeight == maxHeight );
-		this.maxHeight = maxHeight;
 	}
 
 	public Image renderAlphaMap( )
@@ -234,5 +204,35 @@ public class HeightBasedAlphaMapGenerator
 		}
 		BufferedImage img = ImageToAwt.convert( alphamap, false, true, 0 );
 		return ImageIO.write( img, "png", new File( path + filename + ".png" ) );
+	}
+
+	public void setHeightmap( HeightMap heightmap )
+	{
+		rendered = rendered && ( heightmap == this.heightmap );
+		this.heightmap = heightmap;
+	}
+
+	public void setMaxHeight( float maxHeight )
+	{
+		rendered = rendered && ( this.maxHeight == maxHeight );
+		this.maxHeight = maxHeight;
+	}
+
+	public void setTex1Height( float tex1Height )
+	{
+		rendered = rendered && ( this.tex1Height == tex1Height );
+		this.tex1Height = tex1Height;
+	}
+
+	public void setTex2Height( float tex2Height )
+	{
+		rendered = rendered && ( this.tex2Height == tex2Height );
+		this.tex2Height = tex2Height;
+	}
+
+	public void setTex3Height( float tex3Height )
+	{
+		rendered = rendered && ( this.tex3Height == tex3Height );
+		this.tex3Height = tex3Height;
 	}
 }

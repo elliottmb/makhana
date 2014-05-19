@@ -86,63 +86,6 @@ public class PackageUtils
 		return list;
 	}
 
-	public static List< Class< ? > > getAllConcreteClassesFromNames( Set< String > names )
-	{
-		List< Class< ? > > classes = new LinkedList< Class< ? > >( );
-		for ( Class< ? > clazz : getAllClassesFromNames( names ) )
-		{
-			if ( !Modifier.isAbstract( clazz.getModifiers( ) ) && !Modifier.isInterface( clazz.getModifiers( ) ) )
-			{
-				classes.add( clazz );
-			}
-		}
-		return classes;
-	}
-
-	public static List< Class< ? > > getAllClassesFromNames( Set< String > names )
-	{
-		List< Class< ? > > classes = new LinkedList< Class< ? > >( );
-		try
-		{
-			for ( String className : names )
-			{
-				classes.add( Class.forName( className ) );
-			}
-		}
-		catch ( Exception e )
-		{
-			logger.log( Level.SEVERE, "Failed to get classes from names: " + e.getStackTrace( ) );
-		}
-		return classes;
-	}
-
-	/**
-	 * Registers a TreeSet of all classes in a package (recursively).
-	 * 
-	 * @param packageName
-	 *            the package name where the classes are located
-	 * @throws Exception
-	 *             the exception thrown if the file structure of the project is
-	 *             somehow unknown or unreadable
-	 */
-	public static TreeSet< String > getAllClassNamesInPackage( String packageName ) throws IOException
-	{
-		ClassLoader classLoader = Thread.currentThread( ).getContextClassLoader( );
-		Enumeration< URL > resources = classLoader.getResources( packageName.replace( '.', '/' ) );
-		List< String > dirs = new ArrayList< String >( );
-		while ( resources.hasMoreElements( ) )
-		{
-			URL resource = ( URL ) resources.nextElement( );
-			dirs.add( URLDecoder.decode( resource.getFile( ), "UTF-8" ) );
-		}
-		TreeSet< String > classes = new TreeSet< String >( );
-		for ( String dir : dirs )
-		{
-			classes.addAll( findClasses( dir, packageName ) );
-		}
-		return classes;
-	}
-
 	/**
 	 * Finds classes recursively given a specific path and package.
 	 * 
@@ -199,6 +142,63 @@ public class PackageUtils
 			}
 		}
 
+		return classes;
+	}
+
+	public static List< Class< ? > > getAllClassesFromNames( Set< String > names )
+	{
+		List< Class< ? > > classes = new LinkedList< Class< ? > >( );
+		try
+		{
+			for ( String className : names )
+			{
+				classes.add( Class.forName( className ) );
+			}
+		}
+		catch ( Exception e )
+		{
+			logger.log( Level.SEVERE, "Failed to get classes from names: " + e.getStackTrace( ) );
+		}
+		return classes;
+	}
+
+	/**
+	 * Registers a TreeSet of all classes in a package (recursively).
+	 * 
+	 * @param packageName
+	 *            the package name where the classes are located
+	 * @throws Exception
+	 *             the exception thrown if the file structure of the project is
+	 *             somehow unknown or unreadable
+	 */
+	public static TreeSet< String > getAllClassNamesInPackage( String packageName ) throws IOException
+	{
+		ClassLoader classLoader = Thread.currentThread( ).getContextClassLoader( );
+		Enumeration< URL > resources = classLoader.getResources( packageName.replace( '.', '/' ) );
+		List< String > dirs = new ArrayList< String >( );
+		while ( resources.hasMoreElements( ) )
+		{
+			URL resource = ( URL ) resources.nextElement( );
+			dirs.add( URLDecoder.decode( resource.getFile( ), "UTF-8" ) );
+		}
+		TreeSet< String > classes = new TreeSet< String >( );
+		for ( String dir : dirs )
+		{
+			classes.addAll( findClasses( dir, packageName ) );
+		}
+		return classes;
+	}
+
+	public static List< Class< ? > > getAllConcreteClassesFromNames( Set< String > names )
+	{
+		List< Class< ? > > classes = new LinkedList< Class< ? > >( );
+		for ( Class< ? > clazz : getAllClassesFromNames( names ) )
+		{
+			if ( !Modifier.isAbstract( clazz.getModifiers( ) ) && !Modifier.isInterface( clazz.getModifiers( ) ) )
+			{
+				classes.add( clazz );
+			}
+		}
 		return classes;
 	}
 

@@ -12,15 +12,15 @@ public class ArcherTrait extends MoveableTrait
 {
 
 	@Override
-	public float getInitialHealth( )
-	{
-		return 10.0f;
-	}
-
-	@Override
 	public float getInitialDefense( )
 	{
 		return 5.0f;
+	}
+
+	@Override
+	public float getInitialHealth( )
+	{
+		return 10.0f;
 	}
 
 	@Override

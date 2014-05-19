@@ -80,6 +80,16 @@ public class Traits
 		return false;
 	}
 
+	public static int countBuildings( EntityData entityData, EntitySet entitySet )
+	{
+		Set< EntityId > idSet = new HashSet< EntityId >( entitySet.size( ) );
+		for ( Entity e : entitySet )
+		{
+			idSet.add( e.getId( ) );
+		}
+		return countBuildings( entityData, idSet );
+	}
+
 	public static int countBuildings( EntityData entityData, Set< EntityId > idSet )
 	{
 		int count = 0;
@@ -97,6 +107,16 @@ public class Traits
 		return count;
 	}
 
+	public static int countUnits( EntityData entityData, EntitySet entitySet )
+	{
+		Set< EntityId > idSet = new HashSet< EntityId >( entitySet.size( ) );
+		for ( Entity e : entitySet )
+		{
+			idSet.add( e.getId( ) );
+		}
+		return countUnits( entityData, idSet );
+	}
+
 	public static int countUnits( EntityData entityData, Set< EntityId > idSet )
 	{
 		int count = 0;
@@ -112,26 +132,6 @@ public class Traits
 			}
 		}
 		return count;
-	}
-
-	public static int countBuildings( EntityData entityData, EntitySet entitySet )
-	{
-		Set< EntityId > idSet = new HashSet< EntityId >( entitySet.size( ) );
-		for ( Entity e : entitySet )
-		{
-			idSet.add( e.getId( ) );
-		}
-		return countBuildings( entityData, idSet );
-	}
-
-	public static int countUnits( EntityData entityData, EntitySet entitySet )
-	{
-		Set< EntityId > idSet = new HashSet< EntityId >( entitySet.size( ) );
-		for ( Entity e : entitySet )
-		{
-			idSet.add( e.getId( ) );
-		}
-		return countUnits( entityData, idSet );
 	}
 
 	/**

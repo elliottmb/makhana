@@ -25,18 +25,18 @@ public enum ActionType
 	}
 
 	/**
-	 * @return the verb
-	 */
-	public String getVerb( )
-	{
-		return verb;
-	}
-
-	/**
 	 * @return the dataKeys
 	 */
 	public List< String > getDataKeys( )
 	{
 		return dataKeys;
+	}
+
+	/**
+	 * @return the verb
+	 */
+	public String getVerb( )
+	{
+		return verb;
 	}
 }

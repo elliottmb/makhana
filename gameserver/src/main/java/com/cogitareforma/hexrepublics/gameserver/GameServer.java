@@ -82,8 +82,7 @@ public class GameServer extends SimpleApplication
 				}
 				if ( "status".equals( line ) )
 				{
-					List< HostedConnection > connections = gameServer.getGameServerManager( ).getSessionManager( )
-							.getAllSessions( );
+					List< HostedConnection > connections = gameServer.getGameServerManager( ).getSessionManager( ).getAllSessions( );
 					if ( connections.size( ) > 0 )
 					{
 						StringBuilder sb = new StringBuilder( );
@@ -176,6 +175,14 @@ public class GameServer extends SimpleApplication
 	}
 
 	/**
+	 * @return the port
+	 */
+	public int getPort( )
+	{
+		return port;
+	}
+
+	/**
 	 * Sets the parsed command line arguments
 	 * 
 	 * @param arguments
@@ -238,14 +245,6 @@ public class GameServer extends SimpleApplication
 		gameServerManager.run( port );
 
 		masterConnManager = new GameMasterConnManager( this );
-	}
-
-	/**
-	 * @return the port
-	 */
-	public int getPort( )
-	{
-		return port;
 	}
 
 	@Override

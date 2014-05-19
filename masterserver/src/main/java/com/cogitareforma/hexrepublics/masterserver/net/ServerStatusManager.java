@@ -38,17 +38,37 @@ public class ServerStatusManager
 	}
 
 	/**
-	 * Adds a session to the hashmap given a connection and a user serverStatus.
+	 * Returns all current game server connections.
 	 * 
-	 * @param conn
-	 *            the client connection that has successfully authenticated
-	 * @param serverStatus
-	 *            the serverStatus associated with the connection
+	 * @return all current game server connections
 	 */
-	public void put( HostedConnection conn, ServerStatus serverStatus )
+	public List< HostedConnection > getAllGameServerConnections( )
 	{
-		logger.log( Level.FINE, "Adding user session to database." );
-		db.put( conn, serverStatus );
+		logger.log( Level.FINE, "Retrieving all currently active game server connections." );
+		ArrayList< HostedConnection > list = new ArrayList< HostedConnection >( );
+		Iterator< HostedConnection > it = db.keySet( ).iterator( );
+		while ( it.hasNext( ) )
+		{
+			list.add( it.next( ) );
+		}
+		return list;
+	}
+
+	/**
+	 * Returns all current server statuses.
+	 * 
+	 * @return all current server statuses
+	 */
+	public ArrayList< ServerStatus > getAllServerStatuses( )
+	{
+		logger.log( Level.FINE, "Retrieving all currently active server statuses." );
+		ArrayList< ServerStatus > list = new ArrayList< ServerStatus >( );
+		Iterator< ServerStatus > it = db.values( ).iterator( );
+		while ( it.hasNext( ) )
+		{
+			list.add( it.next( ) );
+		}
+		return list;
 	}
 
 	/**
@@ -66,6 +86,20 @@ public class ServerStatusManager
 			return db.get( conn );
 		}
 		return null;
+	}
+
+	/**
+	 * Adds a session to the hashmap given a connection and a user serverStatus.
+	 * 
+	 * @param conn
+	 *            the client connection that has successfully authenticated
+	 * @param serverStatus
+	 *            the serverStatus associated with the connection
+	 */
+	public void put( HostedConnection conn, ServerStatus serverStatus )
+	{
+		logger.log( Level.FINE, "Adding user session to database." );
+		db.put( conn, serverStatus );
 	}
 
 	/**
@@ -100,40 +134,6 @@ public class ServerStatusManager
 				db.remove( conn );
 			}
 		}
-	}
-
-	/**
-	 * Returns all current server statuses.
-	 * 
-	 * @return all current server statuses
-	 */
-	public ArrayList< ServerStatus > getAllServerStatuses( )
-	{
-		logger.log( Level.FINE, "Retrieving all currently active server statuses." );
-		ArrayList< ServerStatus > list = new ArrayList< ServerStatus >( );
-		Iterator< ServerStatus > it = db.values( ).iterator( );
-		while ( it.hasNext( ) )
-		{
-			list.add( it.next( ) );
-		}
-		return list;
-	}
-
-	/**
-	 * Returns all current game server connections.
-	 * 
-	 * @return all current game server connections
-	 */
-	public List< HostedConnection > getAllGameServerConnections( )
-	{
-		logger.log( Level.FINE, "Retrieving all currently active game server connections." );
-		ArrayList< HostedConnection > list = new ArrayList< HostedConnection >( );
-		Iterator< HostedConnection > it = db.keySet( ).iterator( );
-		while ( it.hasNext( ) )
-		{
-			list.add( it.next( ) );
-		}
-		return list;
 	}
 
 }

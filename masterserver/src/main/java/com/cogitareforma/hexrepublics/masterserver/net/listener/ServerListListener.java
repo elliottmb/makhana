@@ -23,6 +23,15 @@ public class ServerListListener implements MessageListener< HostedConnection >
 		this.server = server;
 	}
 
+	public void broadcastServerList( HostedConnection conn )
+	{
+		logger.log( Level.INFO, "Sending updated ServerList to requesting client " + conn.getAddress( ) );
+
+		ArrayList< ServerStatus > servers = server.getServerStatusManager( ).getAllServerStatuses( );
+		conn.send( new ServerListResponse( servers ) );
+
+	}
+
 	@Override
 	public void messageReceived( HostedConnection source, Message message )
 	{
@@ -42,14 +51,5 @@ public class ServerListListener implements MessageListener< HostedConnection >
 
 			broadcastServerList( source );
 		}
-	}
-
-	public void broadcastServerList( HostedConnection conn )
-	{
-		logger.log( Level.INFO, "Sending updated ServerList to requesting client " + conn.getAddress( ) );
-
-		ArrayList< ServerStatus > servers = server.getServerStatusManager( ).getAllServerStatuses( );
-		conn.send( new ServerListResponse( servers ) );
-
 	}
 }

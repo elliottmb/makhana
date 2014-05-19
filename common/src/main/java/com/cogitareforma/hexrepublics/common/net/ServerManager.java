@@ -109,6 +109,18 @@ public abstract class ServerManager< A extends Application >
 	}
 
 	/**
+	 * Starts the ServerManager's Server instance on the given port. If the
+	 * Server is already running, the implementation is free to close it and
+	 * start it with the given port. Returns true if the server was successfully
+	 * started, otherwise false.
+	 * 
+	 * @param port
+	 *            port to bind the server on
+	 * @return true if the server was successfully started, otherwise false.
+	 */
+	public abstract boolean run( final Integer port );
+
+	/**
 	 * Sends a given Message to the connected Clients.
 	 * 
 	 * @param message
@@ -132,18 +144,6 @@ public abstract class ServerManager< A extends Application >
 	{
 		this.server = server;
 	}
-
-	/**
-	 * Starts the ServerManager's Server instance on the given port. If the
-	 * Server is already running, the implementation is free to close it and
-	 * start it with the given port. Returns true if the server was successfully
-	 * started, otherwise false.
-	 * 
-	 * @param port
-	 *            port to bind the server on
-	 * @return true if the server was successfully started, otherwise false.
-	 */
-	public abstract boolean run( final Integer port );
 
 	/**
 	 * Function that contains any update logic that should be called by the main

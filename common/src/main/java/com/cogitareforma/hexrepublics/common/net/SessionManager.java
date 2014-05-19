@@ -42,18 +42,63 @@ public class SessionManager
 	}
 
 	/**
-	 * Adds a session to the hash map given a client connection and a user
-	 * account.
+	 * Checks if the supplied Account is currently in the database
+	 * 
+	 * @param account
+	 *            the account to be checked
+	 * @return true if the account is currently in the database
+	 */
+	public boolean containsAccount( Account account )
+	{
+		logger.log( Level.FINE, "Checking if account is in the session database." );
+		return db.containsValue( account );
+	}
+
+	/**
+	 * Checks if the supplied HostedConnection is currently in the database
 	 * 
 	 * @param conn
-	 *            the client connection that has successfully authenticated
-	 * @param account
-	 *            the account associated with the client
+	 *            the HostedConnection to be checked
+	 * @return true if the conn is currently in the database
 	 */
-	public void put( HostedConnection conn, Account account )
+	public boolean containsConnection( HostedConnection conn )
 	{
-		logger.log( Level.FINE, "Adding user session to session database." );
-		db.put( conn, account );
+		logger.log( Level.FINE, "Checking if connection is in the session database." );
+		return db.containsKey( conn );
+	}
+
+	/**
+	 * Returns all currently active accounts.
+	 * 
+	 * @return all currently active accounts
+	 */
+	public List< Account > getAllActiveAccounts( )
+	{
+		logger.log( Level.FINE, "Retrieving all currently active accounts." );
+		ArrayList< Account > list = new ArrayList<>( );
+		Iterator< Account > it = db.values( ).iterator( );
+		while ( it.hasNext( ) )
+		{
+			list.add( it.next( ) );
+		}
+		return list;
+	}
+
+	/**
+	 * Returns all currently authenticated sessions.
+	 * 
+	 * @return all currently authenticated sessions
+	 */
+	public List< HostedConnection > getAllSessions( )
+	{
+		logger.log( Level.FINE, "Retrieving all currently active connections." );
+		ArrayList< HostedConnection > list = new ArrayList<>( );
+		Iterator< HostedConnection > it = db.keySet( ).iterator( );
+		while ( it.hasNext( ) )
+		{
+			list.add( it.next( ) );
+		}
+		return list;
 	}
 
 	/**
@@ -74,29 +119,18 @@ public class SessionManager
 	}
 
 	/**
-	 * Checks if the supplied HostedConnection is currently in the database
+	 * Adds a session to the hash map given a client connection and a user
+	 * account.
 	 * 
 	 * @param conn
-	 *            the HostedConnection to be checked
-	 * @return true if the conn is currently in the database
-	 */
-	public boolean containsConnection( HostedConnection conn )
-	{
-		logger.log( Level.FINE, "Checking if connection is in the session database." );
-		return db.containsKey( conn );
-	}
-
-	/**
-	 * Checks if the supplied Account is currently in the database
-	 * 
+	 *            the client connection that has successfully authenticated
 	 * @param account
-	 *            the account to be checked
-	 * @return true if the account is currently in the database
+	 *            the account associated with the client
 	 */
-	public boolean containsAccount( Account account )
+	public void put( HostedConnection conn, Account account )
 	{
-		logger.log( Level.FINE, "Checking if account is in the session database." );
-		return db.containsValue( account );
+		logger.log( Level.FINE, "Adding user session to session database." );
+		db.put( conn, account );
 	}
 
 	/**
@@ -131,40 +165,6 @@ public class SessionManager
 				db.remove( conn );
 			}
 		}
-	}
-
-	/**
-	 * Returns all currently authenticated sessions.
-	 * 
-	 * @return all currently authenticated sessions
-	 */
-	public List< HostedConnection > getAllSessions( )
-	{
-		logger.log( Level.FINE, "Retrieving all currently active connections." );
-		ArrayList< HostedConnection > list = new ArrayList< HostedConnection >( );
-		Iterator< HostedConnection > it = db.keySet( ).iterator( );
-		while ( it.hasNext( ) )
-		{
-			list.add( it.next( ) );
-		}
-		return list;
-	}
-
-	/**
-	 * Returns all currently active accounts.
-	 * 
-	 * @return all currently active accounts
-	 */
-	public List< Account > getAllActiveAccounts( )
-	{
-		logger.log( Level.FINE, "Retrieving all currently active accounts." );
-		ArrayList< Account > list = new ArrayList< Account >( );
-		Iterator< Account > it = db.values( ).iterator( );
-		while ( it.hasNext( ) )
-		{
-			list.add( it.next( ) );
-		}
-		return list;
 	}
 
 }

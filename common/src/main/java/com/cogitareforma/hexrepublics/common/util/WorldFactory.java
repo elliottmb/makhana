@@ -42,77 +42,34 @@ public class WorldFactory
 {
 	private final static Logger logger = Logger.getLogger( WorldFactory.class.getName( ) );
 
-	private static Material buildTerrainMaterial( AssetManager am )
+	public static void attachHexagonGridToNode( Node root, AssetManager am )
 	{
-		Texture grass = am.loadTexture( "Textures/grass.jpg" );
-		grass.setWrap( Texture.WrapMode.Repeat );
-		Texture grassNormal = am.loadTexture( "Textures/grass_normal.jpg" );
-		grassNormal.setWrap( Texture.WrapMode.Repeat );
-		Texture dirt = am.loadTexture( "Textures/dirt.png" );
-		dirt.setWrap( Texture.WrapMode.Repeat );
-		Texture snow = am.loadTexture( "Textures/snow.jpg" );
-		snow.setWrap( Texture.WrapMode.Repeat );
-
-		Material matTerrain = new Material( am, "Common/MatDefs/Terrain/TerrainLighting.j3md" );
-		matTerrain.setBoolean( "useTriPlanarMapping", false );
-		matTerrain.setBoolean( "WardIso", true );
-		matTerrain.setFloat( "Shininess", 0 );
-
-		// GRASS texture
-		matTerrain.setTexture( "DiffuseMap", grass );
-		matTerrain.setFloat( "DiffuseMap_0_scale", 64 );
-
-		// DIRT texture
-		matTerrain.setTexture( "DiffuseMap_1", dirt );
-		matTerrain.setFloat( "DiffuseMap_1_scale", 16 );
-
-		// ROCK texture
-		matTerrain.setTexture( "DiffuseMap_2", snow );
-		matTerrain.setFloat( "DiffuseMap_2_scale", 128 );
-
-		return matTerrain;
-	}
-
-	private static AbstractHeightMap buildHeightMap( byte seed )
-	{
-		AbstractHeightMap heightMap = null;
-		logger.log( Level.INFO, "Attempting to generate heightmap with seed: " + seed );
-
-		try
+		if ( root != null )
 		{
-			heightMap = new HillHeightMap( 257, 4096, 4, 16, seed );
-			heightMap.erodeTerrain( );
+			Node hexagonRoot = new Node( "hexagonRoot" );
+			TerrainQuad terrain = ( TerrainQuad ) root.getChild( "terrain" );
+			if ( terrain != null )
+			{
+				float size = 10.0f;
+				int terrainSize = terrain.getTerrainSize( );
+
+				Material hexMat = buildHexagonMaterial( am );
+
+				for ( int i = 1; i < FastMath.floor( terrainSize / ( size * 6 / 4 ) ); i++ )
+				{
+					for ( int j = 1; j < FastMath.ceil( terrainSize / ( FastMath.sqrt( 3f ) * size ) ); j++ )
+					{
+						Geometry lineGeo = new Geometry( String.format( "hexagon[%d, %d]", i, j ), createHexagon(
+								createCenterPoint( terrainSize, size, i, j ), size, terrain, 0.5f ) );
+						lineGeo.setMaterial( hexMat );
+						lineGeo.setQueueBucket( RenderQueue.Bucket.Transparent );
+
+						hexagonRoot.attachChild( lineGeo );
+					}
+				}
+				root.attachChild( hexagonRoot );
+			}
 		}
-		catch ( Exception e )
-		{
-			logger.log( Level.SEVERE, "Failed to generate heightmap with seed: " + seed, e );
-		}
-
-		return heightMap;
-	}
-
-	private static TerrainQuad buildTerrain( AbstractHeightMap heightMap, Camera lodCamera )
-	{
-
-		TerrainQuad terrain = null;
-		int patchSize = 65;
-		terrain = new TerrainQuad( "terrain", patchSize, 257, heightMap.getHeightMap( ) );
-
-		terrain.setLocalTranslation( 0, -3, 0 );
-		terrain.setLocalScale( 1f, 0.05f, 1f );
-		terrain.setShadowMode( RenderQueue.ShadowMode.Receive );
-
-		TerrainLodControl control = new TerrainLodControl( terrain, lodCamera );
-		terrain.addControl( control );
-
-		return terrain;
-	}
-
-	private static Texture2D getHeightAlphaMap( AbstractHeightMap heightMap )
-	{
-		HeightBasedAlphaMapGenerator hbamg = new HeightBasedAlphaMapGenerator( heightMap );
-
-		return new Texture2D( hbamg.renderAlphaMap( ) );
 	}
 
 	public static void attachLighting( Node root, ViewPort vp, AssetManager am )
@@ -161,6 +118,100 @@ public class WorldFactory
 		node.attachChild( terrain );
 	}
 
+	private static AbstractHeightMap buildHeightMap( byte seed )
+	{
+		AbstractHeightMap heightMap = null;
+		logger.log( Level.INFO, "Attempting to generate heightmap with seed: " + seed );
+
+		try
+		{
+			heightMap = new HillHeightMap( 257, 4096, 4, 16, seed );
+			heightMap.erodeTerrain( );
+		}
+		catch ( Exception e )
+		{
+			logger.log( Level.SEVERE, "Failed to generate heightmap with seed: " + seed, e );
+		}
+
+		return heightMap;
+	}
+
+	private static Material buildHexagonMaterial( AssetManager am )
+	{
+		Material hexagonMaterial = new Material( am, "Common/MatDefs/Misc/Unshaded.j3md" );
+		hexagonMaterial.setColor( "Color", new ColorRGBA( 0f, 0f, 0f, 0.3f ) );
+		hexagonMaterial.getAdditionalRenderState( ).setBlendMode( RenderState.BlendMode.Alpha );
+		return hexagonMaterial;
+	}
+
+	private static TerrainQuad buildTerrain( AbstractHeightMap heightMap, Camera lodCamera )
+	{
+
+		TerrainQuad terrain = null;
+		int patchSize = 65;
+		terrain = new TerrainQuad( "terrain", patchSize, 257, heightMap.getHeightMap( ) );
+
+		terrain.setLocalTranslation( 0, -3, 0 );
+		terrain.setLocalScale( 1f, 0.05f, 1f );
+		terrain.setShadowMode( RenderQueue.ShadowMode.Receive );
+
+		TerrainLodControl control = new TerrainLodControl( terrain, lodCamera );
+		terrain.addControl( control );
+
+		return terrain;
+	}
+
+	private static Material buildTerrainMaterial( AssetManager am )
+	{
+		Texture grass = am.loadTexture( "Textures/grass.jpg" );
+		grass.setWrap( Texture.WrapMode.Repeat );
+		Texture grassNormal = am.loadTexture( "Textures/grass_normal.jpg" );
+		grassNormal.setWrap( Texture.WrapMode.Repeat );
+		Texture dirt = am.loadTexture( "Textures/dirt.png" );
+		dirt.setWrap( Texture.WrapMode.Repeat );
+		Texture snow = am.loadTexture( "Textures/snow.jpg" );
+		snow.setWrap( Texture.WrapMode.Repeat );
+
+		Material matTerrain = new Material( am, "Common/MatDefs/Terrain/TerrainLighting.j3md" );
+		matTerrain.setBoolean( "useTriPlanarMapping", false );
+		matTerrain.setBoolean( "WardIso", true );
+		matTerrain.setFloat( "Shininess", 0 );
+
+		// GRASS texture
+		matTerrain.setTexture( "DiffuseMap", grass );
+		matTerrain.setFloat( "DiffuseMap_0_scale", 64 );
+
+		// DIRT texture
+		matTerrain.setTexture( "DiffuseMap_1", dirt );
+		matTerrain.setFloat( "DiffuseMap_1_scale", 16 );
+
+		// ROCK texture
+		matTerrain.setTexture( "DiffuseMap_2", snow );
+		matTerrain.setFloat( "DiffuseMap_2_scale", 128 );
+
+		return matTerrain;
+	}
+
+	public static Vector3f createCenterPoint( int worldSize, float hexSize, int i, int j )
+	{
+		float x = worldSize / 2;
+		float y = 0;
+		float z = worldSize / 2;
+		if ( i % 2 == 0 )
+		{
+			x = x - ( i * hexSize * 3 / 2 );
+		}
+		else
+		{
+			x = x - ( i * hexSize * 6 / 4 );
+			z = z - ( FastMath.sqrt( 3f ) / 2 * hexSize );
+		}
+		z += ( FastMath.sqrt( 3f ) / 2 * hexSize );
+		z = z - ( j * hexSize * FastMath.sqrt( 3f ) );
+
+		return new Vector3f( x, y, z );
+	}
+
 	private static Mesh createHexagon( Vector3f centerPoint, float size, TerrainQuad terrain, float hoverHeight )
 	{
 		Vector3f[ ] vertices = new Vector3f[ 6 ];
@@ -190,62 +241,11 @@ public class WorldFactory
 		return lineMesh;
 	}
 
-	private static Material buildHexagonMaterial( AssetManager am )
+	private static Texture2D getHeightAlphaMap( AbstractHeightMap heightMap )
 	{
-		Material hexagonMaterial = new Material( am, "Common/MatDefs/Misc/Unshaded.j3md" );
-		hexagonMaterial.setColor( "Color", new ColorRGBA( 0f, 0f, 0f, 0.3f ) );
-		hexagonMaterial.getAdditionalRenderState( ).setBlendMode( RenderState.BlendMode.Alpha );
-		return hexagonMaterial;
-	}
+		HeightBasedAlphaMapGenerator hbamg = new HeightBasedAlphaMapGenerator( heightMap );
 
-	public static Vector3f createCenterPoint( int worldSize, float hexSize, int i, int j )
-	{
-		float x = worldSize / 2;
-		float y = 0;
-		float z = worldSize / 2;
-		if ( i % 2 == 0 )
-		{
-			x = x - ( i * hexSize * 3 / 2 );
-		}
-		else
-		{
-			x = x - ( i * hexSize * 6 / 4 );
-			z = z - ( FastMath.sqrt( 3f ) / 2 * hexSize );
-		}
-		z += ( FastMath.sqrt( 3f ) / 2 * hexSize );
-		z = z - ( j * hexSize * FastMath.sqrt( 3f ) );
-
-		return new Vector3f( x, y, z );
-	}
-
-	public static void attachHexagonGridToNode( Node root, AssetManager am )
-	{
-		if ( root != null )
-		{
-			Node hexagonRoot = new Node( "hexagonRoot" );
-			TerrainQuad terrain = ( TerrainQuad ) root.getChild( "terrain" );
-			if ( terrain != null )
-			{
-				float size = 10.0f;
-				int terrainSize = terrain.getTerrainSize( );
-
-				Material hexMat = buildHexagonMaterial( am );
-
-				for ( int i = 1; i < FastMath.floor( terrainSize / ( size * 6 / 4 ) ); i++ )
-				{
-					for ( int j = 1; j < FastMath.ceil( terrainSize / ( FastMath.sqrt( 3f ) * size ) ); j++ )
-					{
-						Geometry lineGeo = new Geometry( String.format( "hexagon[%d, %d]", i, j ), createHexagon(
-								createCenterPoint( terrainSize, size, i, j ), size, terrain, 0.5f ) );
-						lineGeo.setMaterial( hexMat );
-						lineGeo.setQueueBucket( RenderQueue.Bucket.Transparent );
-
-						hexagonRoot.attachChild( lineGeo );
-					}
-				}
-				root.attachChild( hexagonRoot );
-			}
-		}
+		return new Texture2D( hbamg.renderAlphaMap( ) );
 	}
 
 }

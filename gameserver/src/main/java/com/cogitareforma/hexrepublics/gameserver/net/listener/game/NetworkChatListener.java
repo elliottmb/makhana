@@ -47,6 +47,28 @@ public class NetworkChatListener implements MessageListener< HostedConnection >
 		this.chatTime = new LinkedHashMap< String, Pair< Date, Boolean > >( );
 	}
 
+	/**
+	 * Sends a NetworkChatMessage to all authenticated clients except for the
+	 * game servers. If
+	 * 
+	 * @param msg
+	 *            the NetworkChatMessage to send
+	 */
+	private void broadcastMessage( NetworkChatMessage msg )
+	{
+		SessionManager sm = server.getSessionManager( );
+		for ( HostedConnection conn : sm.getAllSessions( ) )
+		{
+			Account act = sm.getFromSession( conn );
+			/* If the account is null or is that of a game server, continue */
+			if ( act == null )
+			{
+				continue;
+			}
+			conn.send( msg );
+		}
+	}
+
 	@Override
 	public void messageReceived( HostedConnection source, Message message )
 	{
@@ -56,7 +78,7 @@ public class NetworkChatListener implements MessageListener< HostedConnection >
 			NetworkChatMessage msg = ( NetworkChatMessage ) message;
 
 			Account loggedInUser = server.getSessionManager( ).getFromSession( source );
-			if ( loggedInUser == null || !loggedInUser.equals( msg.getAccount( ) ) || loggedInUser.isServer( ) )
+			if ( loggedInUser == null || !loggedInUser.equals( msg.getAccount( ) ) )
 			{
 				/*
 				 * Account is either null, is not the same as the logged in
@@ -84,28 +106,6 @@ public class NetworkChatListener implements MessageListener< HostedConnection >
 					chatTime.put( loggedInUser.getAccountName( ), Pair.of( timeNow, true ) );
 				}
 			}
-		}
-	}
-
-	/**
-	 * Sends a NetworkChatMessage to all authenticated clients except for the
-	 * game servers. If
-	 * 
-	 * @param msg
-	 *            the NetworkChatMessage to send
-	 */
-	private void broadcastMessage( NetworkChatMessage msg )
-	{
-		SessionManager sm = server.getSessionManager( );
-		for ( HostedConnection conn : sm.getAllSessions( ) )
-		{
-			Account act = sm.getFromSession( conn );
-			/* If the account is null or is that of a game server, continue */
-			if ( act == null || act.isServer( ) )
-			{
-				continue;
-			}
-			conn.send( msg );
 		}
 	}
 

@@ -5,6 +5,11 @@ import com.simsilica.es.EntityComponent;
 
 public class InstanceOfFilter< T extends EntityComponent > implements ComponentFilter< T >
 {
+	public static < T extends EntityComponent > InstanceOfFilter< T > create( Class< T > type )
+	{
+		return new InstanceOfFilter< T >( type );
+	}
+
 	private Class< T > type;
 
 	public InstanceOfFilter( )
@@ -14,11 +19,6 @@ public class InstanceOfFilter< T extends EntityComponent > implements ComponentF
 	public InstanceOfFilter( Class< T > type )
 	{
 		this.type = type;
-	}
-
-	public static < T extends EntityComponent > InstanceOfFilter< T > create( Class< T > type )
-	{
-		return new InstanceOfFilter< T >( type );
 	}
 
 	@Override

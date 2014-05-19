@@ -13,15 +13,17 @@ public abstract class TypeTrait implements EntityComponent
 {
 
 	/**
-	 * Represents the amount of health points this trait contributes when
-	 * constructing the HealthTrait for this Entity. If not > 0, will be
-	 * ignored. Only override if intending to supply health points on creation.
+	 * Represents the amount of time complexity ( in seconds ) this trait
+	 * contributes to the fabricating of this Entity. If not > 0, will be
+	 * ignored. Default value specified in Traits, override if added strength,
+	 * defense, or health should warrant specific build time other than the
+	 * default duration.
 	 * 
-	 * @return amount of health points to contribute
+	 * @return time complexity ( in seconds )
 	 */
-	public float getInitialHealth( )
+	public float getFabricatingTime( )
 	{
-		return 0.0f;
+		return Traits.BASE_FABRICATING_TIME;
 	}
 
 	/**
@@ -37,6 +39,18 @@ public abstract class TypeTrait implements EntityComponent
 	}
 
 	/**
+	 * Represents the amount of health points this trait contributes when
+	 * constructing the HealthTrait for this Entity. If not > 0, will be
+	 * ignored. Only override if intending to supply health points on creation.
+	 * 
+	 * @return amount of health points to contribute
+	 */
+	public float getInitialHealth( )
+	{
+		return 0.0f;
+	}
+
+	/**
 	 * Represents the amount of strength points this trait contributes when
 	 * constructing the StrengthTrait for this Entity. If not > 0, will be
 	 * ignored. Only override if intending to supply health points on creation.
@@ -46,19 +60,5 @@ public abstract class TypeTrait implements EntityComponent
 	public float getInitialStrength( )
 	{
 		return 0.0f;
-	}
-
-	/**
-	 * Represents the amount of time complexity ( in seconds ) this trait
-	 * contributes to the fabricating of this Entity. If not > 0, will be
-	 * ignored. Default value specified in Traits, override if added strength,
-	 * defense, or health should warrant specific build time other than the
-	 * default duration.
-	 * 
-	 * @return time complexity ( in seconds )
-	 */
-	public float getFabricatingTime( )
-	{
-		return Traits.BASE_FABRICATING_TIME;
 	}
 }
