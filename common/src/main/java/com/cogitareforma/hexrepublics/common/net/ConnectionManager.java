@@ -91,7 +91,15 @@ public class ConnectionManager< A extends Application >
 	public void send( Message message )
 	{
 		logger.log( Level.FINER, "Sending a " + message.getClass( ).getSimpleName( ) + " message the connection." );
-		getClient( ).send( message );
+		if ( isConnected( ) )
+		{
+			getClient( ).send( message );
+		}
+		else
+		{
+			logger.log( Level.WARNING, "Could not send a " + message.getClass( ).getSimpleName( ) + " message, no connection established" );
+		}
+
 	}
 
 	/**

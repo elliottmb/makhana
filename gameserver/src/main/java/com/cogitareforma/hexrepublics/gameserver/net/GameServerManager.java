@@ -153,7 +153,8 @@ public class GameServerManager extends ServerManager< GameServer >
 			status = new ServerStatus( name, 4, 0, 0, port );
 
 			// Move to when match started
-			buildTiles( 257, 10.0f );
+
+			constructWorld( );
 
 			return true;
 		}
@@ -167,6 +168,14 @@ public class GameServerManager extends ServerManager< GameServer >
 		}
 
 		return false;
+	}
+
+	private void constructWorld( )
+	{
+		logger.log( Level.INFO, "Constructing initial world state" );
+		EntityId core = getEntityData( ).createEntity( );
+
+		buildTiles( 257, 10.0f );
 	}
 
 	private void buildTiles( int terrainSize, float hexSize )
@@ -203,7 +212,7 @@ public class GameServerManager extends ServerManager< GameServer >
 				int x = 0;
 				int y = 0;
 
-				switch ( getSessionManager( ).getAllAuthedConnections( ).size( ) )
+				switch ( getSessionManager( ).getAllSessions( ).size( ) )
 				{
 					case 1:
 					{
@@ -288,17 +297,16 @@ public class GameServerManager extends ServerManager< GameServer >
 
 		if ( getServerStatus( ) != null )
 		{
-			if ( getServerStatus( ).getCurrentPlayers( ) != getSessionManager( ).getAllAuthedConnections( ).size( ) )
+			if ( getServerStatus( ).getCurrentPlayers( ) != getSessionManager( ).getAllSessions( ).size( ) )
 			{
 				logger.log( Level.INFO, "Server Status Current Player Count does not match Authed Connection Count, fixing." );
-				getServerStatus( ).setCurrentPlayers( getSessionManager( ).getAllAuthedConnections( ).size( ) );
+				getServerStatus( ).setCurrentPlayers( getSessionManager( ).getAllSessions( ).size( ) );
 			}
 
 			if ( getServerStatus( ).isChanged( ) )
 			{
 				logger.log( Level.INFO, "Server Status has changed since last update, sending to Master Server" );
-				Account act = getApp( ).getMasterConnManager( ).getAccount( );
-				getApp( ).getMasterConnManager( ).send( new ServerStatusResponse( act, getServerStatus( ) ) );
+				getApp( ).getMasterConnManager( ).send( new ServerStatusResponse( getServerStatus( ) ) );
 				getServerStatus( ).setChanged( false );
 			}
 		}

@@ -55,7 +55,7 @@ public class NetworkChatListener implements MessageListener< HostedConnection >
 		{
 			NetworkChatMessage msg = ( NetworkChatMessage ) message;
 
-			Account loggedInUser = server.getSessionManager( ).getAccountFromSession( source );
+			Account loggedInUser = server.getSessionManager( ).getFromSession( source );
 			if ( loggedInUser == null || !loggedInUser.equals( msg.getAccount( ) ) || loggedInUser.isServer( ) )
 			{
 				/*
@@ -97,9 +97,9 @@ public class NetworkChatListener implements MessageListener< HostedConnection >
 	private void broadcastMessage( NetworkChatMessage msg )
 	{
 		SessionManager sm = server.getSessionManager( );
-		for ( HostedConnection conn : sm.getAllAuthedConnections( ) )
+		for ( HostedConnection conn : sm.getAllSessions( ) )
 		{
-			Account act = sm.getAccountFromSession( conn );
+			Account act = sm.getFromSession( conn );
 			/* If the account is null or is that of a game server, continue */
 			if ( act == null || act.isServer( ) )
 			{

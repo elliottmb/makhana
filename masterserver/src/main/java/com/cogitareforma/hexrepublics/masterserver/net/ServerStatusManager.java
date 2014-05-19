@@ -45,7 +45,7 @@ public class ServerStatusManager
 	 * @param serverStatus
 	 *            the serverStatus associated with the connection
 	 */
-	public void addServerStatus( HostedConnection conn, ServerStatus serverStatus )
+	public void put( HostedConnection conn, ServerStatus serverStatus )
 	{
 		logger.log( Level.FINE, "Adding user session to database." );
 		db.put( conn, serverStatus );
@@ -58,7 +58,7 @@ public class ServerStatusManager
 	 *            the client connection to get the UserAccount for
 	 * @return the UserAccount associated with the client connection
 	 */
-	public ServerStatus getServerStatusFromConnection( HostedConnection conn )
+	public ServerStatus getFromConnection( HostedConnection conn )
 	{
 		logger.log( Level.FINE, "Retrieving user session from database." );
 		if ( db.containsKey( conn ) )
@@ -75,7 +75,7 @@ public class ServerStatusManager
 	 * @param conn
 	 *            the connection to remove the session for
 	 */
-	public void removeServerStatus( HostedConnection conn )
+	public void remove( HostedConnection conn )
 	{
 		logger.log( Level.FINE, "Removing user session from database." );
 		db.remove( conn );
@@ -88,7 +88,7 @@ public class ServerStatusManager
 	 * @param serverStatus
 	 *            the ServerStatus to remove the sessions for
 	 */
-	public void removeServerStatuses( ServerStatus serverStatus )
+	public void removeByServerStatus( ServerStatus serverStatus )
 	{
 		logger.log( Level.FINE, "Removing all user sessions associated with an account from database." );
 		Iterator< HostedConnection > it = db.keySet( ).iterator( );

@@ -30,7 +30,7 @@ public class AccountVerificationRequestListener implements MessageListener< Host
 	@Override
 	public void messageReceived( HostedConnection source, Message message )
 	{
-		Account loggedInUser = server.getSessionManager( ).getAccountFromSession( source );
+		Account loggedInUser = server.getSessionManager( ).getFromSession( source );
 		if ( message instanceof AccountVerificationRequest )
 		{
 			logger.log( Level.INFO, "Recieved a AccountVerificationRequest from " + source.getAddress( ) );

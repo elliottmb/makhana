@@ -5,8 +5,9 @@ import java.util.logging.Logger;
 
 import com.jme3.network.Client;
 import com.jme3.network.ClientStateListener;
+import com.jme3.network.ErrorListener;
 
-public class ClientMasterConnListener implements ClientStateListener
+public class ClientMasterConnListener implements ClientStateListener, ErrorListener< Client >
 {
 	/**
 	 * The logger for this class.
@@ -43,6 +44,17 @@ public class ClientMasterConnListener implements ClientStateListener
 		logger.log( Level.INFO, "Disconnected from the master server." );
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public void handleError( Client client, Throwable exception )
+	{
+		logger.log( Level.SEVERE, "A Master Connection error has occured. ", exception );
+		manager.getApp( ).enqueue( ( ) ->
+		{
+			manager.close( );
+			return null;
+		} );
 	}
 
 }

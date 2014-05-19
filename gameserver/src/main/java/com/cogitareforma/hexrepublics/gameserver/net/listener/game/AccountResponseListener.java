@@ -54,7 +54,7 @@ public class AccountResponseListener implements MessageListener< HostedConnectio
 			logger.log( Level.INFO, "Account from " + source.getAddress( ) + " has name: " + msg.getAccount( ).getAccountName( ) );
 
 			// Add the session temporarily
-			manager.getSessionManager( ).addSession( source, msg.getAccount( ) );
+			manager.getSessionManager( ).put( source, msg.getAccount( ) );
 			// Send off a verification request
 			manager.getApp( ).getMasterConnManager( ).send( new AccountVerificationRequest( msg.getAccount( ) ) );
 		}

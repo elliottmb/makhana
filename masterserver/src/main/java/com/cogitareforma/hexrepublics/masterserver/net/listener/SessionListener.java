@@ -4,6 +4,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.cogitareforma.hexrepublics.common.data.Account;
+import com.cogitareforma.hexrepublics.common.net.SessionManager;
 import com.cogitareforma.hexrepublics.common.net.msg.LoginRequest;
 import com.cogitareforma.hexrepublics.common.net.msg.LoginResponse;
 import com.cogitareforma.hexrepublics.common.net.msg.LogoutRequest;
@@ -47,6 +48,7 @@ public class SessionListener implements MessageListener< HostedConnection >
 	@Override
 	public void messageReceived( HostedConnection source, Message message )
 	{
+		SessionManager sm = serverManager.getSessionManager( );
 		if ( message instanceof LoginRequest )
 		{
 			logger.log( Level.INFO, "Received a login request." );
@@ -59,7 +61,8 @@ public class SessionListener implements MessageListener< HostedConnection >
 				Account account = acountRepository.getAccount( request.getAccountName( ) );
 				if ( account != null )
 				{
-					if ( !serverManager.getSessionManager( ).containsAccount( account ) )
+
+					if ( !sm.containsAccount( account ) )
 					{
 						if ( account.isValidPassword( request.getPassword( ) ) )
 						{
@@ -67,11 +70,11 @@ public class SessionListener implements MessageListener< HostedConnection >
 							{
 								logger.log( Level.INFO, "User logged in with a valid accountName and password." );
 								account.setAddress( source.getAddress( ) );
-								serverManager.getSessionManager( ).addSession( source, account );
+								sm.put( source, account );
 								source.send( new LoginResponse( account ) );
 								if ( !account.isServer( ) )
 								{
-									for ( HostedConnection hc : serverManager.getSessionManager( ).getAllAuthedConnections( ) )
+									for ( HostedConnection hc : sm.getAllSessions( ) )
 									{
 										hc.send( new NetworkChatMessage( null, String.format( "Server Notice: %s is now online.",
 												account.getAccountName( ) ) ) );
@@ -113,11 +116,11 @@ public class SessionListener implements MessageListener< HostedConnection >
 		if ( message instanceof LogoutRequest )
 		{
 			logger.log( Level.INFO, "Received a logout request." );
-			Account account = serverManager.getSessionManager( ).getAccountFromSession( source );
+			Account account = serverManager.getSessionManager( ).getFromSession( source );
 			serverManager.getSessionManager( ).removeSession( source );
 			if ( account != null && !account.isServer( ) )
 			{
-				for ( HostedConnection hc : serverManager.getSessionManager( ).getAllAuthedConnections( ) )
+				for ( HostedConnection hc : sm.getAllSessions( ) )
 				{
 					hc.send( new NetworkChatMessage( null, String.format( "Server Notice: %s is now offline.", account.getAccountName( ) ) ) );
 				}

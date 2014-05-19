@@ -57,7 +57,7 @@ public class MasterServer extends SimpleApplication
 				if ( "status".equals( line ) )
 				{
 					List< HostedConnection > connections = masterServer.getMasterServerManager( ).getSessionManager( )
-							.getAllAuthedConnections( );
+							.getAllSessions( );
 					if ( connections.size( ) > 0 )
 					{
 						StringBuilder sb = new StringBuilder( );
@@ -65,7 +65,7 @@ public class MasterServer extends SimpleApplication
 						for ( HostedConnection hc : connections )
 						{
 							sb.append( String.format( "%s: %s - %s \n", hc.getId( ), hc.getAddress( ), masterServer
-									.getMasterServerManager( ).getSessionManager( ).getAccountFromSession( hc ) ) );
+									.getMasterServerManager( ).getSessionManager( ).getFromSession( hc ) ) );
 						}
 						logger.log( Level.INFO, sb.toString( ) );
 					}
@@ -77,12 +77,12 @@ public class MasterServer extends SimpleApplication
 				if ( "srvstatus".equals( line ) )
 				{
 					List< HostedConnection > connections = masterServer.getMasterServerManager( ).getSessionManager( )
-							.getAllAuthedConnections( );
+							.getAllSessions( );
 					if ( connections.size( ) > 0 )
 					{
 						for ( HostedConnection hc : connections )
 						{
-							Account act = masterServer.getMasterServerManager( ).getSessionManager( ).getAccountFromSession( hc );
+							Account act = masterServer.getMasterServerManager( ).getSessionManager( ).getFromSession( hc );
 							if ( act.isServer( ) )
 							{
 								hc.send( new ServerStatusRequest( ) );

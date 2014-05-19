@@ -4,6 +4,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.cogitareforma.hexrepublics.common.data.Account;
+import com.cogitareforma.hexrepublics.common.net.SessionManager;
 import com.cogitareforma.hexrepublics.common.net.msg.NetworkChatMessage;
 import com.jme3.network.ConnectionListener;
 import com.jme3.network.HostedConnection;
@@ -50,15 +51,16 @@ public class ConnListener implements ConnectionListener
 	public void connectionRemoved( Server server, HostedConnection source )
 	{
 		logger.log( Level.INFO, "Removing the sessions for connection=" + source.toString( ) );
-		Account account = serverManager.getSessionManager( ).getAccountFromSession( source );
+		Account account = serverManager.getSessionManager( ).getFromSession( source );
 
-		serverManager.getSessionManager( ).removeSession( source );
-		serverManager.getSessionManager( ).removeSessions( account );
-		serverManager.getServerStatusManager( ).removeServerStatus( source );
+		SessionManager sm = serverManager.getSessionManager( );
+		sm.removeSession( source );
+		sm.removeSessions( account );
+		serverManager.getServerStatusManager( ).remove( source );
 
 		if ( account != null && !account.isServer( ) )
 		{
-			for ( HostedConnection hc : serverManager.getSessionManager( ).getAllAuthedConnections( ) )
+			for ( HostedConnection hc : sm.getAllSessions( ) )
 			{
 				hc.send( new NetworkChatMessage( null, String.format( "Server Notice: %s is now offline.", account.getAccountName( ) ) ) );
 			}

@@ -9,18 +9,27 @@ public class PlayerTrait implements EntityComponent
 {
 
 	private Account account;
+	private int losses;
+	private int wins;
 
 	/**
 	 * Used by Serializer
 	 */
 	public PlayerTrait( )
 	{
-
+		this( null, 0, 0 );
 	}
 
 	public PlayerTrait( Account account )
 	{
+		this( account, 0, 0 );
+	}
+
+	public PlayerTrait( Account account, int wins, int losses )
+	{
 		this.account = account;
+		this.wins = wins;
+		this.losses = losses;
 	}
 
 	public Account getAccount( )
@@ -28,9 +37,25 @@ public class PlayerTrait implements EntityComponent
 		return account;
 	}
 
+	/**
+	 * @return the losses
+	 */
+	public int getLosses( )
+	{
+		return losses;
+	}
+
+	/**
+	 * @return the wins
+	 */
+	public int getWins( )
+	{
+		return wins;
+	}
+
 	@Override
 	public String toString( )
 	{
-		return "PlayerTrait[" + account + "]";
+		return "PlayerTrait[" + account + ", wins: " + wins + ", losses: " + losses + "]";
 	}
 }

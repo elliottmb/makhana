@@ -44,7 +44,7 @@ public class ServerStatusListener implements MessageListener< Client >
 		if ( message instanceof ServerStatusRequest )
 		{
 			logger.log( Level.INFO, "Received a ServerStatusRequest." );
-			source.send( new ServerStatusResponse( manager.getAccount( ), manager.getApp( ).getGameServerManager( ).getServerStatus( ) ) );
+			source.send( new ServerStatusResponse( manager.getApp( ).getGameServerManager( ).getServerStatus( ) ) );
 		}
 	}
 }

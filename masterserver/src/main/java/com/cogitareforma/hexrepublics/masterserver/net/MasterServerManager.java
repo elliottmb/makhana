@@ -49,13 +49,13 @@ public class MasterServerManager extends ServerManager< MasterServer >
 	{
 		logger.log( Level.INFO, "Sending updated UserList to all active Game Clients" );
 
-		List< HostedConnection > connections = getSessionManager( ).getAllAuthedConnections( );
+		List< HostedConnection > connections = getSessionManager( ).getAllSessions( );
 		if ( connections.size( ) > 0 )
 		{
 			ArrayList< String > users = new ArrayList< String >( );
 			for ( HostedConnection hc : connections )
 			{
-				Account act = getSessionManager( ).getAccountFromSession( hc );
+				Account act = getSessionManager( ).getFromSession( hc );
 				if ( act.isServer( ) == false )
 				{
 					users.add( act.getAccountName( ) );
@@ -63,7 +63,7 @@ public class MasterServerManager extends ServerManager< MasterServer >
 			}
 			for ( HostedConnection hc : connections )
 			{
-				Account act = getSessionManager( ).getAccountFromSession( hc );
+				Account act = getSessionManager( ).getFromSession( hc );
 				if ( act.isServer( ) == false )
 				{
 					hc.send( new UserListResponse( users ) );

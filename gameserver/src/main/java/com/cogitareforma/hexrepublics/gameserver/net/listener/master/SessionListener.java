@@ -55,7 +55,7 @@ public class SessionListener implements MessageListener< Client >
 				ServerStatus ss = manager.getApp( ).getGameServerManager( ).getServerStatus( );
 				if ( ss != null )
 				{
-					ss.setAddress( response.getAccount( ).getAddress( ) );
+					ss.setChanged( true );
 				}
 			}
 		}

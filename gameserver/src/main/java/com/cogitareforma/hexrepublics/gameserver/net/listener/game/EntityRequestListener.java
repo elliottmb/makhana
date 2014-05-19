@@ -77,7 +77,7 @@ public class EntityRequestListener implements MessageListener< HostedConnection 
 						Entity owner = manager.getEntityData( ).getEntity( ownerId, PlayerTrait.class );
 						if ( owner != null && owner.get( PlayerTrait.class ) != null )
 						{
-							Account act = manager.getSessionManager( ).getAccountFromSession( source );
+							Account act = manager.getSessionManager( ).getFromSession( source );
 							if ( owner.get( PlayerTrait.class ).getAccount( ).equals( act ) )
 							{
 								/*
@@ -196,7 +196,7 @@ public class EntityRequestListener implements MessageListener< HostedConnection 
 
 						if ( owner != null && owner.get( PlayerTrait.class ) != null )
 						{
-							Account act = manager.getSessionManager( ).getAccountFromSession( source );
+							Account act = manager.getSessionManager( ).getFromSession( source );
 							if ( owner.get( PlayerTrait.class ).getAccount( ).equals( act ) )
 							{
 								manager.getEntityData( ).removeEntity( entityMsg.getEntityId( ) );

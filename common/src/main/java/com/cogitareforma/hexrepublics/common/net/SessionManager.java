@@ -50,7 +50,7 @@ public class SessionManager
 	 * @param account
 	 *            the account associated with the client
 	 */
-	public void addSession( HostedConnection conn, Account account )
+	public void put( HostedConnection conn, Account account )
 	{
 		logger.log( Level.FINE, "Adding user session to session database." );
 		db.put( conn, account );
@@ -63,7 +63,7 @@ public class SessionManager
 	 *            the client connection to get the UserAccount for
 	 * @return the UserAccount associated with the client connection
 	 */
-	public Account getAccountFromSession( HostedConnection conn )
+	public Account getFromSession( HostedConnection conn )
 	{
 		logger.log( Level.FINE, "Retrieving user session from session database." );
 		if ( db.containsKey( conn ) )
@@ -138,7 +138,7 @@ public class SessionManager
 	 * 
 	 * @return all currently authenticated sessions
 	 */
-	public List< HostedConnection > getAllAuthedConnections( )
+	public List< HostedConnection > getAllSessions( )
 	{
 		logger.log( Level.FINE, "Retrieving all currently active connections." );
 		ArrayList< HostedConnection > list = new ArrayList< HostedConnection >( );

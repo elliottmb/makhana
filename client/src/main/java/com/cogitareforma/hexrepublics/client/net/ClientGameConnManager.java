@@ -68,7 +68,9 @@ public class ClientGameConnManager extends ConnectionManager< ClientMain >
 
 			/* add listeners */
 			logger.log( Level.FINE, "Registering connection listener with client." );
-			getClient( ).addClientStateListener( new ClientGameConnListener( this ) );
+			ClientGameConnListener connListener = new ClientGameConnListener( this );
+			getClient( ).addClientStateListener( connListener );
+			getClient( ).addErrorListener( connListener );
 
 			logger.log( Level.FINE, "Registering message listeners with client." );
 			List< Object > messageListeners = PackageUtils.createAllInPackage( "com.cogitareforma.hexrepublics.client.net.gamelistener",

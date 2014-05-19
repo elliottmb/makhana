@@ -31,7 +31,7 @@ public class ServerListListener implements MessageListener< HostedConnection >
 		{
 			logger.log( Level.INFO, "Recieved a ServerListRequest from " + source.getAddress( ) );
 
-			Account loggedInUser = server.getSessionManager( ).getAccountFromSession( source );
+			Account loggedInUser = server.getSessionManager( ).getFromSession( source );
 			if ( loggedInUser == null || loggedInUser.isServer( ) )
 			{
 				/*

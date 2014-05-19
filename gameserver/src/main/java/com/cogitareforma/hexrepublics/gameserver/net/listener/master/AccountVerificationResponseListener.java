@@ -3,6 +3,7 @@ package com.cogitareforma.hexrepublics.gameserver.net.listener.master;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.cogitareforma.hexrepublics.common.data.Account;
 import com.cogitareforma.hexrepublics.common.net.SessionManager;
 import com.cogitareforma.hexrepublics.common.net.msg.AccountVerificationResponse;
 import com.cogitareforma.hexrepublics.gameserver.net.GameMasterConnManager;
@@ -56,9 +57,9 @@ public class AccountVerificationResponseListener implements MessageListener< Cli
 			{
 				logger.log( Level.INFO, "Account for " + msg.getAccount( ).getAccountName( ) + " could not be verified." );
 				SessionManager sm = manager.getApp( ).getGameServerManager( ).getSessionManager( );
-				for ( HostedConnection hc : sm.getAllAuthedConnections( ) )
+				for ( HostedConnection hc : sm.getAllSessions( ) )
 				{
-					if ( sm.getAccountFromSession( hc ).equals( msg.getAccount( ) ) )
+					if ( sm.getFromSession( hc ).equals( msg.getAccount( ) ) )
 					{
 						hc.close( "Account could not be verified" );
 					}

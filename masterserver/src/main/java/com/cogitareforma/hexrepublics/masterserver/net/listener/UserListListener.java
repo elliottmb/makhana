@@ -29,7 +29,7 @@ public class UserListListener implements MessageListener< HostedConnection >
 	@Override
 	public void messageReceived( HostedConnection source, Message message )
 	{
-		Account loggedInUser = server.getSessionManager( ).getAccountFromSession( source );
+		Account loggedInUser = server.getSessionManager( ).getFromSession( source );
 		if ( message instanceof UserListRequest )
 		{
 			if ( loggedInUser == null || loggedInUser.isServer( ) )

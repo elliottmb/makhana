@@ -124,16 +124,32 @@ public class ClientMasterConnManager extends MasterConnManager< ClientMain >
 			 */
 			if ( message.getAccount( ) != null )
 			{
-				if ( message.getMessage( ).charAt( 0 ) == '/' )
+				String chatMessage = message.getMessage( );
+				String chatAccountName = message.getAccount( ).getAccountName( );
+				if ( chatMessage != null )
 				{
-					if ( message.getMessage( ).substring( 0, 3 ).equals( "/me" ) )
+					if ( chatMessage.length( ) > 0 )
 					{
-						chat.receivedChatLine( "* " + message.getAccount( ).getAccountName( ) + message.getMessage( ).substring( 3 ), null );
+						if ( chatMessage.charAt( 0 ) == '/' )
+						{
+							if ( chatMessage.substring( 0, 3 ).equals( "/me" ) )
+							{
+								chat.receivedChatLine( "* " + chatAccountName + chatMessage.substring( 3 ), null );
+							}
+						}
+						else
+						{
+							chat.receivedChatLine( chatAccountName + ": " + chatMessage, null );
+						}
+					}
+					else
+					{
+						logger.log( Level.WARNING, "Recieved a blank message by " + chatAccountName );
 					}
 				}
 				else
 				{
-					chat.receivedChatLine( message.getAccount( ).getAccountName( ) + ": " + message.getMessage( ), null );
+					logger.log( Level.WARNING, "Recieved a null message by " + chatAccountName );
 				}
 			}
 			else
