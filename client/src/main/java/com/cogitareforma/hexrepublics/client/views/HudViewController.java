@@ -389,11 +389,6 @@ public class HudViewController extends GeneralPlayingController implements KeyIn
 		return true;
 	}
 
-	public void openOptions( )
-	{
-		gotoScreen( "options", false, false, false, null, null );
-	}
-
 	@Override
 	public boolean keyEvent( NiftyInputEvent inputEvent )
 	{
@@ -414,6 +409,11 @@ public class HudViewController extends GeneralPlayingController implements KeyIn
 		getApp( ).sendLobbyChat( event.getText( ) );
 	}
 
+	public void openOptions( )
+	{
+		gotoScreen( "options", false, false, false, null, null );
+	}
+
 	@Override
 	protected void postExitToNetwork( )
 	{
@@ -425,7 +425,7 @@ public class HudViewController extends GeneralPlayingController implements KeyIn
 	@Override
 	protected void preExitToNetwork( )
 	{
-		getApp( ).loadWorld( "null" );
+		getApp( ).loadWorld( null );
 	}
 
 	private void printTileInfo( Pair< Integer, Integer > coord )

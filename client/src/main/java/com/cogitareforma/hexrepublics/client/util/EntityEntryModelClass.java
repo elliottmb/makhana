@@ -13,9 +13,9 @@ public class EntityEntryModelClass
 		this.name = name;
 	}
 
-	public void setName( String name )
+	public EntityId getEntityId( )
 	{
-		this.name = name;
+		return this.id;
 	}
 
 	public String getName( )
@@ -28,9 +28,9 @@ public class EntityEntryModelClass
 		this.id = id;
 	}
 
-	public EntityId getEntityId( )
+	public void setName( String name )
 	{
-		return this.id;
+		this.name = name;
 	}
 
 	@Override

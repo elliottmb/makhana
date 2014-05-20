@@ -8,6 +8,8 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.apache.commons.lang3.RandomUtils;
+
 import com.cogitareforma.hexrepublics.common.data.Account;
 import com.cogitareforma.hexrepublics.common.data.ServerStatus;
 import com.cogitareforma.hexrepublics.common.entities.ActionType;
@@ -19,6 +21,7 @@ import com.cogitareforma.hexrepublics.common.entities.traits.LocationTrait;
 import com.cogitareforma.hexrepublics.common.entities.traits.PlayerTrait;
 import com.cogitareforma.hexrepublics.common.entities.traits.StrengthTrait;
 import com.cogitareforma.hexrepublics.common.entities.traits.TileTrait;
+import com.cogitareforma.hexrepublics.common.entities.traits.WorldTrait;
 import com.cogitareforma.hexrepublics.common.net.SerializerRegistrar;
 import com.cogitareforma.hexrepublics.common.net.ServerManager;
 import com.cogitareforma.hexrepublics.common.net.msg.ServerStatusResponse;
@@ -87,6 +90,8 @@ public class GameServerManager extends ServerManager< GameServer >
 
 		logger.log( Level.INFO, "Constructing initial world state" );
 		EntityId core = getEntityData( ).createEntity( );
+		byte[ ] randomBytes = RandomUtils.nextBytes( 3 );
+		getEntityData( ).setComponent( core, new WorldTrait( 0, randomBytes[ RandomUtils.nextInt( 0, 3 ) ] ) );
 	}
 
 	public void createPlayerEntity( Account account )

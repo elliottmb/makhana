@@ -20,6 +20,12 @@ public abstract class GeneralController extends AbstractAppState implements Scre
 	private ClientMain app;
 	private String screenId;
 
+	@Override
+	public void bind( Nifty arg0, Screen arg1 )
+	{
+		// TODO Auto-generated method stub
+	}
+
 	protected ClientMain getApp( )
 	{
 		return app;
@@ -31,43 +37,6 @@ public abstract class GeneralController extends AbstractAppState implements Scre
 	public String getScreenId( )
 	{
 		return screenId;
-	}
-
-	@Override
-	public void initialize( AppStateManager stateManager, Application app )
-	{
-		super.initialize( stateManager, app );
-		this.app = ( ClientMain ) app;
-
-		logger.log( Level.INFO, getScreenId( ) + " screen initialized." );
-	}
-
-	@Override
-	public void bind( Nifty arg0, Screen arg1 )
-	{
-		// TODO Auto-generated method stub
-	}
-
-	@Override
-	public void onEndScreen( )
-	{
-		logger.log( Level.INFO, getScreenId( ) + " screen ended." );
-
-	}
-
-	@Override
-	public void onStartScreen( )
-	{
-
-	}
-
-	/**
-	 * @param screenId
-	 *            the screenId to set
-	 */
-	public void setScreenId( String screenId )
-	{
-		this.screenId = screenId;
 	}
 
 	protected void gotoScreen( String nextScreenId, boolean detachCurrent, boolean attachNext, boolean removeCurrent,
@@ -110,6 +79,37 @@ public abstract class GeneralController extends AbstractAppState implements Scre
 			}
 			return null;
 		} );
+	}
+
+	@Override
+	public void initialize( AppStateManager stateManager, Application app )
+	{
+		super.initialize( stateManager, app );
+		this.app = ( ClientMain ) app;
+
+		logger.log( Level.INFO, getScreenId( ) + " screen initialized." );
+	}
+
+	@Override
+	public void onEndScreen( )
+	{
+		logger.log( Level.INFO, getScreenId( ) + " screen ended." );
+
+	}
+
+	@Override
+	public void onStartScreen( )
+	{
+
+	}
+
+	/**
+	 * @param screenId
+	 *            the screenId to set
+	 */
+	public void setScreenId( String screenId )
+	{
+		this.screenId = screenId;
 	}
 
 }

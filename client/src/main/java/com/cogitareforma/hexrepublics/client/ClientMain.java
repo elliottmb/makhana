@@ -215,10 +215,10 @@ public class ClientMain extends SimpleApplication
 	 * @param seed
 	 *            Seed to be used to generate the world. Can be null.
 	 */
-	public void loadWorld( final String seed )
+	public void loadWorld( final Byte seed )
 	{
 		logger.log( Level.INFO, "ClientMain loadWorld: " + seed );
-		if ( seed.equals( "null" ) )
+		if ( seed == null )
 		{
 			enqueue( ( ) ->
 			{
@@ -233,7 +233,6 @@ public class ClientMain extends SimpleApplication
 		{
 			try
 			{
-
 				worldManager.loadLevel( seed );
 
 				enqueue( ( ) ->

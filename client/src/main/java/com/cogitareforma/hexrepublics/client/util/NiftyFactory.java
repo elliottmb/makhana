@@ -40,66 +40,33 @@ import de.lessvoid.nifty.controls.textfield.builder.TextFieldBuilder;
  */
 public class NiftyFactory
 {
-	public static void createLoadingScreen( Nifty nifty )
+	public static void createConsole( Nifty nifty )
 	{
-		new ControlDefinitionBuilder( "bar" )
+		nifty.addScreen( "consoleScreen", new ScreenBuilder( "consoleScreen" )
 		{
 			{
-				controller( new LoadingViewController( ) );
-				image( new ImageBuilder( )
-				{
-					{
-						filename( "Interface/border.png" );
-						imageMode( "resize:15,2,15,15,15,2,15,2,15,2,15,15" );
-						childLayoutAbsolute( );
-						image( new ImageBuilder( "inner" )
-						{
-							{
-								x( "0" );
-								y( "0" );
-								filename( "Interface/inner.png" );
-								width( "32px" );
-								height( "100%" );
-								imageMode( "resize:15,2,15,15,15,2,15,2,15,2,15,15" );
-							}
-						} );
-					}
-				} );
-			}
-		}.registerControlDefintion( nifty );
-
-		nifty.addScreen( "loading", new ScreenBuilder( "loading" )
-		{
-			{
-				controller( new LoadingViewController( ) );
-				layer( new LayerBuilder( "layer" )
+				controller( new ConsoleViewController( ) );
+				layer( new LayerBuilder( "consoleLayer" )
 				{
 					{
 						childLayoutCenter( );
-						backgroundColor( "#303030ff" );
+						backgroundColor( "#00000000" );
 
-						panel( new PanelBuilder( "loadingBar" )
+						panel( new PanelBuilder( "consolePanel" )
 						{
 							{
-								height( "100%" );
-								width( "100%" );
 								childLayoutCenter( );
-								control( new ControlBuilder( "bar", "bar" )
+								width( "50%" );
+								height( "50%" );
+
+								control( new ConsoleBuilder( "console" )
 								{
+
 									{
-										name( "bar" );
+										width( "100%" );
+										lines( 25 );
 										alignCenter( );
-										valignBottom( );
-										width( "80%" );
-										height( "5%" );
-									}
-								} );
-								control( new LabelBuilder( )
-								{
-									{
-										name( "label" );
-										alignCenter( );
-										text( "" );
+										valignCenter( );
 									}
 								} );
 							}
@@ -348,694 +315,6 @@ public class NiftyFactory
 									}
 								} );
 
-							}
-						} );
-					}
-				} );
-			}
-		}.build( nifty ) );
-	}
-
-	/**
-	 * Builds and adds the start screen with a login popup.
-	 * 
-	 * @param nifty
-	 */
-	public static void createStartView( Nifty nifty )
-	{
-		nifty.addScreen( "start", new ScreenBuilder( "start" )
-		{
-			{
-				controller( new StartViewController( ) );
-
-				layer( new LayerBuilder( "layer" )
-				{
-
-					{
-						childLayoutCenter( );
-						backgroundColor( "#1a1a1aff" );
-
-						panel( new PanelBuilder( "startPanel" )
-						{
-
-							{
-								width( "25%" );
-								height( "100%" );
-								childLayoutVertical( );
-
-								panel( new PanelBuilder( "" )
-								{
-
-									{
-
-										height( "40%" );
-										childLayoutCenter( );
-										alignCenter( );
-
-										text( new TextBuilder( )
-										{
-											{
-												text( "Hex Republics" );
-												font( "Interface/Fonts/Default.fnt" );
-												height( "100%" );
-												width( "100%" );
-											}
-										} );
-									}
-								} );
-
-								panel( new PanelBuilder( "startButtonsPanel" )
-								{
-
-									{
-										style( "nifty-panel-beige" );
-										alignCenter( );
-										childLayoutVertical( );
-
-										control( new ButtonBuilder( "startSingle", "Singleplayer" )
-										{
-
-											{
-												alignCenter( );
-												visibleToMouse( true );
-											}
-										} );
-
-										control( new ButtonBuilder( "startLogin", "Multiplayer" )
-										{
-
-											{
-												alignCenter( );
-												visibleToMouse( true );
-												interactOnClick( "openLogin()" );
-											}
-										} );
-
-										control( new ButtonBuilder( "startSettings", "Settings" )
-										{
-											{
-												alignCenter( );
-												visibleToMouse( true );
-												interactOnClick( "openOptions()" );
-											}
-										} );
-
-										control( new ButtonBuilder( "startExit", "Exit" )
-										{
-
-											{
-												alignCenter( );
-												visibleToMouse( true );
-												interactOnClick( "quit()" );
-											}
-										} );
-									}
-								} );
-							}
-						} );
-					}
-				} );
-			}
-		}.build( nifty ) );
-		new PopupBuilder( "loginPopup" )
-		{
-			{
-				backgroundColor( "#0f0f0fff" );
-				childLayoutCenter( );
-				panel( new PanelBuilder( "loginPanel" )
-				{
-					{
-						style( "nifty-panel-brown" );
-						childLayoutVertical( );
-						width( "320px" );
-						alignCenter( );
-						valignCenter( );
-
-						panel( new PanelBuilder( "loginInputs" )
-						{
-							{
-								style( "nifty-panel-inset-beige" );
-								childLayoutVertical( );
-								panel( new PanelBuilder( "loginUsername" )
-								{
-									{
-										// backgroundColor( "#404040ff" );
-										childLayoutHorizontal( );
-										height( "32px" );
-
-										control( new LabelBuilder( "labelUsername", "Username: " )
-										{
-											{
-												// textHAlignRight( );
-												width( "25%" );
-											}
-										} );
-										control( new TextFieldBuilder( "username", "" )
-										{
-											{
-												alignCenter( );
-												maxLength( 32 );
-												width( "75%" );
-											}
-										} );
-									}
-								} );
-
-								panel( new PanelBuilder( "loginPassword" )
-								{
-									{
-										// backgroundColor( "#303030ff" );
-										childLayoutHorizontal( );
-										height( "32px" );
-
-										control( new LabelBuilder( "labelPassword", "Password: " )
-										{
-											{
-												// textHAlignRight( );
-												width( "25%" );
-											}
-										} );
-										control( new TextFieldBuilder( "password", "" )
-										{
-											{
-												alignCenter( );
-												maxLength( 32 );
-												width( "75%" );
-											}
-										} );
-									}
-								} );
-							}
-						} );
-
-						control( new LabelBuilder( "loginFail" )
-						{
-							{
-								alignCenter( );
-								valignBottom( );
-								height( "32px" );
-								width( "100%" );
-								wrap( true );
-								// color( "#5c3566ff" );
-								color( "#d2b290ff" );
-							}
-						} );
-
-						panel( new PanelBuilder( "loginButtons" )
-						{
-							{
-								backgroundColor( "#404040ff" );
-								childLayoutHorizontal( );
-								textHAlignCenter( );
-								alignCenter( );
-
-								control( new ButtonBuilder( "login", "Login" )
-								{
-									{
-										alignCenter( );
-										valignBottom( );
-										visibleToMouse( true );
-										interactOnClick( "startGame()" );
-									}
-								} );
-								control( new ButtonBuilder( "back", "Back" )
-								{
-									{
-										alignCenter( );
-										valignBottom( );
-										visibleToMouse( true );
-										interactOnClick( "closeLogin()" );
-									}
-								} );
-							}
-						} );
-
-					}
-				} );
-			}
-		}.registerPopup( nifty );
-	}
-
-	/**
-	 * Builds and adds main options with graphics control.
-	 * 
-	 * @param nifty
-	 */
-	public static void createMainOptions( Nifty nifty )
-	{
-		nifty.addScreen( "mainOptions", new ScreenBuilder( "mainOptions" )
-		{
-			{
-				controller( new OptionsViewController( ) );
-
-				layer( new LayerBuilder( "layer" )
-				{
-					{
-						backgroundColor( "#838796ff" );
-						childLayoutVertical( );
-
-						panel( new PanelBuilder( "optionsHeader" )
-						{
-							{
-								width( "100%" );
-								height( "32px" );
-								valignBottom( );
-								childLayoutHorizontal( );
-								backgroundColor( "#616374ff" );
-								paddingLeft( "32px" );
-								paddingRight( "32px" );
-
-								text( new TextBuilder( "optionsTitle" )
-								{
-									{
-										width( "50%" );
-										height( "100%" );
-										text( "Options" );
-										textHAlignLeft( );
-										textVAlignCenter( );
-										font( "Interface/Fonts/Default.fnt" );
-
-									}
-								} );
-
-								panel( new PanelBuilder( "optionsButtons" )
-								{
-									{
-										width( "50%" );
-										childLayoutHorizontal( );
-
-										panel( new PanelBuilder( "spacer" )
-										{
-											{
-												width( "*" );
-											}
-										} );
-										control( new ButtonBuilder( "selectGraphics", "Apply" )
-										{
-											{
-												alignCenter( );
-												valignCenter( );
-												visibleToMouse( true );
-												interactOnClick( "applySettings()" );
-											}
-										} );
-										control( new ButtonBuilder( "backtostart", "Back" )
-										{
-											{
-												alignCenter( );
-												valignCenter( );
-												visibleToMouse( true );
-												interactOnClick( "exitMainOptions()" );
-											}
-										} );
-									}
-								} );
-
-							}
-						} );
-						panel( new PanelBuilder( "optionsTabs" )
-						{
-							{
-								width( "66%" );
-								height( "100%" );
-								padding( "32px" );
-								alignCenter( );
-								valignCenter( );
-								childLayoutVertical( );
-
-								panel( new PanelBuilder( "graphics" )
-								{
-									{
-										style( "nifty-panel-brown" );
-										childLayoutVertical( );
-
-										control( new LabelBuilder( "labelGraphics", "Graphics" )
-										{
-											{
-												textHAlignLeft( );
-												textVAlignBottom( );
-												width( "100%" );
-											}
-										} );
-
-										panel( new PanelBuilder( "graphicsSettings" )
-										{
-											{
-												style( "nifty-panel-inset-beige" );
-												childLayoutVertical( );
-
-												panel( new PanelBuilder( "optionsResolution" )
-												{
-													{
-														childLayoutHorizontal( );
-														control( new LabelBuilder( "labelResolution", "Screen Resolution: " )
-														{
-															{
-																textHAlignLeft( );
-																width( "25%" );
-															}
-														} );
-														control( new DropDownBuilder( "graphicsOptions" )
-														{
-															{
-
-															}
-														} );
-													}
-												} );
-												panel( new PanelBuilder( "optionsFullscreen" )
-												{
-													{
-														childLayoutHorizontal( );
-
-														control( new LabelBuilder( "labelFullscreen", "Fullscreen: " )
-														{
-															{
-																textHAlignLeft( );
-																width( "25%" );
-															}
-														} );
-														control( new CheckboxBuilder( "graphicsFullscreen" )
-														{
-															{
-
-															}
-														} );
-													}
-												} );
-												panel( new PanelBuilder( "optionsQuality" )
-												{
-													{
-														childLayoutHorizontal( );
-
-														control( new LabelBuilder( "labelQuality", "Quality: " )
-														{
-															{
-																textHAlignLeft( );
-																width( "25%" );
-															}
-														} );
-
-														control( new SliderBuilder( "sliderA", false )
-														{
-															{
-																buttonStepSize( 1.0f );
-																max( 2.0f );
-															}
-														} );
-
-													}
-												} );
-												panel( new PanelBuilder( "optionsVSync" )
-												{
-													{
-														childLayoutHorizontal( );
-
-														control( new LabelBuilder( "labelVSync", "VSync: " )
-														{
-															{
-																textHAlignLeft( );
-																width( "25%" );
-															}
-														} );
-														control( new CheckboxBuilder( "graphicsVSync" )
-														{
-															{
-
-															}
-														} );
-													}
-												} );
-											}
-										} );
-									}
-								} );
-
-								panel( new PanelBuilder( "audio" )
-								{
-									{
-										style( "nifty-panel-brown" );
-										childLayoutVertical( );
-
-										control( new LabelBuilder( "audioOptions", "Audio" )
-										{
-											{
-												textHAlignLeft( );
-												textVAlignBottom( );
-												width( "100%" );
-											}
-										} );
-
-										panel( new PanelBuilder( "audioSettings" )
-										{
-											{
-												style( "nifty-panel-inset-beige" );
-												childLayoutVertical( );
-												panel( new PanelBuilder( "optionsMainAudio" )
-												{
-													{
-
-														childLayoutHorizontal( );
-														control( new LabelBuilder( "labelMainVolume", "Main Volume: " )
-														{
-															{
-																textHAlignLeft( );
-																width( "25%" );
-															}
-														} );
-
-														control( new SliderBuilder( "mainVolumeSlider", false )
-														{
-															{
-																buttonStepSize( 5.0f );
-																max( 100.0f );
-															}
-														} );
-													}
-												} );
-												panel( new PanelBuilder( "optionsMusic" )
-												{
-													{
-
-														childLayoutHorizontal( );
-														control( new LabelBuilder( "labelMusic", "Music Volume: " )
-														{
-															{
-																textHAlignLeft( );
-																width( "25%" );
-															}
-														} );
-
-														control( new SliderBuilder( "musicSlider", false )
-														{
-															{
-																buttonStepSize( 5.0f );
-																max( 100.0f );
-															}
-														} );
-													}
-												} );
-												panel( new PanelBuilder( "optionsSounds" )
-												{
-													{
-
-														childLayoutHorizontal( );
-														control( new LabelBuilder( "labelSounds", "Sounds Volume: " )
-														{
-															{
-																textHAlignLeft( );
-																width( "25%" );
-															}
-														} );
-
-														control( new SliderBuilder( "soundsSlider", false )
-														{
-															{
-																buttonStepSize( 5.0f );
-																max( 100.0f );
-															}
-														} );
-													}
-												} );
-											}
-										} );
-									}
-								} );
-								panel( new PanelBuilder( "input" )
-								{
-									{
-										style( "nifty-panel-brown" );
-										childLayoutVertical( );
-										control( new LabelBuilder( "inputOptions", "Input" )
-										{
-											{
-												textHAlignLeft( );
-												textVAlignBottom( );
-												width( "100%" );
-											}
-										} );
-
-										panel( new PanelBuilder( "inputSettings" )
-										{
-											{
-												style( "nifty-panel-inset-beige" );
-												childLayoutVertical( );
-
-												panel( new PanelBuilder( "consoleCheck" )
-												{
-													{
-
-														childLayoutHorizontal( );
-														control( new LabelBuilder( "consoleLabel", "Enable Dev Console: " )
-														{
-															{
-																textHAlignLeft( );
-																width( "25%" );
-															}
-														} );
-														control( new CheckboxBuilder( "consoleCheckBox" )
-														{
-															{
-																checked( false );
-															}
-														} );
-													}
-												} );
-												panel( new PanelBuilder( "inputNorth" )
-												{
-													{
-
-														childLayoutHorizontal( );
-														control( new LabelBuilder( "northLabel", "Move North: " )
-														{
-															{
-																textHAlignLeft( );
-																width( "25%" );
-															}
-														} );
-														control( new ButtonBuilder( "northButton", "" )
-														{
-															{
-																visibleToMouse( true );
-																interactOnClick( "setKeyBinding(northButton)" );
-															}
-														} );
-													}
-												} );
-
-												panel( new PanelBuilder( "inputSouth" )
-												{
-													{
-
-														childLayoutHorizontal( );
-														control( new LabelBuilder( "southLabel", "Move South: " )
-														{
-															{
-																textHAlignLeft( );
-																width( "25%" );
-															}
-														} );
-														control( new ButtonBuilder( "southButton", "" )
-														{
-															{
-																visibleToMouse( true );
-																interactOnClick( "setKeyBinding(southButton)" );
-															}
-														} );
-													}
-												} );
-
-												panel( new PanelBuilder( "inputEast" )
-												{
-													{
-
-														childLayoutHorizontal( );
-														control( new LabelBuilder( "eastLabel", "Move East: " )
-														{
-															{
-																textHAlignLeft( );
-																width( "25%" );
-															}
-														} );
-														control( new ButtonBuilder( "eastButton", "" )
-														{
-															{
-																visibleToMouse( true );
-																interactOnClick( "setKeyBinding(eastButton)" );
-															}
-														} );
-													}
-												} );
-
-												panel( new PanelBuilder( "inputWest" )
-												{
-													{
-
-														childLayoutHorizontal( );
-														control( new LabelBuilder( "westLabel", "Move West: " )
-														{
-															{
-																textHAlignLeft( );
-																width( "25%" );
-															}
-														} );
-														control( new ButtonBuilder( "westButton", "" )
-														{
-															{
-																visibleToMouse( true );
-																interactOnClick( "setKeyBinding(westButton)" );
-															}
-														} );
-													}
-												} );
-
-												panel( new PanelBuilder( "inputChat" )
-												{
-													{
-
-														childLayoutHorizontal( );
-														control( new LabelBuilder( "chatLabel", "Chat: " )
-														{
-															{
-																textHAlignLeft( );
-																width( "25%" );
-															}
-														} );
-														control( new ButtonBuilder( "chatButton", "" )
-														{
-															{
-																visibleToMouse( true );
-																interactOnClick( "setKeyBinding(chatButton)" );
-															}
-														} );
-													}
-												} );
-
-												panel( new PanelBuilder( "inputScore" )
-												{
-													{
-
-														childLayoutHorizontal( );
-														control( new LabelBuilder( "scoreLabel", "Scoreboard: " )
-														{
-															{
-																textHAlignLeft( );
-																width( "25%" );
-															}
-														} );
-														control( new ButtonBuilder( "scoreButton", "" )
-														{
-															{
-																visibleToMouse( true );
-																interactOnClick( "setKeyBinding(scoreButton)" );
-															}
-														} );
-													}
-												} );
-											}
-										} );
-									}
-								} );
 							}
 						} );
 					}
@@ -1548,33 +827,534 @@ public class NiftyFactory
 
 	}
 
-	public static void createConsole( Nifty nifty )
+	public static void createLoadingScreen( Nifty nifty )
 	{
-		nifty.addScreen( "consoleScreen", new ScreenBuilder( "consoleScreen" )
+		new ControlDefinitionBuilder( "bar" )
 		{
 			{
-				controller( new ConsoleViewController( ) );
-				layer( new LayerBuilder( "consoleLayer" )
+				controller( new LoadingViewController( ) );
+				image( new ImageBuilder( )
+				{
+					{
+						filename( "Interface/border.png" );
+						imageMode( "resize:15,2,15,15,15,2,15,2,15,2,15,15" );
+						childLayoutAbsolute( );
+						image( new ImageBuilder( "inner" )
+						{
+							{
+								x( "0" );
+								y( "0" );
+								filename( "Interface/inner.png" );
+								width( "32px" );
+								height( "100%" );
+								imageMode( "resize:15,2,15,15,15,2,15,2,15,2,15,15" );
+							}
+						} );
+					}
+				} );
+			}
+		}.registerControlDefintion( nifty );
+
+		nifty.addScreen( "loading", new ScreenBuilder( "loading" )
+		{
+			{
+				controller( new LoadingViewController( ) );
+				layer( new LayerBuilder( "layer" )
 				{
 					{
 						childLayoutCenter( );
-						backgroundColor( "#00000000" );
+						backgroundColor( "#303030ff" );
 
-						panel( new PanelBuilder( "consolePanel" )
+						panel( new PanelBuilder( "loadingBar" )
 						{
 							{
+								height( "100%" );
+								width( "100%" );
 								childLayoutCenter( );
-								width( "50%" );
-								height( "50%" );
-
-								control( new ConsoleBuilder( "console" )
+								control( new ControlBuilder( "bar", "bar" )
 								{
-
 									{
-										width( "100%" );
-										lines( 25 );
+										name( "bar" );
 										alignCenter( );
-										valignCenter( );
+										valignBottom( );
+										width( "80%" );
+										height( "5%" );
+									}
+								} );
+								control( new LabelBuilder( )
+								{
+									{
+										name( "label" );
+										alignCenter( );
+										text( "" );
+									}
+								} );
+							}
+						} );
+					}
+				} );
+			}
+		}.build( nifty ) );
+	}
+
+	/**
+	 * Builds and adds main options with graphics control.
+	 * 
+	 * @param nifty
+	 */
+	public static void createMainOptions( Nifty nifty )
+	{
+		nifty.addScreen( "mainOptions", new ScreenBuilder( "mainOptions" )
+		{
+			{
+				controller( new OptionsViewController( ) );
+
+				layer( new LayerBuilder( "layer" )
+				{
+					{
+						backgroundColor( "#838796ff" );
+						childLayoutVertical( );
+
+						panel( new PanelBuilder( "optionsHeader" )
+						{
+							{
+								width( "100%" );
+								height( "32px" );
+								valignBottom( );
+								childLayoutHorizontal( );
+								backgroundColor( "#616374ff" );
+								paddingLeft( "32px" );
+								paddingRight( "32px" );
+
+								text( new TextBuilder( "optionsTitle" )
+								{
+									{
+										width( "50%" );
+										height( "100%" );
+										text( "Options" );
+										textHAlignLeft( );
+										textVAlignCenter( );
+										font( "Interface/Fonts/Default.fnt" );
+
+									}
+								} );
+
+								panel( new PanelBuilder( "optionsButtons" )
+								{
+									{
+										width( "50%" );
+										childLayoutHorizontal( );
+
+										panel( new PanelBuilder( "spacer" )
+										{
+											{
+												width( "*" );
+											}
+										} );
+										control( new ButtonBuilder( "selectGraphics", "Apply" )
+										{
+											{
+												alignCenter( );
+												valignCenter( );
+												visibleToMouse( true );
+												interactOnClick( "applySettings()" );
+											}
+										} );
+										control( new ButtonBuilder( "backtostart", "Back" )
+										{
+											{
+												alignCenter( );
+												valignCenter( );
+												visibleToMouse( true );
+												interactOnClick( "exitMainOptions()" );
+											}
+										} );
+									}
+								} );
+
+							}
+						} );
+						panel( new PanelBuilder( "optionsTabs" )
+						{
+							{
+								width( "66%" );
+								height( "100%" );
+								padding( "32px" );
+								alignCenter( );
+								valignCenter( );
+								childLayoutVertical( );
+
+								panel( new PanelBuilder( "graphics" )
+								{
+									{
+										style( "nifty-panel-brown" );
+										childLayoutVertical( );
+
+										control( new LabelBuilder( "labelGraphics", "Graphics" )
+										{
+											{
+												textHAlignLeft( );
+												textVAlignBottom( );
+												width( "100%" );
+											}
+										} );
+
+										panel( new PanelBuilder( "graphicsSettings" )
+										{
+											{
+												style( "nifty-panel-inset-beige" );
+												childLayoutVertical( );
+
+												panel( new PanelBuilder( "optionsResolution" )
+												{
+													{
+														childLayoutHorizontal( );
+														control( new LabelBuilder( "labelResolution", "Screen Resolution: " )
+														{
+															{
+																textHAlignLeft( );
+																width( "25%" );
+															}
+														} );
+														control( new DropDownBuilder( "graphicsOptions" )
+														{
+															{
+
+															}
+														} );
+													}
+												} );
+												panel( new PanelBuilder( "optionsFullscreen" )
+												{
+													{
+														childLayoutHorizontal( );
+
+														control( new LabelBuilder( "labelFullscreen", "Fullscreen: " )
+														{
+															{
+																textHAlignLeft( );
+																width( "25%" );
+															}
+														} );
+														control( new CheckboxBuilder( "graphicsFullscreen" )
+														{
+															{
+
+															}
+														} );
+													}
+												} );
+												panel( new PanelBuilder( "optionsQuality" )
+												{
+													{
+														childLayoutHorizontal( );
+
+														control( new LabelBuilder( "labelQuality", "Quality: " )
+														{
+															{
+																textHAlignLeft( );
+																width( "25%" );
+															}
+														} );
+
+														control( new SliderBuilder( "sliderA", false )
+														{
+															{
+																buttonStepSize( 1.0f );
+																max( 2.0f );
+															}
+														} );
+
+													}
+												} );
+												panel( new PanelBuilder( "optionsVSync" )
+												{
+													{
+														childLayoutHorizontal( );
+
+														control( new LabelBuilder( "labelVSync", "VSync: " )
+														{
+															{
+																textHAlignLeft( );
+																width( "25%" );
+															}
+														} );
+														control( new CheckboxBuilder( "graphicsVSync" )
+														{
+															{
+
+															}
+														} );
+													}
+												} );
+											}
+										} );
+									}
+								} );
+
+								panel( new PanelBuilder( "audio" )
+								{
+									{
+										style( "nifty-panel-brown" );
+										childLayoutVertical( );
+
+										control( new LabelBuilder( "audioOptions", "Audio" )
+										{
+											{
+												textHAlignLeft( );
+												textVAlignBottom( );
+												width( "100%" );
+											}
+										} );
+
+										panel( new PanelBuilder( "audioSettings" )
+										{
+											{
+												style( "nifty-panel-inset-beige" );
+												childLayoutVertical( );
+												panel( new PanelBuilder( "optionsMainAudio" )
+												{
+													{
+
+														childLayoutHorizontal( );
+														control( new LabelBuilder( "labelMainVolume", "Main Volume: " )
+														{
+															{
+																textHAlignLeft( );
+																width( "25%" );
+															}
+														} );
+
+														control( new SliderBuilder( "mainVolumeSlider", false )
+														{
+															{
+																buttonStepSize( 5.0f );
+																max( 100.0f );
+															}
+														} );
+													}
+												} );
+												panel( new PanelBuilder( "optionsMusic" )
+												{
+													{
+
+														childLayoutHorizontal( );
+														control( new LabelBuilder( "labelMusic", "Music Volume: " )
+														{
+															{
+																textHAlignLeft( );
+																width( "25%" );
+															}
+														} );
+
+														control( new SliderBuilder( "musicSlider", false )
+														{
+															{
+																buttonStepSize( 5.0f );
+																max( 100.0f );
+															}
+														} );
+													}
+												} );
+												panel( new PanelBuilder( "optionsSounds" )
+												{
+													{
+
+														childLayoutHorizontal( );
+														control( new LabelBuilder( "labelSounds", "Sounds Volume: " )
+														{
+															{
+																textHAlignLeft( );
+																width( "25%" );
+															}
+														} );
+
+														control( new SliderBuilder( "soundsSlider", false )
+														{
+															{
+																buttonStepSize( 5.0f );
+																max( 100.0f );
+															}
+														} );
+													}
+												} );
+											}
+										} );
+									}
+								} );
+								panel( new PanelBuilder( "input" )
+								{
+									{
+										style( "nifty-panel-brown" );
+										childLayoutVertical( );
+										control( new LabelBuilder( "inputOptions", "Input" )
+										{
+											{
+												textHAlignLeft( );
+												textVAlignBottom( );
+												width( "100%" );
+											}
+										} );
+
+										panel( new PanelBuilder( "inputSettings" )
+										{
+											{
+												style( "nifty-panel-inset-beige" );
+												childLayoutVertical( );
+
+												panel( new PanelBuilder( "consoleCheck" )
+												{
+													{
+
+														childLayoutHorizontal( );
+														control( new LabelBuilder( "consoleLabel", "Enable Dev Console: " )
+														{
+															{
+																textHAlignLeft( );
+																width( "25%" );
+															}
+														} );
+														control( new CheckboxBuilder( "consoleCheckBox" )
+														{
+															{
+																checked( false );
+															}
+														} );
+													}
+												} );
+												panel( new PanelBuilder( "inputNorth" )
+												{
+													{
+
+														childLayoutHorizontal( );
+														control( new LabelBuilder( "northLabel", "Move North: " )
+														{
+															{
+																textHAlignLeft( );
+																width( "25%" );
+															}
+														} );
+														control( new ButtonBuilder( "northButton", "" )
+														{
+															{
+																visibleToMouse( true );
+																interactOnClick( "setKeyBinding(northButton)" );
+															}
+														} );
+													}
+												} );
+
+												panel( new PanelBuilder( "inputSouth" )
+												{
+													{
+
+														childLayoutHorizontal( );
+														control( new LabelBuilder( "southLabel", "Move South: " )
+														{
+															{
+																textHAlignLeft( );
+																width( "25%" );
+															}
+														} );
+														control( new ButtonBuilder( "southButton", "" )
+														{
+															{
+																visibleToMouse( true );
+																interactOnClick( "setKeyBinding(southButton)" );
+															}
+														} );
+													}
+												} );
+
+												panel( new PanelBuilder( "inputEast" )
+												{
+													{
+
+														childLayoutHorizontal( );
+														control( new LabelBuilder( "eastLabel", "Move East: " )
+														{
+															{
+																textHAlignLeft( );
+																width( "25%" );
+															}
+														} );
+														control( new ButtonBuilder( "eastButton", "" )
+														{
+															{
+																visibleToMouse( true );
+																interactOnClick( "setKeyBinding(eastButton)" );
+															}
+														} );
+													}
+												} );
+
+												panel( new PanelBuilder( "inputWest" )
+												{
+													{
+
+														childLayoutHorizontal( );
+														control( new LabelBuilder( "westLabel", "Move West: " )
+														{
+															{
+																textHAlignLeft( );
+																width( "25%" );
+															}
+														} );
+														control( new ButtonBuilder( "westButton", "" )
+														{
+															{
+																visibleToMouse( true );
+																interactOnClick( "setKeyBinding(westButton)" );
+															}
+														} );
+													}
+												} );
+
+												panel( new PanelBuilder( "inputChat" )
+												{
+													{
+
+														childLayoutHorizontal( );
+														control( new LabelBuilder( "chatLabel", "Chat: " )
+														{
+															{
+																textHAlignLeft( );
+																width( "25%" );
+															}
+														} );
+														control( new ButtonBuilder( "chatButton", "" )
+														{
+															{
+																visibleToMouse( true );
+																interactOnClick( "setKeyBinding(chatButton)" );
+															}
+														} );
+													}
+												} );
+
+												panel( new PanelBuilder( "inputScore" )
+												{
+													{
+
+														childLayoutHorizontal( );
+														control( new LabelBuilder( "scoreLabel", "Scoreboard: " )
+														{
+															{
+																textHAlignLeft( );
+																width( "25%" );
+															}
+														} );
+														control( new ButtonBuilder( "scoreButton", "" )
+														{
+															{
+																visibleToMouse( true );
+																interactOnClick( "setKeyBinding(scoreButton)" );
+															}
+														} );
+													}
+												} );
+											}
+										} );
 									}
 								} );
 							}
@@ -2041,6 +1821,226 @@ public class NiftyFactory
 				} );
 			}
 		}.build( nifty ) );
+	}
+
+	/**
+	 * Builds and adds the start screen with a login popup.
+	 * 
+	 * @param nifty
+	 */
+	public static void createStartView( Nifty nifty )
+	{
+		nifty.addScreen( "start", new ScreenBuilder( "start" )
+		{
+			{
+				controller( new StartViewController( ) );
+
+				layer( new LayerBuilder( "layer" )
+				{
+
+					{
+						childLayoutCenter( );
+						backgroundColor( "#1a1a1aff" );
+
+						panel( new PanelBuilder( "startPanel" )
+						{
+
+							{
+								width( "25%" );
+								height( "100%" );
+								childLayoutVertical( );
+
+								panel( new PanelBuilder( "" )
+								{
+
+									{
+
+										height( "40%" );
+										childLayoutCenter( );
+										alignCenter( );
+
+										text( new TextBuilder( )
+										{
+											{
+												text( "Hex Republics" );
+												font( "Interface/Fonts/Default.fnt" );
+												height( "100%" );
+												width( "100%" );
+											}
+										} );
+									}
+								} );
+
+								panel( new PanelBuilder( "startButtonsPanel" )
+								{
+
+									{
+										style( "nifty-panel-beige" );
+										alignCenter( );
+										childLayoutVertical( );
+
+										control( new ButtonBuilder( "startSingle", "Singleplayer" )
+										{
+
+											{
+												alignCenter( );
+												visibleToMouse( true );
+											}
+										} );
+
+										control( new ButtonBuilder( "startLogin", "Multiplayer" )
+										{
+
+											{
+												alignCenter( );
+												visibleToMouse( true );
+												interactOnClick( "openLogin()" );
+											}
+										} );
+
+										control( new ButtonBuilder( "startSettings", "Settings" )
+										{
+											{
+												alignCenter( );
+												visibleToMouse( true );
+												interactOnClick( "openOptions()" );
+											}
+										} );
+
+										control( new ButtonBuilder( "startExit", "Exit" )
+										{
+
+											{
+												alignCenter( );
+												visibleToMouse( true );
+												interactOnClick( "quit()" );
+											}
+										} );
+									}
+								} );
+							}
+						} );
+					}
+				} );
+			}
+		}.build( nifty ) );
+		new PopupBuilder( "loginPopup" )
+		{
+			{
+				backgroundColor( "#0f0f0fff" );
+				childLayoutCenter( );
+				panel( new PanelBuilder( "loginPanel" )
+				{
+					{
+						style( "nifty-panel-brown" );
+						childLayoutVertical( );
+						width( "320px" );
+						alignCenter( );
+						valignCenter( );
+
+						panel( new PanelBuilder( "loginInputs" )
+						{
+							{
+								style( "nifty-panel-inset-beige" );
+								childLayoutVertical( );
+								panel( new PanelBuilder( "loginUsername" )
+								{
+									{
+										// backgroundColor( "#404040ff" );
+										childLayoutHorizontal( );
+										height( "32px" );
+
+										control( new LabelBuilder( "labelUsername", "Username: " )
+										{
+											{
+												// textHAlignRight( );
+												width( "25%" );
+											}
+										} );
+										control( new TextFieldBuilder( "username", "" )
+										{
+											{
+												alignCenter( );
+												maxLength( 32 );
+												width( "75%" );
+											}
+										} );
+									}
+								} );
+
+								panel( new PanelBuilder( "loginPassword" )
+								{
+									{
+										// backgroundColor( "#303030ff" );
+										childLayoutHorizontal( );
+										height( "32px" );
+
+										control( new LabelBuilder( "labelPassword", "Password: " )
+										{
+											{
+												// textHAlignRight( );
+												width( "25%" );
+											}
+										} );
+										control( new TextFieldBuilder( "password", "" )
+										{
+											{
+												alignCenter( );
+												maxLength( 32 );
+												width( "75%" );
+											}
+										} );
+									}
+								} );
+							}
+						} );
+
+						control( new LabelBuilder( "loginFail" )
+						{
+							{
+								alignCenter( );
+								valignBottom( );
+								height( "32px" );
+								width( "100%" );
+								wrap( true );
+								// color( "#5c3566ff" );
+								color( "#d2b290ff" );
+							}
+						} );
+
+						panel( new PanelBuilder( "loginButtons" )
+						{
+							{
+								backgroundColor( "#404040ff" );
+								childLayoutHorizontal( );
+								textHAlignCenter( );
+								alignCenter( );
+
+								control( new ButtonBuilder( "login", "Login" )
+								{
+									{
+										alignCenter( );
+										valignBottom( );
+										visibleToMouse( true );
+										interactOnClick( "startGame()" );
+									}
+								} );
+								control( new ButtonBuilder( "back", "Back" )
+								{
+									{
+										alignCenter( );
+										valignBottom( );
+										visibleToMouse( true );
+										interactOnClick( "closeLogin()" );
+									}
+								} );
+							}
+						} );
+
+					}
+				} );
+			}
+		}.registerPopup( nifty );
 	}
 
 	/**

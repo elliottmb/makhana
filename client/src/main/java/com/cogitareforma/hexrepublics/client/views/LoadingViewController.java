@@ -3,9 +3,14 @@ package com.cogitareforma.hexrepublics.client.views;
 import java.util.Properties;
 import java.util.logging.Logger;
 
+import org.apache.commons.lang3.RandomUtils;
+
 import com.cogitareforma.hexrepublics.client.util.NiftyFactory;
+import com.cogitareforma.hexrepublics.common.entities.traits.WorldTrait;
 import com.jme3.app.Application;
 import com.jme3.app.state.AppStateManager;
+import com.simsilica.es.EntityId;
+import com.simsilica.es.client.RemoteEntityData;
 
 import de.lessvoid.nifty.Nifty;
 import de.lessvoid.nifty.controls.Controller;
@@ -47,7 +52,23 @@ public class LoadingViewController extends GeneralPlayingController implements C
 		super.initialize( stateManager, app );
 
 		progressBar = getApp( ).getNifty( ).getScreen( getScreenId( ) ).findElementByName( "inner" );
-		getApp( ).loadWorld( Integer.toHexString( ( int ) ( Math.random( ) * 1000 ) ) );
+
+		byte seed = ( byte ) ( RandomUtils.nextInt( 0, 256 ) - 128 );
+		RemoteEntityData entityData = getApp( ).getGameConnManager( ).getRemoteEntityData( );
+		if ( entityData != null )
+		{
+			EntityId id = entityData.findEntity( null, WorldTrait.class );
+
+			if ( id != null && id != EntityId.NULL_ID )
+			{
+				WorldTrait wt = entityData.getComponent( id, WorldTrait.class );
+				if ( wt != null )
+				{
+					seed = wt.getSeed( );
+				}
+			}
+		}
+		getApp( ).loadWorld( seed );
 	}
 
 	@Override

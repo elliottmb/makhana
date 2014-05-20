@@ -27,11 +27,6 @@ public class SettingsInputHandler implements RawInputListener
 		this.eventId = eventId;
 	}
 
-	public String getEventId( )
-	{
-		return eventId;
-	}
-
 	@Override
 	public void beginInput( )
 	{
@@ -44,6 +39,11 @@ public class SettingsInputHandler implements RawInputListener
 	{
 		// TODO Auto-generated method stub
 
+	}
+
+	public String getEventId( )
+	{
+		return eventId;
 	}
 
 	@Override

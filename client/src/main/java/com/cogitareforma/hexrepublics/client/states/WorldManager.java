@@ -163,18 +163,18 @@ public class WorldManager extends AbstractAppState
 	/**
 	 * loads the specified level node
 	 * 
-	 * @param name
+	 * @param seed
 	 */
-	public void loadLevel( String name )
+	public void loadLevel( Byte seed )
 	{
 		LoadingViewController con = ( LoadingViewController ) this.app.getNifty( ).getScreen( "loading" ).getScreenController( );
 		con.setLoading( 0.0f, "world" );
-		logger.log( Level.INFO, "Load level with seed: " + name );
+		logger.log( Level.INFO, "Load level with seed: " + seed );
 		worldRoot = new Node( "worldRoot" );
 		con.setLoading( 0.25f, "terrain" );
 
 		logger.log( Level.INFO, "Load terrain" );
-		WorldFactory.attachTerrainToNode( app.getCamera( ), assetManager, worldRoot, ( byte ) name.charAt( 0 ) );
+		WorldFactory.attachTerrainToNode( app.getCamera( ), assetManager, worldRoot, seed.byteValue( ) );
 		con.setLoading( 0.5f, "lighting" );
 
 		logger.log( Level.INFO, "Load lighting" );

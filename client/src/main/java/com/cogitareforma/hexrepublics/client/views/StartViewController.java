@@ -162,6 +162,26 @@ public class StartViewController extends AbstractAppState implements ScreenContr
 		app.stop( );
 	}
 
+	public void setFailText( String notice )
+	{
+		loginFail.setText( notice );
+	}
+
+	private void setLoginEnabled( boolean enabled )
+	{
+		System.out.println( "setLoginEnabled entered" );
+		System.out.println( "setLoginEnabled correct screen and value of " + enabled );
+		loginButton.setEnabled( enabled );
+		if ( enabled )
+		{
+			loginButton.setText( "Multiplayer" );
+		}
+		else
+		{
+			loginButton.setText( "Offline" );
+		}
+	}
+
 	/**
 	 * Checks login credentials. If valid, creates network lobby.
 	 */
@@ -213,26 +233,6 @@ public class StartViewController extends AbstractAppState implements ScreenContr
 					setLoginEnabled( false );
 				}
 			}
-		}
-	}
-
-	public void setFailText( String notice )
-	{
-		loginFail.setText( notice );
-	}
-
-	private void setLoginEnabled( boolean enabled )
-	{
-		System.out.println( "setLoginEnabled entered" );
-		System.out.println( "setLoginEnabled correct screen and value of " + enabled );
-		loginButton.setEnabled( enabled );
-		if ( enabled )
-		{
-			loginButton.setText( "Login" );
-		}
-		else
-		{
-			loginButton.setText( "Offline" );
 		}
 	}
 }
