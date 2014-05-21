@@ -7,12 +7,9 @@ import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.cogitareforma.hexrepublics.client.ClientMain;
 import com.cogitareforma.hexrepublics.client.util.KeyBindings;
 import com.cogitareforma.hexrepublics.common.util.YamlConfig;
 import com.jme3.app.Application;
-import com.jme3.app.state.AbstractAppState;
-import com.jme3.app.state.AppState;
 import com.jme3.app.state.AppStateManager;
 import com.jme3.audio.Listener;
 import com.jme3.input.KeyInput;
@@ -25,20 +22,18 @@ import de.lessvoid.nifty.controls.CheckBox;
 import de.lessvoid.nifty.controls.DropDown;
 import de.lessvoid.nifty.controls.Slider;
 import de.lessvoid.nifty.screen.Screen;
-import de.lessvoid.nifty.screen.ScreenController;
 
 /**
  * 
  * @author Ryan Grier
  */
-public class OptionsViewController extends AbstractAppState implements ScreenController
+public class OptionsViewController extends GeneralController
 {
 	/**
 	 * The logger for this class.
 	 */
 	private final static Logger logger = Logger.getLogger( OptionsViewController.class.getName( ) );
 	private Nifty nifty;
-	private ClientMain app;
 	private DropDown< String > graphic;
 	private CheckBox fullscreen;
 	private Slider mainVolume;
@@ -73,8 +68,8 @@ public class OptionsViewController extends AbstractAppState implements ScreenCon
 	public void applySettings( )
 	{
 		String selected = this.graphic.getSelection( );
-		AppSettings settings = this.app.getContext( ).getSettings( );
-		Listener listener = this.app.getListener( );
+		AppSettings settings = getApp( ).getContext( ).getSettings( );
+		Listener listener = getApp( ).getListener( );
 		float volume = this.mainVolume.getValue( );
 		if ( hasChanged( selected, settings, listener, volume ) )
 		{
@@ -94,11 +89,11 @@ public class OptionsViewController extends AbstractAppState implements ScreenCon
 
 				GraphicsDevice device = GraphicsEnvironment.getLocalGraphicsEnvironment( ).getDefaultScreenDevice( );
 				settings.setFullscreen( fullscreen.isChecked( ) && device.isFullScreenSupported( ) );
-				this.app.setSettings( settings );
+				getApp( ).setSettings( settings );
 
 				yamlConfig.putAppSettings( settings );
 
-				this.app.restart( );
+				getApp( ).restart( );
 			}
 			if ( hasInputChanged( ) )
 			{
@@ -112,12 +107,12 @@ public class OptionsViewController extends AbstractAppState implements ScreenCon
 
 			if ( console.isChecked( ) )
 			{
-				this.app.consoleEnabled = true;
+				getApp( ).consoleEnabled = true;
 				yamlConfig.put( "client.input.console", true );
 			}
 			else
 			{
-				this.app.consoleEnabled = false;
+				getApp( ).consoleEnabled = false;
 				yamlConfig.put( "client.input.console", false );
 			}
 
@@ -125,11 +120,11 @@ public class OptionsViewController extends AbstractAppState implements ScreenCon
 		}
 		if ( console.isChecked( ) )
 		{
-			this.app.consoleEnabled = true;
+			getApp( ).consoleEnabled = true;
 		}
 		else
 		{
-			this.app.consoleEnabled = false;
+			getApp( ).consoleEnabled = false;
 		}
 
 	}
@@ -153,9 +148,7 @@ public class OptionsViewController extends AbstractAppState implements ScreenCon
 
 	public void exitMainOptions( )
 	{
-		this.app.getStateManager( ).detach( ( AppState ) nifty.getCurrentScreen( ).getScreenController( ) );
-		nifty.removeScreen( "mainOptions" );
-		nifty.gotoScreen( "start" );
+		gotoScreen( "start", true, false, true, null, null );
 	}
 
 	/**
@@ -178,7 +171,7 @@ public class OptionsViewController extends AbstractAppState implements ScreenCon
 		this.graphic.addItem( "2048x1152" );
 		this.graphic.addItem( "2560x1440" );
 		this.graphic.addItem( "2560x1600" );
-		if ( this.app.getContext( ).getSettings( ).isFullscreen( ) )
+		if ( getApp( ).getContext( ).getSettings( ).isFullscreen( ) )
 		{
 			this.fullscreen.check( );
 		}
@@ -194,17 +187,17 @@ public class OptionsViewController extends AbstractAppState implements ScreenCon
 		startKeyBinding( "scoreButton", "client.input.scoreKey" );
 		startKeyBinding( "chatButton", "client.input.chatKey" );
 		/*
-		 * if ( this.app.consoleEnabled ) { console.check( ); }
+		 * if ( getApp().consoleEnabled ) { console.check( ); }
 		 */
 		Boolean con = ( Boolean ) yamlConfig.get( "client.input.console" );
 		if ( con == true )
 		{
 			console.check( );
-			this.app.consoleEnabled = true;
+			getApp( ).consoleEnabled = true;
 		}
 		else
 		{
-			this.app.consoleEnabled = false;
+			getApp( ).consoleEnabled = false;
 		}
 	}
 
@@ -316,8 +309,8 @@ public class OptionsViewController extends AbstractAppState implements ScreenCon
 	public void initialize( AppStateManager stateManager, Application app )
 	{
 		super.initialize( stateManager, app );
-		this.app = ( ClientMain ) app;
-		this.nifty = this.app.getNifty( );
+
+		this.nifty = getApp( ).getNifty( );
 		logger.log( Level.INFO, "Initialised " + this.getClass( ) );
 		if ( nifty.getScreen( "mainOptions" ).isRunning( ) )
 		{
@@ -326,19 +319,19 @@ public class OptionsViewController extends AbstractAppState implements ScreenCon
 			this.mainVolume = nifty.getScreen( "mainOptions" ).findNiftyControl( "mainVolumeSlider", Slider.class );
 			this.console = nifty.getScreen( "mainOptions" ).findNiftyControl( "consoleCheckBox", CheckBox.class );
 			fillGraphicsOptions( );
-			this.app.currentScreen = "mainOptions";
+			getApp( ).currentScreen = "mainOptions";
 		}
 		else
 		{
-			this.app.currentScreen = "options";
+			getApp( ).currentScreen = "options";
 		}
 		for ( int i = 0; i < keys.length; i++ )
 		{
 			k.put( keys[ i ], values[ i ] );
 		}
 		fillkeys( );
-		graphic.selectItem( this.app.getContext( ).getSettings( ).getWidth( ) + "x" + this.app.getContext( ).getSettings( ).getHeight( ) );
-		mainVolume.setValue( ( this.app.getListener( ).getVolume( ) ) * 50.0f );
+		graphic.selectItem( getApp( ).getContext( ).getSettings( ).getWidth( ) + "x" + getApp( ).getContext( ).getSettings( ).getHeight( ) );
+		mainVolume.setValue( ( getApp( ).getListener( ).getVolume( ) ) * 50.0f );
 		keyBinds = new KeyBindings( );
 	}
 
@@ -354,7 +347,7 @@ public class OptionsViewController extends AbstractAppState implements ScreenCon
 		Button button = screen.findNiftyControl( eventId, Button.class );
 		button.setText( "" + KeyBindings.getKeyName( evt.getKeyCode( ) ) );
 		mapNiftyBindings( eventId, keyBinds, evt.getKeyCode( ) );
-		this.app.getInputManager( ).removeRawInputListener( handle );
+		getApp( ).getInputManager( ).removeRawInputListener( handle );
 		handle = null;
 	}
 
@@ -395,17 +388,17 @@ public class OptionsViewController extends AbstractAppState implements ScreenCon
 
 	public void nextScreen( String screen )
 	{
-		nifty.gotoScreen( screen );
+		gotoScreen( screen, false, false, false, null, null );
 	}
 
 	public void onEndScreen( )
 	{
-		logger.log( Level.INFO, "Options Screen Stopped" );
+
 	}
 
 	public void onStartScreen( )
 	{
-		logger.log( Level.INFO, "Options Screen Started" );
+
 	}
 
 	/**
@@ -421,12 +414,12 @@ public class OptionsViewController extends AbstractAppState implements ScreenCon
 		{
 			Button button = screen.findNiftyControl( handle.getEventId( ), Button.class );
 			button.setText( "" );
-			this.app.getInputManager( ).removeRawInputListener( handle );
+			getApp( ).getInputManager( ).removeRawInputListener( handle );
 		}
 		Button button = screen.findNiftyControl( eventId, Button.class );
 		button.setText( "<press any key>" );
 		handle = new SettingsInputHandler( this, eventId );
-		this.app.getInputManager( ).addRawInputListener( handle );
+		getApp( ).getInputManager( ).addRawInputListener( handle );
 	}
 
 	/**

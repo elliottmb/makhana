@@ -3,11 +3,8 @@ package com.cogitareforma.hexrepublics.client.views;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.cogitareforma.hexrepublics.client.ClientMain;
 import com.cogitareforma.hexrepublics.client.util.NiftyFactory;
 import com.jme3.app.Application;
-import com.jme3.app.state.AbstractAppState;
-import com.jme3.app.state.AppState;
 import com.jme3.app.state.AppStateManager;
 import com.jme3.audio.AudioNode;
 
@@ -21,14 +18,13 @@ import de.lessvoid.nifty.input.keyboard.KeyboardInputEvent;
 import de.lessvoid.nifty.input.mapping.DefaultInputMapping;
 import de.lessvoid.nifty.screen.KeyInputHandler;
 import de.lessvoid.nifty.screen.Screen;
-import de.lessvoid.nifty.screen.ScreenController;
 
 /**
  * 
  * @author Ryan Grier
  * @author Elliott Butler
  */
-public class StartViewController extends AbstractAppState implements ScreenController, KeyInputHandler
+public class StartViewController extends GeneralController implements KeyInputHandler
 {
 
 	/**
@@ -36,7 +32,6 @@ public class StartViewController extends AbstractAppState implements ScreenContr
 	 */
 	private final static Logger logger = Logger.getLogger( StartViewController.class.getName( ) );
 
-	private ClientMain app;
 	private Element login;
 	private TextField username;
 	private TextField password;
@@ -50,19 +45,15 @@ public class StartViewController extends AbstractAppState implements ScreenContr
 
 	public void closeLogin( )
 	{
-		this.app.getNifty( ).closePopup( "loginPopup" );
+		getApp( ).getNifty( ).closePopup( "loginPopup" );
 	}
 
 	public void gotoNetwork( )
 	{
-		app.enqueue( ( ) ->
+		NiftyFactory.createNetworkView( getApp( ).getNifty( ) );
+		gotoScreen( "network", true, true, true, null, ( ) ->
 		{
-			NiftyFactory.createNetworkView( app.getNifty( ) );
-			app.getStateManager( ).detach( ( AppState ) app.getNifty( ).getCurrentScreen( ).getScreenController( ) );
-			app.getStateManager( ).attach( ( AppState ) app.getNifty( ).getScreen( "network" ).getScreenController( ) );
-			app.getNifty( ).removeScreen( "start" );
-			app.getNifty( ).gotoScreen( "network" );
-			app.getAudioRenderer( ).stopSource( startMusic );
+			getApp( ).getAudioRenderer( ).stopSource( startMusic );
 			return null;
 		} );
 	}
@@ -75,8 +66,8 @@ public class StartViewController extends AbstractAppState implements ScreenContr
 	public void initialize( AppStateManager stateManager, Application app )
 	{
 		super.initialize( stateManager, app );
-		this.app = ( ClientMain ) app;
-		this.app.getNifty( ).getCurrentScreen( ).addPreKeyboardInputHandler( new DefaultInputMapping( )
+
+		getApp( ).getNifty( ).getCurrentScreen( ).addPreKeyboardInputHandler( new DefaultInputMapping( )
 		{
 			public NiftyInputEvent convert( final KeyboardInputEvent inputEvent )
 			{
@@ -86,24 +77,24 @@ public class StartViewController extends AbstractAppState implements ScreenContr
 					return super.convert( inputEvent );
 			}
 		}, this );
-		this.login = this.app.getNifty( ).createPopupWithId( "loginPopup", "loginPopup" );
+		this.login = getApp( ).getNifty( ).createPopupWithId( "loginPopup", "loginPopup" );
 		this.username = login.findNiftyControl( "username", TextField.class );
 		this.password = login.findNiftyControl( "password", TextField.class );
 		this.password.enablePasswordChar( '*' );
 		this.loginFail = login.findNiftyControl( "loginFail", Label.class );
 
-		this.app.currentScreen = "start";
+		getApp( ).currentScreen = "start";
 
-		this.loginButton = this.app.getNifty( ).getCurrentScreen( ).findNiftyControl( "startLogin", Button.class );
+		this.loginButton = getApp( ).getNifty( ).getCurrentScreen( ).findNiftyControl( "startLogin", Button.class );
 
-		if ( !this.app.getMasterConnManager( ).isConnected( ) )
+		if ( !getApp( ).getMasterConnManager( ).isConnected( ) )
 		{
 			setLoginEnabled( false );
 		}
-		startMusic = new AudioNode( this.app.getAssetManager( ), "Sounds/mainMellody.wav", false );
+		startMusic = new AudioNode( getApp( ).getAssetManager( ), "Sounds/mainMellody.wav", false );
 		startMusic.setLooping( true );
 		startMusic.setPositional( false );
-		this.app.getAudioRenderer( ).playSource( startMusic );
+		getApp( ).getAudioRenderer( ).playSource( startMusic );
 
 		logger.log( Level.INFO, "Initialised " + this.getClass( ) );
 	}
@@ -112,7 +103,7 @@ public class StartViewController extends AbstractAppState implements ScreenContr
 	{
 		if ( inputEvent != null )
 		{
-			Element e = this.app.getNifty( ).getCurrentScreen( ).getFocusHandler( ).getKeyboardFocusElement( );
+			Element e = getApp( ).getNifty( ).getCurrentScreen( ).getFocusHandler( ).getKeyboardFocusElement( );
 			if ( e != null )
 			{
 				if ( inputEvent.equals( NiftyInputEvent.SubmitText )
@@ -137,7 +128,7 @@ public class StartViewController extends AbstractAppState implements ScreenContr
 
 	public void openLogin( )
 	{
-		this.app.getNifty( ).showPopup( this.app.getNifty( ).getCurrentScreen( ), "loginPopup", null );
+		getApp( ).getNifty( ).showPopup( getApp( ).getNifty( ).getCurrentScreen( ), "loginPopup", null );
 	}
 
 	/**
@@ -145,13 +136,8 @@ public class StartViewController extends AbstractAppState implements ScreenContr
 	 */
 	public void openOptions( )
 	{
-		app.enqueue( ( ) ->
-		{
-			NiftyFactory.createMainOptions( app.getNifty( ) );
-			app.getStateManager( ).attach( ( AppState ) app.getNifty( ).getScreen( "mainOptions" ).getScreenController( ) );
-			app.getNifty( ).gotoScreen( "mainOptions" );
-			return null;
-		} );
+		NiftyFactory.createMainOptions( getApp( ).getNifty( ) );
+		gotoScreen( "mainOptions", false, true, false, null, null );
 	}
 
 	/**
@@ -159,7 +145,7 @@ public class StartViewController extends AbstractAppState implements ScreenContr
 	 */
 	public void quit( )
 	{
-		app.stop( );
+		getApp( ).stop( );
 	}
 
 	public void setFailText( String notice )
@@ -194,12 +180,12 @@ public class StartViewController extends AbstractAppState implements ScreenContr
 			logger.log( Level.INFO, "Failed login attempt: Username and/or password must be non-empty" );
 			loginFail.setText( "Username and/or password must be non-empty" );
 		}
-		else if ( !app.authenticated( ) )
+		else if ( !getApp( ).authenticated( ) )
 		{
-			app.sendLogin( username.getText( ), password.getText( ) );
+			getApp( ).sendLogin( username.getText( ), password.getText( ) );
 		}
 
-		if ( app.authenticated( ) )
+		if ( getApp( ).authenticated( ) )
 		{
 			loginFail.setText( "" );
 			gotoNetwork( );
@@ -211,15 +197,15 @@ public class StartViewController extends AbstractAppState implements ScreenContr
 	public void update( float tpf )
 	{
 		super.update( tpf );
-		if ( this.app.getNifty( ).getCurrentScreen( ).getScreenId( ) == "start" )
+		if ( getApp( ).getNifty( ).getCurrentScreen( ).getScreenId( ) == "start" )
 		{
-			if ( app.authenticated( ) )
+			if ( getApp( ).authenticated( ) )
 			{
 				loginFail.setText( "" );
 				gotoNetwork( );
 			}
 
-			if ( app.getMasterConnManager( ).isConnected( ) )
+			if ( getApp( ).getMasterConnManager( ).isConnected( ) )
 			{
 				if ( !loginButton.isEnabled( ) )
 				{

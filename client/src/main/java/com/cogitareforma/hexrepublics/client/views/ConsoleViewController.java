@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-import com.cogitareforma.hexrepublics.client.ClientMain;
 import com.cogitareforma.hexrepublics.common.entities.traits.ArcherTrait;
 import com.cogitareforma.hexrepublics.common.entities.traits.ArcheryTrait;
 import com.cogitareforma.hexrepublics.common.entities.traits.ClubmanTrait;
@@ -12,9 +11,6 @@ import com.cogitareforma.hexrepublics.common.entities.traits.LocationTrait;
 import com.cogitareforma.hexrepublics.common.entities.traits.TileTrait;
 import com.cogitareforma.hexrepublics.common.net.msg.EntityCreationRequest;
 import com.cogitareforma.hexrepublics.common.net.msg.EntityDeletionRequest;
-import com.jme3.app.Application;
-import com.jme3.app.state.AbstractAppState;
-import com.jme3.app.state.AppStateManager;
 import com.simsilica.es.ComponentFilter;
 import com.simsilica.es.EntityComponent;
 import com.simsilica.es.EntityId;
@@ -27,11 +23,9 @@ import de.lessvoid.nifty.controls.ConsoleCommands;
 import de.lessvoid.nifty.controls.ConsoleCommands.ConsoleCommand;
 import de.lessvoid.nifty.controls.TextField;
 import de.lessvoid.nifty.screen.Screen;
-import de.lessvoid.nifty.screen.ScreenController;
 
-public class ConsoleViewController extends AbstractAppState implements ScreenController
+public class ConsoleViewController extends GeneralController
 {
-	private ClientMain app;
 	private Console console;
 	private ConsoleCommands consoleCommands;
 
@@ -60,27 +54,27 @@ public class ConsoleViewController extends AbstractAppState implements ScreenCon
 			}
 			else
 			{
-				if ( !app.authenticated( ) )
+				if ( !getApp( ).authenticated( ) )
 				{
 					// console.output( arg0[ 1 ] + " " + arg0[ 2 ] );
-					app.sendLogin( arg0[ 1 ], arg0[ 2 ] );
+					getApp( ).sendLogin( arg0[ 1 ], arg0[ 2 ] );
 				}
 			}
 		};
 		ConsoleCommand restart = ( String[ ] arg0 ) ->
 		{
-			app.restart( );
+			getApp( ).restart( );
 
 		};
 		ConsoleCommand quit = ( String[ ] arg0 ) ->
 		{
-			app.stop( );
+			getApp( ).stop( );
 		};
 		ConsoleCommand account = ( String[ ] arg0 ) ->
 		{
-			if ( app.authenticated( ) )
+			if ( getApp( ).authenticated( ) )
 			{
-				console.output( app.getMasterConnManager( ).getAccount( ).getAccountName( ) );
+				console.output( getApp( ).getMasterConnManager( ).getAccount( ).getAccountName( ) );
 			}
 			else
 			{
@@ -92,11 +86,11 @@ public class ConsoleViewController extends AbstractAppState implements ScreenCon
 
 		ConsoleCommand entCreate = ( String[ ] arg0 ) ->
 		{
-			if ( app.getGameConnManager( ).isConnected( ) )
+			if ( getApp( ).getGameConnManager( ).isConnected( ) )
 			{
 				if ( arg0.length >= 2 )
 				{
-					HudViewController hvc = ( HudViewController ) app.getStateManager( ).getState( HudViewController.class );
+					HudViewController hvc = ( HudViewController ) getApp( ).getStateManager( ).getState( HudViewController.class );
 					System.out.println( hvc != null ? hvc.toString( ) : "null" );
 					if ( hvc != null )
 					{
@@ -107,7 +101,7 @@ public class ConsoleViewController extends AbstractAppState implements ScreenCon
 							ComponentFilter< TileTrait > yFilter = FieldFilter.create( TileTrait.class, "y", coord.getRight( ) );
 							@SuppressWarnings( "unchecked" )
 							ComponentFilter< TileTrait > completeFilter = AndFilter.create( TileTrait.class, xFilter, yFilter );
-							EntityId location = app.getGameConnManager( ).getRemoteEntityData( )
+							EntityId location = getApp( ).getGameConnManager( ).getRemoteEntityData( )
 									.findEntity( completeFilter, TileTrait.class );
 							System.out.println( location != null ? location.toString( ) : "null" );
 							ArrayList< EntityComponent > components = new ArrayList< EntityComponent >( );
@@ -134,7 +128,7 @@ public class ConsoleViewController extends AbstractAppState implements ScreenCon
 								compArray[ i ] = components.get( i );
 							}
 
-							app.getGameConnManager( ).send(
+							getApp( ).getGameConnManager( ).send(
 									new EntityCreationRequest( new LocationTrait( location, ( byte ) 0 ), compArray ) );
 						}
 					}
@@ -152,7 +146,7 @@ public class ConsoleViewController extends AbstractAppState implements ScreenCon
 		};
 		ConsoleCommand entDelete = ( String[ ] arg0 ) ->
 		{
-			if ( app.getGameConnManager( ).isConnected( ) )
+			if ( getApp( ).getGameConnManager( ).isConnected( ) )
 			{
 				if ( arg0.length != 2 )
 				{
@@ -160,7 +154,7 @@ public class ConsoleViewController extends AbstractAppState implements ScreenCon
 				}
 				else
 				{
-					app.getGameConnManager( ).send( new EntityDeletionRequest( new EntityId( Integer.parseInt( arg0[ 1 ] ) ) ) );
+					getApp( ).getGameConnManager( ).send( new EntityDeletionRequest( new EntityId( Integer.parseInt( arg0[ 1 ] ) ) ) );
 				}
 			}
 			else
@@ -204,12 +198,6 @@ public class ConsoleViewController extends AbstractAppState implements ScreenCon
 		consoleCommands.enableCommandCompletion( true );
 	}
 
-	public void initialize( AppStateManager stateManager, Application app )
-	{
-		super.initialize( stateManager, app );
-		this.app = ( ClientMain ) app;
-	}
-
 	@Override
 	public void onEndScreen( )
 	{
@@ -218,7 +206,7 @@ public class ConsoleViewController extends AbstractAppState implements ScreenCon
 	@Override
 	public void onStartScreen( )
 	{
-		TextField consoleInput = this.app.getNifty( ).getCurrentScreen( ).findNiftyControl( "console", Console.class ).getTextField( );
+		TextField consoleInput = getApp( ).getNifty( ).getCurrentScreen( ).findNiftyControl( "console", Console.class ).getTextField( );
 		consoleInput.setText( consoleInput.getRealText( ).replace( "`", "" ) );
 		consoleInput.setCursorPosition( consoleInput.getRealText( ).length( ) );
 	}

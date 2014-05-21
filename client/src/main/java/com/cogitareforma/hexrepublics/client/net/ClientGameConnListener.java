@@ -3,6 +3,8 @@ package com.cogitareforma.hexrepublics.client.net;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.cogitareforma.hexrepublics.client.util.NiftyFactory;
+import com.cogitareforma.hexrepublics.client.views.GeneralController;
 import com.cogitareforma.hexrepublics.client.views.HudViewController;
 import com.cogitareforma.hexrepublics.client.views.LobbyViewController;
 import com.cogitareforma.hexrepublics.common.net.msg.ClientStatusMessage;
@@ -41,6 +43,11 @@ public class ClientGameConnListener implements ClientStateListener, ErrorListene
 
 		logger.log( Level.INFO, "Attaching RemoteEntityData." );
 		manager.setRemoteEntityData( new RemoteEntityData( manager.getClient( ), 0 ) );
+
+		// throw us into the game lobby!
+		GeneralController gController = ( GeneralController ) manager.getApp( ).getNifty( ).getCurrentScreen( ).getScreenController( );
+		NiftyFactory.createGameLobby( manager.getApp( ).getNifty( ) );
+		gController.gotoScreen( "lobby", false, true, false, null, null );
 
 		logger.log( Level.INFO, "Informing Master Server of in game status" );
 		ClientMasterConnManager masterConnManager = manager.getApp( ).getMasterConnManager( );

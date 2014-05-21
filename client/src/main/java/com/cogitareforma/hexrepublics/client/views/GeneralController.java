@@ -39,7 +39,7 @@ public abstract class GeneralController extends AbstractAppState implements Scre
 		return screenId;
 	}
 
-	protected void gotoScreen( String nextScreenId, boolean detachCurrent, boolean attachNext, boolean removeCurrent,
+	public void gotoScreen( String nextScreenId, boolean detachCurrent, boolean attachNext, boolean removeCurrent,
 			Callable< Void > preHook, Callable< Void > postHook )
 	{
 		getApp( ).enqueue( ( ) ->

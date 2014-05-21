@@ -118,7 +118,6 @@ public class NetworkViewController extends GeneralController implements KeyInput
 		getApp( ).getNifty( ).getCurrentScreen( ).findElementByName( "chat" );
 		chat = getApp( ).getNifty( ).getCurrentScreen( ).findNiftyControl( "networkChat", Chat.class );
 		getApp( ).currentScreen = "network";
-
 	}
 
 	public void joinServer( )
@@ -127,9 +126,6 @@ public class NetworkViewController extends GeneralController implements KeyInput
 		{
 			System.out.println( this.serverSelected + " , " + this.port );
 			getApp( ).connectToGameSever( serverSelected, port );
-
-			NiftyFactory.createGameLobby( getApp( ).getNifty( ) );
-			gotoScreen( "lobby", false, true, false, null, null );
 		}
 	}
 
