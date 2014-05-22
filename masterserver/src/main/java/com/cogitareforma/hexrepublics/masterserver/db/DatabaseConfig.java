@@ -26,7 +26,6 @@ public class DatabaseConfig
 	@Bean
 	public DataSource dataSource( )
 	{
-		System.out.println( "HELLO!" );
 		YamlConfig config = YamlConfig.DEFAULT;
 		DriverManagerDataSource dataSource = new DriverManagerDataSource( );
 		dataSource.setDriverClassName( "com.mysql.jdbc.Driver" );

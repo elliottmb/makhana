@@ -2,6 +2,7 @@ package com.cogitareforma.hexrepublics.masterserver.db;
 
 import javax.sql.DataSource;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
@@ -17,6 +18,7 @@ public class JdbcAccountRepository implements AccountRepository
 {
 	JdbcTemplate jdbcTemplate;
 
+	@Autowired
 	public JdbcAccountRepository( DataSource dataSource )
 	{
 		jdbcTemplate = new JdbcTemplate( dataSource );
