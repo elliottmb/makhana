@@ -220,16 +220,15 @@ public class Traits
 		return str;
 	}
 
-	public static byte getFirstAvailableBuildingPosition( EntityData entityData, Set< EntityId > idSet )
+	public static byte getOpenBuildingPosition( EntityData entityData, Set< EntityId > idSet )
 	{
-		return getFirstAvailableOfKindPosition( entityData, idSet, ( EntityData ed, EntityId id ) ->
+		return getOpenOfKindPosition( entityData, idSet, ( EntityData ed, EntityId id ) ->
 		{
 			return isBuilding( ed, id );
 		} );
 	}
 
-	private static byte getFirstAvailableOfKindPosition( EntityData entityData, Set< EntityId > idSet,
-			BiPredicate< EntityData, EntityId > isOfKind )
+	private static byte getOpenOfKindPosition( EntityData entityData, Set< EntityId > idSet, BiPredicate< EntityData, EntityId > isOfKind )
 	{
 		boolean[ ] slots = new boolean[ 6 ];
 		for ( EntityId id : idSet )
@@ -255,9 +254,9 @@ public class Traits
 		return 0;
 	}
 
-	public static byte getFirstAvailableUnitPosition( EntityData entityData, Set< EntityId > idSet )
+	public static byte getOpenUnitPosition( EntityData entityData, Set< EntityId > idSet )
 	{
-		return getFirstAvailableOfKindPosition( entityData, idSet, ( EntityData ed, EntityId id ) ->
+		return getOpenOfKindPosition( entityData, idSet, ( EntityData ed, EntityId id ) ->
 		{
 			return isUnit( ed, id );
 		} );

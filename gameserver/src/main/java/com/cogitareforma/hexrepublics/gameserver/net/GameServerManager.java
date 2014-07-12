@@ -389,8 +389,8 @@ public class GameServerManager extends ServerManager< GameServer >
 														{
 															getEntityData( ).setComponent(
 																	e.getId( ),
-																	new LocationTrait( newTile, Traits.getFirstAvailableUnitPosition(
-																			entityData, targetIdSet ) ) );
+																	new LocationTrait( newTile, Traits.getOpenUnitPosition( entityData,
+																			targetIdSet ) ) );
 														}
 													}
 													else

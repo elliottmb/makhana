@@ -23,6 +23,7 @@ import com.simsilica.es.ComponentFilter;
 import com.simsilica.es.CreatedBy;
 import com.simsilica.es.Entity;
 import com.simsilica.es.EntityComponent;
+import com.simsilica.es.EntityData;
 import com.simsilica.es.EntityId;
 import com.simsilica.es.filter.FieldFilter;
 
@@ -58,6 +59,7 @@ public class EntityRequestListener implements MessageListener< HostedConnection 
 	@Override
 	public void messageReceived( HostedConnection source, Message message )
 	{
+		EntityData entityData = manager.getEntityData( );
 		if ( message instanceof EntityCreationRequest )
 		{
 			EntityCreationRequest entityMsg = ( EntityCreationRequest ) message;
@@ -71,10 +73,10 @@ public class EntityRequestListener implements MessageListener< HostedConnection 
 				LocationTrait location = entityMsg.getLocation( );
 				if ( location.getTile( ) != null )
 				{
-					EntityId ownerId = Traits.getOwner( manager.getEntityData( ), location.getTile( ) );
+					EntityId ownerId = Traits.getOwner( entityData, location.getTile( ) );
 					if ( ownerId != null )
 					{
-						Entity owner = manager.getEntityData( ).getEntity( ownerId, PlayerTrait.class );
+						Entity owner = entityData.getEntity( ownerId, PlayerTrait.class );
 						if ( owner != null && owner.get( PlayerTrait.class ) != null )
 						{
 							Account act = manager.getSessionManager( ).getFromSession( source );
@@ -105,10 +107,10 @@ public class EntityRequestListener implements MessageListener< HostedConnection 
 								{
 									ComponentFilter< LocationTrait > locFilter = FieldFilter.create( LocationTrait.class, "tile",
 											location.getTile( ) );
-									Set< EntityId > idSet = manager.getEntityData( ).findEntities( locFilter, LocationTrait.class );
+									Set< EntityId > targetIdSet = entityData.findEntities( locFilter, LocationTrait.class );
 
-									int unitCount = Traits.countUnits( manager.getEntityData( ), idSet );
-									int buildingCount = Traits.countBuildings( manager.getEntityData( ), idSet );
+									int unitCount = Traits.countUnits( entityData, targetIdSet );
+									int buildingCount = Traits.countBuildings( entityData, targetIdSet );
 
 									System.out.println( String.format( "Unit( %s ): %d, Building( %s ): %d", isUnit, unitCount, isBuilding,
 											buildingCount ) );
@@ -121,15 +123,17 @@ public class EntityRequestListener implements MessageListener< HostedConnection 
 											// have the required buildings
 											// and they are not currently
 											// being built
-											EntityId newEntityId = manager.getEntityData( ).createEntity( );
-											manager.getEntityData( ).setComponent( newEntityId,
-													new LocationTrait( location.getTile( ), ( byte ) ( unitCount + 1 ) ) );
-											manager.getEntityData( ).setComponents( newEntityId, entityMsg.getComponents( ) );
+											EntityId newEntityId = entityData.createEntity( );
+											entityData.setComponent(
+													newEntityId,
+													new LocationTrait( location.getTile( ), Traits.getOpenUnitPosition( entityData,
+															targetIdSet ) ) );
+											entityData.setComponents( newEntityId, entityMsg.getComponents( ) );
 
-											Traits.entityParturition( manager.getEntityData( ), newEntityId, entityMsg.getComponents( ) );
+											Traits.entityParturition( entityData, newEntityId, entityMsg.getComponents( ) );
 
 											source.send( new EntityResponse( newEntityId, EntityCreationRequest.class.getSimpleName( )
-													+ manager.getEntityData( ).getEntities( LocationTrait.class ).size( ), true ) );
+													+ entityData.getEntities( LocationTrait.class ).size( ), true ) );
 											return;
 										}
 									}
@@ -137,15 +141,17 @@ public class EntityRequestListener implements MessageListener< HostedConnection 
 									{
 										if ( buildingCount < 6 )
 										{
-											EntityId newEntityId = manager.getEntityData( ).createEntity( );
-											manager.getEntityData( ).setComponent( newEntityId,
-													new LocationTrait( location.getTile( ), ( byte ) ( buildingCount + 1 ) ) );
-											manager.getEntityData( ).setComponents( newEntityId, entityMsg.getComponents( ) );
+											EntityId newEntityId = entityData.createEntity( );
+											entityData.setComponent(
+													newEntityId,
+													new LocationTrait( location.getTile( ), Traits.getOpenBuildingPosition( entityData,
+															targetIdSet ) ) );
+											entityData.setComponents( newEntityId, entityMsg.getComponents( ) );
 
-											Traits.entityParturition( manager.getEntityData( ), newEntityId, entityMsg.getComponents( ) );
+											Traits.entityParturition( entityData, newEntityId, entityMsg.getComponents( ) );
 
 											source.send( new EntityResponse( newEntityId, EntityCreationRequest.class.getSimpleName( )
-													+ manager.getEntityData( ).getEntities( LocationTrait.class ).size( ), true ) );
+													+ entityData.getEntities( LocationTrait.class ).size( ), true ) );
 											return;
 										}
 									}
@@ -165,7 +171,7 @@ public class EntityRequestListener implements MessageListener< HostedConnection 
 			logger.log( Level.INFO, "Received an EntityDeletionRequest from " + source.getAddress( ) + ", " + entityMsg.getEntityId( ) );
 			if ( entityMsg.getEntityId( ) != null )
 			{
-				Entity theEntity = manager.getEntityData( ).getEntity( entityMsg.getEntityId( ), CreatedBy.class, LocationTrait.class );
+				Entity theEntity = entityData.getEntity( entityMsg.getEntityId( ), CreatedBy.class, LocationTrait.class );
 				if ( theEntity != null )
 				{
 					// TODO:
@@ -181,7 +187,7 @@ public class EntityRequestListener implements MessageListener< HostedConnection 
 						LocationTrait location = theEntity.get( LocationTrait.class );
 						if ( location.getTile( ) != null )
 						{
-							Entity tile = manager.getEntityData( ).getEntity( location.getTile( ), CreatedBy.class );
+							Entity tile = entityData.getEntity( location.getTile( ), CreatedBy.class );
 							if ( tile != null && tile.get( CreatedBy.class ) != null )
 							{
 								ownerId = tile.get( CreatedBy.class ).getCreatorId( );
@@ -192,14 +198,14 @@ public class EntityRequestListener implements MessageListener< HostedConnection 
 
 					if ( ownerId != null )
 					{
-						Entity owner = manager.getEntityData( ).getEntity( ownerId, PlayerTrait.class );
+						Entity owner = entityData.getEntity( ownerId, PlayerTrait.class );
 
 						if ( owner != null && owner.get( PlayerTrait.class ) != null )
 						{
 							Account act = manager.getSessionManager( ).getFromSession( source );
 							if ( owner.get( PlayerTrait.class ).getAccount( ).equals( act ) )
 							{
-								manager.getEntityData( ).removeEntity( entityMsg.getEntityId( ) );
+								entityData.removeEntity( entityMsg.getEntityId( ) );
 								source.send( new EntityResponse( entityMsg.getEntityId( ), EntityDeletionRequest.class.getSimpleName( ),
 										true ) );
 								return;
@@ -216,13 +222,13 @@ public class EntityRequestListener implements MessageListener< HostedConnection 
 			logger.log( Level.INFO, "Received an EntityActionRequest from " + source.getAddress( ) );
 			if ( entityMsg.getEntityId( ) != null )
 			{
-				System.out.println( "EntityActionRequest: " + !Traits.inAction( manager.getEntityData( ), entityMsg.getEntityId( ) ) + ", "
-						+ Traits.isUnit( manager.getEntityData( ), entityMsg.getEntityId( ) ) );
-				if ( !Traits.inAction( manager.getEntityData( ), entityMsg.getEntityId( ) ) )
+				System.out.println( "EntityActionRequest: " + !Traits.inAction( entityData, entityMsg.getEntityId( ) ) + ", "
+						+ Traits.isUnit( entityData, entityMsg.getEntityId( ) ) );
+				if ( !Traits.inAction( entityData, entityMsg.getEntityId( ) ) )
 				{
-					if ( Traits.isUnit( manager.getEntityData( ), entityMsg.getEntityId( ) ) )
+					if ( Traits.isUnit( entityData, entityMsg.getEntityId( ) ) )
 					{
-						EntityId ownerId = Traits.getOwner( manager.getEntityData( ), entityMsg.getEntityId( ) );
+						EntityId ownerId = Traits.getOwner( entityData, entityMsg.getEntityId( ) );
 						System.out.println( "EntityActionRequest: owner: " + ownerId );
 						if ( ownerId != null )
 						{
@@ -231,7 +237,7 @@ public class EntityRequestListener implements MessageListener< HostedConnection 
 							// ago
 							// Check movetrait's duration is valid
 							// Check that the next tile is actually a neighbor
-							manager.getEntityData( ).setComponent( entityMsg.getEntityId( ), entityMsg.getAction( ) );
+							entityData.setComponent( entityMsg.getEntityId( ), entityMsg.getAction( ) );
 							source.send( new EntityResponse( null, EntityActionRequest.class.getSimpleName( ) + " Unfinished", true ) );
 							return;
 						}
