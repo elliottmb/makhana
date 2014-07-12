@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.function.BiPredicate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -95,13 +96,9 @@ public class Traits
 		int count = 0;
 		for ( EntityId id : idSet )
 		{
-			for ( Class< ? extends EntityComponent > c : buildingTraits )
+			if ( isBuilding( entityData, id ) )
 			{
-				if ( entityData.getComponent( id, c ) != null )
-				{
-					count++;
-					break;
-				}
+				count++;
 			}
 		}
 		return count;
@@ -122,13 +119,9 @@ public class Traits
 		int count = 0;
 		for ( EntityId id : idSet )
 		{
-			for ( Class< ? extends EntityComponent > c : unitTraits )
+			if ( isUnit( entityData, id ) )
 			{
-				if ( entityData.getComponent( id, c ) != null )
-				{
-					count++;
-					break;
-				}
+				count++;
 			}
 		}
 		return count;
@@ -225,6 +218,49 @@ public class Traits
 			}
 		}
 		return str;
+	}
+
+	public static byte getFirstAvailableBuildingPosition( EntityData entityData, Set< EntityId > idSet )
+	{
+		return getFirstAvailableOfKindPosition( entityData, idSet, ( EntityData ed, EntityId id ) ->
+		{
+			return isBuilding( ed, id );
+		} );
+	}
+
+	private static byte getFirstAvailableOfKindPosition( EntityData entityData, Set< EntityId > idSet,
+			BiPredicate< EntityData, EntityId > isOfKind )
+	{
+		boolean[ ] slots = new boolean[ 6 ];
+		for ( EntityId id : idSet )
+		{
+			if ( isOfKind.test( entityData, id ) )
+			{
+				LocationTrait lt = entityData.getComponent( id, LocationTrait.class );
+				if ( lt != null )
+				{
+					slots[ lt.getPosition( ) % 6 ] = true;
+				}
+			}
+		}
+
+		for ( byte i = 0; i < slots.length; i++ )
+		{
+			if ( !slots[ i ] )
+			{
+				return i;
+			}
+		}
+
+		return 0;
+	}
+
+	public static byte getFirstAvailableUnitPosition( EntityData entityData, Set< EntityId > idSet )
+	{
+		return getFirstAvailableOfKindPosition( entityData, idSet, ( EntityData ed, EntityId id ) ->
+		{
+			return isUnit( ed, id );
+		} );
 	}
 
 	public static < T extends EntityComponent > int getMovementModifier( EntityData entityData, EntityId id )
@@ -397,7 +433,12 @@ public class Traits
 
 	public static boolean isBuilding( EntityData entityData, EntityId id )
 	{
-		for ( Class< ? extends EntityComponent > c : buildingTraits )
+		return isOfKind( entityData, id, buildingTraits );
+	}
+
+	private static boolean isOfKind( EntityData entityData, EntityId id, List< Class< ? extends EntityComponent >> traits )
+	{
+		for ( Class< ? extends EntityComponent > c : traits )
 		{
 			if ( entityData.getComponent( id, c ) != null )
 			{
@@ -409,14 +450,6 @@ public class Traits
 
 	public static boolean isUnit( EntityData entityData, EntityId id )
 	{
-		for ( Class< ? extends EntityComponent > c : unitTraits )
-		{
-			if ( entityData.getComponent( id, c ) != null )
-			{
-				return true;
-			}
-		}
-		return false;
-
+		return isOfKind( entityData, id, unitTraits );
 	}
 }

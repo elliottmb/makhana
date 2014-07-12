@@ -383,10 +383,14 @@ public class GameServerManager extends ServerManager< GameServer >
 													if ( source.get( CreatedBy.class ).getCreatorId( )
 															.compareTo( tile.get( CreatedBy.class ).getCreatorId( ) ) == 0 )
 													{
+														// Make sure there is
+														// room
 														if ( unitCount < 6 )
 														{
-															getEntityData( ).setComponent( e.getId( ),
-																	new LocationTrait( newTile, ( byte ) ( unitCount + 1 ) ) );
+															getEntityData( ).setComponent(
+																	e.getId( ),
+																	new LocationTrait( newTile, Traits.getFirstAvailableUnitPosition(
+																			entityData, targetIdSet ) ) );
 														}
 													}
 													else
@@ -448,7 +452,7 @@ public class GameServerManager extends ServerManager< GameServer >
 																	new CreatedBy( getEntityData( ).getComponent( location.getTile( ),
 																			CreatedBy.class ).getCreatorId( ) ) );
 															getEntityData( ).setComponent( e.getId( ),
-																	new LocationTrait( newTile, ( byte ) ( 1 ) ) );
+																	new LocationTrait( newTile, ( byte ) 0 ) );
 														}
 														else
 														{
@@ -498,7 +502,7 @@ public class GameServerManager extends ServerManager< GameServer >
 															new CreatedBy( getEntityData( ).getComponent( location.getTile( ),
 																	CreatedBy.class ).getCreatorId( ) ) );
 													getEntityData( ).setComponent( e.getId( ),
-															new LocationTrait( newTile, ( byte ) ( unitCount + 1 ) ) );
+															new LocationTrait( newTile, ( byte ) ( unitCount ) ) );
 												}
 											}
 
