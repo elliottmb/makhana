@@ -2,6 +2,7 @@ package com.cogitareforma.hexrepublics.client.views;
 
 import java.util.ArrayList;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.cogitareforma.hexrepublics.common.entities.traits.ArcherTrait;
@@ -80,7 +81,6 @@ public class ConsoleViewController extends GeneralController
 			{
 				console.output( "No user is logged in" );
 			}
-
 		};
 		// Make args be a trait type
 
@@ -174,6 +174,46 @@ public class ConsoleViewController extends GeneralController
 			}
 
 		};
+
+		ConsoleCommand connect = ( String[ ] arg0 ) ->
+		{
+			if ( getApp( ).getMasterConnManager( ).isLoggedIn( ) )
+			{
+				if ( arg0.length >= 2 )
+				{
+					if ( arg0[ 1 ].length( ) > 4 )
+					{
+						Integer port = 7331;
+
+						if ( arg0.length > 2 )
+						{
+							if ( StringUtils.isNumeric( arg0[ 2 ] ) )
+							{
+								port = Integer.parseInt( arg0[ 2 ] );
+							}
+							else
+							{
+								console.output( "Could not parse port, using default. " );
+							}
+						}
+
+						getApp( ).getGameConnManager( ).connect( arg0[ 1 ], port );
+					}
+					else
+					{
+						console.output( "Expected a host, got something too short!" );
+					}
+				}
+				else
+				{
+					console.output( "Not enough arguments." );
+				}
+			}
+			else
+			{
+				console.output( "Must be logged in to use this command" );
+			}
+		};
 		ConsoleCommand help = ( String[ ] arg0 ) ->
 		{
 			console.output( "Current commands:" );
@@ -195,6 +235,7 @@ public class ConsoleViewController extends GeneralController
 		consoleCommands.registerCommand( "entcreate", entCreate );
 		consoleCommands.registerCommand( "entdelete", entDelete );
 		consoleCommands.registerCommand( "buyLand", buyLand );
+		consoleCommands.registerCommand( "connect", connect );
 		consoleCommands.enableCommandCompletion( true );
 	}
 
