@@ -799,24 +799,45 @@ public class NiftyFactory
 				{
 					{
 						backgroundColor( "#3e3e3eff" );
-						childLayoutVertical( );
+						childLayoutCenter( );
 						width( "100%" );
 						height( "100%" );
 						alignCenter( );
 						valignCenter( );
 
-						control( new ButtonBuilder( "exitToNetwork", "Exit to network" )
+						panel( new PanelBuilder( "" )
 						{
 							{
-								visibleToMouse( true );
-								interactOnClick( "exitToNetwork( )" );
-							}
-						} );
-						control( new ButtonBuilder( "exitGame", "Exit game" )
-						{
-							{
-								visibleToMouse( true );
-								interactOnClick( "exitGame()" );
+								// style( "" );
+								width( "40%" );
+								alignCenter( );
+								valignCenter( );
+								childLayoutCenter( );
+
+								panel( new PanelBuilder( "button-panel" )
+								{
+									{
+										style( "nifty-panel-beige" );
+										alignCenter( );
+										valignCenter( );
+										childLayoutVertical( );
+
+										control( new ButtonBuilder( "exitToNetwork", "Exit to network" )
+										{
+											{
+												visibleToMouse( true );
+												interactOnClick( "exitToNetwork( )" );
+											}
+										} );
+										control( new ButtonBuilder( "exitGame", "Exit game" )
+										{
+											{
+												visibleToMouse( true );
+												interactOnClick( "exitGame()" );
+											}
+										} );
+									}
+								} );
 							}
 						} );
 
@@ -1846,18 +1867,23 @@ public class NiftyFactory
 						{
 
 							{
-								width( "25%" );
+								// width( "25%" );
 								height( "100%" );
-								childLayoutVertical( );
+								// childLayoutVertical( );
+								childLayoutCenter( );
+								style( "nifty-panel-blue" );
 
 								panel( new PanelBuilder( "" )
 								{
 
 									{
 
-										height( "40%" );
+										height( "25%" );
+										width( "25%" );
 										childLayoutCenter( );
 										alignCenter( );
+										valignTop( );
+										style( "nifty-panel-beige" );
 
 										text( new TextBuilder( )
 										{
@@ -1877,6 +1903,7 @@ public class NiftyFactory
 									{
 										style( "nifty-panel-beige" );
 										alignCenter( );
+										valignCenter( );
 										childLayoutVertical( );
 
 										control( new ButtonBuilder( "startSingle", "Singleplayer" )
