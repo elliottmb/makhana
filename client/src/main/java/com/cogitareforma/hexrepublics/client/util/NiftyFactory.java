@@ -372,12 +372,12 @@ public class NiftyFactory
 						{
 
 							{
-								backgroundColor( "#404040ff" );
 								width( "46%" );
 								height( "12%" );
 								alignCenter( );
 								valignBottom( );
 								childLayoutCenter( );
+								style( "nifty-panel-brown" );
 
 								text( new TextBuilder( )
 								{
@@ -397,12 +397,12 @@ public class NiftyFactory
 						{
 
 							{
-								backgroundColor( "#303030ff" );
 								width( "27%" );
 								height( "12%" );
 								alignLeft( );
 								valignBottom( );
 								childLayoutHorizontal( );
+								style( "nifty-panel-brown" );
 							}
 						} );
 						panel( new PanelBuilder( "topRightButtons" )
@@ -472,22 +472,22 @@ public class NiftyFactory
 				panel( new PanelBuilder( "scorePanel" )
 				{
 					{
-						backgroundColor( "#303030ff" );
 						childLayoutHorizontal( );
 						width( "60%" );
 						height( "60%" );
 						alignCenter( );
 						valignCenter( );
+						style( "nifty-panel-brown" );
 
 						panel( new PanelBuilder( "player1Col" )
 						{
 							{
-								backgroundColor( "#404040ff" );
 								childLayoutVertical( );
 								width( "25%" );
 								height( "100%" );
 								alignLeft( );
 								valignCenter( );
+								style( "nifty-panel-beige" );
 
 								panel( new PanelBuilder( "name1" )
 								{
@@ -502,10 +502,9 @@ public class NiftyFactory
 											{
 												alignCenter( );
 												valignBottom( );
-												// height( "32px" );
 												width( "100%" );
 												wrap( true );
-												color( "#f2f2f2ff" );
+												color( "#020202ff" );
 											}
 										} );
 									}
@@ -524,10 +523,9 @@ public class NiftyFactory
 											{
 												alignCenter( );
 												valignBottom( );
-												// height( "32px" );
 												width( "100%" );
 												wrap( true );
-												color( "#f2f2f2ff" );
+												color( "#020202ff" );
 											}
 										} );
 									}
@@ -546,10 +544,9 @@ public class NiftyFactory
 											{
 												alignCenter( );
 												valignBottom( );
-												// height( "32px" );
 												width( "100%" );
 												wrap( true );
-												color( "#f2f2f2ff" );
+												color( "#020202ff" );
 											}
 										} );
 									}
@@ -559,12 +556,12 @@ public class NiftyFactory
 						panel( new PanelBuilder( "player2Col" )
 						{
 							{
-								backgroundColor( "#303030ff" );
 								childLayoutVertical( );
 								width( "25%" );
 								height( "100%" );
 								alignLeft( );
 								valignCenter( );
+								style( "nifty-panel-beige" );
 
 								panel( new PanelBuilder( "name2" )
 								{
@@ -579,10 +576,9 @@ public class NiftyFactory
 											{
 												alignCenter( );
 												valignBottom( );
-												// height( "32px" );
 												width( "100%" );
 												wrap( true );
-												color( "#f2f2f2ff" );
+												color( "#020202ff" );
 											}
 										} );
 									}
@@ -601,10 +597,9 @@ public class NiftyFactory
 											{
 												alignCenter( );
 												valignBottom( );
-												// height( "32px" );
 												width( "100%" );
 												wrap( true );
-												color( "#f2f2f2ff" );
+												color( "#020202ff" );
 											}
 										} );
 									}
@@ -623,10 +618,9 @@ public class NiftyFactory
 											{
 												alignCenter( );
 												valignBottom( );
-												// height( "32px" );
 												width( "100%" );
 												wrap( true );
-												color( "#f2f2f2ff" );
+												color( "#020202ff" );
 											}
 										} );
 									}
@@ -636,12 +630,12 @@ public class NiftyFactory
 						panel( new PanelBuilder( "player3Col" )
 						{
 							{
-								backgroundColor( "#404040ff" );
 								childLayoutVertical( );
 								width( "25%" );
 								height( "100%" );
 								alignLeft( );
 								valignCenter( );
+								style( "nifty-panel-beige" );
 
 								panel( new PanelBuilder( "name3" )
 								{
@@ -656,10 +650,9 @@ public class NiftyFactory
 											{
 												alignCenter( );
 												valignBottom( );
-												// height( "32px" );
 												width( "100%" );
 												wrap( true );
-												color( "#f2f2f2ff" );
+												color( "#020202ff" );
 											}
 										} );
 									}
@@ -678,10 +671,9 @@ public class NiftyFactory
 											{
 												alignCenter( );
 												valignBottom( );
-												// height( "32px" );
 												width( "100%" );
 												wrap( true );
-												color( "#f2f2f2ff" );
+												color( "#020202ff" );
 											}
 										} );
 									}
@@ -700,10 +692,9 @@ public class NiftyFactory
 											{
 												alignCenter( );
 												valignBottom( );
-												// height( "32px" );
 												width( "100%" );
 												wrap( true );
-												color( "#f2f2f2ff" );
+												color( "#020202ff" );
 											}
 										} );
 									}
@@ -713,12 +704,12 @@ public class NiftyFactory
 						panel( new PanelBuilder( "player4Col" )
 						{
 							{
-								backgroundColor( "#303030ff" );
 								childLayoutVertical( );
 								width( "25%" );
 								height( "100%" );
 								alignLeft( );
 								valignCenter( );
+								style( "nifty-panel-beige" );
 
 								panel( new PanelBuilder( "name4" )
 								{
@@ -733,10 +724,9 @@ public class NiftyFactory
 											{
 												alignCenter( );
 												valignBottom( );
-												// height( "32px" );
 												width( "100%" );
 												wrap( true );
-												color( "#f2f2f2ff" );
+												color( "#020202ff" );
 											}
 										} );
 									}
@@ -755,10 +745,9 @@ public class NiftyFactory
 											{
 												alignCenter( );
 												valignBottom( );
-												// height( "32px" );
 												width( "100%" );
 												wrap( true );
-												color( "#f2f2f2ff" );
+												color( "#020202ff" );
 											}
 										} );
 									}
@@ -776,10 +765,9 @@ public class NiftyFactory
 											{
 												alignCenter( );
 												valignBottom( );
-												// height( "32px" );
 												width( "100%" );
 												wrap( true );
-												color( "#f2f2f2ff" );
+												color( "#020202ff" );
 											}
 										} );
 									}
@@ -1867,9 +1855,7 @@ public class NiftyFactory
 						{
 
 							{
-								// width( "25%" );
 								height( "100%" );
-								// childLayoutVertical( );
 								childLayoutCenter( );
 								style( "nifty-panel-blue" );
 
@@ -1877,7 +1863,6 @@ public class NiftyFactory
 								{
 
 									{
-
 										height( "25%" );
 										width( "25%" );
 										childLayoutCenter( );
@@ -1973,14 +1958,12 @@ public class NiftyFactory
 								panel( new PanelBuilder( "loginUsername" )
 								{
 									{
-										// backgroundColor( "#404040ff" );
 										childLayoutHorizontal( );
 										height( "32px" );
 
 										control( new LabelBuilder( "labelUsername", "Username: " )
 										{
 											{
-												// textHAlignRight( );
 												width( "25%" );
 											}
 										} );
@@ -1998,14 +1981,12 @@ public class NiftyFactory
 								panel( new PanelBuilder( "loginPassword" )
 								{
 									{
-										// backgroundColor( "#303030ff" );
 										childLayoutHorizontal( );
 										height( "32px" );
 
 										control( new LabelBuilder( "labelPassword", "Password: " )
 										{
 											{
-												// textHAlignRight( );
 												width( "25%" );
 											}
 										} );
@@ -2030,7 +2011,6 @@ public class NiftyFactory
 								height( "32px" );
 								width( "100%" );
 								wrap( true );
-								// color( "#5c3566ff" );
 								color( "#d2b290ff" );
 							}
 						} );
@@ -2152,13 +2132,12 @@ public class NiftyFactory
 						{
 
 							{
-								backgroundColor( "#303030ff" );
-								width( "47%" );
+								width( "46%" );
 								height( "27%" );
 								alignCenter( );
 								valignBottom( );
 								childLayoutCenter( );
-								style( "nifty-panel-red-no-shadow" );
+								style( "nifty-panel-brown" );
 
 								text( new TextBuilder( )
 								{
@@ -2178,13 +2157,12 @@ public class NiftyFactory
 						{
 
 							{
-								backgroundColor( "#404040ff" );
 								width( "27%" );
 								height( "27%" );
 								alignLeft( );
 								valignBottom( );
 								childLayoutCenter( );
-								style( "nifty-panel-red-no-shadow" );
+								style( "nifty-panel-brown" );
 
 								text( new TextBuilder( )
 								{
@@ -2264,7 +2242,6 @@ public class NiftyFactory
 				panel( new PanelBuilder( "mainPanel" )
 				{
 					{
-						// backgroundColor( "#3e3e3eff" );
 						childLayoutVertical( );
 						width( "100%" );
 						height( "100%" );
