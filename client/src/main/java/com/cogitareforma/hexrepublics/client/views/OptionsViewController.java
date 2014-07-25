@@ -148,7 +148,16 @@ public class OptionsViewController extends GeneralController
 
 	public void exitMainOptions( )
 	{
-		gotoScreen( "start", true, false, true, null, null );
+		if ( nifty.getScreen( "hud" ) != null )
+		{
+			HudViewController hud = ( HudViewController ) nifty.getScreen( "hud" ).getScreenController( );
+			hud.refreshKeys( );
+			gotoScreen( "hud", true, false, true, null, null );
+		}
+		else
+		{
+			gotoScreen( "start", true, false, true, null, null );
+		}
 	}
 
 	/**

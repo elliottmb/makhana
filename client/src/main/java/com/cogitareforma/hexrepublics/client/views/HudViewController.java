@@ -334,7 +334,7 @@ public class HudViewController extends GeneralPlayingController implements KeyIn
 
 		logger.log( Level.INFO, "Initialised " + this.getClass( ) );
 
-		NiftyFactory.createOptionsView( getApp( ).getNifty( ) );
+		//NiftyFactory.createOptionsView( getApp( ).getNifty( ) );
 		bindKeys( );
 		refreshKeys( );
 		getApp( ).getInputManager( ).addMapping( "showScore", new KeyTrigger( scoreKey ) );
@@ -411,7 +411,9 @@ public class HudViewController extends GeneralPlayingController implements KeyIn
 
 	public void openOptions( )
 	{
-		gotoScreen( "options", false, false, false, null, null );
+		// gotoScreen( "options", false, false, false, null, null );
+		NiftyFactory.createMainOptions( getApp( ).getNifty( ) );
+		gotoScreen( "mainOptions", false, true, false, null, null );
 	}
 
 	@Override
