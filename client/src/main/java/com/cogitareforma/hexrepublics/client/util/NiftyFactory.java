@@ -411,24 +411,13 @@ public class NiftyFactory
 								width( "5%" );
 								alignRight( );
 								valignTop( );
-								childLayoutHorizontal( );
-								control( new ButtonBuilder( "ingameOptions", "Op" )
-								{
+								childLayoutVertical( );
 
-									{
-										width( "50%" );
-										alignRight( );
-										valignTop( );
-										visibleToMouse( true );
-										interactOnClick( "openOptions()" );
-									}
-								} );
 								control( new ButtonBuilder( "ingameMenu", "Menu" )
 								{
 									{
 										width( "50%" );
 										alignRight( );
-										valignTop( );
 										visibleToMouse( true );
 										interactOnClick( "showMenu()" );
 									}
@@ -809,6 +798,22 @@ public class NiftyFactory
 										alignCenter( );
 										valignCenter( );
 										childLayoutVertical( );
+
+										control( new ButtonBuilder( "exitMenu", "Resume" )
+										{
+											{
+												visibleToMouse( true );
+												interactOnClick( "closeMenu( )" );
+											}
+										} );
+
+										control( new ButtonBuilder( "openOptions", "Options" )
+										{
+											{
+												visibleToMouse( true );
+												interactOnClick( "openOptions( )" );
+											}
+										} );
 
 										control( new ButtonBuilder( "exitToNetwork", "Exit to network" )
 										{
@@ -1928,24 +1933,13 @@ public class NiftyFactory
 								width( "5%" );
 								alignRight( );
 								valignTop( );
-								childLayoutHorizontal( );
-								control( new ButtonBuilder( "ingameOptions", "Op" )
-								{
+								childLayoutVertical( );
 
+								control( new ButtonBuilder( "exit", "Exit" )
+								{
 									{
 										width( "50%" );
 										alignRight( );
-										valignTop( );
-										visibleToMouse( true );
-										interactOnClick( "nextScreen(options)" );
-									}
-								} );
-								control( new ButtonBuilder( "exit", "Exit" )
-								{
-
-									{
-										width( "50%" );
-										alignLeft( );
 										valignTop( );
 										visibleToMouse( true );
 										interactOnClick( "exitView()" );
