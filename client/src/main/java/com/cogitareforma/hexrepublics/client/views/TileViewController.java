@@ -204,30 +204,12 @@ public class TileViewController extends GeneralPlayingController
 
 				if ( Traits.countBuildings( entityData, locationSet ) < 6 )
 				{
-					if ( !Traits.hasPrerequisites( entityData, locationSet, ArcheryTrait.class ) )
-					{
-						buildables.add( "Build Archery" );
-					}
-					if ( !Traits.hasPrerequisites( entityData, locationSet, BarracksTrait.class ) )
-					{
-						buildables.add( "Build Barracks" );
-					}
-					if ( !Traits.hasPrerequisites( entityData, locationSet, StablesTrait.class ) )
-					{
-						buildables.add( "Build Stables" );
-					}
-					if ( !Traits.hasPrerequisites( entityData, locationSet, ForgeTrait.class ) )
-					{
-						buildables.add( "Build Forge" );
-					}
-					if ( !Traits.hasPrerequisites( entityData, locationSet, MachineWorksTrait.class ) )
-					{
-						buildables.add( "Build Machine Works" );
-					}
-					if ( !Traits.hasPrerequisites( entityData, locationSet, SawmillTrait.class ) )
-					{
-						buildables.add( "Build Sawmill" );
-					}
+					buildables.add( "Build Archery" );
+					buildables.add( "Build Barracks" );
+					buildables.add( "Build Stables" );
+					buildables.add( "Build Forge" );
+					buildables.add( "Build Machine Works" );
+					buildables.add( "Build Sawmill" );
 				}
 				if ( Traits.countUnits( entityData, locationSet ) < 6 )
 				{

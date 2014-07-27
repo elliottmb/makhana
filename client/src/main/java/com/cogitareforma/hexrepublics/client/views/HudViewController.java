@@ -125,6 +125,11 @@ public class HudViewController extends GeneralPlayingController implements KeyIn
 					TileViewController tvc = ( TileViewController ) getApp( ).getNifty( ).getCurrentScreen( ).getScreenController( );
 					tvc.exitView( );
 				}
+				else if ( "mainOptions".equalsIgnoreCase( getApp( ).getNifty( ).getCurrentScreen( ).getScreenId( ) ) )
+				{
+					OptionsViewController ovc = ( OptionsViewController ) getApp( ).getNifty( ).getCurrentScreen( ).getScreenController( );
+					ovc.exitMainOptions( );
+				}
 				else
 				{
 					if ( menuOpen == false && isOpen( ) )
@@ -334,7 +339,7 @@ public class HudViewController extends GeneralPlayingController implements KeyIn
 
 		logger.log( Level.INFO, "Initialised " + this.getClass( ) );
 
-		//NiftyFactory.createOptionsView( getApp( ).getNifty( ) );
+		// NiftyFactory.createOptionsView( getApp( ).getNifty( ) );
 		bindKeys( );
 		refreshKeys( );
 		getApp( ).getInputManager( ).addMapping( "showScore", new KeyTrigger( scoreKey ) );
