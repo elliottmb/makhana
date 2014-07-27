@@ -725,7 +725,7 @@ public class TileViewController extends GeneralPlayingController
 				eemc.setName( createDisplayText( eemc.getEntityId( ) ) );
 			}
 		}
-
+		justUpdated = false;
 		entities.clear( );
 	}
 
