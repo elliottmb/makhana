@@ -682,9 +682,10 @@ public class TileViewController extends GeneralPlayingController
 					System.out.println( actionSet.size( ) );
 					for ( Entity e : actionSet.getAddedEntities( ) )
 					{
-						if ( !toUpdate.contains( e ) )
+						EntityId id = e.getId( );
+						if ( !toUpdate.contains( id ) )
 						{
-							toUpdate.add( e.getId( ) );
+							toUpdate.add( id );
 						}
 					}
 
@@ -695,9 +696,10 @@ public class TileViewController extends GeneralPlayingController
 
 					for ( Entity e : actionSet.getRemovedEntities( ) )
 					{
-						if ( !toUpdate.contains( e ) )
+						EntityId id = e.getId( );
+						if ( !toUpdate.contains( id ) )
 						{
-							toUpdate.add( e.getId( ) );
+							toUpdate.add( id );
 						}
 					}
 

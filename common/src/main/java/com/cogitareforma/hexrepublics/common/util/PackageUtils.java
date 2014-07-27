@@ -7,6 +7,7 @@ import java.lang.reflect.Modifier;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.List;
@@ -157,7 +158,7 @@ public class PackageUtils
 		}
 		catch ( Exception e )
 		{
-			logger.log( Level.SEVERE, "Failed to get classes from names: " + e.getStackTrace( ) );
+			logger.log( Level.SEVERE, "Failed to get classes from names: " + Arrays.toString( e.getStackTrace( ) ) );
 		}
 		return classes;
 	}
