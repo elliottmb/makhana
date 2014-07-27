@@ -22,6 +22,7 @@ import com.jme3.font.BitmapText;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
+import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.Camera;
 import com.jme3.renderer.ViewPort;
@@ -203,7 +204,8 @@ public class WorldManager extends AbstractAppState
 			Spatial build = assetManager.loadModel( "Materials/stablePrototype.obj" );
 
 			build.setMaterial( matBuilding );
-			build.setLocalScale( .035f );
+			build.setLocalScale( .18f );
+			build.setLocalRotation( new Quaternion().fromAngleAxis( 1.04719755f, Vector3f.UNIT_Y ) );
 			build.setLocalTranslation( Traits.getSpatialPosition( tile.getX( ), tile.getY( ), locationTrait.getPosition( ), terrain,
 					FastMath.PI / 6 ) );
 
