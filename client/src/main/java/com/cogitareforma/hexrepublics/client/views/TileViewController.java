@@ -305,21 +305,9 @@ public class TileViewController extends GeneralPlayingController
 
 		toUpdate = new LinkedList< EntityId >( );
 
-		if ( locationSet != null )
-		{
-			if ( locationSet.applyChanges( ) )
-			{
-				for ( Entity e : locationSet.getAddedEntities( ) )
-				{
-					addToExisting( e );
-				}
-			}
-		}
-
 		logger.log( Level.INFO, "Initialised " + this.getClass( ) );
 		getApp( ).currentScreen = "tile";
 
-		fillBuildables( );
 	}
 
 	@SuppressWarnings( "unchecked" )
