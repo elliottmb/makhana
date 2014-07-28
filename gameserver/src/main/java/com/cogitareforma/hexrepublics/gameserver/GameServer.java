@@ -44,6 +44,7 @@ public class GameServer extends SimpleApplication
 		options.addOption( "A", "account", true, "the account name registered with the master server" );
 		options.addOption( "P", "password", true, "the password registered with the master server" );
 		options.addOption( "p", "port", true, "the port this server will bind to (optional)" );
+		options.addOption( "o", "offline", true, "toggle whether account checking should be run (optional)" );
 
 		CommandLineParser parser = new BasicParser( );
 
@@ -133,6 +134,8 @@ public class GameServer extends SimpleApplication
 	 */
 	private int port;
 
+	private boolean onlineMode;
+
 	/**
 	 * Returns if the MasterServer connection manager is logged in
 	 * 
@@ -196,6 +199,23 @@ public class GameServer extends SimpleApplication
 		this.arguments = arguments;
 	}
 
+	/**
+	 * @return the onlineMode
+	 */
+	public boolean isOnlineMode( )
+	{
+		return onlineMode;
+	}
+
+	/**
+	 * @param onlineMode
+	 *            the onlineMode to set
+	 */
+	public void setOnlineMode( boolean onlineMode )
+	{
+		this.onlineMode = onlineMode;
+	}
+
 	@Override
 	public void simpleInitApp( )
 	{
@@ -204,6 +224,8 @@ public class GameServer extends SimpleApplication
 		port = 7331; /* default */
 
 		YamlConfig config = YamlConfig.DEFAULT;
+
+		onlineMode = true;
 
 		if ( config.containsKey( "gameserver.port" ) )
 		{
@@ -221,6 +243,24 @@ public class GameServer extends SimpleApplication
 			logger.log( Level.WARNING, "Configuration port value not set, defaulting to 7331" );
 		}
 		config.put( "gameserver.port", port );
+
+		if ( config.containsKey( "gameserver.online" ) )
+		{
+			if ( config.get( "gameserver.online" ) instanceof Boolean )
+			{
+				onlineMode = ( Boolean ) YamlConfig.DEFAULT.get( "gameserver.online" );
+			}
+			else
+			{
+				logger.log( Level.WARNING, "Configuration online mode value could not be parsed, defaulting to online" );
+			}
+		}
+		else
+		{
+			logger.log( Level.WARNING, "Configuration online mode value not set, defaulting to online" );
+		}
+		config.put( "gameserver.online", onlineMode );
+
 		config.save( );
 
 		if ( getArguments( ).hasOption( "p" ) )
@@ -242,6 +282,19 @@ public class GameServer extends SimpleApplication
 			catch ( NumberFormatException e )
 			{
 				logger.log( Level.WARNING, "Command line argument port value could not be parsed, defaulting to configuration" );
+			}
+		}
+
+		if ( getArguments( ).hasOption( "o" ) )
+		{
+			String value = getArguments( ).getOptionValue( "o" );
+			if ( value != null )
+			{
+				onlineMode = Boolean.parseBoolean( value );
+			}
+			else
+			{
+				logger.log( Level.WARNING, "Command line argument online mode value is undefined, defaulting to configuration" );
 			}
 		}
 

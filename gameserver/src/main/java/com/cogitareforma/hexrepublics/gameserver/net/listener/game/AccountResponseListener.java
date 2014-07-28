@@ -55,8 +55,12 @@ public class AccountResponseListener implements MessageListener< HostedConnectio
 
 			// Add the session temporarily
 			manager.getSessionManager( ).put( source, msg.getAccount( ) );
-			// Send off a verification request
-			manager.getApp( ).getMasterConnManager( ).send( new AccountVerificationRequest( msg.getAccount( ) ) );
+
+			if ( manager.getApp( ).isOnlineMode( ) )
+			{
+				// Send off a verification request
+				manager.getApp( ).getMasterConnManager( ).send( new AccountVerificationRequest( msg.getAccount( ) ) );
+			}
 		}
 	}
 }

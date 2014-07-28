@@ -249,14 +249,14 @@ public class HudViewController extends GeneralPlayingController implements KeyIn
 		}
 		if ( name.equals( "zoomIn" ) )
 		{
-			if ( v.y - value > 50f )
+			if ( v.y - value > 25f )
 			{
 				getApp( ).getCamera( ).setLocation( new Vector3f( v.x, v.y - value, v.z - value ) );
 			}
 		}
 		if ( name.equals( "zoomOut" ) )
 		{
-			if ( v.y + value <= 100f )
+			if ( v.y + value <= 75f )
 			{
 				getApp( ).getCamera( ).setLocation( new Vector3f( v.x, v.y + value, v.z + value ) );
 			}

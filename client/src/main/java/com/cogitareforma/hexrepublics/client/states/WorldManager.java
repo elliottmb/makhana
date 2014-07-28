@@ -8,6 +8,7 @@ import java.util.logging.Logger;
 import com.cogitareforma.hexrepublics.client.ClientMain;
 import com.cogitareforma.hexrepublics.client.views.LoadingViewController;
 import com.cogitareforma.hexrepublics.common.entities.Traits;
+import com.cogitareforma.hexrepublics.common.entities.traits.ArcheryTrait;
 import com.cogitareforma.hexrepublics.common.entities.traits.CapitalTrait;
 import com.cogitareforma.hexrepublics.common.entities.traits.HealthTrait;
 import com.cogitareforma.hexrepublics.common.entities.traits.LocationTrait;
@@ -92,7 +93,7 @@ public class WorldManager extends AbstractAppState
 		logger.log( Level.INFO, "Attach worldRoot" );
 		rootNode.attachChild( worldRoot );
 
-		this.app.getCamera( ).setLocation( new Vector3f( 0f, 100f, 100f ) );
+		this.app.getCamera( ).setLocation( new Vector3f( 0f, 75f, 75f ) );
 		this.app.getCamera( ).lookAt( new Vector3f( 0, 0, 0 ), Vector3f.UNIT_Y );
 
 		if ( miniCam == null )
@@ -213,7 +214,22 @@ public class WorldManager extends AbstractAppState
 
 			build.setMaterial( matBuilding );
 			build.setLocalScale( .18f );
-			build.setLocalRotation( new Quaternion( ).fromAngleAxis( 1.04719755f, Vector3f.UNIT_Y ) );
+			build.setLocalRotation( new Quaternion( ).fromAngleAxis( 1.04719755f + ( locationTrait.getPosition( ) * 0.523598776f ),
+					Vector3f.UNIT_Y ) );
+			build.setLocalTranslation( Traits.getSpatialPosition( tile.getX( ), tile.getY( ), locationTrait.getPosition( ), terrain,
+					FastMath.PI / 6, .25f ) );
+
+			buildings.put( id, build );
+			buildingRoot.attachChild( build );
+		}
+		else if ( entityData.getComponent( id, ArcheryTrait.class ) != null )
+		{
+			Spatial build = assetManager.loadModel( "Materials/archery.obj" );
+
+			build.setMaterial( matBuilding );
+			build.setLocalScale( .18f );
+			build.setLocalRotation( new Quaternion( ).fromAngleAxis( 1.04719755f + ( locationTrait.getPosition( ) * 0.523598776f ),
+					Vector3f.UNIT_Y ) );
 			build.setLocalTranslation( Traits.getSpatialPosition( tile.getX( ), tile.getY( ), locationTrait.getPosition( ), terrain,
 					FastMath.PI / 6, .25f ) );
 
@@ -406,20 +422,22 @@ public class WorldManager extends AbstractAppState
 									// TODO Don't know if its not setting up
 									// correctly in GameServerManager or not
 									// finding them here.
-									LocationTrait locationTrait = e.get( LocationTrait.class );
 									EntityId id = e.getId( );
+									TileTrait tileTrait = entityData.getComponent( id, TileTrait.class );
 
-									TileTrait tileTrait = entityData.getComponent( locationTrait.getTile( ), TileTrait.class );
+									if ( tileTrait != null )
+									{
 
-									Box b = new Box( 1, 5, 1 );
-									Geometry geo = new Geometry( "Box", b );
-									geo.setMaterial( matBuilding );
-									Vector3f centerPoint = WorldFactory.createCenterPoint( 257, 10f, tileTrait.getX( ) + 1,
-											tileTrait.getY( ) + 1 );
-									geo.setLocalTranslation( centerPoint );
+										Box b = new Box( 1, 5, 1 );
+										Geometry geo = new Geometry( "Box", b );
+										geo.setMaterial( matBuilding );
+										Vector3f centerPoint = WorldFactory.createCenterPoint( 257, 10f, tileTrait.getX( ) + 1,
+												tileTrait.getY( ) + 1 );
+										geo.setLocalTranslation( centerPoint );
 
-									buildings.put( id, geo );
-									buildingRoot.attachChild( geo );
+										buildings.put( id, geo );
+										buildingRoot.attachChild( geo );
+									}
 								}
 
 								for ( Entity e : capitalSet.getRemovedEntities( ) )
