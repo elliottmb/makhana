@@ -419,9 +419,6 @@ public class WorldManager extends AbstractAppState
 							{
 								for ( Entity e : capitalSet.getAddedEntities( ) )
 								{
-									// TODO Don't know if its not setting up
-									// correctly in GameServerManager or not
-									// finding them here.
 									EntityId id = e.getId( );
 									TileTrait tileTrait = entityData.getComponent( id, TileTrait.class );
 

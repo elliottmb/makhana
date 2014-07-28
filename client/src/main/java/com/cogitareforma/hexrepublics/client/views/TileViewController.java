@@ -35,9 +35,12 @@ import com.cogitareforma.hexrepublics.common.entities.traits.TileTrait;
 import com.cogitareforma.hexrepublics.common.entities.traits.TrebuchetTrait;
 import com.cogitareforma.hexrepublics.common.net.msg.EntityActionRequest;
 import com.cogitareforma.hexrepublics.common.net.msg.EntityCreationRequest;
+import com.cogitareforma.hexrepublics.common.util.WorldFactory;
 import com.jme3.app.Application;
 import com.jme3.app.state.AppState;
 import com.jme3.app.state.AppStateManager;
+import com.jme3.math.Vector3f;
+import com.jme3.renderer.Camera;
 import com.simsilica.es.ComponentFilter;
 import com.simsilica.es.Entity;
 import com.simsilica.es.EntityId;
@@ -78,6 +81,9 @@ public class TileViewController extends GeneralPlayingController
 	private LinkedList< EntityId > toUpdate;
 	private Element move;
 	private boolean justUpdated = false;
+	private Vector3f prevLocation;
+
+	private Vector3f prevMiniLocation;
 
 	public void addToExisting( Entity entity )
 	{
@@ -321,6 +327,18 @@ public class TileViewController extends GeneralPlayingController
 
 		fillBuildables( );
 		justUpdated = false;
+		moveCamera( );
+	}
+
+	public void moveCamera( )
+	{
+		prevLocation = getApp( ).getCamera( ).getLocation( ).clone( );
+		prevMiniLocation = getApp( ).getRenderManager( ).getMainView( "Minimap" ).getCamera( ).getLocation( ).clone( );
+		System.out.println( "Moving camera" );
+		Vector3f centerPoint = WorldFactory.createCenterPoint( 257, 10f, this.currentTile.getLeft( ) + 1, this.currentTile.getRight( ) + 1 );
+		getApp( ).getCamera( ).setLocation( new Vector3f( centerPoint.x, centerPoint.y + 25f, centerPoint.z + 25f ) );
+		getApp( ).getRenderManager( ).getMainView( "Minimap" ).getCamera( )
+				.setLocation( new Vector3f( centerPoint.x, centerPoint.y + 500f, centerPoint.z ) );
 	}
 
 	@SuppressWarnings( "unchecked" )
@@ -401,6 +419,8 @@ public class TileViewController extends GeneralPlayingController
 
 	public void onEndScreen( )
 	{
+		getApp( ).getCamera( ).setLocation( prevLocation );
+		getApp( ).getRenderManager( ).getMainView( "Minimap" ).getCamera( ).setLocation( prevMiniLocation );
 		super.onEndScreen( );
 		if ( locationSet != null )
 		{
