@@ -15,6 +15,7 @@ import com.cogitareforma.hexrepublics.common.data.ServerStatus;
 import com.cogitareforma.hexrepublics.common.entities.ActionType;
 import com.cogitareforma.hexrepublics.common.entities.Traits;
 import com.cogitareforma.hexrepublics.common.entities.traits.ActionTrait;
+import com.cogitareforma.hexrepublics.common.entities.traits.CapitalTrait;
 import com.cogitareforma.hexrepublics.common.entities.traits.DefenseTrait;
 import com.cogitareforma.hexrepublics.common.entities.traits.HealthTrait;
 import com.cogitareforma.hexrepublics.common.entities.traits.LocationTrait;
@@ -151,6 +152,7 @@ public class GameServerManager extends ServerManager< GameServer >
 
 				getEntityData( ).removeComponent( tileId, CreatedBy.class );
 				getEntityData( ).setComponent( tileId, new CreatedBy( playerEntity ) );
+				getEntityData( ).setComponent( tileId, new CapitalTrait( ) );
 			}
 			else
 			{

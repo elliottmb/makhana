@@ -8,6 +8,7 @@ import java.util.logging.Logger;
 import com.cogitareforma.hexrepublics.client.ClientMain;
 import com.cogitareforma.hexrepublics.client.views.LoadingViewController;
 import com.cogitareforma.hexrepublics.common.entities.Traits;
+import com.cogitareforma.hexrepublics.common.entities.traits.CapitalTrait;
 import com.cogitareforma.hexrepublics.common.entities.traits.HealthTrait;
 import com.cogitareforma.hexrepublics.common.entities.traits.LocationTrait;
 import com.cogitareforma.hexrepublics.common.entities.traits.MoveableTrait;
@@ -62,6 +63,7 @@ public class WorldManager extends AbstractAppState
 	private ViewPort miniView;
 	private BitmapFont myFont;
 	private EntitySet locationSet;
+	private EntitySet capitalSet;
 	private EntitySet healthSet;
 	private Node rootNode;
 	private Node unitRoot;
@@ -151,6 +153,12 @@ public class WorldManager extends AbstractAppState
 		}
 		healthSet = null;
 
+		if ( capitalSet != null )
+		{
+			capitalSet.clear( );
+		}
+		capitalSet = null;
+
 		miniView.detachScene( worldRoot );
 		rootNode.detachChild( worldRoot );
 
@@ -226,6 +234,38 @@ public class WorldManager extends AbstractAppState
 		}
 	}
 
+	public ColorRGBA generatePlayerColor( CreatedBy createdBy )
+	{
+		ColorRGBA color = null;
+		if ( createdBy != null )
+		{
+			int src = ( int ) createdBy.getCreatorId( ).getId( ) % 255;
+			switch ( src % 3 )
+			{
+				case 0:
+				{
+					color = new ColorRGBA( ( float ) ( src * 0.003922 ), 0.5f, 0.5f, 1f );
+					break;
+				}
+				case 1:
+				{
+					color = new ColorRGBA( 0.5f, ( float ) ( src * 0.003922 ), 0.5f, 1f );
+					break;
+				}
+				default:
+				{
+					color = new ColorRGBA( 0.5f, 0.5f, ( float ) ( src * 0.003922 ), 1f );
+					break;
+				}
+			}
+		}
+		else
+		{
+			color = ColorRGBA.Gray;
+		}
+		return color;
+	}
+
 	@Override
 	public void update( float tpf )
 	{
@@ -278,33 +318,7 @@ public class WorldManager extends AbstractAppState
 										BitmapText unitBody = new BitmapText( myFont );
 										unitBody.setQueueBucket( Bucket.Transparent );
 										unitBody.setSize( 5 );
-										ColorRGBA color = null;
-										if ( createdBy != null )
-										{
-											int src = ( int ) createdBy.getCreatorId( ).getId( ) % 255;
-											switch ( src % 3 )
-											{
-												case 0:
-												{
-													color = new ColorRGBA( ( float ) ( src * 0.003922 ), 0.5f, 0.5f, 1f );
-													break;
-												}
-												case 1:
-												{
-													color = new ColorRGBA( 0.5f, ( float ) ( src * 0.003922 ), 0.5f, 1f );
-													break;
-												}
-												default:
-												{
-													color = new ColorRGBA( 0.5f, 0.5f, ( float ) ( src * 0.003922 ), 1f );
-													break;
-												}
-											}
-										}
-										else
-										{
-											color = ColorRGBA.Gray;
-										}
+										ColorRGBA color = generatePlayerColor( createdBy );
 										unitBody.setColor( color );
 										unitBody.setText( display );
 										unitBody.setName( "body" );
@@ -381,6 +395,46 @@ public class WorldManager extends AbstractAppState
 						else
 						{
 							locationSet = entityData.getEntities( LocationTrait.class );
+						}
+
+						if ( capitalSet != null )
+						{
+							if ( capitalSet.applyChanges( ) )
+							{
+								for ( Entity e : capitalSet.getAddedEntities( ) )
+								{
+									// TODO Don't know if its not setting up
+									// correctly in GameServerManager or not
+									// finding them here.
+									LocationTrait locationTrait = e.get( LocationTrait.class );
+									EntityId id = e.getId( );
+
+									TileTrait tileTrait = entityData.getComponent( locationTrait.getTile( ), TileTrait.class );
+
+									Box b = new Box( 1, 5, 1 );
+									Geometry geo = new Geometry( "Box", b );
+									geo.setMaterial( matBuilding );
+									Vector3f centerPoint = WorldFactory.createCenterPoint( 257, 10f, tileTrait.getX( ) + 1,
+											tileTrait.getY( ) + 1 );
+									geo.setLocalTranslation( centerPoint );
+
+									buildings.put( id, geo );
+									buildingRoot.attachChild( geo );
+								}
+
+								for ( Entity e : capitalSet.getRemovedEntities( ) )
+								{
+									Spatial capitalSpatial = buildings.remove( e.getId( ) );
+									if ( capitalSpatial != null )
+									{
+										buildingRoot.detachChild( capitalSpatial );
+									}
+								}
+							}
+						}
+						else
+						{
+							capitalSet = entityData.getEntities( CapitalTrait.class );
 						}
 
 						if ( healthSet != null )
