@@ -333,18 +333,19 @@ public class Traits
 		return ownerId;
 	}
 
-	public static Vector3f getSpatialPosition( int tileX, int tileY, byte position, TerrainQuad terrain, float adjustment )
+	public static Vector3f getSpatialPosition( int tileX, int tileY, byte position, TerrainQuad terrain, float initalRotation,
+			float heightAdjustment )
 	{
 		Vector3f centerPoint = WorldFactory.createCenterPoint( 257, 10f, tileX + 1, tileY + 1 );
 
-		float angle = 2 * FastMath.PI / 6 * position + adjustment;
+		float angle = 2 * FastMath.PI / 6 * position + initalRotation;
 		float x = centerPoint.x + 7f * FastMath.cos( angle );
 		float z = centerPoint.z + 7f * FastMath.sin( angle );
 		float y = 3;
 
 		if ( !Float.isNaN( terrain.getHeight( new Vector2f( x, z ) ) ) )
 		{
-			y = terrain.getHeight( new Vector2f( x, z ) ) + 1.5f;
+			y = terrain.getHeight( new Vector2f( x, z ) ) + heightAdjustment;
 		}
 
 		return new Vector3f( x, y, z );

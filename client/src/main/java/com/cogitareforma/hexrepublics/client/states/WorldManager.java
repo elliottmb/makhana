@@ -205,9 +205,9 @@ public class WorldManager extends AbstractAppState
 
 			build.setMaterial( matBuilding );
 			build.setLocalScale( .18f );
-			build.setLocalRotation( new Quaternion().fromAngleAxis( 1.04719755f, Vector3f.UNIT_Y ) );
+			build.setLocalRotation( new Quaternion( ).fromAngleAxis( 1.04719755f, Vector3f.UNIT_Y ) );
 			build.setLocalTranslation( Traits.getSpatialPosition( tile.getX( ), tile.getY( ), locationTrait.getPosition( ), terrain,
-					FastMath.PI / 6 ) );
+					FastMath.PI / 6, .25f ) );
 
 			buildings.put( id, build );
 			buildingRoot.attachChild( build );
@@ -219,7 +219,7 @@ public class WorldManager extends AbstractAppState
 			Geometry geo = new Geometry( "Box", b );
 			geo.setMaterial( matBuilding );
 			geo.setLocalTranslation( Traits.getSpatialPosition( tile.getX( ), tile.getY( ), locationTrait.getPosition( ), terrain,
-					FastMath.PI / 6 ) );
+					FastMath.PI / 6, 1.5f ) );
 
 			buildings.put( id, geo );
 			buildingRoot.attachChild( geo );
@@ -273,7 +273,7 @@ public class WorldManager extends AbstractAppState
 										}
 
 										Vector3f position = Traits.getSpatialPosition( tileTrait.getX( ), tileTrait.getY( ),
-												locationTrait.getPosition( ), terrain, 0f );
+												locationTrait.getPosition( ), terrain, 0f, 3f );
 
 										BitmapText unitBody = new BitmapText( myFont );
 										unitBody.setQueueBucket( Bucket.Transparent );
@@ -344,7 +344,7 @@ public class WorldManager extends AbstractAppState
 											LocationTrait locationTrait = entityData.getComponent( id, LocationTrait.class );
 											TileTrait loc = entityData.getComponent( locationTrait.getTile( ), TileTrait.class );
 											Vector3f position = Traits.getSpatialPosition( loc.getX( ), loc.getY( ),
-													locationTrait.getPosition( ), terrain, 0f );
+													locationTrait.getPosition( ), terrain, 0f, 3f );
 											Spatial unitSpatial = unitContainer.getChild( "body" );
 											if ( unitSpatial != null && unitSpatial instanceof BitmapText )
 											{

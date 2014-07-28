@@ -99,7 +99,10 @@ public class GameServer extends SimpleApplication
 						logger.log( Level.INFO, "No authenticated sessions." );
 					}
 				}
-
+				if ( "restart".equals( line ) )
+				{
+					gameServer.restart( );
+				}
 			}
 		}
 		catch ( IOException e )
