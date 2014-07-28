@@ -66,10 +66,12 @@ public class WorldManager extends AbstractAppState
 	private EntitySet locationSet;
 	private EntitySet capitalSet;
 	private EntitySet healthSet;
+	private EntitySet tileSet;
 	private Node rootNode;
 	private Node unitRoot;
 	private HashMap< EntityId, Node > units;
 	private Node worldRoot;
+	private HashMap< CreatedBy, Material > playerColors;
 
 	private boolean attached;
 
@@ -85,6 +87,7 @@ public class WorldManager extends AbstractAppState
 		this.buildings = new LinkedHashMap< EntityId, Spatial >( );
 		this.matBuilding = new Material( assetManager, "Common/MatDefs/Misc/ShowNormals.j3md" );
 		this.matHealthBar = new Material( assetManager, "Common/MatDefs/Misc/Unshaded.j3md" );
+		this.playerColors = new LinkedHashMap<>( );
 	}
 
 	public void attachLevel( )
@@ -124,6 +127,7 @@ public class WorldManager extends AbstractAppState
 		buildings = new LinkedHashMap< EntityId, Spatial >( );
 		matBuilding = new Material( assetManager, "Common/MatDefs/Misc/ShowNormals.j3md" );
 		matHealthBar = new Material( assetManager, "Common/MatDefs/Misc/Unshaded.j3md" );
+		playerColors = new LinkedHashMap<>( );
 
 		worldRoot.attachChild( buildingRoot );
 		worldRoot.attachChild( unitRoot );
@@ -142,6 +146,7 @@ public class WorldManager extends AbstractAppState
 		buildings = null;
 		matBuilding = null;
 		matHealthBar = null;
+		playerColors = null;
 		if ( locationSet != null )
 		{
 			locationSet.clear( );
@@ -450,6 +455,69 @@ public class WorldManager extends AbstractAppState
 						else
 						{
 							capitalSet = entityData.getEntities( CapitalTrait.class );
+						}
+
+						if ( tileSet != null )
+						{
+							if ( tileSet.applyChanges( ) )
+							{
+								for ( Entity e : tileSet.getAddedEntities( ) )
+								{
+									EntityId id = e.getId( );
+									TileTrait tileTrait = entityData.getComponent( id, TileTrait.class );
+									CreatedBy createdBy = entityData.getComponent( id, CreatedBy.class );
+
+									if ( tileTrait != null && entityData.getComponent( id, CapitalTrait.class ) == null )
+									{
+										Box b = new Box( .25f, 10, .25f );
+										Geometry geo = new Geometry( "Box", b );
+										if ( !playerColors.containsKey( createdBy ) )
+										{
+											Material flag = new Material( assetManager, "Common/MatDefs/Misc/Unshaded.j3md" );
+											flag.setColor( "Color", generatePlayerColor( createdBy ) );
+											playerColors.put( createdBy, flag );
+										}
+										geo.setMaterial( playerColors.get( createdBy ) );
+										Vector3f centerPoint = WorldFactory.createCenterPoint( 257, 10f, tileTrait.getX( ) + 1,
+												tileTrait.getY( ) + 1 );
+										geo.setLocalTranslation( centerPoint );
+
+										buildings.put( id, geo );
+										buildingRoot.attachChild( geo );
+									}
+
+								}
+								for ( Entity e : tileSet.getChangedEntities( ) )
+								{
+									EntityId id = e.getId( );
+									CreatedBy createdBy = entityData.getComponent( id, CreatedBy.class );
+
+									Geometry geo = ( Geometry ) buildings.get( id );
+									if ( geo != null )
+									{
+										if ( !playerColors.containsKey( createdBy ) )
+										{
+											Material flag = new Material( assetManager, "Common/MatDefs/Misc/Unshaded.j3md" );
+											flag.setColor( "Color", generatePlayerColor( createdBy ) );
+											playerColors.put( createdBy, flag );
+										}
+										geo.setMaterial( playerColors.get( createdBy ) );
+									}
+
+								}
+								for ( Entity e : tileSet.getRemovedEntities( ) )
+								{
+									Spatial tileOwnedSpatial = buildings.remove( e.getId( ) );
+									if ( tileOwnedSpatial != null )
+									{
+										buildingRoot.detachChild( tileOwnedSpatial );
+									}
+								}
+							}
+						}
+						else
+						{
+							tileSet = entityData.getEntities( CreatedBy.class, TileTrait.class );
 						}
 
 						if ( healthSet != null )
