@@ -96,8 +96,9 @@ public class WorldManager extends AbstractAppState
 		logger.log( Level.INFO, "Attach worldRoot" );
 		rootNode.attachChild( worldRoot );
 
-		this.app.getCamera( ).setLocation( new Vector3f( 0f, 75f, 75f ) );
-		this.app.getCamera( ).lookAt( new Vector3f( 0, 0, 0 ), Vector3f.UNIT_Y );
+		Camera mainCam = app.getCamera( );
+		mainCam.setLocation( new Vector3f( 0f, 300f, 300f ) );
+		mainCam.lookAt( new Vector3f( 0, 0, 0 ), Vector3f.UNIT_Y );
 
 		if ( miniCam == null )
 		{
@@ -218,7 +219,7 @@ public class WorldManager extends AbstractAppState
 			Spatial build = assetManager.loadModel( "Materials/stablePrototype.obj" );
 
 			build.setMaterial( matBuilding );
-			build.setLocalScale( .18f );
+			// build.setLocalScale( .5f );
 			build.setLocalRotation( new Quaternion( ).fromAngleAxis( 1.04719755f + ( locationTrait.getPosition( ) * 0.523598776f ),
 					Vector3f.UNIT_Y ) );
 			build.setLocalTranslation( Traits.getSpatialPosition( tile.getX( ), tile.getY( ), locationTrait.getPosition( ), terrain,
@@ -232,7 +233,7 @@ public class WorldManager extends AbstractAppState
 			Spatial build = assetManager.loadModel( "Materials/archery.obj" );
 
 			build.setMaterial( matBuilding );
-			build.setLocalScale( .18f );
+			// build.setLocalScale( .4f );
 			build.setLocalRotation( new Quaternion( ).fromAngleAxis( 1.04719755f + ( locationTrait.getPosition( ) * 0.523598776f ),
 					Vector3f.UNIT_Y ) );
 			build.setLocalTranslation( Traits.getSpatialPosition( tile.getX( ), tile.getY( ), locationTrait.getPosition( ), terrain,
@@ -433,7 +434,7 @@ public class WorldManager extends AbstractAppState
 										Box b = new Box( 1, 5, 1 );
 										Geometry geo = new Geometry( "Box", b );
 										geo.setMaterial( matBuilding );
-										Vector3f centerPoint = WorldFactory.createCenterPoint( 257, 10f, tileTrait.getX( ) + 1,
+										Vector3f centerPoint = WorldFactory.createCenterPoint( 1025, 40f, tileTrait.getX( ) + 1,
 												tileTrait.getY( ) + 1 );
 										geo.setLocalTranslation( centerPoint );
 
@@ -478,7 +479,7 @@ public class WorldManager extends AbstractAppState
 											playerColors.put( createdBy, flag );
 										}
 										geo.setMaterial( playerColors.get( createdBy ) );
-										Vector3f centerPoint = WorldFactory.createCenterPoint( 257, 10f, tileTrait.getX( ) + 1,
+										Vector3f centerPoint = WorldFactory.createCenterPoint( 1025, 40f, tileTrait.getX( ) + 1,
 												tileTrait.getY( ) + 1 );
 										geo.setLocalTranslation( centerPoint );
 

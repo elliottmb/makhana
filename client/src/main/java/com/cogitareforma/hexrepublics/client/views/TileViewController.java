@@ -40,6 +40,7 @@ import com.jme3.app.Application;
 import com.jme3.app.state.AppState;
 import com.jme3.app.state.AppStateManager;
 import com.jme3.math.Vector3f;
+import com.jme3.renderer.Camera;
 import com.simsilica.es.ComponentFilter;
 import com.simsilica.es.Entity;
 import com.simsilica.es.EntityId;
@@ -341,13 +342,15 @@ public class TileViewController extends GeneralPlayingController
 
 	public void moveCamera( )
 	{
-		prevLocation = getApp( ).getCamera( ).getLocation( ).clone( );
-		prevMiniLocation = getApp( ).getRenderManager( ).getMainView( "Minimap" ).getCamera( ).getLocation( ).clone( );
+		Camera mainCamera = getApp( ).getCamera( );
+		Camera miniCamera = getApp( ).getRenderManager( ).getMainView( "Minimap" ).getCamera( );
+		prevLocation = mainCamera.getLocation( ).clone( );
+		prevMiniLocation = miniCamera.getLocation( ).clone( );
 		System.out.println( "Moving camera" );
-		Vector3f centerPoint = WorldFactory.createCenterPoint( 257, 10f, this.currentTile.getLeft( ) + 1, this.currentTile.getRight( ) + 1 );
-		getApp( ).getCamera( ).setLocation( new Vector3f( centerPoint.x, centerPoint.y + 25f, centerPoint.z + 25f ) );
-		getApp( ).getRenderManager( ).getMainView( "Minimap" ).getCamera( )
-				.setLocation( new Vector3f( centerPoint.x, centerPoint.y + 500f, centerPoint.z ) );
+		Vector3f centerPoint = WorldFactory
+				.createCenterPoint( 1025, 40f, this.currentTile.getLeft( ) + 1, this.currentTile.getRight( ) + 1 );
+		mainCamera.setLocation( new Vector3f( centerPoint.x, centerPoint.y + 100f, centerPoint.z + 100f ) );
+		miniCamera.setLocation( new Vector3f( centerPoint.x, centerPoint.y + 2000f, centerPoint.z ) );
 	}
 
 	@SuppressWarnings( "unchecked" )

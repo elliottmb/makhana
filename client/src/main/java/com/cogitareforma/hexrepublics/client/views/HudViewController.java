@@ -180,8 +180,12 @@ public class HudViewController extends GeneralPlayingController implements KeyIn
 					// Print out the colliding tile location
 					// System.out.println( insideTile( new Vector3f( pt.x,
 					// 0, pt.z ) ) );
-					printTileInfo( insideTile( new Vector3f( pt.x, 0, pt.z ) ) );
-					goToTile( insideTile( new Vector3f( pt.x, 0, pt.z ) ) );
+					Pair< Integer, Integer > tile = insideTile( new Vector3f( pt.x, 0, pt.z ) );
+					if ( tile != null )
+					{
+						printTileInfo( tile );
+						goToTile( tile );
+					}
 				}
 			}
 			// Use the results -- we rotate the selected geometry.
@@ -204,7 +208,7 @@ public class HudViewController extends GeneralPlayingController implements KeyIn
 				}
 			}
 		}
-		int theSpeed = 20;
+		int theSpeed = 80;
 		Vector3f v = getApp( ).getCamera( ).getLocation( );
 		ViewPort miniview = getApp( ).getRenderManager( ).getMainView( "Minimap" );
 		Camera minimap = null;
@@ -249,16 +253,16 @@ public class HudViewController extends GeneralPlayingController implements KeyIn
 		}
 		if ( name.equals( "zoomIn" ) )
 		{
-			if ( v.y - value > 25f )
+			if ( v.y - value > 100f )
 			{
-				getApp( ).getCamera( ).setLocation( new Vector3f( v.x, v.y - value, v.z - value ) );
+				getApp( ).getCamera( ).setLocation( new Vector3f( v.x, v.y - value * 4, v.z - value * 4 ) );
 			}
 		}
 		if ( name.equals( "zoomOut" ) )
 		{
-			if ( v.y + value <= 75f )
+			if ( v.y + value <= 300f )
 			{
-				getApp( ).getCamera( ).setLocation( new Vector3f( v.x, v.y + value, v.z + value ) );
+				getApp( ).getCamera( ).setLocation( new Vector3f( v.x, v.y + value * 4, v.z + value * 4 ) );
 			}
 		}
 
@@ -358,7 +362,7 @@ public class HudViewController extends GeneralPlayingController implements KeyIn
 		{
 			for ( int j = 0; j < 14; j++ )
 			{
-				tileCoords[ i ][ j ] = WorldFactory.createCenterPoint( 257, 10f, i + 1, j + 1 );
+				tileCoords[ i ][ j ] = WorldFactory.createCenterPoint( 1025, 40f, i + 1, j + 1 );
 			}
 		}
 
@@ -371,7 +375,7 @@ public class HudViewController extends GeneralPlayingController implements KeyIn
 		{
 			for ( int j = 0; j < tileCoords[ i ].length; j++ )
 			{
-				if ( coord.distance( tileCoords[ i ][ j ] ) <= 8.5 )
+				if ( coord.distance( tileCoords[ i ][ j ] ) <= 34 )
 				{
 					return Pair.of( i, j );
 				}

@@ -50,8 +50,10 @@ public class WorldFactory
 			TerrainQuad terrain = ( TerrainQuad ) root.getChild( "terrain" );
 			if ( terrain != null )
 			{
-				float size = 10.0f;
+				// TODO: Eventually parameterize
 				int terrainSize = terrain.getTerrainSize( );
+				// TODO: Eventually parameterize
+				float size = ( terrainSize - 1 ) / 256 * 10f;
 
 				Material hexMat = buildHexagonMaterial( am );
 
@@ -60,7 +62,7 @@ public class WorldFactory
 					for ( int j = 1; j < FastMath.ceil( terrainSize / ( FastMath.sqrt( 3f ) * size ) ); j++ )
 					{
 						Geometry lineGeo = new Geometry( String.format( "hexagon[%d, %d]", i, j ), createHexagon(
-								createCenterPoint( terrainSize, size, i, j ), size, terrain, 0.5f ) );
+								createCenterPoint( terrainSize, size, i, j ), size, terrain, ( terrainSize - 1 ) / 256 * 0.5f ) );
 						lineGeo.setMaterial( hexMat );
 						lineGeo.setQueueBucket( RenderQueue.Bucket.Transparent );
 
@@ -125,7 +127,7 @@ public class WorldFactory
 
 		try
 		{
-			heightMap = new HillHeightMap( 257, 4096, 4, 16, seed );
+			heightMap = new HillHeightMap( 1025, 4096, 16, 64, seed );
 			heightMap.erodeTerrain( );
 		}
 		catch ( Exception e )
@@ -147,14 +149,16 @@ public class WorldFactory
 	private static TerrainQuad buildTerrain( AbstractHeightMap heightMap, Camera lodCamera )
 	{
 
+		logger.log( Level.INFO, "Constructing the terrain mesh" );
 		TerrainQuad terrain = null;
 		int patchSize = 65;
-		terrain = new TerrainQuad( "terrain", patchSize, 257, heightMap.getHeightMap( ) );
+		terrain = new TerrainQuad( "terrain", patchSize, 1025, heightMap.getHeightMap( ) );
 
 		terrain.setLocalTranslation( 0, -3, 0 );
-		terrain.setLocalScale( 1f, 0.05f, 1f );
+		terrain.setLocalScale( 1f, 0.125f, 1f );
 		terrain.setShadowMode( RenderQueue.ShadowMode.Receive );
 
+		logger.log( Level.INFO, "Constructing the terrain LOD" );
 		TerrainLodControl control = new TerrainLodControl( terrain, lodCamera );
 		terrain.addControl( control );
 
@@ -212,7 +216,7 @@ public class WorldFactory
 		return new Vector3f( x, y, z );
 	}
 
-	private static Mesh createHexagon( Vector3f centerPoint, float size, TerrainQuad terrain, float hoverHeight )
+	private static Mesh createHexagon( Vector3f centerPoint, float size, TerrainQuad terrain, float heightAdjustment )
 	{
 		Vector3f[ ] vertices = new Vector3f[ 6 ];
 		for ( int i = 0; i < 6; i++ )
@@ -223,10 +227,10 @@ public class WorldFactory
 			float y = 3;
 			if ( !Float.isNaN( terrain.getHeight( new Vector2f( x, z ) ) ) )
 			{
-				y = terrain.getHeight( new Vector2f( x, z ) );
+				y = terrain.getHeight( new Vector2f( x, z ) ) + heightAdjustment;
 			}
 
-			vertices[ i ] = new Vector3f( x, y - hoverHeight, z );
+			vertices[ i ] = new Vector3f( x, y, z );
 		}
 		Mesh lineMesh = new Mesh( );
 		lineMesh.setMode( Mesh.Mode.Lines );

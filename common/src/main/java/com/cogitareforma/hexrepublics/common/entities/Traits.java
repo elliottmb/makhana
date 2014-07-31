@@ -336,11 +336,12 @@ public class Traits
 	public static Vector3f getSpatialPosition( int tileX, int tileY, byte position, TerrainQuad terrain, float initalRotation,
 			float heightAdjustment )
 	{
-		Vector3f centerPoint = WorldFactory.createCenterPoint( 257, 10f, tileX + 1, tileY + 1 );
+		Vector3f centerPoint = WorldFactory.createCenterPoint( terrain.getTerrainSize( ), ( terrain.getTerrainSize( ) - 1 ) / 256 * 10f,
+				tileX + 1, tileY + 1 );
 
 		float angle = 2 * FastMath.PI / 6 * position + initalRotation;
-		float x = centerPoint.x + 7f * FastMath.cos( angle );
-		float z = centerPoint.z + 7f * FastMath.sin( angle );
+		float x = centerPoint.x + 24f * FastMath.cos( angle );
+		float z = centerPoint.z + 24f * FastMath.sin( angle );
 		float y = 3;
 
 		if ( !Float.isNaN( terrain.getHeight( new Vector2f( x, z ) ) ) )
