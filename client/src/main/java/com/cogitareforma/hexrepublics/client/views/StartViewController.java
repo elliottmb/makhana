@@ -58,6 +58,16 @@ public class StartViewController extends GeneralController implements KeyInputHa
 		} );
 	}
 
+	public void gotoSinglePlayer( )
+	{
+		NiftyFactory.createSinglePlayerLobby( getApp( ).getNifty( ) );
+		gotoScreen( "singlePlayerLobby", true, true, true, null, ( ) ->
+		{
+			getApp( ).getAudioRenderer( ).stopSource( startMusic );
+			return null;
+		} );
+	}
+
 	/**
 	 * Passes in main app and creates login screen.
 	 */

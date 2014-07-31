@@ -40,7 +40,6 @@ import com.jme3.app.Application;
 import com.jme3.app.state.AppState;
 import com.jme3.app.state.AppStateManager;
 import com.jme3.math.Vector3f;
-import com.jme3.renderer.Camera;
 import com.simsilica.es.ComponentFilter;
 import com.simsilica.es.Entity;
 import com.simsilica.es.EntityId;
@@ -248,7 +247,7 @@ public class TileViewController extends GeneralPlayingController
 					{
 						buildables.add( "Build Crossbowman" );
 					}
-					if ( Traits.countBuildings( entityData, locationSet ) == 6 )
+					if ( Traits.countBuildings( entityData, locationSet ) == 6 && hasSameBuildings( ) )
 					{
 						buildables.add( "Build Krieger" );
 					}
@@ -280,6 +279,16 @@ public class TileViewController extends GeneralPlayingController
 		{
 			justUpdated = false;
 		}
+	}
+
+	public boolean hasSameBuildings( )
+	{
+		// TODO
+		for ( Entity e : locationSet )
+		{
+
+		}
+		return false;
 	}
 
 	public Pair< Integer, Integer > getCoords( )
