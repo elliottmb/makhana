@@ -14,9 +14,11 @@ import com.jme3.app.state.AppStateManager;
 import com.simsilica.es.EntityId;
 import com.simsilica.es.client.RemoteEntityData;
 
+import de.lessvoid.nifty.Nifty;
 import de.lessvoid.nifty.NiftyEventSubscriber;
 import de.lessvoid.nifty.controls.Chat;
 import de.lessvoid.nifty.controls.ChatTextSendEvent;
+import de.lessvoid.nifty.controls.DropDown;
 import de.lessvoid.nifty.controls.Label;
 import de.lessvoid.nifty.screen.Screen;
 
@@ -27,19 +29,27 @@ public class LobbyViewController extends GeneralPlayingController
 
 	private Pair< Date, Boolean > lastMessage;
 	private Chat chat;
+	private DropDown< String > AIDropDown;
+	private DropDown< String > worldSize;
+	private DropDown< String > maxTurns;
 	float updateLimiter = 0;
 	private Screen players;
+	private Nifty nifty;
 
 	public void back( )
 	{
 		exitToNetwork( );
 	}
 
+	@SuppressWarnings( "unchecked" )
 	public void initialize( AppStateManager stateManager, Application app )
 	{
 		setScreenId( "lobby" );
 		super.initialize( stateManager, app );
-
+		nifty = getApp( ).getNifty( );
+		this.AIDropDown = nifty.getScreen( "lobby" ).findNiftyControl( "AIOptions", DropDown.class );
+		this.worldSize = nifty.getScreen( "lobby" ).findNiftyControl( "worldSizeOptions", DropDown.class );
+		this.maxTurns = nifty.getScreen( "lobby" ).findNiftyControl( "maxTurnssOptions", DropDown.class );
 		players = getApp( ).getNifty( ).getCurrentScreen( );
 		logger.log( Level.INFO, "Initialised " + this.getClass( ) );
 		chat = getApp( ).getNifty( ).getCurrentScreen( ).findNiftyControl( "lobbyChat", Chat.class );

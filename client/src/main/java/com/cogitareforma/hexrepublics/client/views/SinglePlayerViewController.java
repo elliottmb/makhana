@@ -7,6 +7,9 @@ import com.cogitareforma.hexrepublics.client.util.NiftyFactory;
 import com.jme3.app.Application;
 import com.jme3.app.state.AppStateManager;
 
+import de.lessvoid.nifty.Nifty;
+import de.lessvoid.nifty.controls.DropDown;
+
 public class SinglePlayerViewController extends GeneralPlayingController
 {
 	/**
@@ -14,10 +17,20 @@ public class SinglePlayerViewController extends GeneralPlayingController
 	 */
 	private final static Logger logger = Logger.getLogger( SinglePlayerViewController.class.getName( ) );
 
+	private Nifty nifty;
+	private DropDown< String > AIDropDown;
+	private DropDown< String > worldSize;
+	private DropDown< String > maxTurns;
+
+	@SuppressWarnings( "unchecked" )
 	public void initialize( AppStateManager stateManager, Application app )
 	{
 		setScreenId( "singlePlayerLobby" );
 		super.initialize( stateManager, app );
+		this.nifty = getApp( ).getNifty( );
+		this.AIDropDown = nifty.getScreen( "singlePlayerLobby" ).findNiftyControl( "AIOptions", DropDown.class );
+		this.worldSize = nifty.getScreen( "singlePlayerLobby" ).findNiftyControl( "worldSizeOptions", DropDown.class );
+		this.maxTurns = nifty.getScreen( "singlePlayerLobby" ).findNiftyControl( "maxTurnssOptions", DropDown.class );
 		startOfflineGameserver( );
 	}
 

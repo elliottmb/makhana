@@ -96,7 +96,7 @@ public class NiftyFactory
 												alignCenter( );
 												valignCenter( );
 												visibleToMouse( true );
-												interactOnClick( "back()" ); // TODO
+												interactOnClick( "back()" ); 
 											}
 										} );
 									}
@@ -143,7 +143,7 @@ public class NiftyFactory
 										panel( new PanelBuilder( "gameOptions" )
 										{
 											{
-												childLayoutHorizontal( );
+												childLayoutVertical( );
 												style( "nifty-panel-inset-beige" );
 												// TODO TODO TODO
 												// Options for world size,
@@ -152,6 +152,65 @@ public class NiftyFactory
 												// game lobby. Move names
 												// vertical and options on right
 												// side.
+												panel( new PanelBuilder( "singleOptionsWorldSize" )
+												{
+													{
+														childLayoutHorizontal( );
+														control( new LabelBuilder( "labelWorldSize", "World Size: " )
+														{
+															{
+																textHAlignLeft( );
+																width( "25%" );
+															}
+														} );
+														control( new DropDownBuilder( "worldSizeOptions" )
+														{
+															{
+
+															}
+														} );
+													}
+												} );
+
+												panel( new PanelBuilder( "singleOptionsAI" )
+												{
+													{
+														childLayoutHorizontal( );
+														control( new LabelBuilder( "labelAICount", "Number of AI: " )
+														{
+															{
+																textHAlignLeft( );
+																width( "25%" );
+															}
+														} );
+														control( new DropDownBuilder( "AIOptions" )
+														{
+															{
+
+															}
+														} );
+													}
+												} );
+
+												panel( new PanelBuilder( "SingleOptionsMaxTurns" )
+												{
+													{
+														childLayoutHorizontal( );
+														control( new LabelBuilder( "labelMaxTurns", "Max Turns: " )
+														{
+															{
+																textHAlignLeft( );
+																width( "25%" );
+															}
+														} );
+														control( new DropDownBuilder( "maxTurnssOptions" )
+														{
+															{
+
+															}
+														} );
+													}
+												} );
 											}
 										} );
 									}
@@ -411,7 +470,7 @@ public class NiftyFactory
 										panel( new PanelBuilder( "lobbyButtons" )
 										{
 											{
-												childLayoutHorizontal( );
+												childLayoutVertical( );
 												style( "nifty-panel-inset-beige" );
 												width( "100%" );
 
@@ -423,6 +482,65 @@ public class NiftyFactory
 														valignCenter( );
 														visibleToMouse( true );
 														interactOnClick( "readyUp()" );
+													}
+												} );
+												panel( new PanelBuilder( "optionsWorldSize" )
+												{
+													{
+														childLayoutHorizontal( );
+														control( new LabelBuilder( "labelWorldSize", "World Size: " )
+														{
+															{
+																textHAlignLeft( );
+																width( "25%" );
+															}
+														} );
+														control( new DropDownBuilder( "worldSizeOptions" )
+														{
+															{
+
+															}
+														} );
+													}
+												} );
+
+												panel( new PanelBuilder( "optionsAI" )
+												{
+													{
+														childLayoutHorizontal( );
+														control( new LabelBuilder( "labelAICount", "Number of AI: " )
+														{
+															{
+																textHAlignLeft( );
+																width( "25%" );
+															}
+														} );
+														control( new DropDownBuilder( "AIOptions" )
+														{
+															{
+
+															}
+														} );
+													}
+												} );
+
+												panel( new PanelBuilder( "optionsMaxTurns" )
+												{
+													{
+														childLayoutHorizontal( );
+														control( new LabelBuilder( "labelMaxTurns", "Max Turns: " )
+														{
+															{
+																textHAlignLeft( );
+																width( "25%" );
+															}
+														} );
+														control( new DropDownBuilder( "maxTurnsOptions" )
+														{
+															{
+
+															}
+														} );
 													}
 												} );
 
@@ -2176,10 +2294,6 @@ public class NiftyFactory
 				} );
 			}
 		}.build( nifty ) );
-
-		// TODO popup of move buttons? Shows unit in middle, buttons in hexgon
-		// pattern with move two on them.
-		// TODO if not currently moving or being built.
 		new PopupBuilder( "move" )
 		{
 			{
