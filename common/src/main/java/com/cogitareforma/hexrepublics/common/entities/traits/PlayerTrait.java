@@ -11,25 +11,27 @@ public class PlayerTrait implements EntityComponent
 	private Account account;
 	private int losses;
 	private int wins;
+	private boolean ready;
 
 	/**
 	 * Used by Serializer
 	 */
 	public PlayerTrait( )
 	{
-		this( null, 0, 0 );
+		this( null, 0, 0, false );
 	}
 
 	public PlayerTrait( Account account )
 	{
-		this( account, 0, 0 );
+		this( account, 0, 0, false );
 	}
 
-	public PlayerTrait( Account account, int wins, int losses )
+	public PlayerTrait( Account account, int wins, int losses, boolean isReady )
 	{
 		this.account = account;
 		this.wins = wins;
 		this.losses = losses;
+		this.ready = isReady;
 	}
 
 	public Account getAccount( )
@@ -56,6 +58,14 @@ public class PlayerTrait implements EntityComponent
 	@Override
 	public String toString( )
 	{
-		return "PlayerTrait[" + account + ", wins: " + wins + ", losses: " + losses + "]";
+		return "PlayerTrait[" + account + ", wins: " + wins + ", losses: " + losses + ", ready: " + ready + "]";
+	}
+
+	/**
+	 * @return the ready
+	 */
+	public boolean isReady( )
+	{
+		return ready;
 	}
 }

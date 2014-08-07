@@ -12,6 +12,7 @@ import com.cogitareforma.hexrepublics.common.entities.traits.LocationTrait;
 import com.cogitareforma.hexrepublics.common.entities.traits.TileTrait;
 import com.cogitareforma.hexrepublics.common.net.msg.EntityCreationRequest;
 import com.cogitareforma.hexrepublics.common.net.msg.EntityDeletionRequest;
+import com.cogitareforma.hexrepublics.common.net.msg.ReadyUpRequest;
 import com.simsilica.es.ComponentFilter;
 import com.simsilica.es.EntityComponent;
 import com.simsilica.es.EntityId;
@@ -83,6 +84,37 @@ public class ConsoleViewController extends GeneralController
 			}
 		};
 		// Make args be a trait type
+		ConsoleCommand readyUpTester = ( String[ ] arg0 ) ->
+		{
+			if ( getApp( ).getGameConnManager( ).isConnected( ) )
+			{
+				if ( arg0.length >= 2 )
+				{
+					if ( "t".equalsIgnoreCase( arg0[ 1 ] ) || "true".equalsIgnoreCase( arg0[ 1 ] ) )
+					{
+						getApp( ).getGameConnManager( ).send( new ReadyUpRequest( true ) );
+					}
+					else if ( "f".equalsIgnoreCase( arg0[ 1 ] ) || "false".equalsIgnoreCase( arg0[ 1 ] ) )
+					{
+						getApp( ).getGameConnManager( ).send( new ReadyUpRequest( false ) );
+					}
+					else
+					{
+						console.output( "Nigga what?" );
+					}
+
+				}
+				else
+				{
+					console.output( "Not enough arguments." );
+				}
+
+			}
+			else
+			{
+				console.output( "Could not execute command, you are not connected to a game server" );
+			}
+		};
 
 		ConsoleCommand entCreate = ( String[ ] arg0 ) ->
 		{
@@ -236,6 +268,8 @@ public class ConsoleViewController extends GeneralController
 		consoleCommands.registerCommand( "entdelete", entDelete );
 		consoleCommands.registerCommand( "buyLand", buyLand );
 		consoleCommands.registerCommand( "connect", connect );
+		consoleCommands.registerCommand( "setready", readyUpTester );
+		consoleCommands.registerCommand( "sr", readyUpTester );
 		consoleCommands.enableCommandCompletion( true );
 	}
 

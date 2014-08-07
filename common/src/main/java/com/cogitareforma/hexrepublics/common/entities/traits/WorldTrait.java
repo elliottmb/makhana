@@ -12,17 +12,19 @@ import com.simsilica.es.EntityComponent;
 public class WorldTrait implements EntityComponent
 {
 	private int currentTurn;
+	private boolean playing;
 	private byte seed;
 
 	public WorldTrait( )
 	{
-		this( 0, ( byte ) ( System.currentTimeMillis( ) % 255 - 127 ) );
+		this( 0, ( byte ) ( System.currentTimeMillis( ) % 255 - 127 ), false );
 	}
 
-	public WorldTrait( int currentTurn, byte seed )
+	public WorldTrait( int currentTurn, byte seed, boolean isPlayer )
 	{
 		this.currentTurn = currentTurn;
 		this.seed = seed;
+		this.playing = isPlayer;
 	}
 
 	/**
@@ -45,6 +47,14 @@ public class WorldTrait implements EntityComponent
 	public String toString( )
 	{
 		return "WorldTrait[" + currentTurn + "]";
+	}
+
+	/**
+	 * @return the playing
+	 */
+	public boolean isPlaying( )
+	{
+		return playing;
 	}
 
 }
