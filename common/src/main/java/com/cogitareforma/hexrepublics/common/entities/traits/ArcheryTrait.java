@@ -1,16 +1,35 @@
 package com.cogitareforma.hexrepublics.common.entities.traits;
 
+import com.jme3.asset.AssetManager;
+import com.jme3.material.Material;
 import com.jme3.network.serializing.Serializable;
+import com.jme3.scene.Spatial;
 
 @Serializable
 public class ArcheryTrait extends StaticTrait
 {
+	// TODO
+	private static Material material;
+
 	/**
 	 * Used by Serializer
 	 */
 	public ArcheryTrait( )
 	{
 
+	}
+
+	@Override
+	public Spatial getSpatial( AssetManager assetManager )
+	{
+		return assetManager.loadModel( "Materials/archery.obj" );
+	}
+
+	@Override
+	public Material getMaterial( AssetManager assetManager )
+	{
+		// TODO
+		return null;
 	}
 
 }

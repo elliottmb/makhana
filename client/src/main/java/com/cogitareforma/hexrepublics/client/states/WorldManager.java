@@ -14,6 +14,7 @@ import com.cogitareforma.hexrepublics.common.entities.traits.HealthTrait;
 import com.cogitareforma.hexrepublics.common.entities.traits.LocationTrait;
 import com.cogitareforma.hexrepublics.common.entities.traits.MoveableTrait;
 import com.cogitareforma.hexrepublics.common.entities.traits.StablesTrait;
+import com.cogitareforma.hexrepublics.common.entities.traits.StaticTrait;
 import com.cogitareforma.hexrepublics.common.entities.traits.TileTrait;
 import com.cogitareforma.hexrepublics.common.util.WorldFactory;
 import com.jme3.app.state.AbstractAppState;
@@ -28,6 +29,7 @@ import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.Camera;
 import com.jme3.renderer.ViewPort;
+import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.renderer.queue.RenderQueue.Bucket;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
@@ -108,8 +110,8 @@ public class WorldManager extends AbstractAppState
 
 		miniCam.setParallelProjection( true );
 		miniCam.setFrustumPerspective( 10, ( float ) this.app.getContext( ).getSettings( ).getWidth( )
-				/ this.app.getContext( ).getSettings( ).getHeight( ), 1, 600 );
-		miniCam.setLocation( new Vector3f( 0, 500f, 0 ) );
+				/ this.app.getContext( ).getSettings( ).getHeight( ), 1500, 2100 );
+		miniCam.setLocation( new Vector3f( 0, 2000f, 0 ) );
 		miniCam.lookAt( new Vector3f( 0, 0, -1f ), Vector3f.UNIT_Y );
 		miniCam.update( );
 
@@ -213,46 +215,38 @@ public class WorldManager extends AbstractAppState
 	public void createBuilding( EntityData entityData, EntityId id, TerrainQuad terrain, LocationTrait locationTrait, TileTrait tile,
 			CreatedBy createdBy )
 	{
-
-		if ( entityData.getComponent( id, StablesTrait.class ) != null )
+		for ( Class< ? extends EntityComponent > c : Traits.buildingTraits )
 		{
-			Spatial build = assetManager.loadModel( "Materials/stablePrototype.obj" );
+			if ( entityData.getComponent( id, c ) != null )
+			{
+				StaticTrait st = ( StaticTrait ) entityData.getComponent( id, c );
 
-			build.setMaterial( matBuilding );
-			// build.setLocalScale( .5f );
-			build.setLocalRotation( new Quaternion( ).fromAngleAxis( 1.04719755f + ( locationTrait.getPosition( ) * 0.523598776f ),
-					Vector3f.UNIT_Y ) );
-			build.setLocalTranslation( Traits.getSpatialPosition( tile.getX( ), tile.getY( ), locationTrait.getPosition( ), terrain,
-					FastMath.PI / 6, .25f ) );
+				Spatial building = st.getSpatial( assetManager );
+				if ( building == null )
+				{
+					building = new Geometry( "Box" + id.toString( ), new Box( 8, 8, 8 ) );
+				}
 
-			buildings.put( id, build );
-			buildingRoot.attachChild( build );
-		}
-		else if ( entityData.getComponent( id, ArcheryTrait.class ) != null )
-		{
-			Spatial build = assetManager.loadModel( "Materials/archery.obj" );
+				Material mat = st.getMaterial( assetManager );
+				if ( mat != null )
+				{
+					building.setMaterial( mat );
+				}
+				else
+				{
+					building.setMaterial( matBuilding );
+				}
 
-			build.setMaterial( matBuilding );
-			// build.setLocalScale( .4f );
-			build.setLocalRotation( new Quaternion( ).fromAngleAxis( 1.04719755f + ( locationTrait.getPosition( ) * 0.523598776f ),
-					Vector3f.UNIT_Y ) );
-			build.setLocalTranslation( Traits.getSpatialPosition( tile.getX( ), tile.getY( ), locationTrait.getPosition( ), terrain,
-					FastMath.PI / 6, .25f ) );
+				building.setShadowMode( RenderQueue.ShadowMode.CastAndReceive );
 
-			buildings.put( id, build );
-			buildingRoot.attachChild( build );
-		}
-		else
-		{
-
-			Box b = new Box( 1, 1, 1 );
-			Geometry geo = new Geometry( "Box", b );
-			geo.setMaterial( matBuilding );
-			geo.setLocalTranslation( Traits.getSpatialPosition( tile.getX( ), tile.getY( ), locationTrait.getPosition( ), terrain,
-					FastMath.PI / 6, 1.5f ) );
-
-			buildings.put( id, geo );
-			buildingRoot.attachChild( geo );
+				building.setLocalRotation( new Quaternion( ).fromAngleAxis( 1.04719755f + ( locationTrait.getPosition( ) * 0.523598776f ),
+						Vector3f.UNIT_Y ) );
+				building.setLocalTranslation( Traits.getSpatialPosition( tile.getX( ), tile.getY( ), locationTrait.getPosition( ), terrain,
+						FastMath.PI / 6, .25f ) );
+				buildings.put( id, building );
+				buildingRoot.attachChild( building );
+				break;
+			}
 		}
 	}
 

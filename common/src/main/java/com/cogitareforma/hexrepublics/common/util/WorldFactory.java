@@ -82,7 +82,7 @@ public class WorldFactory
 
 		DirectionalLight dl = new DirectionalLight( );
 		dl.setColor( ColorRGBA.White.mult( 0.75f ) );
-		dl.setDirection( new Vector3f( 2, -4, 4 ) );
+		dl.setDirection( new Vector3f( -8, -16, -16 ) );
 		root.addLight( dl );
 
 		final int SHADOWMAP_SIZE = 1024;
@@ -151,7 +151,7 @@ public class WorldFactory
 
 		logger.log( Level.INFO, "Constructing the terrain mesh" );
 		TerrainQuad terrain = null;
-		int patchSize = 65;
+		int patchSize = 129;
 		terrain = new TerrainQuad( "terrain", patchSize, 1025, heightMap.getHeightMap( ) );
 
 		terrain.setLocalTranslation( 0, -3, 0 );
