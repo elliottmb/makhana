@@ -22,6 +22,13 @@ public class SinglePlayerViewController extends GeneralPlayingController
 	private DropDown< String > worldSize;
 	private DropDown< String > maxTurns;
 
+	public void back( )
+	{
+		// TODO kill "gameserver"
+		NiftyFactory.createStartView( getApp( ).getNifty( ) );
+		gotoScreen( "start", true, true, true, null, null );
+	}
+
 	@SuppressWarnings( "unchecked" )
 	public void initialize( AppStateManager stateManager, Application app )
 	{
@@ -34,16 +41,14 @@ public class SinglePlayerViewController extends GeneralPlayingController
 		startOfflineGameserver( );
 	}
 
-	public void back( )
+	public void onEndScreen( )
 	{
-		// TODO kill "gameserver"
-		NiftyFactory.createStartView( getApp( ).getNifty( ) );
-		gotoScreen( "start", true, true, true, null, null );
+		logger.log( Level.INFO, "Start Screen Stopped" );
 	}
 
-	public void startOfflineGameserver( )
+	public void onStartScreen( )
 	{
-		// TODO create offline gameserver
+		logger.log( Level.INFO, "Start Screen Started" );
 	}
 
 	@Override
@@ -64,13 +69,8 @@ public class SinglePlayerViewController extends GeneralPlayingController
 		// gotoScreen( "loading", true, true, true, null, null );
 	}
 
-	public void onEndScreen( )
+	public void startOfflineGameserver( )
 	{
-		logger.log( Level.INFO, "Start Screen Stopped" );
-	}
-
-	public void onStartScreen( )
-	{
-		logger.log( Level.INFO, "Start Screen Started" );
+		// TODO create offline gameserver
 	}
 }

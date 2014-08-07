@@ -1,6 +1,5 @@
 package com.cogitareforma.hexrepublics.common.entities.traits;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -16,8 +15,8 @@ import com.simsilica.es.EntityComponent;
 @Serializable
 public class ActionTrait implements EntityComponent
 {
-	private Date startTime;
-	private long duration;
+	private int startTurn;
+	private int duration;
 	private ActionType type;
 	private HashMap< String, Object > data;
 
@@ -38,13 +37,13 @@ public class ActionTrait implements EntityComponent
 	 * @param duration
 	 *            how long the action should last (milliseconds)
 	 */
-	public ActionTrait( Date startTime, long duration, ActionType type, Map< String, Object > data ) throws IllegalArgumentException
+	public ActionTrait( int startTurn, int duration, ActionType type, Map< String, Object > data ) throws IllegalArgumentException
 	{
 		/*
 		 * We need a valid type and we need the data for that type, and we need
 		 * our start and duration to be valid
 		 */
-		if ( type == null || data == null || startTime == null || duration <= 0 )
+		if ( type == null || data == null || startTurn < 0 || duration <= 0 )
 		{
 			throw new IllegalArgumentException( );
 		}
@@ -59,7 +58,7 @@ public class ActionTrait implements EntityComponent
 			throw new IllegalArgumentException( );
 		}
 
-		setStartTime( startTime );
+		setStartTurn( startTurn );
 		setDuration( duration );
 		setType( type );
 		/*
@@ -84,7 +83,7 @@ public class ActionTrait implements EntityComponent
 	 * 
 	 * @return duration of action in milliseconds
 	 */
-	public long getDuration( )
+	public int getDuration( )
 	{
 		return duration;
 	}
@@ -94,9 +93,9 @@ public class ActionTrait implements EntityComponent
 	 * 
 	 * @return the start time of the action
 	 */
-	public Date getStartTime( )
+	public int getStartTurn( )
 	{
-		return startTime;
+		return startTurn;
 	}
 
 	/**
@@ -120,7 +119,7 @@ public class ActionTrait implements EntityComponent
 	 * @param duration
 	 *            the duration to set
 	 */
-	private void setDuration( long duration )
+	private void setDuration( int duration )
 	{
 		this.duration = duration;
 	}
@@ -129,9 +128,9 @@ public class ActionTrait implements EntityComponent
 	 * @param startTime
 	 *            the startTime to set
 	 */
-	private void setStartTime( Date startTime )
+	private void setStartTurn( int startTurn )
 	{
-		this.startTime = startTime;
+		this.startTurn = startTurn;
 	}
 
 	/**
@@ -146,7 +145,7 @@ public class ActionTrait implements EntityComponent
 	@Override
 	public String toString( )
 	{
-		return "ActionTrait[" + toVerb( ) + ": " + getStartTime( ) + ", " + getDuration( ) + "]";
+		return "ActionTrait[" + toVerb( ) + ": " + getStartTurn( ) + ", " + getDuration( ) + "]";
 	}
 
 	public String toVerb( )

@@ -41,188 +41,6 @@ import de.lessvoid.nifty.controls.textfield.builder.TextFieldBuilder;
  */
 public class NiftyFactory
 {
-	public static void createSinglePlayerLobby( Nifty nifty )
-	{
-		nifty.addScreen( "singlePlayerLobby", new ScreenBuilder( "singlePlayerLobby" )
-		{
-			{
-				controller( new SinglePlayerViewController( ) );
-				layer( new LayerBuilder( "" )
-				{
-					{
-						childLayoutVertical( );
-						backgroundColor( "#838796ff" );
-
-						panel( new PanelBuilder( "singleHeader" )
-						{
-							{
-								width( "100%" );
-								height( "32px" );
-								valignBottom( );
-								childLayoutHorizontal( );
-								backgroundColor( "#616374ff" );
-								paddingLeft( "32px" );
-								paddingRight( "32px" );
-
-								text( new TextBuilder( "singleTitle" )
-								{
-									{
-										width( "50%" );
-										height( "100%" );
-										text( "Single Player" );
-										textHAlignLeft( );
-										textVAlignCenter( );
-										font( "Interface/Fonts/Default.fnt" );
-
-									}
-								} );
-
-								panel( new PanelBuilder( "backButton" )
-								{
-									{
-										width( "50%" );
-										childLayoutHorizontal( );
-
-										panel( new PanelBuilder( "spacer" )
-										{
-											{
-												width( "*" );
-											}
-										} );
-
-										control( new ButtonBuilder( "Back", "Back" )
-										{
-											{
-												alignCenter( );
-												valignCenter( );
-												visibleToMouse( true );
-												interactOnClick( "back()" ); 
-											}
-										} );
-									}
-								} );
-							}
-						} );
-
-						panel( new PanelBuilder( "mainPanel" )
-						{
-							{
-								width( "66%" );
-								height( "100%" );
-								padding( "32px" );
-								alignCenter( );
-								valignCenter( );
-								childLayoutVertical( );
-
-								panel( new PanelBuilder( "" )
-								{
-									{
-										childLayoutVertical( );
-										width( "100%" );
-										style( "nifty-panel-brown" );
-
-										panel( new PanelBuilder( "gameControls" )
-										{
-											{
-												childLayoutHorizontal( );
-												width( "100%" );
-												style( "nifty-panel-inset-beige" );
-
-												control( new ButtonBuilder( "start", "Start" )
-												{
-
-													{
-														alignCenter( );
-														valignCenter( );
-														visibleToMouse( true );
-														interactOnClick( "start()" );
-													}
-												} );
-											}
-										} );
-										panel( new PanelBuilder( "gameOptions" )
-										{
-											{
-												childLayoutVertical( );
-												style( "nifty-panel-inset-beige" );
-												// TODO TODO TODO
-												// Options for world size,
-												// number of AI and max turns
-												// Need same for multiplayer
-												// game lobby. Move names
-												// vertical and options on right
-												// side.
-												panel( new PanelBuilder( "singleOptionsWorldSize" )
-												{
-													{
-														childLayoutHorizontal( );
-														control( new LabelBuilder( "labelWorldSize", "World Size: " )
-														{
-															{
-																textHAlignLeft( );
-																width( "25%" );
-															}
-														} );
-														control( new DropDownBuilder( "worldSizeOptions" )
-														{
-															{
-
-															}
-														} );
-													}
-												} );
-
-												panel( new PanelBuilder( "singleOptionsAI" )
-												{
-													{
-														childLayoutHorizontal( );
-														control( new LabelBuilder( "labelAICount", "Number of AI: " )
-														{
-															{
-																textHAlignLeft( );
-																width( "25%" );
-															}
-														} );
-														control( new DropDownBuilder( "AIOptions" )
-														{
-															{
-
-															}
-														} );
-													}
-												} );
-
-												panel( new PanelBuilder( "SingleOptionsMaxTurns" )
-												{
-													{
-														childLayoutHorizontal( );
-														control( new LabelBuilder( "labelMaxTurns", "Max Turns: " )
-														{
-															{
-																textHAlignLeft( );
-																width( "25%" );
-															}
-														} );
-														control( new DropDownBuilder( "maxTurnssOptions" )
-														{
-															{
-
-															}
-														} );
-													}
-												} );
-											}
-										} );
-									}
-								} );
-							}
-						} );
-					}
-				} );
-			}
-		}.build( nifty ) );
-	}
-
 	public static void createConsole( Nifty nifty )
 	{
 		nifty.addScreen( "consoleScreen", new ScreenBuilder( "consoleScreen" )
@@ -1897,6 +1715,188 @@ public class NiftyFactory
 									}
 								} );
 
+							}
+						} );
+					}
+				} );
+			}
+		}.build( nifty ) );
+	}
+
+	public static void createSinglePlayerLobby( Nifty nifty )
+	{
+		nifty.addScreen( "singlePlayerLobby", new ScreenBuilder( "singlePlayerLobby" )
+		{
+			{
+				controller( new SinglePlayerViewController( ) );
+				layer( new LayerBuilder( "" )
+				{
+					{
+						childLayoutVertical( );
+						backgroundColor( "#838796ff" );
+
+						panel( new PanelBuilder( "singleHeader" )
+						{
+							{
+								width( "100%" );
+								height( "32px" );
+								valignBottom( );
+								childLayoutHorizontal( );
+								backgroundColor( "#616374ff" );
+								paddingLeft( "32px" );
+								paddingRight( "32px" );
+
+								text( new TextBuilder( "singleTitle" )
+								{
+									{
+										width( "50%" );
+										height( "100%" );
+										text( "Single Player" );
+										textHAlignLeft( );
+										textVAlignCenter( );
+										font( "Interface/Fonts/Default.fnt" );
+
+									}
+								} );
+
+								panel( new PanelBuilder( "backButton" )
+								{
+									{
+										width( "50%" );
+										childLayoutHorizontal( );
+
+										panel( new PanelBuilder( "spacer" )
+										{
+											{
+												width( "*" );
+											}
+										} );
+
+										control( new ButtonBuilder( "Back", "Back" )
+										{
+											{
+												alignCenter( );
+												valignCenter( );
+												visibleToMouse( true );
+												interactOnClick( "back()" );
+											}
+										} );
+									}
+								} );
+							}
+						} );
+
+						panel( new PanelBuilder( "mainPanel" )
+						{
+							{
+								width( "66%" );
+								height( "100%" );
+								padding( "32px" );
+								alignCenter( );
+								valignCenter( );
+								childLayoutVertical( );
+
+								panel( new PanelBuilder( "" )
+								{
+									{
+										childLayoutVertical( );
+										width( "100%" );
+										style( "nifty-panel-brown" );
+
+										panel( new PanelBuilder( "gameControls" )
+										{
+											{
+												childLayoutHorizontal( );
+												width( "100%" );
+												style( "nifty-panel-inset-beige" );
+
+												control( new ButtonBuilder( "start", "Start" )
+												{
+
+													{
+														alignCenter( );
+														valignCenter( );
+														visibleToMouse( true );
+														interactOnClick( "start()" );
+													}
+												} );
+											}
+										} );
+										panel( new PanelBuilder( "gameOptions" )
+										{
+											{
+												childLayoutVertical( );
+												style( "nifty-panel-inset-beige" );
+												// TODO TODO TODO
+												// Options for world size,
+												// number of AI and max turns
+												// Need same for multiplayer
+												// game lobby. Move names
+												// vertical and options on right
+												// side.
+												panel( new PanelBuilder( "singleOptionsWorldSize" )
+												{
+													{
+														childLayoutHorizontal( );
+														control( new LabelBuilder( "labelWorldSize", "World Size: " )
+														{
+															{
+																textHAlignLeft( );
+																width( "25%" );
+															}
+														} );
+														control( new DropDownBuilder( "worldSizeOptions" )
+														{
+															{
+
+															}
+														} );
+													}
+												} );
+
+												panel( new PanelBuilder( "singleOptionsAI" )
+												{
+													{
+														childLayoutHorizontal( );
+														control( new LabelBuilder( "labelAICount", "Number of AI: " )
+														{
+															{
+																textHAlignLeft( );
+																width( "25%" );
+															}
+														} );
+														control( new DropDownBuilder( "AIOptions" )
+														{
+															{
+
+															}
+														} );
+													}
+												} );
+
+												panel( new PanelBuilder( "SingleOptionsMaxTurns" )
+												{
+													{
+														childLayoutHorizontal( );
+														control( new LabelBuilder( "labelMaxTurns", "Max Turns: " )
+														{
+															{
+																textHAlignLeft( );
+																width( "25%" );
+															}
+														} );
+														control( new DropDownBuilder( "maxTurnssOptions" )
+														{
+															{
+
+															}
+														} );
+													}
+												} );
+											}
+										} );
+									}
+								} );
 							}
 						} );
 					}

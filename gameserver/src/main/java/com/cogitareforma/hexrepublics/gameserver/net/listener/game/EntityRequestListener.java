@@ -11,6 +11,7 @@ import com.cogitareforma.hexrepublics.common.entities.traits.LocationTrait;
 import com.cogitareforma.hexrepublics.common.entities.traits.MoveableTrait;
 import com.cogitareforma.hexrepublics.common.entities.traits.PlayerTrait;
 import com.cogitareforma.hexrepublics.common.entities.traits.StaticTrait;
+import com.cogitareforma.hexrepublics.common.entities.traits.WorldTrait;
 import com.cogitareforma.hexrepublics.common.net.msg.EntityActionRequest;
 import com.cogitareforma.hexrepublics.common.net.msg.EntityCreationRequest;
 import com.cogitareforma.hexrepublics.common.net.msg.EntityDeletionRequest;
@@ -115,6 +116,7 @@ public class EntityRequestListener implements MessageListener< HostedConnection 
 									System.out.println( String.format( "Unit( %s ): %d, Building( %s ): %d", isUnit, unitCount, isBuilding,
 											buildingCount ) );
 
+									WorldTrait wt = entityData.getComponent( manager.getTheWorld( ), WorldTrait.class );
 									if ( !isBuilding )
 									{
 										if ( unitCount < 6 )
@@ -130,7 +132,8 @@ public class EntityRequestListener implements MessageListener< HostedConnection 
 															targetIdSet ) ) );
 											entityData.setComponents( newEntityId, entityMsg.getComponents( ) );
 
-											Traits.entityParturition( entityData, newEntityId, entityMsg.getComponents( ) );
+											Traits.entityParturition( entityData, newEntityId, entityMsg.getComponents( ),
+													wt.getCurrentTurn( ) );
 
 											source.send( new EntityResponse( newEntityId, EntityCreationRequest.class.getSimpleName( )
 													+ entityData.getEntities( LocationTrait.class ).size( ), true ) );
@@ -148,7 +151,8 @@ public class EntityRequestListener implements MessageListener< HostedConnection 
 															targetIdSet ) ) );
 											entityData.setComponents( newEntityId, entityMsg.getComponents( ) );
 
-											Traits.entityParturition( entityData, newEntityId, entityMsg.getComponents( ) );
+											Traits.entityParturition( entityData, newEntityId, entityMsg.getComponents( ),
+													wt.getCurrentTurn( ) );
 
 											source.send( new EntityResponse( newEntityId, EntityCreationRequest.class.getSimpleName( )
 													+ entityData.getEntities( LocationTrait.class ).size( ), true ) );

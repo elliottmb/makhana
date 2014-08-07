@@ -94,9 +94,9 @@ public class GameServerManager extends ServerManager< GameServer >
 		buildTiles( 257, 10.0f );
 
 		logger.log( Level.INFO, "Constructing initial world state" );
-		theWorld = getEntityData( ).createEntity( );
+		setTheWorld( getEntityData( ).createEntity( ) );
 		byte[ ] randomBytes = RandomUtils.nextBytes( 3 );
-		getEntityData( ).setComponent( theWorld, new WorldTrait( 0, randomBytes[ RandomUtils.nextInt( 0, 3 ) ], false ) );
+		getEntityData( ).setComponent( getTheWorld( ), new WorldTrait( 0, randomBytes[ RandomUtils.nextInt( 0, 3 ) ], false ) );
 		advanceTurn = false;
 	}
 
@@ -365,13 +365,13 @@ public class GameServerManager extends ServerManager< GameServer >
 						}
 						if ( readyCount == playerEntities.size( ) )
 						{
-							WorldTrait wt = getEntityData( ).getComponent( theWorld, WorldTrait.class );
+							WorldTrait wt = getEntityData( ).getComponent( getTheWorld( ), WorldTrait.class );
 							if ( wt != null )
 							{
 								if ( !wt.isPlaying( ) )
 								{
 									WorldTrait newWt = new WorldTrait( wt.getCurrentTurn( ), wt.getSeed( ), true );
-									getEntityData( ).setComponent( theWorld, newWt );
+									getEntityData( ).setComponent( getTheWorld( ), newWt );
 								}
 								else
 								{
@@ -400,15 +400,18 @@ public class GameServerManager extends ServerManager< GameServer >
 					actingEntities.applyChanges( );
 					if ( advanceTurn )
 					{
+						WorldTrait wt = getEntityData( ).getComponent( getTheWorld( ), WorldTrait.class );
 						for ( Entity e : actingEntities )
 						{
 							ActionTrait at = e.get( ActionTrait.class );
 							if ( at != null )
 							{
-								double time = ( at.getStartTime( ).getTime( ) + at.getDuration( ) - new Date( ).getTime( ) ) / 60000.0;
-								if ( time <= 0 )
-								{
 
+								int turnsRemaining = ( at.getStartTurn( ) + at.getDuration( ) ) - wt.getCurrentTurn( );
+								System.out.println( at.getStartTurn( ) + " + " + at.getDuration( ) + " - " + wt.getCurrentTurn( ) + " = "
+										+ turnsRemaining );
+								if ( turnsRemaining <= 0 )
+								{
 									if ( at.getType( ).equals( ActionType.MOVE ) )
 									{
 										Map< String, Object > data = at.getData( );
@@ -597,11 +600,11 @@ public class GameServerManager extends ServerManager< GameServer >
 								}
 							}
 						}
-						WorldTrait wt = getEntityData( ).getComponent( theWorld, WorldTrait.class );
+
 						if ( wt != null )
 						{
 							WorldTrait newWt = new WorldTrait( wt.getCurrentTurn( ) + 1, wt.getSeed( ), true );
-							getEntityData( ).setComponent( theWorld, newWt );
+							getEntityData( ).setComponent( getTheWorld( ), newWt );
 						}
 						advanceTurn = false;
 					}
@@ -614,5 +617,22 @@ public class GameServerManager extends ServerManager< GameServer >
 			}
 			getEntityDataHostService( ).sendUpdates( );
 		}
+	}
+
+	/**
+	 * @return the theWorld
+	 */
+	public EntityId getTheWorld( )
+	{
+		return theWorld;
+	}
+
+	/**
+	 * @param theWorld
+	 *            the theWorld to set
+	 */
+	private void setTheWorld( EntityId theWorld )
+	{
+		this.theWorld = theWorld;
 	}
 }

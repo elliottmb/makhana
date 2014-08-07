@@ -22,6 +22,7 @@ import com.cogitareforma.hexrepublics.common.entities.traits.StaticTrait;
 import com.cogitareforma.hexrepublics.common.entities.traits.StrengthTrait;
 import com.cogitareforma.hexrepublics.common.entities.traits.TileTrait;
 import com.cogitareforma.hexrepublics.common.entities.traits.TypeTrait;
+import com.cogitareforma.hexrepublics.common.entities.traits.WorldTrait;
 import com.cogitareforma.hexrepublics.common.util.PackageUtils;
 import com.cogitareforma.hexrepublics.common.util.WorldFactory;
 import com.jme3.math.FastMath;
@@ -48,8 +49,7 @@ public class Traits
 	 */
 	private final static Logger logger = Logger.getLogger( Traits.class.getName( ) );
 
-	public static final int BASE_MOVEMENT_DURATION = 60000; // change back to
-															// 60000
+	public static final int BASE_MOVEMENT_DURATION = 6; // change back to 6
 
 	public static final float BASE_FABRICATING_TIME = 0.5f; // change back to
 															// 0.5f
@@ -139,7 +139,7 @@ public class Traits
 	 * @param components
 	 *            The given Components to consider when constructing the traits
 	 */
-	public static void entityParturition( EntityData entityData, EntityId id, EntityComponent[ ] components )
+	public static void entityParturition( EntityData entityData, EntityId id, EntityComponent[ ] components, int currentTurn )
 	{
 		float health = 0;
 		float strength = 0;
@@ -177,16 +177,19 @@ public class Traits
 			logger.log( Level.INFO, String.format( "Adding FabricatingTrait(%d) to entity %s", ( long ) ( complexity * 60000 ), id ) );
 
 			entityData.setComponent( id,
-					new ActionTrait( new Date( ), ( long ) ( complexity * 60000 ), ActionType.FABRICATING, Collections.emptyMap( ) ) );
+					new ActionTrait( currentTurn, ( int ) ( complexity * 6 ), ActionType.FABRICATING, Collections.emptyMap( ) ) );
 		}
 	}
 
-	public static Pair< String, Double > getActionRemainingTime( EntityData entityData, EntityId id )
+	public static Pair< String, Integer > getActionRemainingTurns( EntityData entityData, EntityId id, int currentTurn )
 	{
 		ActionTrait at = entityData.getComponent( id, ActionTrait.class );
 		if ( at != null )
 		{
-			double time = ( at.getStartTime( ).getTime( ) + at.getDuration( ) - new Date( ).getTime( ) ) / 60000.0;
+			// TODO:
+			System.out.println( at.getStartTurn( ) + " + " + at.getDuration( ) + " - " + currentTurn + " = "
+					+ ( ( at.getStartTurn( ) + at.getDuration( ) ) - currentTurn ) );
+			int time = ( at.getStartTurn( ) + at.getDuration( ) ) - currentTurn;
 			return Pair.of( at.toVerb( ), time );
 		}
 		return null;

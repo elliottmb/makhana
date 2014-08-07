@@ -5,8 +5,11 @@ import java.util.logging.Logger;
 
 import com.cogitareforma.hexrepublics.client.net.ClientGameConnManager;
 import com.cogitareforma.hexrepublics.client.net.ClientMasterConnManager;
+import com.cogitareforma.hexrepublics.client.states.EntityManager;
 import com.cogitareforma.hexrepublics.client.states.WorldManager;
 import com.cogitareforma.hexrepublics.client.util.NiftyFactory;
+import com.cogitareforma.hexrepublics.client.util.PlayerEntityListener;
+import com.cogitareforma.hexrepublics.common.entities.traits.PlayerTrait;
 import com.cogitareforma.hexrepublics.common.util.YamlConfig;
 import com.jme3.app.SimpleApplication;
 import com.jme3.app.state.AppState;
@@ -31,11 +34,6 @@ import de.lessvoid.nifty.Nifty;
  */
 public class ClientMain extends SimpleApplication
 {
-	/**
-	 * The logger for this class
-	 */
-	private final static Logger logger = Logger.getLogger( ClientMain.class.getName( ) );
-
 	public static void main( String[ ] args )
 	{
 		AppSettings settings = new AppSettings( true );
@@ -63,6 +61,11 @@ public class ClientMain extends SimpleApplication
 	}
 
 	/**
+	 * The logger for this class
+	 */
+	private final static Logger logger = Logger.getLogger( ClientMain.class.getName( ) );
+
+	/**
 	 * The Client's Nifty Display instance.
 	 */
 	private NiftyJmeDisplay niftyDisplay;
@@ -81,6 +84,8 @@ public class ClientMain extends SimpleApplication
 	 * The Client's world manager.
 	 */
 	private WorldManager worldManager;
+
+	private EntityManager entityManager;
 
 	/**
 	 * Name of screen that should be returned to after closing the console.
@@ -168,6 +173,14 @@ public class ClientMain extends SimpleApplication
 	public ActionListener getBaseActionListener( )
 	{
 		return baseActionListener;
+	}
+
+	/**
+	 * @return the entityManager
+	 */
+	public EntityManager getEntityManager( )
+	{
+		return entityManager;
 	}
 
 	/**
@@ -330,6 +343,15 @@ public class ClientMain extends SimpleApplication
 	}
 
 	/**
+	 * @param entityManager
+	 *            the entityManager to set
+	 */
+	private void setEntityManager( EntityManager entityManager )
+	{
+		this.entityManager = entityManager;
+	}
+
+	/**
 	 * @param niftyDisplay
 	 *            the niftyDisplay to set
 	 */
@@ -350,6 +372,12 @@ public class ClientMain extends SimpleApplication
 		flyCam.setEnabled( false );
 		flyCam.setMoveSpeed( 50 );
 		flyCam.setRotationSpeed( 15 );
+
+		setEntityManager( new EntityManager( this ) );
+		stateManager.attach( getEntityManager( ) );
+
+		// TODO: Remove after done testing
+		getEntityManager( ).addListener( new PlayerEntityListener( ), PlayerTrait.class );
 
 		worldManager = new WorldManager( this, rootNode );
 		stateManager.attach( worldManager );

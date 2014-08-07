@@ -1,15 +1,16 @@
 package com.cogitareforma.hexrepublics.client.views;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import java.util.Stack;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.apache.commons.lang3.tuple.Pair;
 
+import com.cogitareforma.hexrepublics.client.states.EntityManager;
 import com.cogitareforma.hexrepublics.client.util.EntityEntryModelClass;
 import com.cogitareforma.hexrepublics.common.entities.ActionType;
 import com.cogitareforma.hexrepublics.common.entities.Traits;
@@ -33,8 +34,10 @@ import com.cogitareforma.hexrepublics.common.entities.traits.StablesTrait;
 import com.cogitareforma.hexrepublics.common.entities.traits.SwordsmanTrait;
 import com.cogitareforma.hexrepublics.common.entities.traits.TileTrait;
 import com.cogitareforma.hexrepublics.common.entities.traits.TrebuchetTrait;
+import com.cogitareforma.hexrepublics.common.entities.traits.WorldTrait;
 import com.cogitareforma.hexrepublics.common.net.msg.EntityActionRequest;
 import com.cogitareforma.hexrepublics.common.net.msg.EntityCreationRequest;
+import com.cogitareforma.hexrepublics.common.util.EntityEventListener;
 import com.cogitareforma.hexrepublics.common.util.WorldFactory;
 import com.jme3.app.Application;
 import com.jme3.app.state.AppState;
@@ -43,6 +46,7 @@ import com.jme3.math.Vector3f;
 import com.jme3.renderer.Camera;
 import com.simsilica.es.ComponentFilter;
 import com.simsilica.es.Entity;
+import com.simsilica.es.EntityData;
 import com.simsilica.es.EntityId;
 import com.simsilica.es.EntitySet;
 import com.simsilica.es.client.RemoteEntityData;
@@ -82,6 +86,75 @@ public class TileViewController extends GeneralPlayingController
 	private Element move;
 	private boolean justUpdated = false;
 	private Vector3f prevLocation;
+	private int currentTurn = 0;
+
+	private EntityEventListener worldListener = new EntityEventListener( )
+	{
+		@Override
+		public void onAdded( EntityData entityData, Set< Entity > entities )
+		{
+			for ( Entity e : entities )
+			{
+				WorldTrait wt = e.get( WorldTrait.class );
+				if ( wt != null )
+				{
+					currentTurn = wt.getCurrentTurn( );
+					break;
+				}
+			}
+			if ( actionSet != null )
+			{
+				for ( Entity e : actionSet )
+				{
+					EntityId id = e.getId( );
+					if ( !toUpdate.contains( id ) )
+					{
+						toUpdate.add( id );
+					}
+				}
+				updateExisting( toUpdate );
+
+				current.refresh( );
+				fillBuildables( );
+			}
+		}
+
+		@Override
+		public void onChanged( EntityData entityData, Set< Entity > entities )
+		{
+			for ( Entity e : entities )
+			{
+				WorldTrait wt = e.get( WorldTrait.class );
+				if ( wt != null )
+				{
+					currentTurn = wt.getCurrentTurn( );
+
+					break;
+				}
+			}
+			if ( actionSet != null )
+			{
+				for ( Entity e : actionSet )
+				{
+					EntityId id = e.getId( );
+					if ( !toUpdate.contains( id ) )
+					{
+						toUpdate.add( id );
+					}
+				}
+				updateExisting( toUpdate );
+
+				current.refresh( );
+				fillBuildables( );
+			}
+		}
+
+		@Override
+		public void onRemoved( EntityData entityData, Set< Entity > entities )
+		{
+			// Should never happen?
+		}
+	};
 
 	private Vector3f prevMiniLocation;
 
@@ -175,18 +248,10 @@ public class TileViewController extends GeneralPlayingController
 		}
 
 		// Suffix
-		Pair< String, Double > action = Traits.getActionRemainingTime( entityData, id );
+		Pair< String, Integer > action = Traits.getActionRemainingTurns( entityData, id, currentTurn );
 		if ( action != null )
 		{
-			existing += String.format( " - %s: ", action.getLeft( ) );
-			if ( action.getRight( ) > 1 )
-			{
-				existing += String.format( "%.1f minutes", action.getRight( ) );
-			}
-			else
-			{
-				existing += String.format( "%.0f seconds", action.getRight( ) * 60 );
-			}
+			existing += String.format( " - %s: %d turns", action.getLeft( ), action.getRight( ) );
 		}
 
 		return existing;
@@ -282,6 +347,11 @@ public class TileViewController extends GeneralPlayingController
 		}
 	}
 
+	public Pair< Integer, Integer > getCoords( )
+	{
+		return this.currentTile;
+	}
+
 	public boolean hasSameBuildings( )
 	{
 		// TODO
@@ -290,11 +360,6 @@ public class TileViewController extends GeneralPlayingController
 
 		}
 		return false;
-	}
-
-	public Pair< Integer, Integer > getCoords( )
-	{
-		return this.currentTile;
 	}
 
 	/**
@@ -330,6 +395,12 @@ public class TileViewController extends GeneralPlayingController
 					addToExisting( e );
 				}
 			}
+		}
+
+		EntityManager entityManager = getApp( ).getEntityManager( );
+		if ( entityManager != null )
+		{
+			entityManager.addListener( worldListener, WorldTrait.class );
 		}
 
 		logger.log( Level.INFO, "Initialised " + this.getClass( ) );
@@ -420,7 +491,7 @@ public class TileViewController extends GeneralPlayingController
 					HashMap< String, Object > data = new HashMap< String, Object >( );
 					data.put( "newTile", nextTile );
 					getApp( ).getGameConnManager( ).send(
-							new EntityActionRequest( currentUnit, new ActionTrait( new Date( ), Traits.getMovementModifier( entityData,
+							new EntityActionRequest( currentUnit, new ActionTrait( currentTurn, Traits.getMovementModifier( entityData,
 									currentUnit ), ActionType.MOVE, data ) ) );
 				}
 			}
@@ -436,14 +507,21 @@ public class TileViewController extends GeneralPlayingController
 		super.onEndScreen( );
 		if ( locationSet != null )
 		{
-			locationSet.clear( );
+			locationSet.release( );
 			locationSet = null;
 		}
 		if ( actionSet != null )
 		{
-			actionSet.clear( );
+			actionSet.release( );
 			actionSet = null;
 		}
+
+		EntityManager entityManager = getApp( ).getEntityManager( );
+		if ( entityManager != null )
+		{
+			entityManager.removeListener( worldListener, WorldTrait.class );
+		}
+
 	}
 
 	@NiftyEventSubscriber( id = "buildBox" )
