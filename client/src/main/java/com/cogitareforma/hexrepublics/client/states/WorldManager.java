@@ -320,7 +320,7 @@ public class WorldManager extends AbstractAppState
 		{
 			miniCam = this.app.getCamera( ).clone( );
 		}
-		miniCam.setViewPort( 0.75f, 1f, 0f, 0.25f );
+		miniCam.setViewPort( 0.0f, .25f, 0f, 0.25f ); 
 
 		miniCam.setParallelProjection( true );
 		miniCam.setFrustumPerspective( 10, ( float ) this.app.getContext( ).getSettings( ).getWidth( )

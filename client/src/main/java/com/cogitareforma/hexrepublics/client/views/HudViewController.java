@@ -13,6 +13,7 @@ import com.cogitareforma.hexrepublics.common.entities.traits.HealthTrait;
 import com.cogitareforma.hexrepublics.common.entities.traits.LocationTrait;
 import com.cogitareforma.hexrepublics.common.entities.traits.PlayerTrait;
 import com.cogitareforma.hexrepublics.common.entities.traits.TileTrait;
+import com.cogitareforma.hexrepublics.common.net.msg.ReadyUpRequest;
 import com.cogitareforma.hexrepublics.common.util.WorldFactory;
 import com.cogitareforma.hexrepublics.common.util.YamlConfig;
 import com.jme3.app.Application;
@@ -268,6 +269,10 @@ public class HudViewController extends GeneralPlayingController implements KeyIn
 
 	};
 
+	private Label currentTurnText;
+
+	private int currentTurn = 0;
+
 	/**
 	 * Binds saved key inputs.
 	 */
@@ -332,6 +337,12 @@ public class HudViewController extends GeneralPlayingController implements KeyIn
 		}
 	}
 
+	public void readyUp( )
+	{
+		//TODO: server needs to make sure all players are ready before changing.
+		getApp( ).getGameConnManager( ).send( new ReadyUpRequest( true ) );
+	}
+
 	/**
 	 * Starts the hud view with all popup options and creates the games ingame
 	 * state.
@@ -356,6 +367,9 @@ public class HudViewController extends GeneralPlayingController implements KeyIn
 		// chat = getApp().getNifty( ).findPopupByName( "ingameChat"
 		// ).findNiftyControl( "gameChat", Chat.class );
 		getApp( ).currentScreen = "hud";
+
+		currentTurnText = ( Label ) getApp( ).getNifty( ).getScreen( "hud" ).findNiftyControl( "turns", Label.class );
+		currentTurnText.setText( "Turn: " + currentTurn );
 
 		tileCoords = new Vector3f[ 16 ][ 14 ];
 		for ( int i = 0; i < 16; i++ )
