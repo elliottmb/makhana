@@ -11,4 +11,5 @@ public class DebugGlobals
 	public static final boolean DEBUG_STATE_OUTPUT = false;
 	public static final boolean DEBUG_HEXCLICK_VISUAL = false;
 	public static final boolean EASTEREGGFONT = false;
+	public static final boolean DEBUG_TILE_SELECTION_OUTPUT = false;
 }

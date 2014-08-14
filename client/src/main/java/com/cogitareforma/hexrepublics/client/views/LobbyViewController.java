@@ -9,6 +9,7 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import com.cogitareforma.hexrepublics.client.util.NiftyFactory;
 import com.cogitareforma.hexrepublics.common.entities.traits.PlayerTrait;
+import com.cogitareforma.hexrepublics.common.net.msg.ReadyUpRequest;
 import com.jme3.app.Application;
 import com.jme3.app.state.AppStateManager;
 import com.simsilica.es.EntityId;
@@ -76,20 +77,18 @@ public class LobbyViewController extends GeneralPlayingController
 	@Override
 	protected void postExitToNetwork( )
 	{
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	protected void preExitToNetwork( )
 	{
-		// TODO Auto-generated method stub
-
 	}
 
 	public void readyUp( )
 	{
 		// TODO: LOGIC GOES HERE!
+		// Issue #33
+		getApp( ).getGameConnManager( ).send( new ReadyUpRequest( true ) );
 		start( );
 	}
 

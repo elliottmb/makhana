@@ -26,6 +26,7 @@ import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
 import com.jme3.math.Quaternion;
+import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.Camera;
 import com.jme3.renderer.ViewPort;
@@ -75,16 +76,17 @@ public class WorldManager extends AbstractAppState
 			{
 				EntityId id = e.getId( );
 				TileTrait tileTrait = entityData.getComponent( id, TileTrait.class );
+				TerrainQuad terrain = ( TerrainQuad ) worldRoot.getChild( "terrain" );
 
 				if ( tileTrait != null )
 				{
 
-					Box b = new Box( 1, 100, 1 );
+					Box b = new Box( 1, 10, 1 );
 					Geometry geo = new Geometry( "Box", b );
 					geo.setMaterial( matBuilding );
 					Vector3f centerPoint = WorldFactory.createCenterPoint( 1025, 40f, tileTrait.getX( ) + 1, tileTrait.getY( ) + 1 );
-					geo.setLocalTranslation( centerPoint );
-
+					geo.setLocalTranslation( centerPoint.x, terrain.getHeight( new Vector2f( centerPoint.x, centerPoint.z ) ),
+							centerPoint.z );
 					buildings.put( id, geo );
 					buildingRoot.attachChild( geo );
 				}
@@ -320,7 +322,7 @@ public class WorldManager extends AbstractAppState
 		{
 			miniCam = this.app.getCamera( ).clone( );
 		}
-		miniCam.setViewPort( 0.0f, .25f, 0f, 0.25f ); 
+		miniCam.setViewPort( 0.0f, .25f, 0f, 0.25f );
 
 		miniCam.setParallelProjection( true );
 		miniCam.setFrustumPerspective( 10, ( float ) this.app.getContext( ).getSettings( ).getWidth( )

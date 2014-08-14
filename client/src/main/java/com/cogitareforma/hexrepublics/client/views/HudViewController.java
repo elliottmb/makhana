@@ -7,13 +7,16 @@ import java.util.logging.Logger;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.cogitareforma.hexrepublics.client.DebugGlobals;
+import com.cogitareforma.hexrepublics.client.states.EntityManager;
 import com.cogitareforma.hexrepublics.client.util.NiftyFactory;
 import com.cogitareforma.hexrepublics.common.entities.Traits;
 import com.cogitareforma.hexrepublics.common.entities.traits.HealthTrait;
 import com.cogitareforma.hexrepublics.common.entities.traits.LocationTrait;
 import com.cogitareforma.hexrepublics.common.entities.traits.PlayerTrait;
 import com.cogitareforma.hexrepublics.common.entities.traits.TileTrait;
+import com.cogitareforma.hexrepublics.common.entities.traits.WorldTrait;
 import com.cogitareforma.hexrepublics.common.net.msg.ReadyUpRequest;
+import com.cogitareforma.hexrepublics.common.util.EntityEventListener;
 import com.cogitareforma.hexrepublics.common.util.WorldFactory;
 import com.cogitareforma.hexrepublics.common.util.YamlConfig;
 import com.jme3.app.Application;
@@ -35,6 +38,7 @@ import com.jme3.scene.Geometry;
 import com.simsilica.es.ComponentFilter;
 import com.simsilica.es.CreatedBy;
 import com.simsilica.es.Entity;
+import com.simsilica.es.EntityData;
 import com.simsilica.es.EntityId;
 import com.simsilica.es.EntitySet;
 import com.simsilica.es.Name;
@@ -150,6 +154,52 @@ public class HudViewController extends GeneralPlayingController implements KeyIn
 			}
 		}
 	};
+	private EntityEventListener worldListener = new EntityEventListener( )
+	{
+		// TODO Don't know if this needs more. This just current is here for
+		// current turn counter.
+		@Override
+		public void onAdded( EntityData entityData, Set< Entity > entities )
+		{
+			for ( Entity e : entities )
+			{
+				WorldTrait wt = e.get( WorldTrait.class );
+				if ( wt != null )
+				{
+					currentTurn = wt.getCurrentTurn( );
+					System.out.println( "HUD onAdded changed currentTurn" );
+					updateCurrentTurnText( );
+					break;
+				}
+			}
+		}
+
+		@Override
+		public void onChanged( EntityData entityData, Set< Entity > entities )
+		{
+			for ( Entity e : entities )
+			{
+				WorldTrait wt = e.get( WorldTrait.class );
+				if ( wt != null )
+				{
+					currentTurn = wt.getCurrentTurn( );
+					System.out.println( "HUD onChanged changed currentTurn" );
+					updateCurrentTurnText( );
+					break;
+				}
+			}
+		}
+
+		@Override
+		public void onRemoved( EntityData entityData, Set< Entity > entities )
+		{
+		}
+	};
+
+	public void updateCurrentTurnText( )
+	{
+		currentTurnText.setText( "Turn: " + currentTurn );
+	}
 
 	private AnalogListener analogListener = ( String name, float value, float tpf ) ->
 	{
@@ -176,7 +226,10 @@ public class HudViewController extends GeneralPlayingController implements KeyIn
 					float dist = results.getCollision( i ).getDistance( );
 					Vector3f pt = results.getCollision( i ).getContactPoint( );
 					String target = results.getCollision( i ).getGeometry( ).getName( );
-					System.out.println( "Selection #" + i + ": " + target + " at " + pt + ", " + dist + " WU away." );
+					if ( DebugGlobals.DEBUG_TILE_SELECTION_OUTPUT )
+					{
+						System.out.println( "Selection #" + i + ": " + target + " at " + pt + ", " + dist + " WU away." );
+					}
 
 					// Print out the colliding tile location
 					// System.out.println( insideTile( new Vector3f( pt.x,
@@ -329,6 +382,7 @@ public class HudViewController extends GeneralPlayingController implements KeyIn
 									TileViewController tvc = ( TileViewController ) getApp( ).getNifty( ).getScreen( "tile" )
 											.getScreenController( );
 									tvc.setCoords( currentTile );
+									//tvc.setCurrentTurn( currentTurn );
 									return null;
 								}, null );
 					}
@@ -339,7 +393,8 @@ public class HudViewController extends GeneralPlayingController implements KeyIn
 
 	public void readyUp( )
 	{
-		//TODO: server needs to make sure all players are ready before changing.
+		// TODO: server needs to make sure all players are ready before
+		// changing.
 		getApp( ).getGameConnManager( ).send( new ReadyUpRequest( true ) );
 	}
 
@@ -347,6 +402,7 @@ public class HudViewController extends GeneralPlayingController implements KeyIn
 	 * Starts the hud view with all popup options and creates the games ingame
 	 * state.
 	 */
+	@SuppressWarnings( "unchecked" )
 	public void initialize( AppStateManager stateManager, Application app )
 	{
 		setScreenId( "hud" );
@@ -381,6 +437,11 @@ public class HudViewController extends GeneralPlayingController implements KeyIn
 		}
 
 		setupScoreBoard( );
+		EntityManager entityManager = getApp( ).getEntityManager( );
+		if ( entityManager != null )
+		{
+			entityManager.addListener( worldListener, WorldTrait.class );
+		}
 	}
 
 	public Pair< Integer, Integer > insideTile( Vector3f coord )
@@ -445,6 +506,12 @@ public class HudViewController extends GeneralPlayingController implements KeyIn
 		getApp( ).getInputManager( ).deleteMapping( "showScore" );
 		getApp( ).getInputManager( ).deleteMapping( "showChat" );
 		getApp( ).getInputManager( ).deleteMapping( "showMenu" );
+
+		EntityManager entityManager = getApp( ).getEntityManager( );
+		if ( entityManager != null )
+		{
+			entityManager.removeListener( worldListener, WorldTrait.class );
+		}
 	}
 
 	@Override
@@ -468,8 +535,11 @@ public class HudViewController extends GeneralPlayingController implements KeyIn
 				{
 					Entity tileEntity = getApp( ).getGameConnManager( ).getRemoteEntityData( )
 							.getEntity( tileId, TileTrait.class, Name.class, HealthTrait.class, CreatedBy.class );
-					System.out.println( String.format( "Remote tile %s: %s, %s, %s, %s", tileId, tileEntity.get( TileTrait.class ),
-							tileEntity.get( Name.class ), tileEntity.get( HealthTrait.class ), tileEntity.get( CreatedBy.class ) ) );
+					if ( DebugGlobals.DEBUG_TILE_SELECTION_OUTPUT )
+					{
+						System.out.println( String.format( "Remote tile %s: %s, %s, %s, %s", tileId, tileEntity.get( TileTrait.class ),
+								tileEntity.get( Name.class ), tileEntity.get( HealthTrait.class ), tileEntity.get( CreatedBy.class ) ) );
+					}
 				}
 			}
 		}

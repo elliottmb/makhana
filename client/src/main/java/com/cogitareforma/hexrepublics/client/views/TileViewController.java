@@ -117,6 +117,7 @@ public class TileViewController extends GeneralPlayingController
 				current.refresh( );
 				fillBuildables( );
 			}
+			System.out.println( "onAdded current turn: " + currentTurn );
 		}
 
 		@Override
@@ -147,6 +148,7 @@ public class TileViewController extends GeneralPlayingController
 				current.refresh( );
 				fillBuildables( );
 			}
+			System.out.println( "onChanged current turn: " + currentTurn );
 		}
 
 		@Override
@@ -248,6 +250,7 @@ public class TileViewController extends GeneralPlayingController
 		}
 
 		// Suffix
+		System.out.println( "current turn in TileView: " + currentTurn );
 		Pair< String, Integer > action = Traits.getActionRemainingTurns( entityData, id, currentTurn );
 		if ( action != null )
 		{
@@ -756,6 +759,11 @@ public class TileViewController extends GeneralPlayingController
 	public void setCoords( Pair< Integer, Integer > coords )
 	{
 		this.currentTile = coords;
+	}
+
+	public void setCurrentTurn( int currentTurn )
+	{
+		this.currentTurn = currentTurn;
 	}
 
 	@Override
