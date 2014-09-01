@@ -55,17 +55,17 @@ public class PlayerTrait implements EntityComponent
 		return wins;
 	}
 
-	@Override
-	public String toString( )
-	{
-		return "PlayerTrait[" + account + ", wins: " + wins + ", losses: " + losses + ", ready: " + ready + "]";
-	}
-
 	/**
 	 * @return the ready
 	 */
 	public boolean isReady( )
 	{
 		return ready;
+	}
+
+	@Override
+	public String toString( )
+	{
+		return "PlayerTrait[" + account + ", wins: " + wins + ", losses: " + losses + ", ready: " + ready + "]";
 	}
 }

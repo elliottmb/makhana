@@ -21,24 +21,6 @@ public class SerializerRegistrar
 {
 
 	/**
-	 * The logger for this class.
-	 */
-	private final static Logger logger = Logger.getLogger( SerializerRegistrar.class.getName( ) );
-
-	private static Consumer< ? super String > consumingSerializer = ( String className ) ->
-	{
-		try
-		{
-			logger.log( Level.FINEST, "Attempting to register class " + className + " with the Serializer" );
-			Serializer.registerClass( Class.forName( className ) );
-		}
-		catch ( Exception e )
-		{
-			logger.log( Level.SEVERE, "Unable to register class " + className + " with the Serializer" );
-		}
-	};
-
-	/**
 	 * Registers all serializable packages.
 	 */
 	public static void registerAllSerializable( )
@@ -78,5 +60,23 @@ public class SerializerRegistrar
 			logger.log( Level.SEVERE, "Unable to register classes to the Serializer.", e );
 		}
 	}
+
+	/**
+	 * The logger for this class.
+	 */
+	private final static Logger logger = Logger.getLogger( SerializerRegistrar.class.getName( ) );
+
+	private static Consumer< ? super String > consumingSerializer = ( String className ) ->
+	{
+		try
+		{
+			logger.log( Level.FINEST, "Attempting to register class " + className + " with the Serializer" );
+			Serializer.registerClass( Class.forName( className ) );
+		}
+		catch ( Exception e )
+		{
+			logger.log( Level.SEVERE, "Unable to register class " + className + " with the Serializer" );
+		}
+	};
 
 }

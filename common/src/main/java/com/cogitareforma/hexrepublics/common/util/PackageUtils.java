@@ -28,11 +28,6 @@ import java.util.zip.ZipInputStream;
 public class PackageUtils
 {
 	/**
-	 * The logger for this class.
-	 */
-	private final static Logger logger = Logger.getLogger( PackageUtils.class.getName( ) );
-
-	/**
 	 * Instantiates all non-abstract classes within the given package. May throw
 	 * an exception if a class can not be instantiated or the package can not be
 	 * found.
@@ -202,5 +197,10 @@ public class PackageUtils
 		}
 		return classes;
 	}
+
+	/**
+	 * The logger for this class.
+	 */
+	private final static Logger logger = Logger.getLogger( PackageUtils.class.getName( ) );
 
 }

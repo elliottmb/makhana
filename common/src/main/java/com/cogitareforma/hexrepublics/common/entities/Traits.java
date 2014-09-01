@@ -2,7 +2,6 @@ package com.cogitareforma.hexrepublics.common.entities;
 
 import java.io.IOException;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -22,7 +21,6 @@ import com.cogitareforma.hexrepublics.common.entities.traits.StaticTrait;
 import com.cogitareforma.hexrepublics.common.entities.traits.StrengthTrait;
 import com.cogitareforma.hexrepublics.common.entities.traits.TileTrait;
 import com.cogitareforma.hexrepublics.common.entities.traits.TypeTrait;
-import com.cogitareforma.hexrepublics.common.entities.traits.WorldTrait;
 import com.cogitareforma.hexrepublics.common.util.PackageUtils;
 import com.cogitareforma.hexrepublics.common.util.WorldFactory;
 import com.jme3.math.FastMath;
@@ -44,24 +42,6 @@ import com.simsilica.es.EntitySet;
 @SuppressWarnings( "unchecked" )
 public class Traits
 {
-	/**
-	 * The logger for this class.
-	 */
-	private final static Logger logger = Logger.getLogger( Traits.class.getName( ) );
-
-	public static final int BASE_MOVEMENT_DURATION = 6; // change back to 6
-
-	public static final float BASE_FABRICATING_TIME = 0.5f; // change back to
-															// 0.5f
-
-	public static final List< Class< ? >> allTypes = getAllTraits( );
-
-	public static final List< Class< ? extends EntityComponent >> unitTraits = getSubTraits( MoveableTrait.class );
-
-	public static final List< Class< ? extends EntityComponent >> buildingTraits = getSubTraits( StaticTrait.class );
-
-	public static final List< List< Pair< Integer, Integer > >> neighbors = getNeighbors( );
-
 	public static boolean areNeighbors( EntityData entityData, EntityId source, EntityId target )
 	{
 		TileTrait srcTile = entityData.getComponent( source, TileTrait.class );
@@ -223,6 +203,45 @@ public class Traits
 		return str;
 	}
 
+	public static < T extends EntityComponent > int getMovementModifier( EntityData entityData, EntityId id )
+	{
+		int movement = Traits.BASE_MOVEMENT_DURATION;
+		for ( Class< ? > c : unitTraits )
+		{
+			MoveableTrait mt = ( MoveableTrait ) entityData.getComponent( id, ( Class< T > ) c );
+			if ( mt != null )
+			{
+				movement = ( int ) ( movement * mt.getMovementMultiplier( ) );
+			}
+		}
+
+		return movement;
+	}
+
+	private static List< List< Pair< Integer, Integer >>> getNeighbors( )
+	{
+		List< Pair< Integer, Integer >> one = new LinkedList< Pair< Integer, Integer >>( );
+		one.add( Pair.of( 1, 1 ) ); // NW
+		one.add( Pair.of( 1, 0 ) ); // SW
+		one.add( Pair.of( 0, -1 ) ); // S
+		one.add( Pair.of( -1, 0 ) ); // SE
+		one.add( Pair.of( -1, +1 ) ); // NE
+		one.add( Pair.of( 0, 1 ) ); // N
+
+		List< Pair< Integer, Integer >> two = new LinkedList< Pair< Integer, Integer >>( );
+		two.add( Pair.of( 1, 0 ) ); // NW = 0
+		two.add( Pair.of( 1, -1 ) ); // SW = 1
+		two.add( Pair.of( 0, -1 ) ); // S = 2
+		two.add( Pair.of( -1, -1 ) ); // SE = 3
+		two.add( Pair.of( -1, 0 ) ); // NE = 4
+		two.add( Pair.of( 0, 1 ) ); // N = 5
+
+		List< List< Pair< Integer, Integer >>> result = new LinkedList< List< Pair< Integer, Integer >>>( );
+		result.add( one );
+		result.add( two );
+		return result;
+	}
+
 	public static byte getOpenBuildingPosition( EntityData entityData, Set< EntityId > idSet )
 	{
 		return getOpenOfKindPosition( entityData, idSet, ( EntityData ed, EntityId id ) ->
@@ -263,45 +282,6 @@ public class Traits
 		{
 			return isUnit( ed, id );
 		} );
-	}
-
-	public static < T extends EntityComponent > int getMovementModifier( EntityData entityData, EntityId id )
-	{
-		int movement = Traits.BASE_MOVEMENT_DURATION;
-		for ( Class< ? > c : unitTraits )
-		{
-			MoveableTrait mt = ( MoveableTrait ) entityData.getComponent( id, ( Class< T > ) c );
-			if ( mt != null )
-			{
-				movement = ( int ) ( movement * mt.getMovementMultiplier( ) );
-			}
-		}
-
-		return movement;
-	}
-
-	private static List< List< Pair< Integer, Integer >>> getNeighbors( )
-	{
-		List< Pair< Integer, Integer >> one = new LinkedList< Pair< Integer, Integer >>( );
-		one.add( Pair.of( 1, 1 ) ); // NW
-		one.add( Pair.of( 1, 0 ) ); // SW
-		one.add( Pair.of( 0, -1 ) ); // S
-		one.add( Pair.of( -1, 0 ) ); // SE
-		one.add( Pair.of( -1, +1 ) ); // NE
-		one.add( Pair.of( 0, 1 ) ); // N
-
-		List< Pair< Integer, Integer >> two = new LinkedList< Pair< Integer, Integer >>( );
-		two.add( Pair.of( 1, 0 ) ); // NW = 0
-		two.add( Pair.of( 1, -1 ) ); // SW = 1
-		two.add( Pair.of( 0, -1 ) ); // S = 2
-		two.add( Pair.of( -1, -1 ) ); // SE = 3
-		two.add( Pair.of( -1, 0 ) ); // NE = 4
-		two.add( Pair.of( 0, 1 ) ); // N = 5
-
-		List< List< Pair< Integer, Integer >>> result = new LinkedList< List< Pair< Integer, Integer >>>( );
-		result.add( one );
-		result.add( two );
-		return result;
 	}
 
 	public static EntityId getOwner( EntityData entityData, EntityId id )
@@ -456,4 +436,22 @@ public class Traits
 	{
 		return isOfKind( entityData, id, unitTraits );
 	}
+
+	/**
+	 * The logger for this class.
+	 */
+	private final static Logger logger = Logger.getLogger( Traits.class.getName( ) );
+
+	public static final int BASE_MOVEMENT_DURATION = 6; // change back to 6
+
+	public static final float BASE_FABRICATING_TIME = 0.5f; // change back to
+															// 0.5f
+
+	public static final List< Class< ? >> allTypes = getAllTraits( );
+
+	public static final List< Class< ? extends EntityComponent >> unitTraits = getSubTraits( MoveableTrait.class );
+
+	public static final List< Class< ? extends EntityComponent >> buildingTraits = getSubTraits( StaticTrait.class );
+
+	public static final List< List< Pair< Integer, Integer > >> neighbors = getNeighbors( );
 }

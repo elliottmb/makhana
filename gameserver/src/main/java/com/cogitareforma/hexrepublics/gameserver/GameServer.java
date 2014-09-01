@@ -31,11 +31,6 @@ import com.jme3.system.JmeContext;
  */
 public class GameServer extends SimpleApplication
 {
-	/**
-	 * The logger for this class.
-	 */
-	private final static Logger logger = Logger.getLogger( GameServer.class.getName( ) );
-
 	public static void main( String[ ] args )
 	{
 		GameServer gameServer = new GameServer( );
@@ -115,6 +110,11 @@ public class GameServer extends SimpleApplication
 	}
 
 	/**
+	 * The logger for this class.
+	 */
+	private final static Logger logger = Logger.getLogger( GameServer.class.getName( ) );
+
+	/**
 	 * The supplied command line arguments parsed into a more usable form
 	 */
 	private CommandLine arguments;
@@ -189,6 +189,14 @@ public class GameServer extends SimpleApplication
 	}
 
 	/**
+	 * @return the onlineMode
+	 */
+	public boolean isOnlineMode( )
+	{
+		return onlineMode;
+	}
+
+	/**
 	 * Sets the parsed command line arguments
 	 * 
 	 * @param arguments
@@ -197,14 +205,6 @@ public class GameServer extends SimpleApplication
 	public void setArguments( CommandLine arguments )
 	{
 		this.arguments = arguments;
-	}
-
-	/**
-	 * @return the onlineMode
-	 */
-	public boolean isOnlineMode( )
-	{
-		return onlineMode;
 	}
 
 	/**

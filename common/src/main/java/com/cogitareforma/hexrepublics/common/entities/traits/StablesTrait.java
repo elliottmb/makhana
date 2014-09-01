@@ -20,15 +20,15 @@ public class StablesTrait extends StaticTrait
 	}
 
 	@Override
-	public Spatial getSpatial( AssetManager assetManager )
-	{
-		return assetManager.loadModel( "Materials/stablePrototype.obj" );
-	}
-
-	@Override
 	public Material getMaterial( AssetManager assetManager )
 	{
 		// TODO
 		return null;
+	}
+
+	@Override
+	public Spatial getSpatial( AssetManager assetManager )
+	{
+		return assetManager.loadModel( "Materials/stablePrototype.obj" );
 	}
 }

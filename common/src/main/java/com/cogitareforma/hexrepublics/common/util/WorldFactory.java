@@ -40,8 +40,6 @@ import com.jme3.util.BufferUtils;
  */
 public class WorldFactory
 {
-	private final static Logger logger = Logger.getLogger( WorldFactory.class.getName( ) );
-
 	public static void attachHexagonGridToNode( Node root, AssetManager am )
 	{
 		if ( root != null )
@@ -251,5 +249,7 @@ public class WorldFactory
 
 		return new Texture2D( hbamg.renderAlphaMap( ) );
 	}
+
+	private final static Logger logger = Logger.getLogger( WorldFactory.class.getName( ) );
 
 }

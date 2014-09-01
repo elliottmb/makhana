@@ -20,16 +20,16 @@ public class ArcheryTrait extends StaticTrait
 	}
 
 	@Override
-	public Spatial getSpatial( AssetManager assetManager )
-	{
-		return assetManager.loadModel( "Materials/archery.obj" );
-	}
-
-	@Override
 	public Material getMaterial( AssetManager assetManager )
 	{
 		// TODO
 		return null;
+	}
+
+	@Override
+	public Spatial getSpatial( AssetManager assetManager )
+	{
+		return assetManager.loadModel( "Materials/archery.obj" );
 	}
 
 }

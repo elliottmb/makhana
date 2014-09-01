@@ -35,11 +35,6 @@ import com.jme3.system.JmeContext;
 public class MasterServer extends SimpleApplication
 {
 
-	/**
-	 * The logger for this class.
-	 */
-	private final static Logger logger = Logger.getLogger( MasterServer.class.getName( ) );
-
 	public static void main( String[ ] args )
 	{
 		MasterServer masterServer = new MasterServer( );
@@ -105,6 +100,11 @@ public class MasterServer extends SimpleApplication
 		}
 		masterServer.stop( );
 	}
+
+	/**
+	 * The logger for this class.
+	 */
+	private final static Logger logger = Logger.getLogger( MasterServer.class.getName( ) );
 
 	private AnnotationConfigApplicationContext configContext;
 

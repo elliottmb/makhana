@@ -43,18 +43,18 @@ public class WorldTrait implements EntityComponent
 		return seed;
 	}
 
-	@Override
-	public String toString( )
-	{
-		return "WorldTrait[" + currentTurn + "]";
-	}
-
 	/**
 	 * @return the playing
 	 */
 	public boolean isPlaying( )
 	{
 		return playing;
+	}
+
+	@Override
+	public String toString( )
+	{
+		return "WorldTrait[" + currentTurn + "]";
 	}
 
 }

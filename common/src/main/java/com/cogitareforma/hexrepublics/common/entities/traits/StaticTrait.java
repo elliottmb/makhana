@@ -15,13 +15,13 @@ import com.jme3.scene.shape.Box;
 @Serializable
 public abstract class StaticTrait extends TypeTrait
 {
-	public Spatial getSpatial( AssetManager assetManager )
-	{
-		return new Geometry( "Box", new Box( 8, 8, 8 ) );
-	}
-
 	public Material getMaterial( AssetManager assetManager )
 	{
 		return null;
+	}
+
+	public Spatial getSpatial( AssetManager assetManager )
+	{
+		return new Geometry( "Box", new Box( 8, 8, 8 ) );
 	}
 }

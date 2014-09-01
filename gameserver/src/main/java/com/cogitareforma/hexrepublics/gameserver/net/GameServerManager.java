@@ -1,7 +1,6 @@
 package com.cogitareforma.hexrepublics.gameserver.net;
 
 import java.io.IOException;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -190,16 +189,6 @@ public class GameServerManager extends ServerManager< GameServer >
 		return entityDataHostService;
 	}
 
-	/**
-	 * Returns the current ServerStatus
-	 * 
-	 * @return the current ServerStatus
-	 */
-	public ServerStatus getServerStatus( )
-	{
-		return status;
-	}
-
 	public EntityId getPlayerEntityId( Account account )
 	{
 		if ( getEntityData( ) != null )
@@ -219,6 +208,24 @@ public class GameServerManager extends ServerManager< GameServer >
 			logger.log( Level.WARNING, "Could not find Entity for Account, Entity Data is null" );
 		}
 		return null;
+	}
+
+	/**
+	 * Returns the current ServerStatus
+	 * 
+	 * @return the current ServerStatus
+	 */
+	public ServerStatus getServerStatus( )
+	{
+		return status;
+	}
+
+	/**
+	 * @return the theWorld
+	 */
+	public EntityId getTheWorld( )
+	{
+		return theWorld;
 	}
 
 	public void removePlayerEntity( Account account )
@@ -313,6 +320,15 @@ public class GameServerManager extends ServerManager< GameServer >
 		}
 
 		return false;
+	}
+
+	/**
+	 * @param theWorld
+	 *            the theWorld to set
+	 */
+	private void setTheWorld( EntityId theWorld )
+	{
+		this.theWorld = theWorld;
 	}
 
 	@Override
@@ -617,22 +633,5 @@ public class GameServerManager extends ServerManager< GameServer >
 			}
 			getEntityDataHostService( ).sendUpdates( );
 		}
-	}
-
-	/**
-	 * @return the theWorld
-	 */
-	public EntityId getTheWorld( )
-	{
-		return theWorld;
-	}
-
-	/**
-	 * @param theWorld
-	 *            the theWorld to set
-	 */
-	private void setTheWorld( EntityId theWorld )
-	{
-		this.theWorld = theWorld;
 	}
 }
