@@ -222,6 +222,14 @@ public class ClientMain extends SimpleApplication
 	}
 
 	/**
+	 * @return the worldManager
+	 */
+	public WorldManager getWorldManager( )
+	{
+		return worldManager;
+	}
+
+	/**
 	 * Thread safe method that loads the games world by either the given seed or
 	 * a random one.
 	 * 
@@ -360,6 +368,15 @@ public class ClientMain extends SimpleApplication
 		this.niftyDisplay = niftyDisplay;
 	}
 
+	/**
+	 * @param worldManager
+	 *            the worldManager to set
+	 */
+	private void setWorldManager( WorldManager worldManager )
+	{
+		this.worldManager = worldManager;
+	}
+
 	@Override
 	public void simpleInitApp( )
 	{
@@ -379,7 +396,7 @@ public class ClientMain extends SimpleApplication
 		// TODO: Remove after done testing
 		getEntityManager( ).addListener( new PlayerEntityListener( ), PlayerTrait.class );
 
-		worldManager = new WorldManager( this, rootNode );
+		setWorldManager( new WorldManager( this, rootNode ) );
 		stateManager.attach( worldManager );
 
 		// Setup first view

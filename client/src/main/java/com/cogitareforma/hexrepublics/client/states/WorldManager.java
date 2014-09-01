@@ -15,6 +15,7 @@ import com.cogitareforma.hexrepublics.common.entities.traits.LocationTrait;
 import com.cogitareforma.hexrepublics.common.entities.traits.MoveableTrait;
 import com.cogitareforma.hexrepublics.common.entities.traits.StaticTrait;
 import com.cogitareforma.hexrepublics.common.entities.traits.TileTrait;
+import com.cogitareforma.hexrepublics.common.entities.traits.WorldTrait;
 import com.cogitareforma.hexrepublics.common.util.EntityEventListener;
 import com.cogitareforma.hexrepublics.common.util.WorldFactory;
 import com.jme3.app.state.AbstractAppState;
@@ -66,6 +67,43 @@ public class WorldManager extends AbstractAppState
 	private Camera miniCam;
 	private ViewPort miniView;
 	private BitmapFont myFont;
+
+	private int currentTurn = 0;
+	private EntityEventListener worldListener = new EntityEventListener( )
+	{
+		@Override
+		public void onAdded( EntityData entityData, Set< Entity > entities )
+		{
+			for ( Entity e : entities )
+			{
+				WorldTrait wt = e.get( WorldTrait.class );
+				if ( wt != null )
+				{
+					setCurrentTurn( wt.getCurrentTurn( ) );
+					break;
+				}
+			}
+		}
+
+		@Override
+		public void onChanged( EntityData entityData, Set< Entity > entities )
+		{
+			for ( Entity e : entities )
+			{
+				WorldTrait wt = e.get( WorldTrait.class );
+				if ( wt != null )
+				{
+					setCurrentTurn( wt.getCurrentTurn( ) );
+					break;
+				}
+			}
+		}
+
+		@Override
+		public void onRemoved( EntityData entityData, Set< Entity > entities )
+		{
+		}
+	};
 
 	private EntityEventListener capitalListener = new EntityEventListener( )
 	{
@@ -354,6 +392,7 @@ public class WorldManager extends AbstractAppState
 		EntityManager entityManager = app.getEntityManager( );
 		if ( entityManager != null )
 		{
+			entityManager.addListener( worldListener, WorldTrait.class );
 			entityManager.addListener( locationListener, LocationTrait.class );
 			entityManager.addListener( capitalListener, CapitalTrait.class );
 			entityManager.addListener( healthBarListener, HealthTrait.class );
@@ -384,6 +423,7 @@ public class WorldManager extends AbstractAppState
 		EntityManager entityManager = app.getEntityManager( );
 		if ( entityManager != null )
 		{
+			entityManager.removeListener( worldListener, WorldTrait.class );
 			entityManager.removeListener( locationListener, LocationTrait.class );
 			entityManager.removeListener( capitalListener, CapitalTrait.class );
 			entityManager.removeListener( healthBarListener, HealthTrait.class );
@@ -463,6 +503,14 @@ public class WorldManager extends AbstractAppState
 	}
 
 	/**
+	 * @return the currentTurn
+	 */
+	public int getCurrentTurn( )
+	{
+		return currentTurn;
+	}
+
+	/**
 	 * get the world root node (not necessarily the application rootNode!)
 	 * 
 	 * @return The world root node
@@ -496,6 +544,15 @@ public class WorldManager extends AbstractAppState
 		logger.log( Level.INFO, "Load hexagon grid" );
 		WorldFactory.attachHexagonGridToNode( worldRoot, assetManager );
 		con.setLoading( 1.0f, "Done" );
+	}
+
+	/**
+	 * @param currentTurn
+	 *            the currentTurn to set
+	 */
+	private void setCurrentTurn( int currentTurn )
+	{
+		this.currentTurn = currentTurn;
 	}
 
 	@Override

@@ -166,7 +166,6 @@ public class HudViewController extends GeneralPlayingController implements KeyIn
 				WorldTrait wt = e.get( WorldTrait.class );
 				if ( wt != null )
 				{
-					currentTurn = wt.getCurrentTurn( );
 					System.out.println( "HUD onAdded changed currentTurn" );
 					updateCurrentTurnText( );
 					break;
@@ -182,7 +181,6 @@ public class HudViewController extends GeneralPlayingController implements KeyIn
 				WorldTrait wt = e.get( WorldTrait.class );
 				if ( wt != null )
 				{
-					currentTurn = wt.getCurrentTurn( );
 					System.out.println( "HUD onChanged changed currentTurn" );
 					updateCurrentTurnText( );
 					break;
@@ -195,11 +193,6 @@ public class HudViewController extends GeneralPlayingController implements KeyIn
 		{
 		}
 	};
-
-	public void updateCurrentTurnText( )
-	{
-		currentTurnText.setText( "Turn: " + currentTurn );
-	}
 
 	private AnalogListener analogListener = ( String name, float value, float tpf ) ->
 	{
@@ -324,8 +317,6 @@ public class HudViewController extends GeneralPlayingController implements KeyIn
 
 	private Label currentTurnText;
 
-	private int currentTurn = 0;
-
 	/**
 	 * Binds saved key inputs.
 	 */
@@ -382,20 +373,13 @@ public class HudViewController extends GeneralPlayingController implements KeyIn
 									TileViewController tvc = ( TileViewController ) getApp( ).getNifty( ).getScreen( "tile" )
 											.getScreenController( );
 									tvc.setCoords( currentTile );
-									//tvc.setCurrentTurn( currentTurn );
-									return null;
-								}, null );
+									// tvc.setCurrentTurn( currentTurn );
+								return null;
+							}, null );
 					}
 				}
 			}
 		}
-	}
-
-	public void readyUp( )
-	{
-		// TODO: server needs to make sure all players are ready before
-		// changing.
-		getApp( ).getGameConnManager( ).send( new ReadyUpRequest( true ) );
 	}
 
 	/**
@@ -425,7 +409,7 @@ public class HudViewController extends GeneralPlayingController implements KeyIn
 		getApp( ).currentScreen = "hud";
 
 		currentTurnText = ( Label ) getApp( ).getNifty( ).getScreen( "hud" ).findNiftyControl( "turns", Label.class );
-		currentTurnText.setText( "Turn: " + currentTurn );
+		currentTurnText.setText( "Turn: " + getApp( ).getWorldManager( ).getCurrentTurn( ) );
 
 		tileCoords = new Vector3f[ 16 ][ 14 ];
 		for ( int i = 0; i < 16; i++ )
@@ -545,6 +529,13 @@ public class HudViewController extends GeneralPlayingController implements KeyIn
 		}
 	}
 
+	public void readyUp( )
+	{
+		// TODO: server needs to make sure all players are ready before
+		// changing.
+		getApp( ).getGameConnManager( ).send( new ReadyUpRequest( true ) );
+	}
+
 	/**
 	 * Sets Clients input settings from YamlConfig file.
 	 */
@@ -618,6 +609,11 @@ public class HudViewController extends GeneralPlayingController implements KeyIn
 	{
 		getApp( ).getNifty( ).showPopup( getApp( ).getNifty( ).getCurrentScreen( ), "menu", null );
 		menuOpen = true;
+	}
+
+	public void updateCurrentTurnText( )
+	{
+		currentTurnText.setText( "Turn: " + getApp( ).getWorldManager( ).getCurrentTurn( ) );
 	}
 
 }

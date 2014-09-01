@@ -86,22 +86,12 @@ public class TileViewController extends GeneralPlayingController
 	private Element move;
 	private boolean justUpdated = false;
 	private Vector3f prevLocation;
-	private int currentTurn = 0;
 
 	private EntityEventListener worldListener = new EntityEventListener( )
 	{
 		@Override
 		public void onAdded( EntityData entityData, Set< Entity > entities )
 		{
-			for ( Entity e : entities )
-			{
-				WorldTrait wt = e.get( WorldTrait.class );
-				if ( wt != null )
-				{
-					currentTurn = wt.getCurrentTurn( );
-					break;
-				}
-			}
 			if ( actionSet != null )
 			{
 				for ( Entity e : actionSet )
@@ -117,22 +107,12 @@ public class TileViewController extends GeneralPlayingController
 				current.refresh( );
 				fillBuildables( );
 			}
-			System.out.println( "onAdded current turn: " + currentTurn );
+			System.out.println( "onAdded current turn: " + getApp( ).getWorldManager( ).getCurrentTurn( ) );
 		}
 
 		@Override
 		public void onChanged( EntityData entityData, Set< Entity > entities )
 		{
-			for ( Entity e : entities )
-			{
-				WorldTrait wt = e.get( WorldTrait.class );
-				if ( wt != null )
-				{
-					currentTurn = wt.getCurrentTurn( );
-
-					break;
-				}
-			}
 			if ( actionSet != null )
 			{
 				for ( Entity e : actionSet )
@@ -148,7 +128,7 @@ public class TileViewController extends GeneralPlayingController
 				current.refresh( );
 				fillBuildables( );
 			}
-			System.out.println( "onChanged current turn: " + currentTurn );
+			System.out.println( "onChanged current turn: " + getApp( ).getWorldManager( ).getCurrentTurn( ) );
 		}
 
 		@Override
@@ -160,11 +140,11 @@ public class TileViewController extends GeneralPlayingController
 
 	private Vector3f prevMiniLocation;
 
-	public void addToExisting( Entity entity )
+	public void addToExisting( Entity entity, int currentTurn )
 	{
 		EntityId id = entity.getId( );
 
-		EntityEntryModelClass eemc = new EntityEntryModelClass( id, createDisplayText( id ) );
+		EntityEntryModelClass eemc = new EntityEntryModelClass( id, createDisplayText( id, currentTurn ) );
 		current.addItem( eemc );
 	}
 
@@ -173,7 +153,7 @@ public class TileViewController extends GeneralPlayingController
 		getApp( ).getNifty( ).closePopup( "move" );
 	}
 
-	public String createDisplayText( EntityId id )
+	public String createDisplayText( EntityId id, int currentTurn )
 	{
 		String existing = "";
 
@@ -250,11 +230,10 @@ public class TileViewController extends GeneralPlayingController
 		}
 
 		// Suffix
-		System.out.println( "current turn in TileView: " + currentTurn );
 		Pair< String, Integer > action = Traits.getActionRemainingTurns( entityData, id, currentTurn );
 		if ( action != null )
 		{
-			existing += String.format( " - %s: %d turns", action.getLeft( ), action.getRight( ) );
+			existing += String.format( " - %s: %d turns", action.getLeft( ), action.getRight( ) + 1 );
 		}
 
 		return existing;
@@ -389,13 +368,14 @@ public class TileViewController extends GeneralPlayingController
 
 		toUpdate = new LinkedList< EntityId >( );
 
+		int currentTurn = getApp( ).getWorldManager( ).getCurrentTurn( );
 		if ( locationSet != null )
 		{
 			if ( locationSet.applyChanges( ) )
 			{
 				for ( Entity e : locationSet.getAddedEntities( ) )
 				{
-					addToExisting( e );
+					addToExisting( e, currentTurn );
 				}
 			}
 		}
@@ -494,8 +474,8 @@ public class TileViewController extends GeneralPlayingController
 					HashMap< String, Object > data = new HashMap< String, Object >( );
 					data.put( "newTile", nextTile );
 					getApp( ).getGameConnManager( ).send(
-							new EntityActionRequest( currentUnit, new ActionTrait( currentTurn, Traits.getMovementModifier( entityData,
-									currentUnit ), ActionType.MOVE, data ) ) );
+							new EntityActionRequest( currentUnit, new ActionTrait( getApp( ).getWorldManager( ).getCurrentTurn( ), Traits
+									.getMovementModifier( entityData, currentUnit ), ActionType.MOVE, data ) ) );
 				}
 			}
 		}
@@ -761,11 +741,6 @@ public class TileViewController extends GeneralPlayingController
 		this.currentTile = coords;
 	}
 
-	public void setCurrentTurn( int currentTurn )
-	{
-		this.currentTurn = currentTurn;
-	}
-
 	@Override
 	public void update( float tpf )
 	{
@@ -776,9 +751,10 @@ public class TileViewController extends GeneralPlayingController
 			{
 				if ( locationSet.applyChanges( ) )
 				{
+					int currentTurn = getApp( ).getWorldManager( ).getCurrentTurn( );
 					for ( Entity e : locationSet.getAddedEntities( ) )
 					{
-						addToExisting( e );
+						addToExisting( e, currentTurn );
 					}
 					for ( Entity e : locationSet.getRemovedEntities( ) )
 					{
@@ -839,11 +815,12 @@ public class TileViewController extends GeneralPlayingController
 
 	public void updateExisting( LinkedList< EntityId > entities )
 	{
+		int currentTurn = getApp( ).getWorldManager( ).getCurrentTurn( );
 		for ( EntityEntryModelClass eemc : current.getItems( ) )
 		{
 			if ( entities.contains( eemc.getEntityId( ) ) )
 			{
-				eemc.setName( createDisplayText( eemc.getEntityId( ) ) );
+				eemc.setName( createDisplayText( eemc.getEntityId( ), currentTurn ) );
 			}
 		}
 		justUpdated = false;
