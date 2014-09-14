@@ -37,7 +37,7 @@ import com.cogitareforma.hexrepublics.common.entities.traits.TrebuchetTrait;
 import com.cogitareforma.hexrepublics.common.entities.traits.WorldTrait;
 import com.cogitareforma.hexrepublics.common.net.msg.EntityActionRequest;
 import com.cogitareforma.hexrepublics.common.net.msg.EntityCreationRequest;
-import com.cogitareforma.hexrepublics.common.util.EntityEventListener;
+import com.cogitareforma.hexrepublics.common.util.TraitEventListener;
 import com.cogitareforma.hexrepublics.common.util.WorldFactory;
 import com.jme3.app.Application;
 import com.jme3.app.state.AppState;
@@ -87,7 +87,7 @@ public class TileViewController extends GeneralPlayingController
 	private boolean justUpdated = false;
 	private Vector3f prevLocation;
 
-	private EntityEventListener worldListener = new EntityEventListener( )
+	private TraitEventListener worldListener = new TraitEventListener( )
 	{
 		@Override
 		public void onAdded( EntityData entityData, Set< Entity > entities )

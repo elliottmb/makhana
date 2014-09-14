@@ -16,7 +16,7 @@ import com.cogitareforma.hexrepublics.common.entities.traits.PlayerTrait;
 import com.cogitareforma.hexrepublics.common.entities.traits.TileTrait;
 import com.cogitareforma.hexrepublics.common.entities.traits.WorldTrait;
 import com.cogitareforma.hexrepublics.common.net.msg.ReadyUpRequest;
-import com.cogitareforma.hexrepublics.common.util.EntityEventListener;
+import com.cogitareforma.hexrepublics.common.util.TraitEventListener;
 import com.cogitareforma.hexrepublics.common.util.WorldFactory;
 import com.cogitareforma.hexrepublics.common.util.YamlConfig;
 import com.jme3.app.Application;
@@ -154,7 +154,7 @@ public class HudViewController extends GeneralPlayingController implements KeyIn
 			}
 		}
 	};
-	private EntityEventListener worldListener = new EntityEventListener( )
+	private TraitEventListener worldListener = new TraitEventListener( )
 	{
 		// TODO Don't know if this needs more. This just current is here for
 		// current turn counter.

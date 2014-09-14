@@ -2,11 +2,11 @@ package com.cogitareforma.hexrepublics.client.util;
 
 import java.util.Set;
 
-import com.cogitareforma.hexrepublics.common.util.EntityEventListener;
+import com.cogitareforma.hexrepublics.common.util.TraitEventListener;
 import com.simsilica.es.Entity;
 import com.simsilica.es.EntityData;
 
-public class PlayerEntityListener implements EntityEventListener
+public class PlayerTraitListener implements TraitEventListener
 {
 
 	@Override

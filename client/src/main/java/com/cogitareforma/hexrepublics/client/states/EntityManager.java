@@ -12,8 +12,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 import com.cogitareforma.hexrepublics.client.ClientMain;
-import com.cogitareforma.hexrepublics.common.util.EntityEventListener;
-import com.cogitareforma.hexrepublics.common.util.FilterEntityEventListener;
+import com.cogitareforma.hexrepublics.common.util.ComponentFilterEventListener;
+import com.cogitareforma.hexrepublics.common.util.TraitEventListener;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import com.jme3.app.state.AbstractAppState;
@@ -25,9 +25,9 @@ import com.simsilica.es.EntitySet;
 public class EntityManager extends AbstractAppState
 {
 	// TODO: Add support for Listeners that should act on filter-based EntitySet
-	private BiMap< Set< Class< ? extends EntityComponent >>, Set< EntityEventListener >> listenerBiMap;
+	private BiMap< Set< Class< ? extends EntityComponent >>, Set< TraitEventListener >> listenerBiMap;
 	private BiMap< Set< Class< ? extends EntityComponent >>, EntitySet > entitySetBiMap;
-	private Map< ComponentFilter< ? >, List< FilterEntityEventListener >> filterListenerMap;
+	private Map< ComponentFilter< ? >, List< ComponentFilterEventListener >> filterListenerMap;
 	private Map< ComponentFilter< ? >, EntitySet > filterSetMap;
 	private ClientMain app;
 
@@ -40,11 +40,11 @@ public class EntityManager extends AbstractAppState
 		this.entitySetBiMap = HashBiMap.create( );
 	}
 
-	public void addListener( EntityEventListener listener, Class< ? extends EntityComponent >... classes )
+	public void addListener( TraitEventListener listener, Class< ? extends EntityComponent >... classes )
 	{
-		if ( listener instanceof FilterEntityEventListener )
+		if ( listener instanceof ComponentFilterEventListener )
 		{
-			FilterEntityEventListener filterListener = ( FilterEntityEventListener ) listener;
+			ComponentFilterEventListener filterListener = ( ComponentFilterEventListener ) listener;
 			getFilterListeners( filterListener.getFilter( ), true ).add( filterListener );
 		}
 		else
@@ -69,9 +69,9 @@ public class EntityManager extends AbstractAppState
 		return null;
 	}
 
-	protected List< FilterEntityEventListener > getFilterListeners( ComponentFilter< ? > filter, boolean create )
+	protected List< ComponentFilterEventListener > getFilterListeners( ComponentFilter< ? > filter, boolean create )
 	{
-		List< FilterEntityEventListener > result = filterListenerMap.get( filter );
+		List< ComponentFilterEventListener > result = filterListenerMap.get( filter );
 		if ( result == null && create )
 		{
 			result = new CopyOnWriteArrayList<>( );
@@ -85,9 +85,9 @@ public class EntityManager extends AbstractAppState
 		return result;
 	}
 
-	protected Set< EntityEventListener > getListeners( Set< Class< ? extends EntityComponent > > classes, boolean create )
+	protected Set< TraitEventListener > getListeners( Set< Class< ? extends EntityComponent > > classes, boolean create )
 	{
-		Set< EntityEventListener > result = listenerBiMap.get( classes );
+		Set< TraitEventListener > result = listenerBiMap.get( classes );
 		if ( result == null && create )
 		{
 			result = new CopyOnWriteArraySet<>( );
@@ -101,12 +101,12 @@ public class EntityManager extends AbstractAppState
 		return result;
 	}
 
-	public void removeListener( EntityEventListener listener, Class< ? extends EntityComponent >... classes )
+	public void removeListener( TraitEventListener listener, Class< ? extends EntityComponent >... classes )
 	{
-		if ( listener instanceof FilterEntityEventListener )
+		if ( listener instanceof ComponentFilterEventListener )
 		{
-			FilterEntityEventListener filterListener = ( FilterEntityEventListener ) listener;
-			List< FilterEntityEventListener > list = getFilterListeners( filterListener.getFilter( ), false );
+			ComponentFilterEventListener filterListener = ( ComponentFilterEventListener ) listener;
+			List< ComponentFilterEventListener > list = getFilterListeners( filterListener.getFilter( ), false );
 			list.remove( listener );
 			if ( list.isEmpty( ) )
 			{
@@ -119,7 +119,7 @@ public class EntityManager extends AbstractAppState
 		}
 		else
 		{
-			Set< EntityEventListener > set = getListeners( new HashSet<>( Arrays.asList( classes ) ), false );
+			Set< TraitEventListener > set = getListeners( new HashSet<>( Arrays.asList( classes ) ), false );
 			set.remove( listener );
 			if ( set.isEmpty( ) )
 			{
@@ -162,7 +162,7 @@ public class EntityManager extends AbstractAppState
 					EntitySet entitySet = e.getValue( );
 					if ( entitySet.applyChanges( ) )
 					{
-						for ( EntityEventListener listener : getListeners( e.getKey( ), false ) )
+						for ( TraitEventListener listener : getListeners( e.getKey( ), false ) )
 						{
 							listener.onAdded( entityData, entitySet.getAddedEntities( ) );
 							listener.onChanged( entityData, entitySet.getChangedEntities( ) );
@@ -176,7 +176,7 @@ public class EntityManager extends AbstractAppState
 					EntitySet entitySet = e.getValue( );
 					if ( entitySet.applyChanges( ) )
 					{
-						for ( EntityEventListener listener : getFilterListeners( e.getKey( ), false ) )
+						for ( TraitEventListener listener : getFilterListeners( e.getKey( ), false ) )
 						{
 							listener.onAdded( entityData, entitySet.getAddedEntities( ) );
 							listener.onChanged( entityData, entitySet.getChangedEntities( ) );

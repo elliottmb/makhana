@@ -16,7 +16,7 @@ import com.cogitareforma.hexrepublics.common.entities.traits.MoveableTrait;
 import com.cogitareforma.hexrepublics.common.entities.traits.StaticTrait;
 import com.cogitareforma.hexrepublics.common.entities.traits.TileTrait;
 import com.cogitareforma.hexrepublics.common.entities.traits.WorldTrait;
-import com.cogitareforma.hexrepublics.common.util.EntityEventListener;
+import com.cogitareforma.hexrepublics.common.util.TraitEventListener;
 import com.cogitareforma.hexrepublics.common.util.WorldFactory;
 import com.jme3.app.state.AbstractAppState;
 import com.jme3.asset.AssetManager;
@@ -68,7 +68,7 @@ public class WorldManager extends AbstractAppState
 	private BitmapFont myFont;
 
 	private int currentTurn = 0;
-	private EntityEventListener worldListener = new EntityEventListener( )
+	private TraitEventListener worldListener = new TraitEventListener( )
 	{
 		@Override
 		public void onAdded( EntityData entityData, Set< Entity > entities )
@@ -104,7 +104,7 @@ public class WorldManager extends AbstractAppState
 		}
 	};
 
-	private EntityEventListener capitalListener = new EntityEventListener( )
+	private TraitEventListener capitalListener = new TraitEventListener( )
 	{
 		@Override
 		public void onAdded( EntityData entityData, Set< Entity > entities )
@@ -150,7 +150,7 @@ public class WorldManager extends AbstractAppState
 		}
 	};
 
-	private EntityEventListener healthBarListener = new EntityEventListener( )
+	private TraitEventListener healthBarListener = new TraitEventListener( )
 	{
 		@Override
 		public void onAdded( EntityData entityData, Set< Entity > entities )
@@ -195,7 +195,7 @@ public class WorldManager extends AbstractAppState
 		}
 	};
 
-	private EntityEventListener locationListener = new EntityEventListener( )
+	private TraitEventListener locationListener = new TraitEventListener( )
 	{
 		@Override
 		public void onAdded( EntityData entityData, Set< Entity > entities )
@@ -321,7 +321,7 @@ public class WorldManager extends AbstractAppState
 		}
 	};
 
-	private EntityEventListener tileListener = new EntityEventListener( )
+	private TraitEventListener tileListener = new TraitEventListener( )
 	{
 
 		@Override

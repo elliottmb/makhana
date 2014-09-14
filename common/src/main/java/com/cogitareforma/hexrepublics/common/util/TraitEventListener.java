@@ -5,7 +5,7 @@ import java.util.Set;
 import com.simsilica.es.Entity;
 import com.simsilica.es.EntityData;
 
-public interface EntityEventListener
+public interface TraitEventListener
 {
 	public void onAdded( EntityData entityData, Set< Entity > entities );
 
