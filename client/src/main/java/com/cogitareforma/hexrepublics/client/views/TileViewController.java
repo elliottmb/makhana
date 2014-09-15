@@ -233,7 +233,7 @@ public class TileViewController extends GeneralPlayingController
 		Pair< String, Integer > action = Traits.getActionRemainingTurns( entityData, id, currentTurn );
 		if ( action != null )
 		{
-			existing += String.format( " - %s: %d turns", action.getLeft( ), action.getRight( ) + 1 );
+			existing += String.format( " - %s: %d turns", action.getLeft( ), action.getRight( ) );
 		}
 
 		return existing;

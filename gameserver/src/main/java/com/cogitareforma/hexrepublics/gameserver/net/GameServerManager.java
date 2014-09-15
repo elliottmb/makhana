@@ -2,8 +2,6 @@ package com.cogitareforma.hexrepublics.gameserver.net;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -11,23 +9,20 @@ import org.apache.commons.lang3.RandomUtils;
 
 import com.cogitareforma.hexrepublics.common.data.Account;
 import com.cogitareforma.hexrepublics.common.data.ServerStatus;
-import com.cogitareforma.hexrepublics.common.entities.ActionType;
-import com.cogitareforma.hexrepublics.common.entities.Traits;
 import com.cogitareforma.hexrepublics.common.entities.traits.ActionTrait;
 import com.cogitareforma.hexrepublics.common.entities.traits.CapitalTrait;
-import com.cogitareforma.hexrepublics.common.entities.traits.DefenseTrait;
-import com.cogitareforma.hexrepublics.common.entities.traits.HealthTrait;
-import com.cogitareforma.hexrepublics.common.entities.traits.LocationTrait;
 import com.cogitareforma.hexrepublics.common.entities.traits.PlayerTrait;
-import com.cogitareforma.hexrepublics.common.entities.traits.StrengthTrait;
 import com.cogitareforma.hexrepublics.common.entities.traits.TileTrait;
 import com.cogitareforma.hexrepublics.common.entities.traits.WorldTrait;
+import com.cogitareforma.hexrepublics.common.eventsystem.EntityEventManager;
 import com.cogitareforma.hexrepublics.common.net.SerializerRegistrar;
 import com.cogitareforma.hexrepublics.common.net.ServerManager;
 import com.cogitareforma.hexrepublics.common.net.msg.ServerStatusResponse;
 import com.cogitareforma.hexrepublics.common.util.PackageUtils;
 import com.cogitareforma.hexrepublics.common.util.YamlConfig;
 import com.cogitareforma.hexrepublics.gameserver.GameServer;
+import com.cogitareforma.hexrepublics.gameserver.eventsystem.events.ActionCompletedEntityEvent;
+import com.cogitareforma.hexrepublics.gameserver.eventsystem.handlers.ActionCompletedEventHandler;
 import com.jme3.math.FastMath;
 import com.jme3.network.MessageListener;
 import com.jme3.network.Network;
@@ -51,6 +46,7 @@ public class GameServerManager extends ServerManager< GameServer >
 
 	private EntityData entityData;
 	private EntityDataHostService entityDataHostService;
+	private EntityEventManager entityEventManager;
 
 	private EntitySet actingEntities;
 	private EntitySet playerEntities;
@@ -264,6 +260,7 @@ public class GameServerManager extends ServerManager< GameServer >
 			close( );
 			entityDataHostService = null;
 			entityData = null;
+			entityEventManager = null;
 			status = null;
 		}
 
@@ -295,6 +292,9 @@ public class GameServerManager extends ServerManager< GameServer >
 
 			entityData = new DefaultEntityData( );
 			entityDataHostService = new EntityDataHostService( getServer( ), 0, entityData );
+			entityEventManager = new EntityEventManager( );
+
+			entityEventManager.addEventHandler( ActionCompletedEntityEvent.class, new ActionCompletedEventHandler( ) );
 
 			String name = ( String ) YamlConfig.DEFAULT.get( "gameserver.name" );
 			if ( name == null )
@@ -426,193 +426,11 @@ public class GameServerManager extends ServerManager< GameServer >
 								int turnsRemaining = ( at.getStartTurn( ) + at.getDuration( ) ) - wt.getCurrentTurn( );
 								System.out.println( at.getStartTurn( ) + " + " + at.getDuration( ) + " - " + wt.getCurrentTurn( ) + " = "
 										+ turnsRemaining );
-								if ( turnsRemaining <= 0 )
+								if ( turnsRemaining <= 1 )
 								{
-									if ( at.getType( ).equals( ActionType.MOVE ) )
-									{
-										Map< String, Object > data = at.getData( );
 
-										EntityId newTile = ( EntityId ) data.get( "newTile" );
-										if ( newTile != null )
-										{
-											LocationTrait location = getEntityData( ).getComponent( e.getId( ), LocationTrait.class );
-											if ( location != null )
-											{
-												if ( Traits.areNeighbors( getEntityData( ), location.getTile( ), newTile ) )
-												{
-													// Get the entities are the
-													// target
-													// tile
-													ComponentFilter< LocationTrait > locFilter = FieldFilter.create( LocationTrait.class,
-															"tile", newTile );
-													Set< EntityId > targetIdSet = getEntityData( ).findEntities( locFilter,
-															LocationTrait.class );
+									entityEventManager.triggerEvent( new ActionCompletedEntityEvent( entityData, e.getId( ), at ) );
 
-													ComponentFilter< LocationTrait > sourceLocFilter = FieldFilter.create(
-															LocationTrait.class, "tile", location.getTile( ) );
-													Set< EntityId > sourceIdSet = getEntityData( ).findEntities( sourceLocFilter,
-															LocationTrait.class );
-
-													// Units at the target tile
-													int unitCount = Traits.countUnits( getEntityData( ), targetIdSet );
-													// Buildings at the target
-													// tile
-													int buildingCount = Traits.countBuildings( getEntityData( ), targetIdSet );
-
-													// Get info on the target
-													// tile
-													Entity tile = getEntityData( ).getEntity( newTile, CreatedBy.class, TileTrait.class );
-
-													Entity source = getEntityData( ).getEntity( location.getTile( ), CreatedBy.class,
-															TileTrait.class );
-
-													if ( tile.get( CreatedBy.class ) != null )
-													{
-														// Owned, check if owned
-														// by
-														// same
-														// player
-														// or enemy
-														if ( source.get( CreatedBy.class ).getCreatorId( )
-																.compareTo( tile.get( CreatedBy.class ).getCreatorId( ) ) == 0 )
-														{
-															// Make sure there
-															// is
-															// room
-															if ( unitCount < 6 )
-															{
-																getEntityData( ).setComponent(
-																		e.getId( ),
-																		new LocationTrait( newTile, Traits.getOpenUnitPosition( entityData,
-																				targetIdSet ) ) );
-															}
-														}
-														else
-														{
-															// Owned by enemy
-															float targetStr = 0.0f;
-															float sourceStr = 0.0f;
-															if ( getEntityData( ).getComponent( e.getId( ), StrengthTrait.class ) != null )
-															{
-																sourceStr = getEntityData( ).getComponent( e.getId( ), StrengthTrait.class )
-																		.getStrength( );
-															}
-															System.out.println( "Source Strength: " + sourceStr );
-															// divide att by
-															// amount
-															// of
-															// defending units
-															// apply to all def
-															// units
-															// health
-															// if health <= 0
-															// delete
-															// unit
-															// if all units
-															// dead,
-															// move
-															// to
-															// tile and take
-															// ownership
-															// butt if units
-															// remain,
-															// apply
-															// str back to
-															// attacking
-															float newStr = sourceStr / Traits.countUnits( getEntityData( ), targetIdSet );
-															for ( EntityId id : targetIdSet )
-															{
-																if ( Traits.isUnit( getEntityData( ), id ) )
-																{
-																	Entity unit = getEntityData( ).getEntity( id, HealthTrait.class,
-																			DefenseTrait.class );
-																	if ( unit.get( HealthTrait.class ) != null )
-																	{
-																		float health = unit.get( HealthTrait.class ).getHealth( ) - newStr;
-																		if ( health <= 0 )
-																		{
-																			getEntityData( ).removeEntity( id );
-																		}
-																		else
-																		{
-																			System.out.println( "New Target Health: " + health );
-																			getEntityData( ).setComponent( id, new HealthTrait( health ) );
-																		}
-
-																	}
-																}
-															}
-
-															targetIdSet = getEntityData( ).findEntities( locFilter, LocationTrait.class );
-															if ( Traits.countUnits( getEntityData( ), targetIdSet ) == 0 )
-															{
-																getEntityData( ).setComponent(
-																		newTile,
-																		new CreatedBy( getEntityData( ).getComponent( location.getTile( ),
-																				CreatedBy.class ).getCreatorId( ) ) );
-																getEntityData( ).setComponent( e.getId( ),
-																		new LocationTrait( newTile, ( byte ) 0 ) );
-															}
-															else
-															{
-																for ( EntityId id : targetIdSet )
-																{
-																	if ( Traits.isUnit( getEntityData( ), id ) )
-																	{
-																		Entity unit = getEntityData( ).getEntity( id, StrengthTrait.class );
-																		if ( unit.get( StrengthTrait.class ) != null )
-																		{
-																			targetStr += unit.get( StrengthTrait.class ).getStrength( );
-																		}
-																	}
-																}
-																// Entity
-																// sourceUnit
-																// =
-																// getEntityData(
-																// ).getEntity(
-																// e.getId(
-																// ),
-																// HealthTrait.class
-																// );
-																HealthTrait sourceHealth = getEntityData( ).getComponent( e.getId( ),
-																		HealthTrait.class );
-																if ( sourceHealth != null )
-																{
-																	float health = sourceHealth.getHealth( ) - targetStr;
-																	if ( health <= 0 )
-																	{
-																		getEntityData( ).removeEntity( e.getId( ) );
-																	}
-																	else
-																	{
-																		System.out.println( "New Source Health: " + health );
-																		getEntityData( )
-																				.setComponent( e.getId( ), new HealthTrait( health ) );
-																	}
-
-																}
-															}
-														}
-													}
-													else
-													{
-														// Unowned, just take it
-														getEntityData( ).setComponent(
-																newTile,
-																new CreatedBy( getEntityData( ).getComponent( location.getTile( ),
-																		CreatedBy.class ).getCreatorId( ) ) );
-														getEntityData( ).setComponent( e.getId( ),
-																new LocationTrait( newTile, ( byte ) ( unitCount ) ) );
-													}
-												}
-
-											}
-										}
-									}
-
-									logger.log( Level.INFO, "Removing ActionTrait from " + e.toString( ) );
-									getEntityData( ).removeComponent( e.getId( ), ActionTrait.class );
 								}
 							}
 						}
