@@ -11,9 +11,9 @@ public class EntityEventManager extends AbstractEventManager< EntityEvent, Entit
 		super( );
 	}
 
-	public void addEventHandler( Class< ? extends EntityEvent > event, EntityEventHandler handler )
+	public void addEventHandler( EntityEventHandler handler, Class< ? extends EntityEvent > event )
 	{
-		super.addEventHandler( event, handler );
+		super.addEventHandler( handler, event );
 		// Sort from highest priority to lowest
 		Collections.sort( getEventHandlers( event, false ), Collections.reverseOrder( ) );
 	}

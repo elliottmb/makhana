@@ -8,25 +8,35 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 public abstract class AbstractEventManager< E, H > implements EventManager< E, H >
 {
-	private Map< Class< ? extends E >, List< H > > listenerMap;
+	private Map< Class< ? extends E >, List< H > > handlerMap;
 
 	public AbstractEventManager( )
 	{
-		this.listenerMap = new HashMap<>( );
+		this.handlerMap = new HashMap<>( );
 	}
 
-	public void addEventHandler( Class< ? extends E > eventType, H handler )
+	@Override
+	public void addEventHandler( H handler, Class< ? extends E > eventType )
 	{
 		getEventHandlers( eventType, true ).add( handler );
 	}
 
+	@Override
+	public void addEventHandler( H handler, @SuppressWarnings( "unchecked" ) Class< ? extends E >... eventTypes )
+	{
+		for ( Class< ? extends E > eventType : eventTypes )
+		{
+			addEventHandler( handler, eventType );
+		}
+	}
+
 	protected List< H > getEventHandlers( Class< ? extends E > eventType, boolean create )
 	{
-		List< H > result = listenerMap.get( eventType );
+		List< H > result = handlerMap.get( eventType );
 		if ( result == null && create )
 		{
 			result = new CopyOnWriteArrayList<>( );
-			listenerMap.put( eventType, result );
+			handlerMap.put( eventType, result );
 		}
 
 		if ( result == null )
@@ -36,7 +46,26 @@ public abstract class AbstractEventManager< E, H > implements EventManager< E, H
 		return result;
 	}
 
-	public void removeEventHandler( Class< ? extends E > eventType, H handler )
+	@Override
+	public void removeEventHandler( H handler )
+	{
+		for ( List< H > handlers : handlerMap.values( ) )
+		{
+			handlers.remove( handler );
+		}
+	}
+
+	@Override
+	public void removeEventHandler( H handler, @SuppressWarnings( "unchecked" ) Class< ? extends E >... eventTypes )
+	{
+		for ( Class< ? extends E > eventType : eventTypes )
+		{
+			removeEventHandler( handler, eventType );
+		}
+	}
+
+	@Override
+	public void removeEventHandler( H handler, Class< ? extends E > eventType )
 	{
 		List< H > list = getEventHandlers( eventType, false );
 		list.remove( handler );

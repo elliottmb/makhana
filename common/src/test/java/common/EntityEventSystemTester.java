@@ -20,7 +20,7 @@ public class EntityEventSystemTester
 	public void setUp( ) throws Exception
 	{
 		eem = new EntityEventManager( );
-		eem.addEventHandler( PlayerJoinEntityEvent.class, new PlayerJoinEventHandler( ) );
+		eem.addEventHandler( new PlayerJoinEventHandler( ), PlayerJoinEntityEvent.class );
 	}
 
 	@After

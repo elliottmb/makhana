@@ -2,9 +2,39 @@ package com.cogitareforma.hexrepublics.common.eventsystem;
 
 public interface EventManager< E, H >
 {
-	public void addEventHandler( Class< ? extends E > event, H handler );
+	/**
+	 * 
+	 * @param handler
+	 * @param eventType
+	 */
+	public void addEventHandler( H handler, Class< ? extends E > eventType );
 
-	public void removeEventHandler( Class< ? extends E > event, H handler );
+	/**
+	 * 
+	 * @param handler
+	 * @param eventTypes
+	 */
+	public void addEventHandler( H handler, @SuppressWarnings( "unchecked" ) Class< ? extends E >... eventTypes );
+
+	/**
+	 * 
+	 * @param handler
+	 */
+	public void removeEventHandler( H handler );
+
+	/**
+	 * 
+	 * @param handler
+	 * @param eventType
+	 */
+	public void removeEventHandler( H handler, Class< ? extends E > eventType );
+
+	/**
+	 * 
+	 * @param handler
+	 * @param eventTypes
+	 */
+	public void removeEventHandler( H handler, @SuppressWarnings( "unchecked" ) Class< ? extends E >... eventTypes );
 
 	/**
 	 * Returns true if the event was handled by all appropriate event handlers,

@@ -294,7 +294,7 @@ public class GameServerManager extends ServerManager< GameServer >
 			entityDataHostService = new EntityDataHostService( getServer( ), 0, entityData );
 			entityEventManager = new EntityEventManager( );
 
-			entityEventManager.addEventHandler( ActionCompletedEntityEvent.class, new ActionCompletedEventHandler( ) );
+			entityEventManager.addEventHandler( new ActionCompletedEventHandler( ), ActionCompletedEntityEvent.class );
 
 			String name = ( String ) YamlConfig.DEFAULT.get( "gameserver.name" );
 			if ( name == null )

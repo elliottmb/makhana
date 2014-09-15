@@ -2,6 +2,7 @@ package com.cogitareforma.hexrepublics.client.states;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -14,8 +15,6 @@ import java.util.concurrent.CopyOnWriteArraySet;
 import com.cogitareforma.hexrepublics.client.ClientMain;
 import com.cogitareforma.hexrepublics.common.util.ComponentFilterEventListener;
 import com.cogitareforma.hexrepublics.common.util.TraitEventListener;
-import com.google.common.collect.BiMap;
-import com.google.common.collect.HashBiMap;
 import com.jme3.app.state.AbstractAppState;
 import com.simsilica.es.ComponentFilter;
 import com.simsilica.es.EntityComponent;
@@ -25,8 +24,8 @@ import com.simsilica.es.EntitySet;
 public class EntityManager extends AbstractAppState
 {
 	// TODO: Add support for Listeners that should act on filter-based EntitySet
-	private BiMap< Set< Class< ? extends EntityComponent >>, Set< TraitEventListener >> listenerBiMap;
-	private BiMap< Set< Class< ? extends EntityComponent >>, EntitySet > entitySetBiMap;
+	private Map< Set< Class< ? extends EntityComponent >>, Set< TraitEventListener >> listenerMap;
+	private Map< Set< Class< ? extends EntityComponent >>, EntitySet > entitySetMap;
 	private Map< ComponentFilter< ? >, List< ComponentFilterEventListener >> filterListenerMap;
 	private Map< ComponentFilter< ? >, EntitySet > filterSetMap;
 	private ClientMain app;
@@ -36,8 +35,8 @@ public class EntityManager extends AbstractAppState
 		this.app = app;
 		this.filterListenerMap = new ConcurrentHashMap<>( );
 		this.filterSetMap = new ConcurrentHashMap<>( );
-		this.listenerBiMap = HashBiMap.create( );
-		this.entitySetBiMap = HashBiMap.create( );
+		this.listenerMap = new HashMap<>( );
+		this.entitySetMap = new HashMap<>( );
 	}
 
 	public void addListener( TraitEventListener listener, Class< ? extends EntityComponent >... classes )
@@ -57,7 +56,7 @@ public class EntityManager extends AbstractAppState
 	{
 		Set< Class< ? extends EntityComponent >> setOfClasses = new HashSet<>( Arrays.asList( classes ) );
 
-		for ( Entry< Set< Class< ? extends EntityComponent >>, EntitySet > e : entitySetBiMap.entrySet( ) )
+		for ( Entry< Set< Class< ? extends EntityComponent >>, EntitySet > e : entitySetMap.entrySet( ) )
 		{
 			Set< Class< ? extends EntityComponent > > eKey = e.getKey( );
 			if ( eKey != null && eKey.equals( setOfClasses ) )
@@ -87,11 +86,11 @@ public class EntityManager extends AbstractAppState
 
 	protected Set< TraitEventListener > getListeners( Set< Class< ? extends EntityComponent > > classes, boolean create )
 	{
-		Set< TraitEventListener > result = listenerBiMap.get( classes );
+		Set< TraitEventListener > result = listenerMap.get( classes );
 		if ( result == null && create )
 		{
 			result = new CopyOnWriteArraySet<>( );
-			listenerBiMap.put( classes, result );
+			listenerMap.put( classes, result );
 		}
 
 		if ( result == null )
@@ -119,11 +118,12 @@ public class EntityManager extends AbstractAppState
 		}
 		else
 		{
-			Set< TraitEventListener > set = getListeners( new HashSet<>( Arrays.asList( classes ) ), false );
+			Set< Class< ? extends EntityComponent >> classesSet = new HashSet<>( Arrays.asList( classes ) );
+			Set< TraitEventListener > set = getListeners( classesSet, false );
 			set.remove( listener );
 			if ( set.isEmpty( ) )
 			{
-				EntitySet entitySet = entitySetBiMap.remove( set );
+				EntitySet entitySet = entitySetMap.remove( classesSet );
 				if ( entitySet != null )
 				{
 					entitySet.release( );
@@ -140,12 +140,12 @@ public class EntityManager extends AbstractAppState
 			EntityData entityData = app.getGameConnManager( ).getRemoteEntityData( );
 			if ( entityData != null )
 			{
-				for ( Set< Class< ? extends EntityComponent >> s : listenerBiMap.keySet( ) )
+				for ( Set< Class< ? extends EntityComponent >> s : listenerMap.keySet( ) )
 				{
-					if ( !entitySetBiMap.containsKey( s ) )
+					if ( !entitySetMap.containsKey( s ) )
 					{
 						Class< ? >[ ] tempArray = new Class[ s.size( ) ];
-						entitySetBiMap.put( s, entityData.getEntities( s.toArray( tempArray ) ) );
+						entitySetMap.put( s, entityData.getEntities( s.toArray( tempArray ) ) );
 					}
 				}
 
@@ -157,7 +157,7 @@ public class EntityManager extends AbstractAppState
 					}
 				}
 
-				for ( Entry< Set< Class< ? extends EntityComponent >>, EntitySet > e : entitySetBiMap.entrySet( ) )
+				for ( Entry< Set< Class< ? extends EntityComponent >>, EntitySet > e : entitySetMap.entrySet( ) )
 				{
 					EntitySet entitySet = e.getValue( );
 					if ( entitySet.applyChanges( ) )
