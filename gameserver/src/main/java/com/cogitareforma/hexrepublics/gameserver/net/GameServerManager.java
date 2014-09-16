@@ -10,7 +10,6 @@ import org.apache.commons.lang3.RandomUtils;
 import com.cogitareforma.hexrepublics.common.data.Account;
 import com.cogitareforma.hexrepublics.common.data.ServerStatus;
 import com.cogitareforma.hexrepublics.common.entities.traits.ActionTrait;
-import com.cogitareforma.hexrepublics.common.entities.traits.CapitalTrait;
 import com.cogitareforma.hexrepublics.common.entities.traits.PlayerTrait;
 import com.cogitareforma.hexrepublics.common.entities.traits.TileTrait;
 import com.cogitareforma.hexrepublics.common.entities.traits.WorldTrait;
@@ -21,19 +20,19 @@ import com.cogitareforma.hexrepublics.common.net.msg.ServerStatusResponse;
 import com.cogitareforma.hexrepublics.common.util.PackageUtils;
 import com.cogitareforma.hexrepublics.common.util.YamlConfig;
 import com.cogitareforma.hexrepublics.gameserver.GameServer;
-import com.cogitareforma.hexrepublics.gameserver.eventsystem.events.ActionCompletedEntityEvent;
+import com.cogitareforma.hexrepublics.gameserver.eventsystem.events.ActionCompletedEvent;
+import com.cogitareforma.hexrepublics.gameserver.eventsystem.events.ServerPlayerJoinEvent;
 import com.cogitareforma.hexrepublics.gameserver.eventsystem.handlers.ActionCompletedEventHandler;
+import com.cogitareforma.hexrepublics.gameserver.eventsystem.handlers.ServerPlayerJoinEventHandler;
 import com.jme3.math.FastMath;
 import com.jme3.network.MessageListener;
 import com.jme3.network.Network;
 import com.simsilica.es.ComponentFilter;
-import com.simsilica.es.CreatedBy;
 import com.simsilica.es.Entity;
 import com.simsilica.es.EntityData;
 import com.simsilica.es.EntityId;
 import com.simsilica.es.EntitySet;
 import com.simsilica.es.base.DefaultEntityData;
-import com.simsilica.es.filter.AndFilter;
 import com.simsilica.es.filter.FieldFilter;
 import com.simsilica.es.server.EntityDataHostService;
 
@@ -101,58 +100,24 @@ public class GameServerManager extends ServerManager< GameServer >
 		{
 			if ( account != null )
 			{
+
 				// Check if already exists
 				for ( Entity e : entityData.getEntities( PlayerTrait.class ) )
 				{
 					if ( e.get( PlayerTrait.class ).getAccount( ).equals( account ) )
 					{
+						logger.log( Level.WARNING, "Could not create an Entity, Player already exists" );
+						entityEventManager.triggerEvent( new ServerPlayerJoinEvent( entityData, e.getId( ), account, getSessionManager( )
+								.getAllSessions( ).size( ), true ) );
 						return;
 					}
 				}
-				EntityId playerEntity = entityData.createEntity( );
-				logger.log( Level.INFO, "Creating an Entity for player: " + account.getAccountName( ) + ", " + playerEntity );
-				getEntityData( ).setComponent( playerEntity, new PlayerTrait( account ) );
 
-				int x = 0;
-				int y = 0;
-
-				switch ( getSessionManager( ).getAllSessions( ).size( ) )
-				{
-					case 1:
-					{
-						x = 3;
-						y = 3;
-						break;
-					}
-					case 2:
-					{
-						x = 12;
-						y = 10;
-						break;
-					}
-					case 3:
-					{
-						x = 3;
-						y = 10;
-						break;
-					}
-					default:
-					{
-						x = 12;
-						y = 3;
-						break;
-					}
-				}
-				ComponentFilter< TileTrait > xFilter = FieldFilter.create( TileTrait.class, "x", x );
-				ComponentFilter< TileTrait > yFilter = FieldFilter.create( TileTrait.class, "y", y );
-				@SuppressWarnings( "unchecked" )
-				ComponentFilter< TileTrait > completeFilter = AndFilter.create( TileTrait.class, xFilter, yFilter );
-
-				EntityId tileId = getEntityData( ).findEntity( completeFilter, TileTrait.class );
-
-				getEntityData( ).removeComponent( tileId, CreatedBy.class );
-				getEntityData( ).setComponent( tileId, new CreatedBy( playerEntity ) );
-				getEntityData( ).setComponent( tileId, new CapitalTrait( ) );
+				EntityId playerId = entityData.createEntity( );
+				logger.log( Level.INFO, "Creating an Entity for player: " + account.getAccountName( ) + ", " + playerId );
+				entityData.setComponent( playerId, new PlayerTrait( account ) );
+				entityEventManager.triggerEvent( new ServerPlayerJoinEvent( entityData, playerId, account, getSessionManager( )
+						.getAllSessions( ).size( ), false ) );
 			}
 			else
 			{
@@ -294,7 +259,8 @@ public class GameServerManager extends ServerManager< GameServer >
 			entityDataHostService = new EntityDataHostService( getServer( ), 0, entityData );
 			entityEventManager = new EntityEventManager( );
 
-			entityEventManager.addEventHandler( new ActionCompletedEventHandler( ), ActionCompletedEntityEvent.class );
+			entityEventManager.addEventHandler( new ActionCompletedEventHandler( ), ActionCompletedEvent.class );
+			entityEventManager.addEventHandler( new ServerPlayerJoinEventHandler( ), ServerPlayerJoinEvent.class );
 
 			String name = ( String ) YamlConfig.DEFAULT.get( "gameserver.name" );
 			if ( name == null )
@@ -417,30 +383,26 @@ public class GameServerManager extends ServerManager< GameServer >
 					if ( advanceTurn )
 					{
 						WorldTrait wt = getEntityData( ).getComponent( getTheWorld( ), WorldTrait.class );
-						for ( Entity e : actingEntities )
-						{
-							ActionTrait at = e.get( ActionTrait.class );
-							if ( at != null )
-							{
-
-								int turnsRemaining = ( at.getStartTurn( ) + at.getDuration( ) ) - wt.getCurrentTurn( );
-								System.out.println( at.getStartTurn( ) + " + " + at.getDuration( ) + " - " + wt.getCurrentTurn( ) + " = "
-										+ turnsRemaining );
-								if ( turnsRemaining <= 1 )
-								{
-
-									entityEventManager.triggerEvent( new ActionCompletedEntityEvent( entityData, e.getId( ), at ) );
-
-								}
-							}
-						}
-
 						if ( wt != null )
 						{
-							WorldTrait newWt = new WorldTrait( wt.getCurrentTurn( ) + 1, wt.getSeed( ), true );
-							getEntityData( ).setComponent( getTheWorld( ), newWt );
+							for ( Entity e : actingEntities )
+							{
+								ActionTrait at = e.get( ActionTrait.class );
+								if ( at != null )
+								{
+									// If enough turns have passed
+									if ( ( at.getStartTurn( ) + at.getDuration( ) ) - wt.getCurrentTurn( ) <= 1 )
+									{
+
+										entityEventManager.triggerEvent( new ActionCompletedEvent( entityData, e.getId( ), at ) );
+
+									}
+								}
+							}
+
+							getEntityData( ).setComponent( getTheWorld( ), new WorldTrait( wt.getCurrentTurn( ) + 1, wt.getSeed( ), true ) );
+							advanceTurn = false;
 						}
-						advanceTurn = false;
 					}
 				}
 				else

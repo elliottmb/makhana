@@ -15,7 +15,7 @@ import com.cogitareforma.hexrepublics.common.entities.traits.StrengthTrait;
 import com.cogitareforma.hexrepublics.common.entities.traits.TileTrait;
 import com.cogitareforma.hexrepublics.common.eventsystem.EntityEvent;
 import com.cogitareforma.hexrepublics.common.eventsystem.EntityEventHandler;
-import com.cogitareforma.hexrepublics.gameserver.eventsystem.events.ActionCompletedEntityEvent;
+import com.cogitareforma.hexrepublics.gameserver.eventsystem.events.ActionCompletedEvent;
 import com.simsilica.es.ComponentFilter;
 import com.simsilica.es.CreatedBy;
 import com.simsilica.es.Entity;
@@ -36,9 +36,9 @@ public class ActionCompletedEventHandler implements EntityEventHandler
 	@Override
 	public boolean handle( EntityEvent event )
 	{
-		if ( event instanceof ActionCompletedEntityEvent )
+		if ( event instanceof ActionCompletedEvent )
 		{
-			ActionCompletedEntityEvent actionCompleted = ( ActionCompletedEntityEvent ) event;
+			ActionCompletedEvent actionCompleted = ( ActionCompletedEvent ) event;
 
 			EntityData entityData = actionCompleted.getEntityData( );
 			EntityId id = actionCompleted.getSource( );

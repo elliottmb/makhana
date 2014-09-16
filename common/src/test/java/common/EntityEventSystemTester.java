@@ -8,8 +8,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.cogitareforma.hexrepublics.common.eventsystem.EntityEventManager;
-import com.cogitareforma.hexrepublics.common.eventsystem.events.PlayerJoinEntityEvent;
-import com.cogitareforma.hexrepublics.common.eventsystem.events.PlayerLeaveEntityEvent;
+import com.cogitareforma.hexrepublics.common.eventsystem.events.PlayerJoinEvent;
+import com.cogitareforma.hexrepublics.common.eventsystem.events.PlayerLeaveEvent;
 import com.cogitareforma.hexrepublics.common.eventsystem.handlers.PlayerJoinEventHandler;
 
 public class EntityEventSystemTester
@@ -20,7 +20,7 @@ public class EntityEventSystemTester
 	public void setUp( ) throws Exception
 	{
 		eem = new EntityEventManager( );
-		eem.addEventHandler( new PlayerJoinEventHandler( ), PlayerJoinEntityEvent.class );
+		eem.addEventHandler( new PlayerJoinEventHandler( ), PlayerJoinEvent.class );
 	}
 
 	@After
@@ -31,13 +31,13 @@ public class EntityEventSystemTester
 	@Test
 	public void test( )
 	{
-		assertTrue( eem.triggerEvent( new PlayerJoinEntityEvent( null, null ) ) );
+		assertTrue( eem.triggerEvent( new PlayerJoinEvent( null, null ) ) );
 	}
 
 	@Test
 	public void test2( )
 	{
-		assertFalse( eem.triggerEvent( new PlayerLeaveEntityEvent( null, null ) ) );
+		assertFalse( eem.triggerEvent( new PlayerLeaveEvent( null, null ) ) );
 	}
 
 }

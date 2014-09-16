@@ -2,7 +2,7 @@ package com.cogitareforma.hexrepublics.common.eventsystem.handlers;
 
 import com.cogitareforma.hexrepublics.common.eventsystem.EntityEvent;
 import com.cogitareforma.hexrepublics.common.eventsystem.EntityEventHandler;
-import com.cogitareforma.hexrepublics.common.eventsystem.events.PlayerJoinEntityEvent;
+import com.cogitareforma.hexrepublics.common.eventsystem.events.PlayerJoinEvent;
 
 public class PlayerJoinEventHandler implements EntityEventHandler
 {
@@ -16,7 +16,7 @@ public class PlayerJoinEventHandler implements EntityEventHandler
 	@Override
 	public boolean handle( EntityEvent event )
 	{
-		if ( event instanceof PlayerJoinEntityEvent )
+		if ( event instanceof PlayerJoinEvent )
 		{
 			System.out.println( "Woo!" );
 			// TODO Auto-generated method stub

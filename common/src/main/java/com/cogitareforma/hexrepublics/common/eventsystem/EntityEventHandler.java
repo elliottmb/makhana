@@ -2,6 +2,7 @@ package com.cogitareforma.hexrepublics.common.eventsystem;
 
 public interface EntityEventHandler extends Comparable< EntityEventHandler >
 {
+	@Override
 	public default int compareTo( EntityEventHandler other )
 	{
 		return ( getPriority( ) < other.getPriority( ) ) ? -1 : ( ( getPriority( ) == other.getPriority( ) ) ? 0 : 1 );

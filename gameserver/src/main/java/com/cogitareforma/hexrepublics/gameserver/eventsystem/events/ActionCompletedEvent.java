@@ -5,15 +5,14 @@ import com.cogitareforma.hexrepublics.common.eventsystem.EntityEvent;
 import com.simsilica.es.EntityData;
 import com.simsilica.es.EntityId;
 
-public class ActionCompletedEntityEvent extends EntityEvent
+public class ActionCompletedEvent extends EntityEvent
 {
 
 	private ActionTrait action;
 
-	public ActionCompletedEntityEvent( EntityData entityData, EntityId source, ActionTrait action )
+	public ActionCompletedEvent( EntityData entityData, EntityId source, ActionTrait action )
 	{
 		super( entityData, source );
-		// TODO Auto-generated constructor stub
 		this.action = action;
 	}
 
