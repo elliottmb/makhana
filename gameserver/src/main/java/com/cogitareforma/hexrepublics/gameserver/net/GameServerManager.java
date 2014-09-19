@@ -16,7 +16,9 @@ import com.cogitareforma.hexrepublics.common.entities.traits.PlayerTrait;
 import com.cogitareforma.hexrepublics.common.entities.traits.TileTrait;
 import com.cogitareforma.hexrepublics.common.entities.traits.WorldTrait;
 import com.cogitareforma.hexrepublics.common.eventsystem.EntityEventManager;
-import com.cogitareforma.hexrepublics.common.eventsystem.events.TileOwnerChangedEvent;
+import com.cogitareforma.hexrepublics.common.eventsystem.events.TileCapturedEvent;
+import com.cogitareforma.hexrepublics.common.eventsystem.events.TileClaimedEvent;
+import com.cogitareforma.hexrepublics.common.eventsystem.events.TileFreedEvent;
 import com.cogitareforma.hexrepublics.common.net.SerializerRegistrar;
 import com.cogitareforma.hexrepublics.common.net.ServerManager;
 import com.cogitareforma.hexrepublics.common.net.msg.ServerStatusResponse;
@@ -271,7 +273,10 @@ public class GameServerManager extends ServerManager< GameServer >
 
 			entityEventManager.addEventHandler( new ActionCompletedEventHandler( ), ActionCompletedEvent.class );
 			entityEventManager.addEventHandler( new ServerPlayerJoinEventHandler( ), ServerPlayerJoinEvent.class );
-			entityEventManager.addEventHandler( new TileOwnerChangedEventHandler( ), TileOwnerChangedEvent.class );
+			TileOwnerChangedEventHandler tileOwnerChangeHandler = new TileOwnerChangedEventHandler( );
+			entityEventManager.addEventHandler( tileOwnerChangeHandler, TileClaimedEvent.class );
+			entityEventManager.addEventHandler( tileOwnerChangeHandler, TileCapturedEvent.class );
+			entityEventManager.addEventHandler( tileOwnerChangeHandler, TileFreedEvent.class );
 
 			String name = ( String ) YamlConfig.DEFAULT.get( "gameserver.name" );
 			if ( name == null )
@@ -436,8 +441,8 @@ public class GameServerManager extends ServerManager< GameServer >
 								TileTrait tileTrait = tileEntity.get( TileTrait.class );
 								CreatedBy createdBy = tileEntity.get( CreatedBy.class );
 
-								entityEventManager.triggerEvent( new TileOwnerChangedEvent( getEntityData( ), tileId, tileTrait, null,
-										createdBy.getCreatorId( ) ) );
+								entityEventManager.triggerEvent( new TileClaimedEvent( getEntityData( ), tileId, tileTrait, createdBy
+										.getCreatorId( ) ) );
 
 								tileToOwnerMap.put( tileId, createdBy.getCreatorId( ) );
 							}
@@ -454,8 +459,8 @@ public class GameServerManager extends ServerManager< GameServer >
 									oldOwnerId = tileToOwnerMap.get( tileId );
 								}
 
-								entityEventManager.triggerEvent( new TileOwnerChangedEvent( getEntityData( ), tileId, tileTrait,
-										oldOwnerId, createdBy.getCreatorId( ) ) );
+								entityEventManager.triggerEvent( new TileCapturedEvent( getEntityData( ), tileId, tileTrait, oldOwnerId,
+										createdBy.getCreatorId( ) ) );
 
 								tileToOwnerMap.put( tileId, createdBy.getCreatorId( ) );
 							}
@@ -471,8 +476,7 @@ public class GameServerManager extends ServerManager< GameServer >
 									oldOwnerId = tileToOwnerMap.get( tileId );
 								}
 
-								entityEventManager.triggerEvent( new TileOwnerChangedEvent( getEntityData( ), tileId, tileTrait,
-										oldOwnerId, null ) );
+								entityEventManager.triggerEvent( new TileFreedEvent( getEntityData( ), tileId, tileTrait, oldOwnerId ) );
 
 								tileToOwnerMap.remove( tileId );
 							}
