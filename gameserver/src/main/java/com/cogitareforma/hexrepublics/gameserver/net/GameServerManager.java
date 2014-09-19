@@ -1,7 +1,9 @@
 package com.cogitareforma.hexrepublics.gameserver.net;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -14,6 +16,7 @@ import com.cogitareforma.hexrepublics.common.entities.traits.PlayerTrait;
 import com.cogitareforma.hexrepublics.common.entities.traits.TileTrait;
 import com.cogitareforma.hexrepublics.common.entities.traits.WorldTrait;
 import com.cogitareforma.hexrepublics.common.eventsystem.EntityEventManager;
+import com.cogitareforma.hexrepublics.common.eventsystem.events.TileOwnerChangedEvent;
 import com.cogitareforma.hexrepublics.common.net.SerializerRegistrar;
 import com.cogitareforma.hexrepublics.common.net.ServerManager;
 import com.cogitareforma.hexrepublics.common.net.msg.ServerStatusResponse;
@@ -24,10 +27,12 @@ import com.cogitareforma.hexrepublics.gameserver.eventsystem.events.ActionComple
 import com.cogitareforma.hexrepublics.gameserver.eventsystem.events.ServerPlayerJoinEvent;
 import com.cogitareforma.hexrepublics.gameserver.eventsystem.handlers.ActionCompletedEventHandler;
 import com.cogitareforma.hexrepublics.gameserver.eventsystem.handlers.ServerPlayerJoinEventHandler;
+import com.cogitareforma.hexrepublics.gameserver.eventsystem.handlers.TileOwnerChangedEventHandler;
 import com.jme3.math.FastMath;
 import com.jme3.network.MessageListener;
 import com.jme3.network.Network;
 import com.simsilica.es.ComponentFilter;
+import com.simsilica.es.CreatedBy;
 import com.simsilica.es.Entity;
 import com.simsilica.es.EntityData;
 import com.simsilica.es.EntityId;
@@ -47,10 +52,13 @@ public class GameServerManager extends ServerManager< GameServer >
 	private EntityDataHostService entityDataHostService;
 	private EntityEventManager entityEventManager;
 
-	private EntitySet actingEntities;
-	private EntitySet playerEntities;
+	private EntitySet actingEntitySet;
+	private EntitySet playerEntitySet;
+	private EntitySet ownedTileEntitySet;
 	private boolean advanceTurn;
 	private EntityId theWorld;
+
+	private Map< EntityId, EntityId > tileToOwnerMap;
 
 	/**
 	 * The server's status, used for informing the master server and clients.
@@ -104,19 +112,21 @@ public class GameServerManager extends ServerManager< GameServer >
 				// Check if already exists
 				for ( Entity e : entityData.getEntities( PlayerTrait.class ) )
 				{
-					if ( e.get( PlayerTrait.class ).getAccount( ).equals( account ) )
+					PlayerTrait playerTrait = e.get( PlayerTrait.class );
+					if ( account.equals( playerTrait.getAccount( ) ) )
 					{
 						logger.log( Level.WARNING, "Could not create an Entity, Player already exists" );
-						entityEventManager.triggerEvent( new ServerPlayerJoinEvent( entityData, e.getId( ), account, getSessionManager( )
-								.getAllSessions( ).size( ), true ) );
+						entityEventManager.triggerEvent( new ServerPlayerJoinEvent( entityData, e.getId( ), playerTrait,
+								getSessionManager( ).getAllSessions( ).size( ), true ) );
 						return;
 					}
 				}
 
 				EntityId playerId = entityData.createEntity( );
 				logger.log( Level.INFO, "Creating an Entity for player: " + account.getAccountName( ) + ", " + playerId );
-				entityData.setComponent( playerId, new PlayerTrait( account ) );
-				entityEventManager.triggerEvent( new ServerPlayerJoinEvent( entityData, playerId, account, getSessionManager( )
+				PlayerTrait playerTrait = new PlayerTrait( account );
+				entityData.setComponent( playerId, playerTrait );
+				entityEventManager.triggerEvent( new ServerPlayerJoinEvent( entityData, playerId, playerTrait, getSessionManager( )
 						.getAllSessions( ).size( ), false ) );
 			}
 			else
@@ -261,6 +271,7 @@ public class GameServerManager extends ServerManager< GameServer >
 
 			entityEventManager.addEventHandler( new ActionCompletedEventHandler( ), ActionCompletedEvent.class );
 			entityEventManager.addEventHandler( new ServerPlayerJoinEventHandler( ), ServerPlayerJoinEvent.class );
+			entityEventManager.addEventHandler( new TileOwnerChangedEventHandler( ), TileOwnerChangedEvent.class );
 
 			String name = ( String ) YamlConfig.DEFAULT.get( "gameserver.name" );
 			if ( name == null )
@@ -328,24 +339,25 @@ public class GameServerManager extends ServerManager< GameServer >
 		{
 			if ( getEntityData( ) != null )
 			{
-				if ( playerEntities != null )
+				if ( playerEntitySet != null )
 				{
-					if ( playerEntities.applyChanges( ) )
+					if ( playerEntitySet.applyChanges( ) )
 					{
 						logger.log( Level.INFO, "There were changes to the players!" );
-						for ( Entity e : playerEntities.getChangedEntities( ) )
+						for ( Entity e : playerEntitySet.getChangedEntities( ) )
 						{
 							logger.log( Level.INFO, "Change: " + e.getId( ).toString( ) + ", " + e.get( PlayerTrait.class ) );
 						}
 						int readyCount = 0;
-						for ( Entity e : playerEntities )
+						for ( Entity e : playerEntitySet )
 						{
 							if ( e.get( PlayerTrait.class ).isReady( ) )
 							{
 								readyCount++;
 							}
 						}
-						if ( readyCount == playerEntities.size( ) )
+
+						if ( readyCount == playerEntitySet.size( ) )
 						{
 							WorldTrait wt = getEntityData( ).getComponent( getTheWorld( ), WorldTrait.class );
 							if ( wt != null )
@@ -361,7 +373,7 @@ public class GameServerManager extends ServerManager< GameServer >
 								}
 							}
 
-							for ( Entity e : playerEntities )
+							for ( Entity e : playerEntitySet )
 							{
 								PlayerTrait pt = e.get( PlayerTrait.class );
 								PlayerTrait newPt = new PlayerTrait( pt.getAccount( ), pt.getWins( ), pt.getLosses( ), false );
@@ -373,19 +385,20 @@ public class GameServerManager extends ServerManager< GameServer >
 				}
 				else
 				{
-					playerEntities = getEntityData( ).getEntities( PlayerTrait.class );
+					playerEntitySet = getEntityData( ).getEntities( PlayerTrait.class );
 				}
 
-				if ( actingEntities != null )
+				if ( actingEntitySet != null )
 				{
 
-					actingEntities.applyChanges( );
+					actingEntitySet.applyChanges( );
+
 					if ( advanceTurn )
 					{
 						WorldTrait wt = getEntityData( ).getComponent( getTheWorld( ), WorldTrait.class );
 						if ( wt != null )
 						{
-							for ( Entity e : actingEntities )
+							for ( Entity e : actingEntitySet )
 							{
 								ActionTrait at = e.get( ActionTrait.class );
 								if ( at != null )
@@ -404,13 +417,78 @@ public class GameServerManager extends ServerManager< GameServer >
 							advanceTurn = false;
 						}
 					}
+
 				}
 				else
 				{
-					actingEntities = getEntityData( ).getEntities( ActionTrait.class );
+					actingEntitySet = getEntityData( ).getEntities( ActionTrait.class );
 				}
 
+				if ( ownedTileEntitySet != null )
+				{
+					if ( tileToOwnerMap != null )
+					{
+						if ( ownedTileEntitySet.applyChanges( ) )
+						{
+							for ( Entity tileEntity : ownedTileEntitySet.getAddedEntities( ) )
+							{
+								EntityId tileId = tileEntity.getId( );
+								TileTrait tileTrait = tileEntity.get( TileTrait.class );
+								CreatedBy createdBy = tileEntity.get( CreatedBy.class );
+
+								entityEventManager.triggerEvent( new TileOwnerChangedEvent( getEntityData( ), tileId, tileTrait, null,
+										createdBy.getCreatorId( ) ) );
+
+								tileToOwnerMap.put( tileId, createdBy.getCreatorId( ) );
+							}
+
+							for ( Entity tileEntity : ownedTileEntitySet.getChangedEntities( ) )
+							{
+								EntityId tileId = tileEntity.getId( );
+								TileTrait tileTrait = tileEntity.get( TileTrait.class );
+								CreatedBy createdBy = tileEntity.get( CreatedBy.class );
+								EntityId oldOwnerId = null;
+
+								if ( tileToOwnerMap.containsKey( tileId ) )
+								{
+									oldOwnerId = tileToOwnerMap.get( tileId );
+								}
+
+								entityEventManager.triggerEvent( new TileOwnerChangedEvent( getEntityData( ), tileId, tileTrait,
+										oldOwnerId, createdBy.getCreatorId( ) ) );
+
+								tileToOwnerMap.put( tileId, createdBy.getCreatorId( ) );
+							}
+
+							for ( Entity tileEntity : ownedTileEntitySet.getRemovedEntities( ) )
+							{
+								EntityId tileId = tileEntity.getId( );
+								TileTrait tileTrait = tileEntity.get( TileTrait.class );
+								EntityId oldOwnerId = null;
+
+								if ( tileToOwnerMap.containsKey( tileId ) )
+								{
+									oldOwnerId = tileToOwnerMap.get( tileId );
+								}
+
+								entityEventManager.triggerEvent( new TileOwnerChangedEvent( getEntityData( ), tileId, tileTrait,
+										oldOwnerId, null ) );
+
+								tileToOwnerMap.remove( tileId );
+							}
+						}
+					}
+					else
+					{
+						tileToOwnerMap = new HashMap<>( );
+					}
+				}
+				else
+				{
+					ownedTileEntitySet = getEntityData( ).getEntities( TileTrait.class, CreatedBy.class );
+				}
 			}
+
 			getEntityDataHostService( ).sendUpdates( );
 		}
 	}

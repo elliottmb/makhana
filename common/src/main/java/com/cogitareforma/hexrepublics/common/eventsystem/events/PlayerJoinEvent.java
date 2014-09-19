@@ -1,14 +1,15 @@
 package com.cogitareforma.hexrepublics.common.eventsystem.events;
 
+import com.cogitareforma.hexrepublics.common.entities.traits.PlayerTrait;
 import com.simsilica.es.EntityData;
 import com.simsilica.es.EntityId;
 
-public class PlayerJoinEvent extends PlayerEntityEvent
+public class PlayerJoinEvent extends PlayerEvent
 {
 
-	public PlayerJoinEvent( EntityData entityData, EntityId source )
+	public PlayerJoinEvent( EntityData entityData, EntityId source, PlayerTrait playerTrait )
 	{
-		super( entityData, source );
+		super( entityData, source, playerTrait );
 		// TODO Auto-generated constructor stub
 	}
 
