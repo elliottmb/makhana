@@ -12,7 +12,7 @@ public class TileEvent extends EntityEvent
 	public TileEvent( EntityData entityData, EntityId source, TileTrait tileTrait )
 	{
 		super( entityData, source );
-		// TODO Auto-generated constructor stub
+
 		this.tileTrait = tileTrait;
 	}
 

@@ -22,14 +22,15 @@ public interface EntityEventHandler extends Comparable< EntityEventHandler >
 	}
 
 	/**
-	 * This function is to handle the provided event and return true if the
-	 * event should continue to be handled by any other lower priority event
-	 * handlers. If false is returned, the event will be closed and no further
-	 * event handlers will be called.
+	 * This function will handle the provided event and return true if the event
+	 * has been completely handled and no further handlers should be called on
+	 * the given even. If false, the event should be handled by any remaining
+	 * lower priority event handlers.
 	 * 
 	 * @param event
 	 *            the provided event to be handled
-	 * @return true if the event should continue to be handled, otherwise false
+	 * @return true if the event has been handled completely and should cease,
+	 *         otherwise false
 	 */
 	public boolean handle( EntityEvent event );
 

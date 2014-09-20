@@ -186,7 +186,8 @@ public class ActionCompletedEventHandler implements EntityEventHandler
 			logger.log( Level.INFO, "Removing ActionTrait from " + id.toString( ) );
 			entityData.removeComponent( id, ActionTrait.class );
 		}
-		return true;
+
+		return false;
 	}
 
 }

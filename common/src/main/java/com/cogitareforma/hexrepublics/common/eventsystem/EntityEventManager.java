@@ -27,9 +27,8 @@ public class EntityEventManager extends AbstractEventManager< EntityEvent, Entit
 			{
 				if ( e.handle( event ) )
 				{
-					continue;
+					return false;
 				}
-				return false;
 			}
 		}
 		else

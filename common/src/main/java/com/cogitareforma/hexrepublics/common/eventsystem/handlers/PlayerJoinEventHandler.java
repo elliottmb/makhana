@@ -21,7 +21,7 @@ public class PlayerJoinEventHandler implements EntityEventHandler
 			System.out.println( "Woo!" );
 			// TODO Auto-generated method stub
 		}
-		return true;
+		return false;
 	}
 
 }

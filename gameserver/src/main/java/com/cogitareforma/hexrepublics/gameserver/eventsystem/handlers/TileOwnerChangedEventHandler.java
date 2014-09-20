@@ -42,6 +42,6 @@ public class TileOwnerChangedEventHandler implements EntityEventHandler
 					String.format( "Tile %s freed from %s's grasp", tileFreed.getTileTrait( ).toString( ), tileFreed.getOldOwner( ) ) );
 		}
 
-		return true;
+		return false;
 	}
 }

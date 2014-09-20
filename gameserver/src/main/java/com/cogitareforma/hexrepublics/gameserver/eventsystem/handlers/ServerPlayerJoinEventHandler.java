@@ -79,7 +79,7 @@ public class ServerPlayerJoinEventHandler implements EntityEventHandler
 			}
 		}
 
-		return true;
+		return false;
 	}
 
 }

@@ -10,7 +10,6 @@ public class PlayerJoinEvent extends PlayerEvent
 	public PlayerJoinEvent( EntityData entityData, EntityId source, PlayerTrait playerTrait )
 	{
 		super( entityData, source, playerTrait );
-		// TODO Auto-generated constructor stub
 	}
 
 }
