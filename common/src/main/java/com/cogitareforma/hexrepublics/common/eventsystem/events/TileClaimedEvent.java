@@ -1,16 +1,16 @@
 package com.cogitareforma.hexrepublics.common.eventsystem.events;
 
 import com.cogitareforma.hexrepublics.common.entities.traits.TileTrait;
-import com.simsilica.es.EntityData;
+import com.cogitareforma.hexrepublics.common.eventsystem.EntityEventManager;
 import com.simsilica.es.EntityId;
 
 public class TileClaimedEvent extends TileEvent
 {
 	private EntityId newOwner;
 
-	public TileClaimedEvent( EntityData entityData, EntityId source, TileTrait tileTrait, EntityId newOwner )
+	public TileClaimedEvent( EntityEventManager entityEventManager, EntityId source, TileTrait tileTrait, EntityId newOwner )
 	{
-		super( entityData, source, tileTrait );
+		super( entityEventManager, source, tileTrait );
 		this.newOwner = newOwner;
 	}
 

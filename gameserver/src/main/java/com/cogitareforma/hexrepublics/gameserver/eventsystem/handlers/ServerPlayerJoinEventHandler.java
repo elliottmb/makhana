@@ -34,7 +34,7 @@ public class ServerPlayerJoinEventHandler implements EntityEventHandler
 			if ( !joinEvent.isAlreadyExisting( ) )
 			{
 				EntityId playerEntity = joinEvent.getSource( );
-				EntityData entityData = joinEvent.getEntityData( );
+				EntityData entityData = joinEvent.getEntityEventManager( ).getEntityData( );
 
 				int x = 0;
 				int y = 0;

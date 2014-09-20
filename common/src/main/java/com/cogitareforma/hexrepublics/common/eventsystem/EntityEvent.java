@@ -1,22 +1,21 @@
 package com.cogitareforma.hexrepublics.common.eventsystem;
 
-import com.simsilica.es.EntityData;
 import com.simsilica.es.EntityId;
 
 public class EntityEvent
 {
-	private EntityData entityData;
 	private EntityId source;
+	private EntityEventManager entityEventManager;
 
-	public EntityEvent( EntityData entityData, EntityId source )
+	public EntityEvent( EntityEventManager entityEventManager, EntityId source )
 	{
-		this.entityData = entityData;
 		this.source = source;
+		this.entityEventManager = entityEventManager;
 	}
 
-	public EntityData getEntityData( )
+	public EntityEventManager getEntityEventManager( )
 	{
-		return entityData;
+		return entityEventManager;
 	}
 
 	public EntityId getSource( )

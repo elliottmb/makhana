@@ -2,7 +2,7 @@ package com.cogitareforma.hexrepublics.common.eventsystem.events;
 
 import com.cogitareforma.hexrepublics.common.entities.traits.PlayerTrait;
 import com.cogitareforma.hexrepublics.common.eventsystem.EntityEvent;
-import com.simsilica.es.EntityData;
+import com.cogitareforma.hexrepublics.common.eventsystem.EntityEventManager;
 import com.simsilica.es.EntityId;
 
 public abstract class PlayerEvent extends EntityEvent
@@ -15,16 +15,16 @@ public abstract class PlayerEvent extends EntityEvent
 	/**
 	 * An event involving a Player entity
 	 * 
-	 * @param entityData
-	 *            the entity data containing the source
+	 * @param entityEventManager
+	 *            the entityEventManager which triggered this event
 	 * @param source
 	 *            the source entity
 	 * @param playerTrait
 	 *            player trait when the event was triggered
 	 */
-	public PlayerEvent( EntityData entityData, EntityId source, PlayerTrait playerTrait )
+	public PlayerEvent( EntityEventManager entityEventManager, EntityId source, PlayerTrait playerTrait )
 	{
-		super( entityData, source );
+		super( entityEventManager, source );
 		// TODO Auto-generated constructor stub
 		this.playerTrait = playerTrait;
 	}

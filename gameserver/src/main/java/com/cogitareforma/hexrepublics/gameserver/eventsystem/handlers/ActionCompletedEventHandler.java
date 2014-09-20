@@ -40,7 +40,7 @@ public class ActionCompletedEventHandler implements EntityEventHandler
 		{
 			ActionCompletedEvent actionCompleted = ( ActionCompletedEvent ) event;
 
-			EntityData entityData = actionCompleted.getEntityData( );
+			EntityData entityData = actionCompleted.getEntityEventManager( ).getEntityData( );
 			EntityId id = actionCompleted.getSource( );
 			ActionTrait at = actionCompleted.getAction( );
 

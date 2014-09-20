@@ -2,7 +2,7 @@ package com.cogitareforma.hexrepublics.gameserver.eventsystem.events;
 
 import com.cogitareforma.hexrepublics.common.entities.traits.ActionTrait;
 import com.cogitareforma.hexrepublics.common.eventsystem.EntityEvent;
-import com.simsilica.es.EntityData;
+import com.cogitareforma.hexrepublics.common.eventsystem.EntityEventManager;
 import com.simsilica.es.EntityId;
 
 public class ActionCompletedEvent extends EntityEvent
@@ -10,9 +10,9 @@ public class ActionCompletedEvent extends EntityEvent
 
 	private ActionTrait action;
 
-	public ActionCompletedEvent( EntityData entityData, EntityId source, ActionTrait action )
+	public ActionCompletedEvent( EntityEventManager entityEventManager, EntityId source, ActionTrait action )
 	{
-		super( entityData, source );
+		super( entityEventManager, source );
 		this.action = action;
 	}
 

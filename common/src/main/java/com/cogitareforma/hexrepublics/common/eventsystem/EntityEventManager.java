@@ -3,12 +3,17 @@ package com.cogitareforma.hexrepublics.common.eventsystem;
 import java.util.Collections;
 import java.util.List;
 
+import com.simsilica.es.EntityData;
+
 public class EntityEventManager extends AbstractEventManager< EntityEvent, EntityEventHandler >
 {
+	private EntityData entityData;
 
-	public EntityEventManager( )
+	public EntityEventManager( EntityData entityData )
 	{
 		super( );
+
+		this.entityData = entityData;
 	}
 
 	public void addEventHandler( EntityEventHandler handler, Class< ? extends EntityEvent > event )
@@ -16,6 +21,11 @@ public class EntityEventManager extends AbstractEventManager< EntityEvent, Entit
 		super.addEventHandler( handler, event );
 		// Sort from highest priority to lowest
 		Collections.sort( getEventHandlers( event, false ), Collections.reverseOrder( ) );
+	}
+
+	public EntityData getEntityData( )
+	{
+		return entityData;
 	}
 
 	public boolean triggerEvent( EntityEvent event )

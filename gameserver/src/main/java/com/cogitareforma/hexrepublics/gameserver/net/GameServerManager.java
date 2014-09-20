@@ -118,7 +118,7 @@ public class GameServerManager extends ServerManager< GameServer >
 					if ( account.equals( playerTrait.getAccount( ) ) )
 					{
 						logger.log( Level.WARNING, "Could not create an Entity, Player already exists" );
-						entityEventManager.triggerEvent( new ServerPlayerJoinEvent( entityData, e.getId( ), playerTrait,
+						entityEventManager.triggerEvent( new ServerPlayerJoinEvent( entityEventManager, e.getId( ), playerTrait,
 								getSessionManager( ).getAllSessions( ).size( ), true ) );
 						return;
 					}
@@ -128,7 +128,7 @@ public class GameServerManager extends ServerManager< GameServer >
 				logger.log( Level.INFO, "Creating an Entity for player: " + account.getAccountName( ) + ", " + playerId );
 				PlayerTrait playerTrait = new PlayerTrait( account );
 				entityData.setComponent( playerId, playerTrait );
-				entityEventManager.triggerEvent( new ServerPlayerJoinEvent( entityData, playerId, playerTrait, getSessionManager( )
+				entityEventManager.triggerEvent( new ServerPlayerJoinEvent( entityEventManager, playerId, playerTrait, getSessionManager( )
 						.getAllSessions( ).size( ), false ) );
 			}
 			else
@@ -269,14 +269,12 @@ public class GameServerManager extends ServerManager< GameServer >
 
 			entityData = new DefaultEntityData( );
 			entityDataHostService = new EntityDataHostService( getServer( ), 0, entityData );
-			entityEventManager = new EntityEventManager( );
+			entityEventManager = new EntityEventManager( entityData );
 
 			entityEventManager.addEventHandler( new ActionCompletedEventHandler( ), ActionCompletedEvent.class );
 			entityEventManager.addEventHandler( new ServerPlayerJoinEventHandler( ), ServerPlayerJoinEvent.class );
-			TileOwnerChangedEventHandler tileOwnerChangeHandler = new TileOwnerChangedEventHandler( );
-			entityEventManager.addEventHandler( tileOwnerChangeHandler, TileClaimedEvent.class );
-			entityEventManager.addEventHandler( tileOwnerChangeHandler, TileCapturedEvent.class );
-			entityEventManager.addEventHandler( tileOwnerChangeHandler, TileFreedEvent.class );
+			entityEventManager.addEventHandler( new TileOwnerChangedEventHandler( ), TileClaimedEvent.class, TileCapturedEvent.class,
+					TileFreedEvent.class );
 
 			String name = ( String ) YamlConfig.DEFAULT.get( "gameserver.name" );
 			if ( name == null )
@@ -349,10 +347,6 @@ public class GameServerManager extends ServerManager< GameServer >
 					if ( playerEntitySet.applyChanges( ) )
 					{
 						logger.log( Level.INFO, "There were changes to the players!" );
-						for ( Entity e : playerEntitySet.getChangedEntities( ) )
-						{
-							logger.log( Level.INFO, "Change: " + e.getId( ).toString( ) + ", " + e.get( PlayerTrait.class ) );
-						}
 						int readyCount = 0;
 						for ( Entity e : playerEntitySet )
 						{
@@ -412,7 +406,7 @@ public class GameServerManager extends ServerManager< GameServer >
 									if ( ( at.getStartTurn( ) + at.getDuration( ) ) - wt.getCurrentTurn( ) <= 1 )
 									{
 
-										entityEventManager.triggerEvent( new ActionCompletedEvent( entityData, e.getId( ), at ) );
+										entityEventManager.triggerEvent( new ActionCompletedEvent( entityEventManager, e.getId( ), at ) );
 
 									}
 								}
@@ -441,7 +435,7 @@ public class GameServerManager extends ServerManager< GameServer >
 								TileTrait tileTrait = tileEntity.get( TileTrait.class );
 								CreatedBy createdBy = tileEntity.get( CreatedBy.class );
 
-								entityEventManager.triggerEvent( new TileClaimedEvent( getEntityData( ), tileId, tileTrait, createdBy
+								entityEventManager.triggerEvent( new TileClaimedEvent( entityEventManager, tileId, tileTrait, createdBy
 										.getCreatorId( ) ) );
 
 								tileToOwnerMap.put( tileId, createdBy.getCreatorId( ) );
@@ -459,7 +453,7 @@ public class GameServerManager extends ServerManager< GameServer >
 									oldOwnerId = tileToOwnerMap.get( tileId );
 								}
 
-								entityEventManager.triggerEvent( new TileCapturedEvent( getEntityData( ), tileId, tileTrait, oldOwnerId,
+								entityEventManager.triggerEvent( new TileCapturedEvent( entityEventManager, tileId, tileTrait, oldOwnerId,
 										createdBy.getCreatorId( ) ) );
 
 								tileToOwnerMap.put( tileId, createdBy.getCreatorId( ) );
@@ -476,7 +470,7 @@ public class GameServerManager extends ServerManager< GameServer >
 									oldOwnerId = tileToOwnerMap.get( tileId );
 								}
 
-								entityEventManager.triggerEvent( new TileFreedEvent( getEntityData( ), tileId, tileTrait, oldOwnerId ) );
+								entityEventManager.triggerEvent( new TileFreedEvent( entityEventManager, tileId, tileTrait, oldOwnerId ) );
 
 								tileToOwnerMap.remove( tileId );
 							}
