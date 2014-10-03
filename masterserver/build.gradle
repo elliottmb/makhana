@@ -1,31 +1,34 @@
-buildscript {
-    repositories {
-        jcenter()
-    }
-    dependencies {
-        classpath 'com.github.jengelman.gradle.plugins:shadow:0.8'
-    }
+apply plugin: "java"
+
+sourceCompatibility = 1.8
+sourceSets.main.java.srcDirs = [ "src/main/java" ]
+
+project.ext.mainClassName = "com.cogitareforma.hexrepublics.masterserver.MasterServer"
+project.ext.assetsDir = new File("src/main/resources");
+
+task run(dependsOn: classes, type: JavaExec) {
+    main = project.mainClassName
+    classpath = sourceSets.main.runtimeClasspath
+    standardInput = System.in
+    workingDir = project.assetsDir
+    ignoreExitValue = true
 }
 
-apply plugin: 'shadow'
-
-jar {
-
+task dist(type: Jar) {
+    from files(sourceSets.main.output.classesDir)
+    from files(sourceSets.main.output.resourcesDir)
+    from {configurations.compile.collect {zipTree(it)}}
+    from files(project.assetsDir);
+ 
     manifest {
-        attributes 'Implementation-Title': 'Hex Republics - Master Server',
-                'Implementation-Version': version,
-                'Built-By': System.getProperty('user.name'),
-                'Built-Date': new Date(),
-                'Built-JDK': System.getProperty('java.version'),
-                'Main-Class': 'com.cogitareforma.hexrepublics.masterserver.MasterServer'
+        attributes 'Main-Class': project.mainClassName
     }
 }
 
-dependencies {
-		compile project(':common')
-		compile 'mysql:mysql-connector-java:5.1.30'
-		compile 'org.springframework:spring-core:4.0.4.RELEASE'
-		compile 'org.springframework:spring-context:4.0.4.RELEASE'
-		compile 'org.springframework:spring-jdbc:4.0.4.RELEASE'
-		compile 'org.springframework.boot:spring-boot-starter-web:1.0.2.RELEASE'
+dist.dependsOn classes
+
+eclipse {
+    project {
+        name = appName + "-masterserver"
+    }
 }

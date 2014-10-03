@@ -1,26 +1,34 @@
-buildscript {
-    repositories {
-        jcenter()
-    }
-    dependencies {
-        classpath 'com.github.jengelman.gradle.plugins:shadow:0.8'
-    }
+apply plugin: "java"
+
+sourceCompatibility = 1.8
+sourceSets.main.java.srcDirs = [ "src/main/java" ]
+
+project.ext.mainClassName = "com.cogitareforma.hexrepublics.client.ClientMain"
+project.ext.assetsDir = new File("src/main/resources");
+
+task run(dependsOn: classes, type: JavaExec) {
+    main = project.mainClassName
+    classpath = sourceSets.main.runtimeClasspath
+    standardInput = System.in
+    workingDir = project.assetsDir
+    ignoreExitValue = true
 }
 
-apply plugin: 'shadow'
-
-jar {
-
+task dist(type: Jar) {
+    from files(sourceSets.main.output.classesDir)
+    from files(sourceSets.main.output.resourcesDir)
+    from {configurations.compile.collect {zipTree(it)}}
+    from files(project.assetsDir);
+ 
     manifest {
-        attributes 'Implementation-Title': "Hex Republics - Client",
-                'Implementation-Version': version,
-                'Built-By': System.getProperty('user.name'),
-                'Built-Date': new Date(),
-                'Built-JDK': System.getProperty('java.version'),
-                'Main-Class': 'com.cogitareforma.hexrepublics.client.ClientMain'
+        attributes 'Main-Class': project.mainClassName
     }
 }
 
-dependencies {
-        compile project(':common')
+dist.dependsOn classes
+
+eclipse {
+    project {
+        name = appName + "-client"
+    }
 }
