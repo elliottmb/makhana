@@ -1,4 +1,4 @@
-package com.cogitareforma.hexrepublics.masterserver.net;
+package com.cogitareforma.makhana.masterserver.net;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;

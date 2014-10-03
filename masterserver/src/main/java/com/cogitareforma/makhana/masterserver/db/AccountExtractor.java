@@ -1,4 +1,4 @@
-package com.cogitareforma.hexrepublics.masterserver.db;
+package com.cogitareforma.makhana.masterserver.db;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

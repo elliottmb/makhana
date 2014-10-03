@@ -1,4 +1,4 @@
-package com.cogitareforma.hexrepublics.masterserver.net.listener;
+package com.cogitareforma.makhana.masterserver.net.listener;
 
 import java.util.Date;
 import java.util.LinkedHashMap;
@@ -8,10 +8,10 @@ import java.util.logging.Logger;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-import com.cogitareforma.hexrepublics.masterserver.net.MasterServerManager;
 import com.cogitareforma.makhana.common.data.Account;
 import com.cogitareforma.makhana.common.net.SessionManager;
 import com.cogitareforma.makhana.common.net.msg.NetworkChatMessage;
+import com.cogitareforma.makhana.masterserver.net.MasterServerManager;
 import com.jme3.network.HostedConnection;
 import com.jme3.network.Message;
 import com.jme3.network.MessageListener;

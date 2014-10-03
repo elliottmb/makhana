@@ -1,4 +1,4 @@
-package com.cogitareforma.hexrepublics.masterserver.net;
+package com.cogitareforma.makhana.masterserver.net;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -6,13 +6,13 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.cogitareforma.hexrepublics.masterserver.MasterServer;
 import com.cogitareforma.makhana.common.data.Account;
 import com.cogitareforma.makhana.common.net.SerializerRegistrar;
 import com.cogitareforma.makhana.common.net.ServerManager;
 import com.cogitareforma.makhana.common.net.msg.ServerStatusRequest;
 import com.cogitareforma.makhana.common.net.msg.UserListResponse;
 import com.cogitareforma.makhana.common.util.PackageUtils;
+import com.cogitareforma.makhana.masterserver.MasterServer;
 import com.jme3.network.HostedConnection;
 import com.jme3.network.MessageListener;
 import com.jme3.network.Network;
