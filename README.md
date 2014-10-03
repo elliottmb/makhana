@@ -1,4 +1,4 @@
-HexRepublics [![Build Status](http://dev.westcoastgaming.net/jenkins/job/HexRepublics/badge/icon)](http://dev.westcoastgaming.net/jenkins/job/HexRepublics/)
+Makhana
 ===============
 
-HexRepublics is a 3D multiplayer strategy game.
+Makhana is a multiplayer game framework based on jMonkeyEngine 3.
