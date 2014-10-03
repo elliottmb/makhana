@@ -3,7 +3,7 @@ package com.cogitareforma.hexrepublics.gameserver.net;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.cogitareforma.hexrepublics.common.net.msg.AccountRequest;
+import com.cogitareforma.makhana.common.net.msg.AccountRequest;
 import com.jme3.network.ConnectionListener;
 import com.jme3.network.HostedConnection;
 import com.jme3.network.Server;

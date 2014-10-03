@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.cogitareforma.hexrepublics.common.data.ServerStatus;
+import com.cogitareforma.makhana.common.data.ServerStatus;
 import com.jme3.network.HostedConnection;
 
 /**

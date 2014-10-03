@@ -4,8 +4,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.cogitareforma.hexrepublics.client.net.ClientGameConnManager;
-import com.cogitareforma.hexrepublics.common.net.msg.AccountRequest;
-import com.cogitareforma.hexrepublics.common.net.msg.AccountResponse;
+import com.cogitareforma.makhana.common.net.msg.AccountRequest;
+import com.cogitareforma.makhana.common.net.msg.AccountResponse;
 import com.jme3.network.Client;
 import com.jme3.network.Message;
 import com.jme3.network.MessageListener;

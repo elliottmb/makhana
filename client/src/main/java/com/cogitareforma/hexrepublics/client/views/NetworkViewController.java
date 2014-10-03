@@ -8,9 +8,9 @@ import java.util.logging.Logger;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.cogitareforma.hexrepublics.client.util.NiftyFactory;
-import com.cogitareforma.hexrepublics.common.data.ServerStatus;
-import com.cogitareforma.hexrepublics.common.net.msg.ServerListRequest;
-import com.cogitareforma.hexrepublics.common.net.msg.UserListRequest;
+import com.cogitareforma.makhana.common.data.ServerStatus;
+import com.cogitareforma.makhana.common.net.msg.ServerListRequest;
+import com.cogitareforma.makhana.common.net.msg.UserListRequest;
 import com.jme3.app.Application;
 import com.jme3.app.state.AppStateManager;
 

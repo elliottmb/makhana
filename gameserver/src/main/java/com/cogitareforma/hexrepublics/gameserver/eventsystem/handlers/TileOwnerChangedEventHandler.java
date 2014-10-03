@@ -3,11 +3,11 @@ package com.cogitareforma.hexrepublics.gameserver.eventsystem.handlers;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.cogitareforma.hexrepublics.common.eventsystem.EntityEvent;
-import com.cogitareforma.hexrepublics.common.eventsystem.EntityEventHandler;
-import com.cogitareforma.hexrepublics.common.eventsystem.events.TileCapturedEvent;
-import com.cogitareforma.hexrepublics.common.eventsystem.events.TileClaimedEvent;
-import com.cogitareforma.hexrepublics.common.eventsystem.events.TileFreedEvent;
+import com.cogitareforma.makhana.common.eventsystem.EntityEvent;
+import com.cogitareforma.makhana.common.eventsystem.EntityEventHandler;
+import com.cogitareforma.makhana.common.eventsystem.events.TileCapturedEvent;
+import com.cogitareforma.makhana.common.eventsystem.events.TileClaimedEvent;
+import com.cogitareforma.makhana.common.eventsystem.events.TileFreedEvent;
 
 public class TileOwnerChangedEventHandler implements EntityEventHandler
 {

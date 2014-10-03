@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.cogitareforma.hexrepublics.common.data.Account;
-import com.cogitareforma.hexrepublics.common.data.ServerStatus;
-import com.cogitareforma.hexrepublics.common.net.msg.ServerListRequest;
-import com.cogitareforma.hexrepublics.common.net.msg.ServerListResponse;
 import com.cogitareforma.hexrepublics.masterserver.net.MasterServerManager;
+import com.cogitareforma.makhana.common.data.Account;
+import com.cogitareforma.makhana.common.data.ServerStatus;
+import com.cogitareforma.makhana.common.net.msg.ServerListRequest;
+import com.cogitareforma.makhana.common.net.msg.ServerListResponse;
 import com.jme3.network.HostedConnection;
 import com.jme3.network.Message;
 import com.jme3.network.MessageListener;

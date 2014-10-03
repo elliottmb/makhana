@@ -1,8 +1,8 @@
 package com.cogitareforma.hexrepublics.gameserver.eventsystem.events;
 
-import com.cogitareforma.hexrepublics.common.entities.traits.PlayerTrait;
-import com.cogitareforma.hexrepublics.common.eventsystem.EntityEventManager;
-import com.cogitareforma.hexrepublics.common.eventsystem.events.PlayerJoinEvent;
+import com.cogitareforma.makhana.common.entities.traits.PlayerTrait;
+import com.cogitareforma.makhana.common.eventsystem.EntityEventManager;
+import com.cogitareforma.makhana.common.eventsystem.events.PlayerJoinEvent;
 import com.simsilica.es.EntityId;
 
 public class ServerPlayerJoinEvent extends PlayerJoinEvent

@@ -5,7 +5,7 @@ import java.sql.SQLException;
 
 import org.springframework.jdbc.core.RowMapper;
 
-import com.cogitareforma.hexrepublics.common.data.Account;
+import com.cogitareforma.makhana.common.data.Account;
 
 /**
  * 

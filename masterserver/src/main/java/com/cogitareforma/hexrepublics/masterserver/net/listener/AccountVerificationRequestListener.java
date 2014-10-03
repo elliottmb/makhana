@@ -3,10 +3,10 @@ package com.cogitareforma.hexrepublics.masterserver.net.listener;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.cogitareforma.hexrepublics.common.data.Account;
-import com.cogitareforma.hexrepublics.common.net.msg.AccountVerificationRequest;
-import com.cogitareforma.hexrepublics.common.net.msg.AccountVerificationResponse;
 import com.cogitareforma.hexrepublics.masterserver.net.MasterServerManager;
+import com.cogitareforma.makhana.common.data.Account;
+import com.cogitareforma.makhana.common.net.msg.AccountVerificationRequest;
+import com.cogitareforma.makhana.common.net.msg.AccountVerificationResponse;
 import com.jme3.network.HostedConnection;
 import com.jme3.network.Message;
 import com.jme3.network.MessageListener;

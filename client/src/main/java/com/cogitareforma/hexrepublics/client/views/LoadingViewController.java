@@ -6,7 +6,7 @@ import java.util.logging.Logger;
 import org.apache.commons.lang3.RandomUtils;
 
 import com.cogitareforma.hexrepublics.client.util.NiftyFactory;
-import com.cogitareforma.hexrepublics.common.entities.traits.WorldTrait;
+import com.cogitareforma.makhana.common.entities.traits.WorldTrait;
 import com.jme3.app.Application;
 import com.jme3.app.state.AppStateManager;
 import com.simsilica.es.EntityId;

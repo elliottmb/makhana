@@ -3,9 +3,9 @@ package com.cogitareforma.hexrepublics.masterserver.net;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.cogitareforma.hexrepublics.common.data.Account;
-import com.cogitareforma.hexrepublics.common.net.SessionManager;
-import com.cogitareforma.hexrepublics.common.net.msg.NetworkChatMessage;
+import com.cogitareforma.makhana.common.data.Account;
+import com.cogitareforma.makhana.common.net.SessionManager;
+import com.cogitareforma.makhana.common.net.msg.NetworkChatMessage;
 import com.jme3.network.ConnectionListener;
 import com.jme3.network.HostedConnection;
 import com.jme3.network.Server;

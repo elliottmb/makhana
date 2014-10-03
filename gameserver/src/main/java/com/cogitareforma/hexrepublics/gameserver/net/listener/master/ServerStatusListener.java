@@ -3,9 +3,9 @@ package com.cogitareforma.hexrepublics.gameserver.net.listener.master;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.cogitareforma.hexrepublics.common.net.msg.ServerStatusRequest;
-import com.cogitareforma.hexrepublics.common.net.msg.ServerStatusResponse;
 import com.cogitareforma.hexrepublics.gameserver.net.GameMasterConnManager;
+import com.cogitareforma.makhana.common.net.msg.ServerStatusRequest;
+import com.cogitareforma.makhana.common.net.msg.ServerStatusResponse;
 import com.jme3.network.Client;
 import com.jme3.network.Message;
 import com.jme3.network.MessageListener;

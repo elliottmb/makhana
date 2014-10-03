@@ -8,10 +8,10 @@ import java.util.logging.Logger;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-import com.cogitareforma.hexrepublics.common.data.Account;
-import com.cogitareforma.hexrepublics.common.net.SessionManager;
-import com.cogitareforma.hexrepublics.common.net.msg.NetworkChatMessage;
 import com.cogitareforma.hexrepublics.gameserver.net.GameServerManager;
+import com.cogitareforma.makhana.common.data.Account;
+import com.cogitareforma.makhana.common.net.SessionManager;
+import com.cogitareforma.makhana.common.net.msg.NetworkChatMessage;
 import com.jme3.network.HostedConnection;
 import com.jme3.network.Message;
 import com.jme3.network.MessageListener;

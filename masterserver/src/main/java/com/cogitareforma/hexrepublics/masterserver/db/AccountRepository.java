@@ -1,6 +1,6 @@
 package com.cogitareforma.hexrepublics.masterserver.db;
 
-import com.cogitareforma.hexrepublics.common.data.Account;
+import com.cogitareforma.makhana.common.data.Account;
 
 /**
  * AccountRepository is an interface which is implemented by a backing database.

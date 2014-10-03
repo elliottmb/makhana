@@ -7,7 +7,7 @@ import com.cogitareforma.hexrepublics.client.util.NiftyFactory;
 import com.cogitareforma.hexrepublics.client.views.GeneralController;
 import com.cogitareforma.hexrepublics.client.views.HudViewController;
 import com.cogitareforma.hexrepublics.client.views.LobbyViewController;
-import com.cogitareforma.hexrepublics.common.net.msg.ClientStatusMessage;
+import com.cogitareforma.makhana.common.net.msg.ClientStatusMessage;
 import com.jme3.network.Client;
 import com.jme3.network.ClientStateListener;
 import com.jme3.network.ErrorListener;

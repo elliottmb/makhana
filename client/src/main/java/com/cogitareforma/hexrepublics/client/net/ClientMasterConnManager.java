@@ -6,14 +6,14 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.cogitareforma.hexrepublics.client.ClientMain;
-import com.cogitareforma.hexrepublics.common.data.ServerStatus;
-import com.cogitareforma.hexrepublics.common.net.MasterConnManager;
-import com.cogitareforma.hexrepublics.common.net.SerializerRegistrar;
-import com.cogitareforma.hexrepublics.common.net.msg.NetworkChatMessage;
-import com.cogitareforma.hexrepublics.common.net.msg.ServerListResponse;
-import com.cogitareforma.hexrepublics.common.net.msg.UserListResponse;
-import com.cogitareforma.hexrepublics.common.util.PackageUtils;
-import com.cogitareforma.hexrepublics.common.util.YamlConfig;
+import com.cogitareforma.makhana.common.data.ServerStatus;
+import com.cogitareforma.makhana.common.net.MasterConnManager;
+import com.cogitareforma.makhana.common.net.SerializerRegistrar;
+import com.cogitareforma.makhana.common.net.msg.NetworkChatMessage;
+import com.cogitareforma.makhana.common.net.msg.ServerListResponse;
+import com.cogitareforma.makhana.common.net.msg.UserListResponse;
+import com.cogitareforma.makhana.common.util.PackageUtils;
+import com.cogitareforma.makhana.common.util.YamlConfig;
 import com.jme3.network.MessageListener;
 import com.jme3.network.Network;
 

@@ -13,9 +13,9 @@ import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
-import com.cogitareforma.hexrepublics.common.util.YamlConfig;
 import com.cogitareforma.hexrepublics.gameserver.net.GameMasterConnManager;
 import com.cogitareforma.hexrepublics.gameserver.net.GameServerManager;
+import com.cogitareforma.makhana.common.util.YamlConfig;
 import com.jme3.app.SimpleApplication;
 import com.jme3.network.HostedConnection;
 import com.jme3.system.JmeContext;

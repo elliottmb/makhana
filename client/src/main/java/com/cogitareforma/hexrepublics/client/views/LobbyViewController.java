@@ -8,8 +8,8 @@ import java.util.logging.Logger;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.cogitareforma.hexrepublics.client.util.NiftyFactory;
-import com.cogitareforma.hexrepublics.common.entities.traits.PlayerTrait;
-import com.cogitareforma.hexrepublics.common.net.msg.ReadyUpRequest;
+import com.cogitareforma.makhana.common.entities.traits.PlayerTrait;
+import com.cogitareforma.makhana.common.net.msg.ReadyUpRequest;
 import com.jme3.app.Application;
 import com.jme3.app.state.AppStateManager;
 import com.simsilica.es.EntityId;

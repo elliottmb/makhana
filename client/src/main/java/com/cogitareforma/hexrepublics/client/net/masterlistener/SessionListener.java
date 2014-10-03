@@ -5,7 +5,7 @@ import java.util.logging.Logger;
 
 import com.cogitareforma.hexrepublics.client.net.ClientMasterConnManager;
 import com.cogitareforma.hexrepublics.client.views.StartViewController;
-import com.cogitareforma.hexrepublics.common.net.msg.LoginResponse;
+import com.cogitareforma.makhana.common.net.msg.LoginResponse;
 import com.jme3.network.Client;
 import com.jme3.network.Message;
 import com.jme3.network.MessageListener;

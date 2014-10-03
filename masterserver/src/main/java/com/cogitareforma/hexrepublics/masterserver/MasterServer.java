@@ -13,13 +13,13 @@ import javax.sql.DataSource;
 
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
-import com.cogitareforma.hexrepublics.common.data.Account;
-import com.cogitareforma.hexrepublics.common.data.ServerStatus;
-import com.cogitareforma.hexrepublics.common.net.msg.ServerStatusRequest;
-import com.cogitareforma.hexrepublics.common.util.YamlConfig;
 import com.cogitareforma.hexrepublics.masterserver.db.AccountRepository;
 import com.cogitareforma.hexrepublics.masterserver.db.DatabaseConfig;
 import com.cogitareforma.hexrepublics.masterserver.net.MasterServerManager;
+import com.cogitareforma.makhana.common.data.Account;
+import com.cogitareforma.makhana.common.data.ServerStatus;
+import com.cogitareforma.makhana.common.net.msg.ServerStatusRequest;
+import com.cogitareforma.makhana.common.util.YamlConfig;
 import com.jme3.app.SimpleApplication;
 import com.jme3.network.HostedConnection;
 import com.jme3.system.JmeContext;

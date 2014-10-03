@@ -5,10 +5,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.cogitareforma.hexrepublics.client.ClientMain;
-import com.cogitareforma.hexrepublics.common.net.ConnectionManager;
-import com.cogitareforma.hexrepublics.common.net.SerializerRegistrar;
-import com.cogitareforma.hexrepublics.common.net.msg.NetworkChatMessage;
-import com.cogitareforma.hexrepublics.common.util.PackageUtils;
+import com.cogitareforma.makhana.common.net.ConnectionManager;
+import com.cogitareforma.makhana.common.net.SerializerRegistrar;
+import com.cogitareforma.makhana.common.net.msg.NetworkChatMessage;
+import com.cogitareforma.makhana.common.util.PackageUtils;
 import com.jme3.network.MessageListener;
 import com.jme3.network.Network;
 import com.simsilica.es.client.RemoteEntityData;

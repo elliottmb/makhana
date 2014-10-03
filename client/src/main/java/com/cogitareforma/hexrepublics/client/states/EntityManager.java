@@ -13,8 +13,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 import com.cogitareforma.hexrepublics.client.ClientMain;
-import com.cogitareforma.hexrepublics.common.util.ComponentFilterEventListener;
-import com.cogitareforma.hexrepublics.common.util.TraitEventListener;
+import com.cogitareforma.makhana.common.util.ComponentFilterEventListener;
+import com.cogitareforma.makhana.common.util.TraitEventListener;
 import com.jme3.app.state.AbstractAppState;
 import com.simsilica.es.ComponentFilter;
 import com.simsilica.es.EntityComponent;

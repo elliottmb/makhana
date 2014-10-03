@@ -2,7 +2,7 @@ package com.cogitareforma.hexrepublics.client.util;
 
 import java.lang.reflect.Field;
 
-import com.cogitareforma.hexrepublics.common.util.YamlConfig;
+import com.cogitareforma.makhana.common.util.YamlConfig;
 import com.jme3.input.KeyInput;
 
 public class KeyBindings

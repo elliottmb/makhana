@@ -1,8 +1,8 @@
 package com.cogitareforma.hexrepublics.gameserver.eventsystem.events;
 
-import com.cogitareforma.hexrepublics.common.entities.traits.ActionTrait;
-import com.cogitareforma.hexrepublics.common.eventsystem.EntityEvent;
-import com.cogitareforma.hexrepublics.common.eventsystem.EntityEventManager;
+import com.cogitareforma.makhana.common.entities.traits.ActionTrait;
+import com.cogitareforma.makhana.common.eventsystem.EntityEvent;
+import com.cogitareforma.makhana.common.eventsystem.EntityEventManager;
 import com.simsilica.es.EntityId;
 
 public class ActionCompletedEvent extends EntityEvent

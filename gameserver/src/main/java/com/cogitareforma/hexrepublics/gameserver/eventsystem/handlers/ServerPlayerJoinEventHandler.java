@@ -2,11 +2,11 @@ package com.cogitareforma.hexrepublics.gameserver.eventsystem.handlers;
 
 import java.util.logging.Logger;
 
-import com.cogitareforma.hexrepublics.common.entities.traits.CapitalTrait;
-import com.cogitareforma.hexrepublics.common.entities.traits.TileTrait;
-import com.cogitareforma.hexrepublics.common.eventsystem.EntityEvent;
-import com.cogitareforma.hexrepublics.common.eventsystem.EntityEventHandler;
 import com.cogitareforma.hexrepublics.gameserver.eventsystem.events.ServerPlayerJoinEvent;
+import com.cogitareforma.makhana.common.entities.traits.CapitalTrait;
+import com.cogitareforma.makhana.common.entities.traits.TileTrait;
+import com.cogitareforma.makhana.common.eventsystem.EntityEvent;
+import com.cogitareforma.makhana.common.eventsystem.EntityEventHandler;
 import com.simsilica.es.ComponentFilter;
 import com.simsilica.es.CreatedBy;
 import com.simsilica.es.EntityData;

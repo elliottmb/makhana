@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
-import com.cogitareforma.hexrepublics.common.util.YamlConfig;
+import com.cogitareforma.makhana.common.util.YamlConfig;
 
 /**
  * 

@@ -3,10 +3,10 @@ package com.cogitareforma.hexrepublics.gameserver.net.listener.game;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.cogitareforma.hexrepublics.common.data.Account;
-import com.cogitareforma.hexrepublics.common.entities.traits.PlayerTrait;
-import com.cogitareforma.hexrepublics.common.net.msg.ReadyUpRequest;
 import com.cogitareforma.hexrepublics.gameserver.net.GameServerManager;
+import com.cogitareforma.makhana.common.data.Account;
+import com.cogitareforma.makhana.common.entities.traits.PlayerTrait;
+import com.cogitareforma.makhana.common.net.msg.ReadyUpRequest;
 import com.jme3.network.HostedConnection;
 import com.jme3.network.Message;
 import com.jme3.network.MessageListener;

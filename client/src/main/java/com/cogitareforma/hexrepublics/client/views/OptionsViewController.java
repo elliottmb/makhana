@@ -8,7 +8,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.cogitareforma.hexrepublics.client.util.KeyBindings;
-import com.cogitareforma.hexrepublics.common.util.YamlConfig;
+import com.cogitareforma.makhana.common.util.YamlConfig;
 import com.jme3.app.Application;
 import com.jme3.app.state.AppStateManager;
 import com.jme3.audio.Listener;

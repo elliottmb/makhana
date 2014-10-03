@@ -2,7 +2,7 @@ package com.cogitareforma.hexrepublics.client.util;
 
 import java.util.Set;
 
-import com.cogitareforma.hexrepublics.common.util.TraitEventListener;
+import com.cogitareforma.makhana.common.util.TraitEventListener;
 import com.simsilica.es.Entity;
 import com.simsilica.es.EntityData;
 
