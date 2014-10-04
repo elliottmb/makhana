@@ -17,23 +17,10 @@ import com.cogitareforma.makhana.common.entities.Traits;
 import com.cogitareforma.makhana.common.entities.traits.ActionTrait;
 import com.cogitareforma.makhana.common.entities.traits.ArcherTrait;
 import com.cogitareforma.makhana.common.entities.traits.ArcheryTrait;
-import com.cogitareforma.makhana.common.entities.traits.AxemanTrait;
-import com.cogitareforma.makhana.common.entities.traits.BarracksTrait;
-import com.cogitareforma.makhana.common.entities.traits.CatapultTrait;
-import com.cogitareforma.makhana.common.entities.traits.ClubmanTrait;
-import com.cogitareforma.makhana.common.entities.traits.CrossbowTrait;
-import com.cogitareforma.makhana.common.entities.traits.ForgeTrait;
-import com.cogitareforma.makhana.common.entities.traits.KriegerTrait;
 import com.cogitareforma.makhana.common.entities.traits.LocationTrait;
-import com.cogitareforma.makhana.common.entities.traits.LongbowTrait;
-import com.cogitareforma.makhana.common.entities.traits.MachineWorksTrait;
 import com.cogitareforma.makhana.common.entities.traits.MountedTrait;
-import com.cogitareforma.makhana.common.entities.traits.PikemanTrait;
-import com.cogitareforma.makhana.common.entities.traits.SawmillTrait;
 import com.cogitareforma.makhana.common.entities.traits.StablesTrait;
-import com.cogitareforma.makhana.common.entities.traits.SwordsmanTrait;
 import com.cogitareforma.makhana.common.entities.traits.TileTrait;
-import com.cogitareforma.makhana.common.entities.traits.TrebuchetTrait;
 import com.cogitareforma.makhana.common.entities.traits.WorldTrait;
 import com.cogitareforma.makhana.common.net.msg.EntityActionRequest;
 import com.cogitareforma.makhana.common.net.msg.EntityCreationRequest;
@@ -168,10 +155,6 @@ public class TileViewController extends GeneralPlayingController
 		{
 			existing += "Archery";
 		}
-		if ( entityData.getComponent( id, BarracksTrait.class ) != null )
-		{
-			existing += "Barracks";
-		}
 		if ( entityData.getComponent( id, StablesTrait.class ) != null )
 		{
 			existing += "Stables";
@@ -179,54 +162,6 @@ public class TileViewController extends GeneralPlayingController
 		if ( entityData.getComponent( id, ArcherTrait.class ) != null )
 		{
 			existing += "Archer";
-		}
-		if ( entityData.getComponent( id, ClubmanTrait.class ) != null )
-		{
-			existing += "Clubman";
-		}
-		if ( entityData.getComponent( id, AxemanTrait.class ) != null )
-		{
-			existing += "Axeman";
-		}
-		if ( entityData.getComponent( id, CatapultTrait.class ) != null )
-		{
-			existing += "Catapult";
-		}
-		if ( entityData.getComponent( id, CrossbowTrait.class ) != null )
-		{
-			existing += "Crossbowman";
-		}
-		if ( entityData.getComponent( id, ForgeTrait.class ) != null )
-		{
-			existing += "Forge";
-		}
-		if ( entityData.getComponent( id, KriegerTrait.class ) != null )
-		{
-			existing += "Krieger";
-		}
-		if ( entityData.getComponent( id, LongbowTrait.class ) != null )
-		{
-			existing += "Longbowman";
-		}
-		if ( entityData.getComponent( id, MachineWorksTrait.class ) != null )
-		{
-			existing += "Machine Works";
-		}
-		if ( entityData.getComponent( id, PikemanTrait.class ) != null )
-		{
-			existing += "Pikeman";
-		}
-		if ( entityData.getComponent( id, SawmillTrait.class ) != null )
-		{
-			existing += "Sawmill";
-		}
-		if ( entityData.getComponent( id, SwordsmanTrait.class ) != null )
-		{
-			existing += "Swordsman";
-		}
-		if ( entityData.getComponent( id, TrebuchetTrait.class ) != null )
-		{
-			existing += "Trebuchet";
 		}
 
 		// Suffix
@@ -270,51 +205,15 @@ public class TileViewController extends GeneralPlayingController
 					{
 						buildables.add( "Build Archer" );
 					}
-					if ( Traits.hasPrerequisites( entityData, locationSet, BarracksTrait.class ) )
-					{
-						buildables.add( "Build Clubman" );
-					}
+
 					if ( Traits.hasPrerequisites( entityData, locationSet, ArcheryTrait.class, StablesTrait.class ) )
 					{
 						buildables.add( "Build Mounted Archer" );
 					}
-					if ( Traits.hasPrerequisites( entityData, locationSet, BarracksTrait.class, StablesTrait.class ) )
-					{
-						buildables.add( "Build Mounted Clubman" );
-					}
-					if ( Traits.hasPrerequisites( entityData, locationSet, ForgeTrait.class, BarracksTrait.class ) )
-					{
-						buildables.add( "Build Axeman" );
-					}
-					if ( Traits.hasPrerequisites( entityData, locationSet, ArcheryTrait.class, ForgeTrait.class, SawmillTrait.class,
-							MachineWorksTrait.class ) )
-					{
-						buildables.add( "Build Catapult" );
-					}
-					if ( Traits.hasPrerequisites( entityData, locationSet, ArcheryTrait.class, ForgeTrait.class, SawmillTrait.class ) )
-					{
-						buildables.add( "Build Crossbowman" );
-					}
+
 					if ( Traits.countBuildings( entityData, locationSet ) == 6 && hasSameBuildings( ) )
 					{
 						buildables.add( "Build Krieger" );
-					}
-					if ( Traits.hasPrerequisites( entityData, locationSet, SawmillTrait.class, ArcheryTrait.class ) )
-					{
-						buildables.add( "Build Longbowman" );
-					}
-					if ( Traits.hasPrerequisites( entityData, locationSet, BarracksTrait.class, ForgeTrait.class, SawmillTrait.class ) )
-					{
-						buildables.add( "Build Pikeman" );
-					}
-					if ( Traits.hasPrerequisites( entityData, locationSet, BarracksTrait.class, ForgeTrait.class ) )
-					{
-						buildables.add( "Build Swordsman" );
-					}
-					if ( Traits.hasPrerequisites( entityData, locationSet, ArcheryTrait.class, ForgeTrait.class, SawmillTrait.class,
-							StablesTrait.class ) )
-					{
-						buildables.add( "Build Trebuchet" );
 					}
 				}
 
@@ -524,35 +423,12 @@ public class TileViewController extends GeneralPlayingController
 				getApp( ).getGameConnManager( ).send(
 						new EntityCreationRequest( new LocationTrait( location, ( byte ) 0 ), new ArcheryTrait( ) ) );
 			}
-			if ( "Build Barracks".equals( event.getSelection( ).get( 0 ) ) )
-			{
-				System.out.println( "Trying to build Barracks" );
-				getApp( ).getGameConnManager( ).send(
-						new EntityCreationRequest( new LocationTrait( location, ( byte ) 0 ), new BarracksTrait( ) ) );
-			}
+
 			if ( "Build Stables".equals( event.getSelection( ).get( 0 ) ) )
 			{
 				System.out.println( "Trying to build Stables" );
 				getApp( ).getGameConnManager( ).send(
 						new EntityCreationRequest( new LocationTrait( location, ( byte ) 0 ), new StablesTrait( ) ) );
-			}
-			if ( "Build Forge".equals( event.getSelection( ).get( 0 ) ) )
-			{
-				System.out.println( "Trying to build Forge" );
-				getApp( ).getGameConnManager( ).send(
-						new EntityCreationRequest( new LocationTrait( location, ( byte ) 0 ), new ForgeTrait( ) ) );
-			}
-			if ( "Build Sawmill".equals( event.getSelection( ).get( 0 ) ) )
-			{
-				System.out.println( "Trying to build Sawmill" );
-				getApp( ).getGameConnManager( ).send(
-						new EntityCreationRequest( new LocationTrait( location, ( byte ) 0 ), new SawmillTrait( ) ) );
-			}
-			if ( "Build Machine Works".equals( event.getSelection( ).get( 0 ) ) )
-			{
-				System.out.println( "Trying to build Machine Works" );
-				getApp( ).getGameConnManager( ).send(
-						new EntityCreationRequest( new LocationTrait( location, ( byte ) 0 ), new MachineWorksTrait( ) ) );
 			}
 
 			// UNITS
@@ -562,72 +438,13 @@ public class TileViewController extends GeneralPlayingController
 				getApp( ).getGameConnManager( ).send(
 						new EntityCreationRequest( new LocationTrait( location, ( byte ) 0 ), new ArcherTrait( ) ) );
 			}
-			if ( "Build Clubman".equals( event.getSelection( ).get( 0 ) ) )
-			{
-				System.out.println( "Trying to build Clubman" );
-				getApp( ).getGameConnManager( ).send(
-						new EntityCreationRequest( new LocationTrait( location, ( byte ) 0 ), new ClubmanTrait( ) ) );
-			}
 			if ( "Build Mounted Archer".equals( event.getSelection( ).get( 0 ) ) )
 			{
 				System.out.println( "Tyring to build Mounted Archer" );
 				getApp( ).getGameConnManager( ).send(
 						new EntityCreationRequest( new LocationTrait( location, ( byte ) 0 ), new ArcherTrait( ), new MountedTrait( ) ) );
 			}
-			if ( "Build Mounted Clubman".equals( event.getSelection( ).get( 0 ) ) )
-			{
-				System.out.println( "Trying to build Mounted Clubman" );
-				getApp( ).getGameConnManager( ).send(
-						new EntityCreationRequest( new LocationTrait( location, ( byte ) 0 ), new ClubmanTrait( ), new MountedTrait( ) ) );
-			}
-			if ( "Build Axeman".equals( event.getSelection( ).get( 0 ) ) )
-			{
-				System.out.println( "Trying to build Axeman" );
-				getApp( ).getGameConnManager( ).send(
-						new EntityCreationRequest( new LocationTrait( location, ( byte ) 0 ), new AxemanTrait( ) ) );
-			}
-			if ( "Build Catapult".equals( event.getSelection( ).get( 0 ) ) )
-			{
-				System.out.println( "Trying to build Catapult" );
-				getApp( ).getGameConnManager( ).send(
-						new EntityCreationRequest( new LocationTrait( location, ( byte ) 0 ), new CatapultTrait( ) ) );
-			}
-			if ( "Build Crossbowman".equals( event.getSelection( ).get( 0 ) ) )
-			{
-				System.out.println( "Trying to build Crossbowman" );
-				getApp( ).getGameConnManager( ).send(
-						new EntityCreationRequest( new LocationTrait( location, ( byte ) 0 ), new CrossbowTrait( ) ) );
-			}
-			if ( "Build Krieger".equals( event.getSelection( ).get( 0 ) ) )
-			{
-				System.out.println( "Trying to build Krieger" );
-				getApp( ).getGameConnManager( ).send(
-						new EntityCreationRequest( new LocationTrait( location, ( byte ) 0 ), new KriegerTrait( ) ) );
-			}
-			if ( "Build Longbowman".equals( event.getSelection( ).get( 0 ) ) )
-			{
-				System.out.println( "Trying to build Longbowman" );
-				getApp( ).getGameConnManager( ).send(
-						new EntityCreationRequest( new LocationTrait( location, ( byte ) 0 ), new LongbowTrait( ) ) );
-			}
-			if ( "Build Pikeman".equals( event.getSelection( ).get( 0 ) ) )
-			{
-				System.out.println( "Trying to build Pikeman" );
-				getApp( ).getGameConnManager( ).send(
-						new EntityCreationRequest( new LocationTrait( location, ( byte ) 0 ), new PikemanTrait( ) ) );
-			}
-			if ( "Build Swordsman".equals( event.getSelection( ).get( 0 ) ) )
-			{
-				System.out.println( "Trying to build Swordsman" );
-				getApp( ).getGameConnManager( ).send(
-						new EntityCreationRequest( new LocationTrait( location, ( byte ) 0 ), new SwordsmanTrait( ) ) );
-			}
-			if ( "Build Trebuchet".equals( event.getSelection( ).get( 0 ) ) )
-			{
-				System.out.println( "Trying to build Trebuchet" );
-				getApp( ).getGameConnManager( ).send(
-						new EntityCreationRequest( new LocationTrait( location, ( byte ) 0 ), new TrebuchetTrait( ) ) );
-			}
+
 		}
 	}
 
