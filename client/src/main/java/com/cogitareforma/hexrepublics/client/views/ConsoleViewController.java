@@ -7,7 +7,6 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import com.cogitareforma.makhana.common.entities.traits.ArcherTrait;
 import com.cogitareforma.makhana.common.entities.traits.ArcheryTrait;
-import com.cogitareforma.makhana.common.entities.traits.ClubmanTrait;
 import com.cogitareforma.makhana.common.entities.traits.LocationTrait;
 import com.cogitareforma.makhana.common.entities.traits.TileTrait;
 import com.cogitareforma.makhana.common.net.msg.EntityCreationRequest;
@@ -146,10 +145,6 @@ public class ConsoleViewController extends GeneralController
 								if ( "archery".equalsIgnoreCase( arg0[ i ] ) && !components.contains( new ArcheryTrait( ) ) )
 								{
 									components.add( new ArcheryTrait( ) );
-								}
-								if ( "clubman".equalsIgnoreCase( arg0[ i ] ) && !components.contains( new ClubmanTrait( ) ) )
-								{
-									components.add( new ClubmanTrait( ) );
 								}
 								// TODO Add rest of units and buildings. Figure
 								// out way for mounted units.

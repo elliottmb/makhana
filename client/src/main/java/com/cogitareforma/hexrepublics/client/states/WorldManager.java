@@ -397,8 +397,6 @@ public class WorldManager extends AbstractAppState
 	private Node worldRoot;
 	private HashMap< CreatedBy, Material > playerColors;
 
-	private boolean attached;
-
 	public WorldManager( ClientMain app, Node rootNode )
 	{
 		this.app = app;
@@ -467,8 +465,6 @@ public class WorldManager extends AbstractAppState
 			entityManager.addListener( tileListener, CreatedBy.class, TileTrait.class );
 		}
 
-		attached = true;
-
 	}
 
 	public void closeLevel( )
@@ -498,8 +494,6 @@ public class WorldManager extends AbstractAppState
 			entityManager.removeListener( healthBarListener, HealthTrait.class );
 			entityManager.removeListener( tileListener, CreatedBy.class, TileTrait.class );
 		}
-
-		attached = false;
 	}
 
 	public void createBuilding( EntityData entityData, EntityId id, TerrainQuad terrain, LocationTrait locationTrait, TileTrait tile,
