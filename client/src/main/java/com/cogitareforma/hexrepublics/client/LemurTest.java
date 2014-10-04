@@ -23,6 +23,7 @@ import com.simsilica.lemur.LayerComparator;
 import com.simsilica.lemur.Panel;
 import com.simsilica.lemur.Slider;
 import com.simsilica.lemur.component.BorderLayout;
+import com.simsilica.lemur.component.BoxLayout;
 import com.simsilica.lemur.component.DynamicInsetsComponent;
 import com.simsilica.lemur.component.QuadBackgroundComponent;
 import com.simsilica.lemur.component.SpringGridLayout;
@@ -246,32 +247,31 @@ public class LemurTest extends SimpleApplication
 		if ( hud != null && guiNode.hasChild( hud ) )
 		{
 			guiNode.detachChild( hud );
-			// options = new Container( new SpringGridLayout( Axis.Y, Axis.X,
-			// FillMode.Even, FillMode.None ) );
-			options = new Container( );
-			options.setBackground( new QuadBackgroundComponent( ColorRGBA.Red, 2, 2 ) );
-			float scale = cam.getHeight( ) / 720f;
-			Vector3f pref = options.getPreferredSize( );
+			// options = new Container( new BoxLayout( Axis.Y, FillMode.None )
+			// );
+			options = new Container( new BorderLayout( ) );
+			// Container top = options.addChild( new Container( new BoxLayout(
+			// Axis.X, FillMode.Even ) ) );
+			// Container top = options.addChild( new Container( new BoxLayout(
+			// Axis.X, FillMode.Even ) ), BorderLayout.Position.North );
+			Container top = options.addChild( new Container( new SpringGridLayout( Axis.Y, Axis.X, FillMode.Even, FillMode.ForcedEven ) ),
+					BorderLayout.Position.North );
+			top.setBackground( new QuadBackgroundComponent( ColorRGBA.DarkGray ) );
+
+			Label name = top.addChild( new Label( "Options" ) );
+			Button apply = top.addChild( new Button( "Apply" ), 1 );
+			apply.setInsetsComponent( new DynamicInsetsComponent( 0, 0, 0, 0 ) );
+			Button exit = top.addChild( new Button( "Exit" ), 2 );
+			exit.setInsetsComponent( new DynamicInsetsComponent( 0, 1, 0, 0 ) );
+
 			options.setLocalTranslation( 0, cam.getHeight( ), 0 );
+			options.setPreferredSize( new Vector3f( cam.getWidth( ), cam.getHeight( ), 0 ) );
+			options.setBackground( new QuadBackgroundComponent( ColorRGBA.Gray ) );
 
-			// options.setLocalScale( scale );
-
-			Container title = new Container( new SpringGridLayout( Axis.X, Axis.Y, FillMode.None, FillMode.None ) );
-			Label titleLabel = title.addChild( new Label( "Options" ) );
-			//title.addChild( optionsApply );
-			//title.addChild( optionsExit );
-			// Panel titlePanel = new Panel( cam.getWidth( ), 50f, "glass" );
-			// Container graphics = new Container( "glass" );
-			// Container audio = new Container( "glass" );
-			// Container input = new Container( "glass" );
-			// titlePanel.attachChild( new Label( "Options" ) );
-			// titlePanel.attachChild( optionsApply );
-			// titlePanel.attachChild( optionsExit );
-			// title.addChild( new Label( "Options" ) );
-			// title.addChild( optionsApply );
-			// title.addChild( optionsExit );
-			// title.addChild( titlePanel );
-			// options.addChild( title );
+			//Container op = options.addChild( new Container( ), BorderLayout.Position.Center );
+			//op.setPreferredSize( new Vector3f( cam.getWidth( ) / 2, cam.getHeight( ) / 2, 0 ) );
+			//op.setBackground( new QuadBackgroundComponent( ColorRGBA.DarkGray ) );
+			//Label graphics = op.addChild( new Label( "Graphics" ) );
 
 			guiNode.attachChild( options );
 		}
