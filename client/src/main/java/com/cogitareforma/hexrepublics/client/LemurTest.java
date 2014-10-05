@@ -249,31 +249,39 @@ public class LemurTest extends SimpleApplication
 			guiNode.detachChild( hud );
 			// options = new Container( new BoxLayout( Axis.Y, FillMode.None )
 			// );
-			options = new Container( new BorderLayout( ) );
+			options = new Container( new BoxLayout( Axis.Y, FillMode.None ) );
 			// Container top = options.addChild( new Container( new BoxLayout(
 			// Axis.X, FillMode.Even ) ) );
 			// Container top = options.addChild( new Container( new BoxLayout(
 			// Axis.X, FillMode.Even ) ), BorderLayout.Position.North );
-			Container top = options.addChild( new Container( new SpringGridLayout( Axis.Y, Axis.X, FillMode.Even, FillMode.ForcedEven ) ),
-					BorderLayout.Position.North );
+			Container top = options.addChild( new Container( new BoxLayout( Axis.X, FillMode.Even ) ) );
 			top.setBackground( new QuadBackgroundComponent( ColorRGBA.DarkGray ) );
+			top.setPreferredSize( new Vector3f( cam.getWidth( ), cam.getHeight( ) / 16, 0 ) );
 
 			Label name = top.addChild( new Label( "Options" ) );
-			Button apply = top.addChild( new Button( "Apply" ), 1 );
-			apply.setInsetsComponent( new DynamicInsetsComponent( 0, 0, 0, 0 ) );
-			Button exit = top.addChild( new Button( "Exit" ), 2 );
-			exit.setInsetsComponent( new DynamicInsetsComponent( 0, 1, 0, 0 ) );
+
+			Container buttons = top.addChild( new Container( new BoxLayout( Axis.X, FillMode.Even ) ) );
+			Button apply = buttons.addChild( new Button( "Apply" ) );
+			// apply.setInsetsComponent( new DynamicInsetsComponent( 0, 0, 0, 0
+			// ) );
+			Button exit = buttons.addChild( new Button( "Exit" ) );
+			// exit.setInsetsComponent( new DynamicInsetsComponent( 0, 1, 0, 0 )
+			// );
 
 			options.setLocalTranslation( 0, cam.getHeight( ), 0 );
-			options.setPreferredSize( new Vector3f( cam.getWidth( ), cam.getHeight( ), 0 ) );
+			// options.setPreferredSize( new Vector3f( cam.getWidth( ) / 2,
+			// cam.getHeight( ) / 2, 0 ) );
 			options.setBackground( new QuadBackgroundComponent( ColorRGBA.Gray ) );
 
-			//Container op = options.addChild( new Container( ), BorderLayout.Position.Center );
-			//op.setPreferredSize( new Vector3f( cam.getWidth( ) / 2, cam.getHeight( ) / 2, 0 ) );
-			//op.setBackground( new QuadBackgroundComponent( ColorRGBA.DarkGray ) );
-			//Label graphics = op.addChild( new Label( "Graphics" ) );
+			Container op = options.addChild( new Container( ) );
+			op.setPreferredSize( new Vector3f( cam.getWidth( ) / 16, cam.getHeight( ) / 16, 0 ) );
+
+			op.setBackground( new QuadBackgroundComponent( ColorRGBA.Brown ) );
+			Label graphics = op.addChild( new Label( "Graphics" ) );
 
 			guiNode.attachChild( options );
+			System.out.println( top.getSize( ) + " " + op.getSize( ) );
+			System.out.println( top.getPreferredSize( ) + " " + op.getPreferredSize( ) );
 		}
 	}
 
