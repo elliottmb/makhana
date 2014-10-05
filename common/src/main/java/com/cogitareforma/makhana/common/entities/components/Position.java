@@ -1,4 +1,4 @@
-package com.cogitareforma.makhana.common.entities.traits;
+package com.cogitareforma.makhana.common.entities.components;
 
 import com.cogitareforma.makhana.common.data.Chunk;
 import com.jme3.math.Quaternion;

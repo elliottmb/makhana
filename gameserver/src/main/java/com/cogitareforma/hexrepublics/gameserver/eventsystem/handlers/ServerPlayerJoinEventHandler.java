@@ -3,8 +3,8 @@ package com.cogitareforma.hexrepublics.gameserver.eventsystem.handlers;
 import java.util.logging.Logger;
 
 import com.cogitareforma.hexrepublics.gameserver.eventsystem.events.ServerPlayerJoinEvent;
-import com.cogitareforma.makhana.common.entities.traits.CapitalTrait;
-import com.cogitareforma.makhana.common.entities.traits.TileTrait;
+import com.cogitareforma.makhana.common.entities.components.CapitalTrait;
+import com.cogitareforma.makhana.common.entities.components.TileTrait;
 import com.cogitareforma.makhana.common.eventsystem.EntityEvent;
 import com.cogitareforma.makhana.common.eventsystem.EntityEventHandler;
 import com.simsilica.es.ComponentFilter;

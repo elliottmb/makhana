@@ -1,6 +1,6 @@
-package com.cogitareforma.makhana.common.entities.traits;
+package com.cogitareforma.makhana.common.entities.components;
 
-import com.cogitareforma.makhana.common.entities.Traits;
+import com.cogitareforma.makhana.common.entities.ComponentUtil;
 import com.jme3.network.serializing.Serializable;
 import com.simsilica.es.EntityComponent;
 
@@ -23,7 +23,7 @@ public abstract class TypeTrait implements EntityComponent
 	 */
 	public float getFabricatingTime( )
 	{
-		return Traits.BASE_FABRICATING_TIME;
+		return ComponentUtil.BASE_FABRICATING_TIME;
 	}
 
 	/**

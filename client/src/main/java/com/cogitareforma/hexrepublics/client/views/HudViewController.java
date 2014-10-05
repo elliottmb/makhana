@@ -9,12 +9,12 @@ import org.apache.commons.lang3.tuple.Pair;
 import com.cogitareforma.hexrepublics.client.DebugGlobals;
 import com.cogitareforma.hexrepublics.client.states.EntityManager;
 import com.cogitareforma.hexrepublics.client.util.NiftyFactory;
-import com.cogitareforma.makhana.common.entities.Traits;
-import com.cogitareforma.makhana.common.entities.traits.HealthTrait;
-import com.cogitareforma.makhana.common.entities.traits.LocationTrait;
-import com.cogitareforma.makhana.common.entities.traits.PlayerTrait;
-import com.cogitareforma.makhana.common.entities.traits.TileTrait;
-import com.cogitareforma.makhana.common.entities.traits.WorldTrait;
+import com.cogitareforma.makhana.common.entities.ComponentUtil;
+import com.cogitareforma.makhana.common.entities.components.Health;
+import com.cogitareforma.makhana.common.entities.components.LocationTrait;
+import com.cogitareforma.makhana.common.entities.components.Player;
+import com.cogitareforma.makhana.common.entities.components.TileTrait;
+import com.cogitareforma.makhana.common.entities.components.WorldTrait;
 import com.cogitareforma.makhana.common.net.msg.ReadyUpRequest;
 import com.cogitareforma.makhana.common.util.TraitEventListener;
 import com.cogitareforma.makhana.common.util.WorldFactory;
@@ -360,7 +360,7 @@ public class HudViewController extends GeneralPlayingController implements KeyIn
 			CreatedBy cb = entityData.getComponent( findTile, CreatedBy.class );
 			if ( cb != null )
 			{
-				PlayerTrait pt = entityData.getComponent( cb.getCreatorId( ), PlayerTrait.class );
+				Player pt = entityData.getComponent( cb.getCreatorId( ), Player.class );
 				if ( pt != null )
 				{
 					if ( getApp( ).getMasterConnManager( ).getAccount( ).equals( pt.getAccount( ) ) )
@@ -518,11 +518,11 @@ public class HudViewController extends GeneralPlayingController implements KeyIn
 				if ( tileId != null )
 				{
 					Entity tileEntity = getApp( ).getGameConnManager( ).getRemoteEntityData( )
-							.getEntity( tileId, TileTrait.class, Name.class, HealthTrait.class, CreatedBy.class );
+							.getEntity( tileId, TileTrait.class, Name.class, Health.class, CreatedBy.class );
 					if ( DebugGlobals.DEBUG_TILE_SELECTION_OUTPUT )
 					{
 						System.out.println( String.format( "Remote tile %s: %s, %s, %s, %s", tileId, tileEntity.get( TileTrait.class ),
-								tileEntity.get( Name.class ), tileEntity.get( HealthTrait.class ), tileEntity.get( CreatedBy.class ) ) );
+								tileEntity.get( Name.class ), tileEntity.get( Health.class ), tileEntity.get( CreatedBy.class ) ) );
 					}
 				}
 			}
@@ -573,7 +573,7 @@ public class HudViewController extends GeneralPlayingController implements KeyIn
 			}
 			else
 			{
-				players = entityData.getEntities( PlayerTrait.class );
+				players = entityData.getEntities( Player.class );
 			}
 
 			int playerCount = 1;
@@ -589,12 +589,12 @@ public class HudViewController extends GeneralPlayingController implements KeyIn
 				{
 					ComponentFilter< LocationTrait > locationFilter = FieldFilter.create( LocationTrait.class, "tile", tile );
 					Set< EntityId > objectSet = entityData.findEntities( locationFilter, LocationTrait.class );
-					units += Traits.countUnits( entityData, objectSet );
-					buildings += Traits.countBuildings( entityData, objectSet );
+					units += ComponentUtil.countUnits( entityData, objectSet );
+					buildings += ComponentUtil.countBuildings( entityData, objectSet );
 				}
 				System.out.println( "Player: " + id + ", Tile Count: " + tiles.size( ) + ", Unit Count: " + units + ", Building Count: "
 						+ buildings );
-				String name = entityData.getComponent( id, PlayerTrait.class ).getAccount( ).getAccountName( );
+				String name = entityData.getComponent( id, Player.class ).getAccount( ).getAccountName( );
 				scoreboard.findNiftyControl( String.format( "name%sLabel", playerCount ), Label.class ).setText( name );
 				scoreboard.findNiftyControl( String.format( "unit%sLabel", playerCount ), Label.class ).setText(
 						"Units: " + Integer.toString( units ) );

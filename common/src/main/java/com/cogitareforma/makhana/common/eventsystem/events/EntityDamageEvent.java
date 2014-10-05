@@ -1,6 +1,6 @@
 package com.cogitareforma.makhana.common.eventsystem.events;
 
-import com.cogitareforma.makhana.common.entities.traits.HealthTrait;
+import com.cogitareforma.makhana.common.entities.components.Health;
 import com.cogitareforma.makhana.common.eventsystem.EntityEvent;
 import com.cogitareforma.makhana.common.eventsystem.EntityEventManager;
 import com.simsilica.es.EntityId;
@@ -10,7 +10,7 @@ public abstract class EntityDamageEvent extends EntityEvent
 	/**
 	 * Player trait when the event was triggered
 	 */
-	private HealthTrait healthTrait;
+	private Health healthTrait;
 	private float damage;
 
 	/**
@@ -25,7 +25,7 @@ public abstract class EntityDamageEvent extends EntityEvent
 	 * @param damage
 	 *            the amount of damage done to the entity
 	 */
-	public EntityDamageEvent( EntityEventManager entityEventManager, EntityId source, HealthTrait healthTrait, float damage )
+	public EntityDamageEvent( EntityEventManager entityEventManager, EntityId source, Health healthTrait, float damage )
 	{
 		super( entityEventManager, source );
 		this.healthTrait = healthTrait;
@@ -38,7 +38,7 @@ public abstract class EntityDamageEvent extends EntityEvent
 	 * 
 	 * @return health trait when the event was triggered
 	 */
-	public HealthTrait getHealthTrait( )
+	public Health getHealthTrait( )
 	{
 		return healthTrait;
 	}

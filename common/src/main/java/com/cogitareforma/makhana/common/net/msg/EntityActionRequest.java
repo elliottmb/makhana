@@ -1,6 +1,6 @@
 package com.cogitareforma.makhana.common.net.msg;
 
-import com.cogitareforma.makhana.common.entities.traits.ActionTrait;
+import com.cogitareforma.makhana.common.entities.components.ActionTrait;
 import com.jme3.network.serializing.Serializable;
 import com.simsilica.es.EntityId;
 

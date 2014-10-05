@@ -7,13 +7,13 @@ import java.util.logging.Logger;
 
 import com.cogitareforma.hexrepublics.gameserver.eventsystem.events.ActionCompletedEvent;
 import com.cogitareforma.makhana.common.entities.ActionType;
-import com.cogitareforma.makhana.common.entities.Traits;
-import com.cogitareforma.makhana.common.entities.traits.ActionTrait;
-import com.cogitareforma.makhana.common.entities.traits.DefenseTrait;
-import com.cogitareforma.makhana.common.entities.traits.HealthTrait;
-import com.cogitareforma.makhana.common.entities.traits.LocationTrait;
-import com.cogitareforma.makhana.common.entities.traits.StrengthTrait;
-import com.cogitareforma.makhana.common.entities.traits.TileTrait;
+import com.cogitareforma.makhana.common.entities.ComponentUtil;
+import com.cogitareforma.makhana.common.entities.components.ActionTrait;
+import com.cogitareforma.makhana.common.entities.components.DefenseTrait;
+import com.cogitareforma.makhana.common.entities.components.Health;
+import com.cogitareforma.makhana.common.entities.components.LocationTrait;
+import com.cogitareforma.makhana.common.entities.components.StrengthTrait;
+import com.cogitareforma.makhana.common.entities.components.TileTrait;
 import com.cogitareforma.makhana.common.eventsystem.EntityEvent;
 import com.cogitareforma.makhana.common.eventsystem.EntityEventHandler;
 import com.simsilica.es.ComponentFilter;
@@ -54,7 +54,7 @@ public class ActionCompletedEventHandler implements EntityEventHandler
 					LocationTrait location = entityData.getComponent( id, LocationTrait.class );
 					if ( location != null )
 					{
-						if ( Traits.areNeighbors( entityData, location.getTile( ), newTile ) )
+						if ( ComponentUtil.areNeighbors( entityData, location.getTile( ), newTile ) )
 						{
 							// Get the entities are the target tile
 							ComponentFilter< LocationTrait > locFilter = FieldFilter.create( LocationTrait.class, "tile", newTile );
@@ -65,9 +65,9 @@ public class ActionCompletedEventHandler implements EntityEventHandler
 							Set< EntityId > sourceIdSet = entityData.findEntities( sourceLocFilter, LocationTrait.class );
 
 							// Units at the target tile
-							int unitCount = Traits.countUnits( entityData, targetIdSet );
+							int unitCount = ComponentUtil.countUnits( entityData, targetIdSet );
 							// Buildings at the target tile
-							int buildingCount = Traits.countBuildings( entityData, targetIdSet );
+							int buildingCount = ComponentUtil.countBuildings( entityData, targetIdSet );
 
 							// Get info on the target tile
 							Entity tile = entityData.getEntity( newTile, CreatedBy.class, TileTrait.class );
@@ -85,7 +85,7 @@ public class ActionCompletedEventHandler implements EntityEventHandler
 									if ( unitCount < 6 )
 									{
 										entityData.setComponent( id,
-												new LocationTrait( newTile, Traits.getOpenUnitPosition( entityData, targetIdSet ) ) );
+												new LocationTrait( newTile, ComponentUtil.getOpenUnitPosition( entityData, targetIdSet ) ) );
 									}
 								}
 								else
@@ -105,15 +105,15 @@ public class ActionCompletedEventHandler implements EntityEventHandler
 									 * to tile and take ownership butt if units
 									 * remain, apply str back to attacking
 									 */
-									float newStr = sourceStr / Traits.countUnits( entityData, targetIdSet );
+									float newStr = sourceStr / ComponentUtil.countUnits( entityData, targetIdSet );
 									for ( EntityId targetId : targetIdSet )
 									{
-										if ( Traits.isUnit( entityData, targetId ) )
+										if ( ComponentUtil.isUnit( entityData, targetId ) )
 										{
-											Entity unit = entityData.getEntity( targetId, HealthTrait.class, DefenseTrait.class );
-											if ( unit.get( HealthTrait.class ) != null )
+											Entity unit = entityData.getEntity( targetId, Health.class, DefenseTrait.class );
+											if ( unit.get( Health.class ) != null )
 											{
-												float health = unit.get( HealthTrait.class ).getHealth( ) - newStr;
+												float health = unit.get( Health.class ).getHealth( ) - newStr;
 												if ( health <= 0 )
 												{
 													entityData.removeEntity( targetId );
@@ -121,7 +121,7 @@ public class ActionCompletedEventHandler implements EntityEventHandler
 												else
 												{
 													System.out.println( "New Target Health: " + health );
-													entityData.setComponent( targetId, new HealthTrait( health ) );
+													entityData.setComponent( targetId, new Health( health ) );
 												}
 
 											}
@@ -129,7 +129,7 @@ public class ActionCompletedEventHandler implements EntityEventHandler
 									}
 
 									targetIdSet = entityData.findEntities( locFilter, LocationTrait.class );
-									if ( Traits.countUnits( entityData, targetIdSet ) == 0 )
+									if ( ComponentUtil.countUnits( entityData, targetIdSet ) == 0 )
 									{
 										entityData.setComponent( newTile,
 												new CreatedBy( entityData.getComponent( location.getTile( ), CreatedBy.class )
@@ -140,7 +140,7 @@ public class ActionCompletedEventHandler implements EntityEventHandler
 									{
 										for ( EntityId targetId : targetIdSet )
 										{
-											if ( Traits.isUnit( entityData, targetId ) )
+											if ( ComponentUtil.isUnit( entityData, targetId ) )
 											{
 												Entity unit = entityData.getEntity( targetId, StrengthTrait.class );
 												if ( unit.get( StrengthTrait.class ) != null )
@@ -152,7 +152,7 @@ public class ActionCompletedEventHandler implements EntityEventHandler
 										// Entity sourceUnit = getEntityData(
 										// ).getEntity( e.getId( ),
 										// HealthTrait.class );
-										HealthTrait sourceHealth = entityData.getComponent( id, HealthTrait.class );
+										Health sourceHealth = entityData.getComponent( id, Health.class );
 										if ( sourceHealth != null )
 										{
 											float health = sourceHealth.getHealth( ) - targetStr;
@@ -163,7 +163,7 @@ public class ActionCompletedEventHandler implements EntityEventHandler
 											else
 											{
 												System.out.println( "New Source Health: " + health );
-												entityData.setComponent( id, new HealthTrait( health ) );
+												entityData.setComponent( id, new Health( health ) );
 											}
 
 										}

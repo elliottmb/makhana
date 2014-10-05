@@ -5,10 +5,10 @@ import java.util.ArrayList;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 
-import com.cogitareforma.makhana.common.entities.traits.ArcherTrait;
-import com.cogitareforma.makhana.common.entities.traits.ArcheryTrait;
-import com.cogitareforma.makhana.common.entities.traits.LocationTrait;
-import com.cogitareforma.makhana.common.entities.traits.TileTrait;
+import com.cogitareforma.makhana.common.entities.components.ArcherTrait;
+import com.cogitareforma.makhana.common.entities.components.ArcheryTrait;
+import com.cogitareforma.makhana.common.entities.components.LocationTrait;
+import com.cogitareforma.makhana.common.entities.components.TileTrait;
 import com.cogitareforma.makhana.common.net.msg.EntityCreationRequest;
 import com.cogitareforma.makhana.common.net.msg.EntityDeletionRequest;
 import com.cogitareforma.makhana.common.net.msg.ReadyUpRequest;

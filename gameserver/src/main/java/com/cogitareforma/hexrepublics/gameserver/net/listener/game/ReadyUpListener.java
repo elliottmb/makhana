@@ -5,7 +5,7 @@ import java.util.logging.Logger;
 
 import com.cogitareforma.hexrepublics.gameserver.net.GameServerManager;
 import com.cogitareforma.makhana.common.data.Account;
-import com.cogitareforma.makhana.common.entities.traits.PlayerTrait;
+import com.cogitareforma.makhana.common.entities.components.Player;
 import com.cogitareforma.makhana.common.net.msg.ReadyUpRequest;
 import com.jme3.network.HostedConnection;
 import com.jme3.network.Message;
@@ -58,12 +58,12 @@ public class ReadyUpListener implements MessageListener< HostedConnection >
 					EntityData entityData = manager.getEntityData( );
 					if ( entityData != null )
 					{
-						PlayerTrait pt = entityData.getComponent( id, PlayerTrait.class );
+						Player pt = entityData.getComponent( id, Player.class );
 						if ( pt != null )
 						{
-							if ( pt.isReady( ) != readyUp.isReady( ) )
+							if ( pt.isAlive( ) != readyUp.isReady( ) )
 							{
-								PlayerTrait newPt = new PlayerTrait( pt.getAccount( ), pt.getWins( ), pt.getLosses( ), readyUp.isReady( ) );
+								Player newPt = new Player( pt.getAccount( ), pt.getKills( ), pt.getDeaths( ), readyUp.isReady( ) );
 								entityData.setComponent( id, newPt );
 							}
 						}

@@ -13,15 +13,15 @@ import org.apache.commons.lang3.tuple.Pair;
 import com.cogitareforma.hexrepublics.client.states.EntityManager;
 import com.cogitareforma.hexrepublics.client.util.EntityEntryModelClass;
 import com.cogitareforma.makhana.common.entities.ActionType;
-import com.cogitareforma.makhana.common.entities.Traits;
-import com.cogitareforma.makhana.common.entities.traits.ActionTrait;
-import com.cogitareforma.makhana.common.entities.traits.ArcherTrait;
-import com.cogitareforma.makhana.common.entities.traits.ArcheryTrait;
-import com.cogitareforma.makhana.common.entities.traits.LocationTrait;
-import com.cogitareforma.makhana.common.entities.traits.MountedTrait;
-import com.cogitareforma.makhana.common.entities.traits.StablesTrait;
-import com.cogitareforma.makhana.common.entities.traits.TileTrait;
-import com.cogitareforma.makhana.common.entities.traits.WorldTrait;
+import com.cogitareforma.makhana.common.entities.ComponentUtil;
+import com.cogitareforma.makhana.common.entities.components.ActionTrait;
+import com.cogitareforma.makhana.common.entities.components.ArcherTrait;
+import com.cogitareforma.makhana.common.entities.components.ArcheryTrait;
+import com.cogitareforma.makhana.common.entities.components.LocationTrait;
+import com.cogitareforma.makhana.common.entities.components.MountedTrait;
+import com.cogitareforma.makhana.common.entities.components.StablesTrait;
+import com.cogitareforma.makhana.common.entities.components.TileTrait;
+import com.cogitareforma.makhana.common.entities.components.WorldTrait;
 import com.cogitareforma.makhana.common.net.msg.EntityActionRequest;
 import com.cogitareforma.makhana.common.net.msg.EntityCreationRequest;
 import com.cogitareforma.makhana.common.util.TraitEventListener;
@@ -165,7 +165,7 @@ public class TileViewController extends GeneralPlayingController
 		}
 
 		// Suffix
-		Pair< String, Integer > action = Traits.getActionRemainingTurns( entityData, id, currentTurn );
+		Pair< String, Integer > action = ComponentUtil.getActionRemainingTurns( entityData, id, currentTurn );
 		if ( action != null )
 		{
 			existing += String.format( " - %s: %d turns", action.getLeft( ), action.getRight( ) );
@@ -190,7 +190,7 @@ public class TileViewController extends GeneralPlayingController
 			{
 				Stack< String > buildables = new Stack< String >( );
 
-				if ( Traits.countBuildings( entityData, locationSet ) < 6 )
+				if ( ComponentUtil.countBuildings( entityData, locationSet ) < 6 )
 				{
 					buildables.add( "Build Archery" );
 					buildables.add( "Build Barracks" );
@@ -199,19 +199,19 @@ public class TileViewController extends GeneralPlayingController
 					buildables.add( "Build Machine Works" );
 					buildables.add( "Build Sawmill" );
 				}
-				if ( Traits.countUnits( entityData, locationSet ) < 6 )
+				if ( ComponentUtil.countUnits( entityData, locationSet ) < 6 )
 				{
-					if ( Traits.hasPrerequisites( entityData, locationSet, ArcheryTrait.class ) )
+					if ( ComponentUtil.hasPrerequisites( entityData, locationSet, ArcheryTrait.class ) )
 					{
 						buildables.add( "Build Archer" );
 					}
 
-					if ( Traits.hasPrerequisites( entityData, locationSet, ArcheryTrait.class, StablesTrait.class ) )
+					if ( ComponentUtil.hasPrerequisites( entityData, locationSet, ArcheryTrait.class, StablesTrait.class ) )
 					{
 						buildables.add( "Build Mounted Archer" );
 					}
 
-					if ( Traits.countBuildings( entityData, locationSet ) == 6 && hasSameBuildings( ) )
+					if ( ComponentUtil.countBuildings( entityData, locationSet ) == 6 && hasSameBuildings( ) )
 					{
 						buildables.add( "Build Krieger" );
 					}
@@ -316,7 +316,7 @@ public class TileViewController extends GeneralPlayingController
 			int x = this.currentTile.getLeft( );
 			int y = this.currentTile.getRight( );
 
-			List< List< Pair< Integer, Integer > >> neighbors = Traits.neighbors;
+			List< List< Pair< Integer, Integer > >> neighbors = ComponentUtil.neighbors;
 
 			int parity = x % 2;
 			switch ( direction )
@@ -373,8 +373,8 @@ public class TileViewController extends GeneralPlayingController
 					HashMap< String, Object > data = new HashMap< String, Object >( );
 					data.put( "newTile", nextTile );
 					getApp( ).getGameConnManager( ).send(
-							new EntityActionRequest( currentUnit, new ActionTrait( getApp( ).getWorldManager( ).getCurrentTurn( ), Traits
-									.getMovementModifier( entityData, currentUnit ), ActionType.MOVE, data ) ) );
+							new EntityActionRequest( currentUnit, new ActionTrait( getApp( ).getWorldManager( ).getCurrentTurn( ),
+									ComponentUtil.getMovementModifier( entityData, currentUnit ), ActionType.MOVE, data ) ) );
 				}
 			}
 		}
@@ -453,9 +453,9 @@ public class TileViewController extends GeneralPlayingController
 	{
 		if ( event != null && event.getSelection( ) != null && event.getSelection( ).size( ) > 0 )
 		{
-			if ( Traits.isUnit( entityData, event.getSelection( ).get( 0 ).getEntityId( ) ) )
+			if ( ComponentUtil.isUnit( entityData, event.getSelection( ).get( 0 ).getEntityId( ) ) )
 			{
-				if ( !Traits.inAction( entityData, event.getSelection( ).get( 0 ).getEntityId( ) ) )
+				if ( !ComponentUtil.inAction( entityData, event.getSelection( ).get( 0 ).getEntityId( ) ) )
 				{
 					Label unit = move.findNiftyControl( "unit", Label.class );
 					if ( "Archer".equals( event.getSelection( ).get( 0 ).getName( ) ) )

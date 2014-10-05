@@ -17,12 +17,10 @@ import com.simsilica.lemur.Container;
 import com.simsilica.lemur.DefaultRangedValueModel;
 import com.simsilica.lemur.FillMode;
 import com.simsilica.lemur.GuiGlobals;
-import com.simsilica.lemur.Insets3f;
 import com.simsilica.lemur.Label;
 import com.simsilica.lemur.LayerComparator;
 import com.simsilica.lemur.Panel;
 import com.simsilica.lemur.Slider;
-import com.simsilica.lemur.component.BorderLayout;
 import com.simsilica.lemur.component.BoxLayout;
 import com.simsilica.lemur.component.DynamicInsetsComponent;
 import com.simsilica.lemur.component.QuadBackgroundComponent;
@@ -156,7 +154,7 @@ public class LemurTest extends SimpleApplication
 			// Vector3f(200,0,0).maxLocal(hudPanel.getPreferredSize()) );
 
 			// Something in scene
-			Box box = new Box( Vector3f.ZERO, 1, 1, 1 );
+			Box box = new Box( 1, 1, 1 );
 			Geometry geom = new Geometry( "Box", box );
 			Material mat = new Material( assetManager, "Common/MatDefs/Misc/Unshaded.j3md" );
 			mat.setColor( "Color", boxColor );

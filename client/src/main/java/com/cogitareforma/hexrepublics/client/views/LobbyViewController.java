@@ -1,14 +1,11 @@
 package com.cogitareforma.hexrepublics.client.views;
 
-import java.util.Date;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.apache.commons.lang3.tuple.Pair;
-
 import com.cogitareforma.hexrepublics.client.util.NiftyFactory;
-import com.cogitareforma.makhana.common.entities.traits.PlayerTrait;
+import com.cogitareforma.makhana.common.entities.components.Player;
 import com.cogitareforma.makhana.common.net.msg.ReadyUpRequest;
 import com.jme3.app.Application;
 import com.jme3.app.state.AppStateManager;
@@ -26,9 +23,7 @@ import de.lessvoid.nifty.screen.Screen;
 public class LobbyViewController extends GeneralPlayingController
 {
 	private final static Logger logger = Logger.getLogger( LobbyViewController.class.getName( ) );
-	private final static int chatInterval = 1000;
 
-	private Pair< Date, Boolean > lastMessage;
 	private Chat chat;
 	private DropDown< String > AIDropDown;
 	private DropDown< String > worldSize;
@@ -99,11 +94,11 @@ public class LobbyViewController extends GeneralPlayingController
 			RemoteEntityData entityData = getApp( ).getGameConnManager( ).getRemoteEntityData( );
 			if ( entityData != null )
 			{
-				Set< EntityId > playerSet = entityData.findEntities( null, PlayerTrait.class );
+				Set< EntityId > playerSet = entityData.findEntities( null, Player.class );
 				int playerCount = 1;
 				for ( EntityId id : playerSet )
 				{
-					String name = entityData.getComponent( id, PlayerTrait.class ).getAccount( ).getAccountName( );
+					String name = entityData.getComponent( id, Player.class ).getAccount( ).getAccountName( );
 					players.findNiftyControl( String.format( "player%sname", playerCount ), Label.class ).setText( name );
 					playerCount++;
 				}

@@ -12,15 +12,15 @@ import java.util.logging.Logger;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-import com.cogitareforma.makhana.common.entities.traits.ActionTrait;
-import com.cogitareforma.makhana.common.entities.traits.DefenseTrait;
-import com.cogitareforma.makhana.common.entities.traits.HealthTrait;
-import com.cogitareforma.makhana.common.entities.traits.LocationTrait;
-import com.cogitareforma.makhana.common.entities.traits.MoveableTrait;
-import com.cogitareforma.makhana.common.entities.traits.StaticTrait;
-import com.cogitareforma.makhana.common.entities.traits.StrengthTrait;
-import com.cogitareforma.makhana.common.entities.traits.TileTrait;
-import com.cogitareforma.makhana.common.entities.traits.TypeTrait;
+import com.cogitareforma.makhana.common.entities.components.ActionTrait;
+import com.cogitareforma.makhana.common.entities.components.DefenseTrait;
+import com.cogitareforma.makhana.common.entities.components.Health;
+import com.cogitareforma.makhana.common.entities.components.LocationTrait;
+import com.cogitareforma.makhana.common.entities.components.MoveableTrait;
+import com.cogitareforma.makhana.common.entities.components.StaticTrait;
+import com.cogitareforma.makhana.common.entities.components.StrengthTrait;
+import com.cogitareforma.makhana.common.entities.components.TileTrait;
+import com.cogitareforma.makhana.common.entities.components.TypeTrait;
 import com.cogitareforma.makhana.common.util.PackageUtils;
 import com.cogitareforma.makhana.common.util.WorldFactory;
 import com.jme3.math.FastMath;
@@ -40,7 +40,7 @@ import com.simsilica.es.EntitySet;
  *
  */
 @SuppressWarnings( "unchecked" )
-public class Traits
+public class ComponentUtil
 {
 	public static boolean areNeighbors( EntityData entityData, EntityId source, EntityId target )
 	{
@@ -139,7 +139,7 @@ public class Traits
 		if ( health > 0 )
 		{
 			logger.log( Level.INFO, String.format( "Adding HealthTrait(%f) to entity %s", health, id ) );
-			entityData.setComponent( id, new HealthTrait( health ) );
+			entityData.setComponent( id, new Health( health ) );
 		}
 		if ( strength > 0 )
 		{
@@ -205,7 +205,7 @@ public class Traits
 
 	public static < T extends EntityComponent > int getMovementModifier( EntityData entityData, EntityId id )
 	{
-		int movement = Traits.BASE_MOVEMENT_DURATION;
+		int movement = ComponentUtil.BASE_MOVEMENT_DURATION;
 		for ( Class< ? > c : unitTraits )
 		{
 			MoveableTrait mt = ( MoveableTrait ) entityData.getComponent( id, ( Class< T > ) c );
@@ -440,7 +440,7 @@ public class Traits
 	/**
 	 * The logger for this class.
 	 */
-	private final static Logger logger = Logger.getLogger( Traits.class.getName( ) );
+	private final static Logger logger = Logger.getLogger( ComponentUtil.class.getName( ) );
 
 	public static final int BASE_MOVEMENT_DURATION = 6; // change back to 6
 

@@ -1,4 +1,4 @@
-package com.cogitareforma.makhana.common.entities.traits;
+package com.cogitareforma.makhana.common.entities.components;
 
 import com.jme3.network.serializing.Serializable;
 import com.simsilica.es.EntityComponent;
@@ -8,17 +8,11 @@ import com.simsilica.es.EntityComponent;
  * @author Elliott Butler
  */
 @Serializable
-public class HealthTrait implements EntityComponent
+public class Health implements EntityComponent
 {
-
 	private float health;
 
-	public HealthTrait( )
-	{
-
-	}
-
-	public HealthTrait( float health )
+	public Health( float health )
 	{
 		this.health = health;
 	}

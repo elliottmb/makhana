@@ -1,6 +1,6 @@
 package com.cogitareforma.makhana.common.eventsystem.events;
 
-import com.cogitareforma.makhana.common.entities.traits.TileTrait;
+import com.cogitareforma.makhana.common.entities.components.TileTrait;
 import com.cogitareforma.makhana.common.eventsystem.EntityEvent;
 import com.cogitareforma.makhana.common.eventsystem.EntityEventManager;
 import com.simsilica.es.EntityId;

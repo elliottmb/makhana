@@ -7,12 +7,12 @@ import java.util.logging.Logger;
 
 import com.cogitareforma.hexrepublics.gameserver.net.GameServerManager;
 import com.cogitareforma.makhana.common.data.Account;
-import com.cogitareforma.makhana.common.entities.Traits;
-import com.cogitareforma.makhana.common.entities.traits.LocationTrait;
-import com.cogitareforma.makhana.common.entities.traits.MoveableTrait;
-import com.cogitareforma.makhana.common.entities.traits.PlayerTrait;
-import com.cogitareforma.makhana.common.entities.traits.StaticTrait;
-import com.cogitareforma.makhana.common.entities.traits.WorldTrait;
+import com.cogitareforma.makhana.common.entities.ComponentUtil;
+import com.cogitareforma.makhana.common.entities.components.LocationTrait;
+import com.cogitareforma.makhana.common.entities.components.MoveableTrait;
+import com.cogitareforma.makhana.common.entities.components.Player;
+import com.cogitareforma.makhana.common.entities.components.StaticTrait;
+import com.cogitareforma.makhana.common.entities.components.WorldTrait;
 import com.cogitareforma.makhana.common.net.msg.EntityActionRequest;
 import com.cogitareforma.makhana.common.net.msg.EntityCreationRequest;
 import com.cogitareforma.makhana.common.net.msg.EntityDeletionRequest;
@@ -74,14 +74,14 @@ public class EntityRequestListener implements MessageListener< HostedConnection 
 				LocationTrait location = entityMsg.getLocation( );
 				if ( location.getTile( ) != null )
 				{
-					EntityId ownerId = Traits.getOwner( entityData, location.getTile( ) );
+					EntityId ownerId = ComponentUtil.getOwner( entityData, location.getTile( ) );
 					if ( ownerId != null )
 					{
-						Entity owner = entityData.getEntity( ownerId, PlayerTrait.class );
-						if ( owner != null && owner.get( PlayerTrait.class ) != null )
+						Entity owner = entityData.getEntity( ownerId, Player.class );
+						if ( owner != null && owner.get( Player.class ) != null )
 						{
 							Account act = manager.getSessionManager( ).getFromSession( source );
-							if ( owner.get( PlayerTrait.class ).getAccount( ).equals( act ) )
+							if ( owner.get( Player.class ).getAccount( ).equals( act ) )
 							{
 								/*
 								 * TODO: More validation, need to check that all
@@ -110,8 +110,8 @@ public class EntityRequestListener implements MessageListener< HostedConnection 
 											location.getTile( ) );
 									Set< EntityId > targetIdSet = entityData.findEntities( locFilter, LocationTrait.class );
 
-									int unitCount = Traits.countUnits( entityData, targetIdSet );
-									int buildingCount = Traits.countBuildings( entityData, targetIdSet );
+									int unitCount = ComponentUtil.countUnits( entityData, targetIdSet );
+									int buildingCount = ComponentUtil.countBuildings( entityData, targetIdSet );
 
 									System.out.println( String.format( "Unit( %s ): %d, Building( %s ): %d", isUnit, unitCount, isBuilding,
 											buildingCount ) );
@@ -128,11 +128,11 @@ public class EntityRequestListener implements MessageListener< HostedConnection 
 											EntityId newEntityId = entityData.createEntity( );
 											entityData.setComponent(
 													newEntityId,
-													new LocationTrait( location.getTile( ), Traits.getOpenUnitPosition( entityData,
+													new LocationTrait( location.getTile( ), ComponentUtil.getOpenUnitPosition( entityData,
 															targetIdSet ) ) );
 											entityData.setComponents( newEntityId, entityMsg.getComponents( ) );
 
-											Traits.entityParturition( entityData, newEntityId, entityMsg.getComponents( ),
+											ComponentUtil.entityParturition( entityData, newEntityId, entityMsg.getComponents( ),
 													wt.getCurrentTurn( ) );
 
 											source.send( new EntityResponse( newEntityId, EntityCreationRequest.class.getSimpleName( )
@@ -147,11 +147,11 @@ public class EntityRequestListener implements MessageListener< HostedConnection 
 											EntityId newEntityId = entityData.createEntity( );
 											entityData.setComponent(
 													newEntityId,
-													new LocationTrait( location.getTile( ), Traits.getOpenBuildingPosition( entityData,
-															targetIdSet ) ) );
+													new LocationTrait( location.getTile( ), ComponentUtil.getOpenBuildingPosition(
+															entityData, targetIdSet ) ) );
 											entityData.setComponents( newEntityId, entityMsg.getComponents( ) );
 
-											Traits.entityParturition( entityData, newEntityId, entityMsg.getComponents( ),
+											ComponentUtil.entityParturition( entityData, newEntityId, entityMsg.getComponents( ),
 													wt.getCurrentTurn( ) );
 
 											source.send( new EntityResponse( newEntityId, EntityCreationRequest.class.getSimpleName( )
@@ -202,12 +202,12 @@ public class EntityRequestListener implements MessageListener< HostedConnection 
 
 					if ( ownerId != null )
 					{
-						Entity owner = entityData.getEntity( ownerId, PlayerTrait.class );
+						Entity owner = entityData.getEntity( ownerId, Player.class );
 
-						if ( owner != null && owner.get( PlayerTrait.class ) != null )
+						if ( owner != null && owner.get( Player.class ) != null )
 						{
 							Account act = manager.getSessionManager( ).getFromSession( source );
-							if ( owner.get( PlayerTrait.class ).getAccount( ).equals( act ) )
+							if ( owner.get( Player.class ).getAccount( ).equals( act ) )
 							{
 								entityData.removeEntity( entityMsg.getEntityId( ) );
 								source.send( new EntityResponse( entityMsg.getEntityId( ), EntityDeletionRequest.class.getSimpleName( ),
@@ -226,13 +226,13 @@ public class EntityRequestListener implements MessageListener< HostedConnection 
 			logger.log( Level.INFO, "Received an EntityActionRequest from " + source.getAddress( ) );
 			if ( entityMsg.getEntityId( ) != null )
 			{
-				System.out.println( "EntityActionRequest: " + !Traits.inAction( entityData, entityMsg.getEntityId( ) ) + ", "
-						+ Traits.isUnit( entityData, entityMsg.getEntityId( ) ) );
-				if ( !Traits.inAction( entityData, entityMsg.getEntityId( ) ) )
+				System.out.println( "EntityActionRequest: " + !ComponentUtil.inAction( entityData, entityMsg.getEntityId( ) ) + ", "
+						+ ComponentUtil.isUnit( entityData, entityMsg.getEntityId( ) ) );
+				if ( !ComponentUtil.inAction( entityData, entityMsg.getEntityId( ) ) )
 				{
-					if ( Traits.isUnit( entityData, entityMsg.getEntityId( ) ) )
+					if ( ComponentUtil.isUnit( entityData, entityMsg.getEntityId( ) ) )
 					{
-						EntityId ownerId = Traits.getOwner( entityData, entityMsg.getEntityId( ) );
+						EntityId ownerId = ComponentUtil.getOwner( entityData, entityMsg.getEntityId( ) );
 						System.out.println( "EntityActionRequest: owner: " + ownerId );
 						if ( ownerId != null )
 						{

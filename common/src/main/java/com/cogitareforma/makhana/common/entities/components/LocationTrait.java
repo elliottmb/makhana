@@ -1,4 +1,4 @@
-package com.cogitareforma.makhana.common.entities.traits;
+package com.cogitareforma.makhana.common.entities.components;
 
 import com.jme3.network.serializing.Serializable;
 import com.simsilica.es.EntityComponent;

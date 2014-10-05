@@ -1,4 +1,4 @@
-package com.cogitareforma.makhana.common.entities.traits;
+package com.cogitareforma.makhana.common.entities.components;
 
 import java.util.HashMap;
 import java.util.Map;

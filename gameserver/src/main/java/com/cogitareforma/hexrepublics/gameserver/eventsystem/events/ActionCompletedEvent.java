@@ -1,6 +1,6 @@
 package com.cogitareforma.hexrepublics.gameserver.eventsystem.events;
 
-import com.cogitareforma.makhana.common.entities.traits.ActionTrait;
+import com.cogitareforma.makhana.common.entities.components.ActionTrait;
 import com.cogitareforma.makhana.common.eventsystem.EntityEvent;
 import com.cogitareforma.makhana.common.eventsystem.EntityEventManager;
 import com.simsilica.es.EntityId;

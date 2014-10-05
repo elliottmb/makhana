@@ -17,10 +17,10 @@ import com.cogitareforma.hexrepublics.gameserver.eventsystem.handlers.ServerPlay
 import com.cogitareforma.hexrepublics.gameserver.eventsystem.handlers.TileOwnerChangedEventHandler;
 import com.cogitareforma.makhana.common.data.Account;
 import com.cogitareforma.makhana.common.data.ServerStatus;
-import com.cogitareforma.makhana.common.entities.traits.ActionTrait;
-import com.cogitareforma.makhana.common.entities.traits.PlayerTrait;
-import com.cogitareforma.makhana.common.entities.traits.TileTrait;
-import com.cogitareforma.makhana.common.entities.traits.WorldTrait;
+import com.cogitareforma.makhana.common.entities.components.ActionTrait;
+import com.cogitareforma.makhana.common.entities.components.Player;
+import com.cogitareforma.makhana.common.entities.components.TileTrait;
+import com.cogitareforma.makhana.common.entities.components.WorldTrait;
 import com.cogitareforma.makhana.common.eventsystem.EntityEventManager;
 import com.cogitareforma.makhana.common.eventsystem.events.TileCapturedEvent;
 import com.cogitareforma.makhana.common.eventsystem.events.TileClaimedEvent;
@@ -112,9 +112,9 @@ public class GameServerManager extends ServerManager< GameServer >
 			{
 
 				// Check if already exists
-				for ( Entity e : entityData.getEntities( PlayerTrait.class ) )
+				for ( Entity e : entityData.getEntities( Player.class ) )
 				{
-					PlayerTrait playerTrait = e.get( PlayerTrait.class );
+					Player playerTrait = e.get( Player.class );
 					if ( account.equals( playerTrait.getAccount( ) ) )
 					{
 						logger.log( Level.WARNING, "Could not create an Entity, Player already exists" );
@@ -126,7 +126,7 @@ public class GameServerManager extends ServerManager< GameServer >
 
 				EntityId playerId = entityData.createEntity( );
 				logger.log( Level.INFO, "Creating an Entity for player: " + account.getAccountName( ) + ", " + playerId );
-				PlayerTrait playerTrait = new PlayerTrait( account );
+				Player playerTrait = new Player( account );
 				entityData.setComponent( playerId, playerTrait );
 				entityEventManager.triggerEvent( new ServerPlayerJoinEvent( entityEventManager, playerId, playerTrait, getSessionManager( )
 						.getAllSessions( ).size( ), false ) );
@@ -168,8 +168,8 @@ public class GameServerManager extends ServerManager< GameServer >
 		{
 			if ( account != null )
 			{
-				ComponentFilter< PlayerTrait > accountFilter = FieldFilter.create( PlayerTrait.class, "account", account );
-				return getEntityData( ).findEntity( accountFilter, PlayerTrait.class );
+				ComponentFilter< Player > accountFilter = FieldFilter.create( Player.class, "account", account );
+				return getEntityData( ).findEntity( accountFilter, Player.class );
 			}
 			else
 			{
@@ -350,7 +350,7 @@ public class GameServerManager extends ServerManager< GameServer >
 						int readyCount = 0;
 						for ( Entity e : playerEntitySet )
 						{
-							if ( e.get( PlayerTrait.class ).isReady( ) )
+							if ( e.get( Player.class ).isAlive( ) )
 							{
 								readyCount++;
 							}
@@ -374,8 +374,8 @@ public class GameServerManager extends ServerManager< GameServer >
 
 							for ( Entity e : playerEntitySet )
 							{
-								PlayerTrait pt = e.get( PlayerTrait.class );
-								PlayerTrait newPt = new PlayerTrait( pt.getAccount( ), pt.getWins( ), pt.getLosses( ), false );
+								Player pt = e.get( Player.class );
+								Player newPt = new Player( pt.getAccount( ), pt.getKills( ), pt.getDeaths( ), false );
 								e.set( newPt );
 							}
 
@@ -384,7 +384,7 @@ public class GameServerManager extends ServerManager< GameServer >
 				}
 				else
 				{
-					playerEntitySet = getEntityData( ).getEntities( PlayerTrait.class );
+					playerEntitySet = getEntityData( ).getEntities( Player.class );
 				}
 
 				if ( actingEntitySet != null )

@@ -1,4 +1,4 @@
-package com.cogitareforma.makhana.common.entities.traits;
+package com.cogitareforma.makhana.common.entities.components;
 
 import com.jme3.asset.AssetManager;
 import com.jme3.material.Material;

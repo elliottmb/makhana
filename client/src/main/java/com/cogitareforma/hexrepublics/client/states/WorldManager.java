@@ -8,14 +8,14 @@ import java.util.logging.Logger;
 
 import com.cogitareforma.hexrepublics.client.ClientMain;
 import com.cogitareforma.hexrepublics.client.views.LoadingViewController;
-import com.cogitareforma.makhana.common.entities.Traits;
-import com.cogitareforma.makhana.common.entities.traits.CapitalTrait;
-import com.cogitareforma.makhana.common.entities.traits.HealthTrait;
-import com.cogitareforma.makhana.common.entities.traits.LocationTrait;
-import com.cogitareforma.makhana.common.entities.traits.MoveableTrait;
-import com.cogitareforma.makhana.common.entities.traits.StaticTrait;
-import com.cogitareforma.makhana.common.entities.traits.TileTrait;
-import com.cogitareforma.makhana.common.entities.traits.WorldTrait;
+import com.cogitareforma.makhana.common.entities.ComponentUtil;
+import com.cogitareforma.makhana.common.entities.components.CapitalTrait;
+import com.cogitareforma.makhana.common.entities.components.Health;
+import com.cogitareforma.makhana.common.entities.components.LocationTrait;
+import com.cogitareforma.makhana.common.entities.components.MoveableTrait;
+import com.cogitareforma.makhana.common.entities.components.StaticTrait;
+import com.cogitareforma.makhana.common.entities.components.TileTrait;
+import com.cogitareforma.makhana.common.entities.components.WorldTrait;
 import com.cogitareforma.makhana.common.util.TraitEventListener;
 import com.cogitareforma.makhana.common.util.WorldFactory;
 import com.jme3.app.state.AbstractAppState;
@@ -164,12 +164,12 @@ public class WorldManager extends AbstractAppState
 			for ( Entity e : entities )
 			{
 				EntityId id = e.getId( );
-				if ( Traits.isUnit( entityData, id ) )
+				if ( ComponentUtil.isUnit( entityData, id ) )
 				{
 					Node unitContainer = units.get( id );
 					if ( unitContainer != null )
 					{
-						HealthTrait ht = e.get( HealthTrait.class );
+						Health ht = e.get( Health.class );
 						if ( ht != null )
 						{
 							Spatial healthBar = unitContainer.getChild( "health" );
@@ -213,13 +213,13 @@ public class WorldManager extends AbstractAppState
 					TileTrait tileTrait = entityData.getComponent( locationTrait.getTile( ), TileTrait.class );
 					CreatedBy createdBy = entityData.getComponent( locationTrait.getTile( ), CreatedBy.class );
 
-					if ( Traits.isUnit( entityData, id ) )
+					if ( ComponentUtil.isUnit( entityData, id ) )
 					{
 						System.out.println( id + " is a unit!" );
 
 						String display = "";
 						float health = 0.0f;
-						for ( Class< ? extends EntityComponent > ec : Traits.unitTraits )
+						for ( Class< ? extends EntityComponent > ec : ComponentUtil.unitTraits )
 						{
 							MoveableTrait mt = ( MoveableTrait ) entityData.getComponent( id, ec );
 							if ( mt != null )
@@ -229,8 +229,8 @@ public class WorldManager extends AbstractAppState
 							}
 						}
 
-						Vector3f position = Traits.getSpatialPosition( tileTrait.getX( ), tileTrait.getY( ), locationTrait.getPosition( ),
-								terrain, 0f, 3f );
+						Vector3f position = ComponentUtil.getSpatialPosition( tileTrait.getX( ), tileTrait.getY( ),
+								locationTrait.getPosition( ), terrain, 0f, 3f );
 
 						BitmapText unitBody = new BitmapText( myFont );
 						unitBody.setQueueBucket( Bucket.Transparent );
@@ -257,7 +257,7 @@ public class WorldManager extends AbstractAppState
 						units.put( id, unitContainer );
 						unitRoot.attachChild( unitContainer );
 					}
-					else if ( Traits.isBuilding( entityData, id ) )
+					else if ( ComponentUtil.isBuilding( entityData, id ) )
 					{
 						createBuilding( entityData, id, terrain, locationTrait, tileTrait, createdBy );
 					}
@@ -275,15 +275,15 @@ public class WorldManager extends AbstractAppState
 				for ( Entity e : entities )
 				{
 					EntityId id = e.getId( );
-					if ( Traits.isUnit( entityData, id ) )
+					if ( ComponentUtil.isUnit( entityData, id ) )
 					{
 						Node unitContainer = units.get( id );
 						if ( unitContainer != null )
 						{
 							LocationTrait locationTrait = entityData.getComponent( id, LocationTrait.class );
 							TileTrait loc = entityData.getComponent( locationTrait.getTile( ), TileTrait.class );
-							Vector3f position = Traits.getSpatialPosition( loc.getX( ), loc.getY( ), locationTrait.getPosition( ), terrain,
-									0f, 3f );
+							Vector3f position = ComponentUtil.getSpatialPosition( loc.getX( ), loc.getY( ), locationTrait.getPosition( ),
+									terrain, 0f, 3f );
 							Spatial unitSpatial = unitContainer.getChild( "body" );
 							if ( unitSpatial != null && unitSpatial instanceof BitmapText )
 							{
@@ -461,7 +461,7 @@ public class WorldManager extends AbstractAppState
 			entityManager.addListener( worldListener, WorldTrait.class );
 			entityManager.addListener( locationListener, LocationTrait.class );
 			entityManager.addListener( capitalListener, CapitalTrait.class );
-			entityManager.addListener( healthBarListener, HealthTrait.class );
+			entityManager.addListener( healthBarListener, Health.class );
 			entityManager.addListener( tileListener, CreatedBy.class, TileTrait.class );
 		}
 
@@ -491,7 +491,7 @@ public class WorldManager extends AbstractAppState
 			entityManager.removeListener( worldListener, WorldTrait.class );
 			entityManager.removeListener( locationListener, LocationTrait.class );
 			entityManager.removeListener( capitalListener, CapitalTrait.class );
-			entityManager.removeListener( healthBarListener, HealthTrait.class );
+			entityManager.removeListener( healthBarListener, Health.class );
 			entityManager.removeListener( tileListener, CreatedBy.class, TileTrait.class );
 		}
 	}
@@ -499,7 +499,7 @@ public class WorldManager extends AbstractAppState
 	public void createBuilding( EntityData entityData, EntityId id, TerrainQuad terrain, LocationTrait locationTrait, TileTrait tile,
 			CreatedBy createdBy )
 	{
-		for ( Class< ? extends EntityComponent > c : Traits.buildingTraits )
+		for ( Class< ? extends EntityComponent > c : ComponentUtil.buildingTraits )
 		{
 			if ( entityData.getComponent( id, c ) != null )
 			{
@@ -525,8 +525,8 @@ public class WorldManager extends AbstractAppState
 
 				building.setLocalRotation( new Quaternion( ).fromAngleAxis( 1.04719755f + ( locationTrait.getPosition( ) * 0.523598776f ),
 						Vector3f.UNIT_Y ) );
-				building.setLocalTranslation( Traits.getSpatialPosition( tile.getX( ), tile.getY( ), locationTrait.getPosition( ), terrain,
-						FastMath.PI / 6, .25f ) );
+				building.setLocalTranslation( ComponentUtil.getSpatialPosition( tile.getX( ), tile.getY( ), locationTrait.getPosition( ),
+						terrain, FastMath.PI / 6, .25f ) );
 				buildings.put( id, building );
 				buildingRoot.attachChild( building );
 				break;

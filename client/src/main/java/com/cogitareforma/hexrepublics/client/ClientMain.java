@@ -9,7 +9,7 @@ import com.cogitareforma.hexrepublics.client.states.EntityManager;
 import com.cogitareforma.hexrepublics.client.states.WorldManager;
 import com.cogitareforma.hexrepublics.client.util.NiftyFactory;
 import com.cogitareforma.hexrepublics.client.util.PlayerTraitListener;
-import com.cogitareforma.makhana.common.entities.traits.PlayerTrait;
+import com.cogitareforma.makhana.common.entities.components.Player;
 import com.cogitareforma.makhana.common.util.YamlConfig;
 import com.jme3.app.SimpleApplication;
 import com.jme3.app.state.AppState;
@@ -394,7 +394,7 @@ public class ClientMain extends SimpleApplication
 		stateManager.attach( getEntityManager( ) );
 
 		// TODO: Remove after done testing
-		getEntityManager( ).addListener( new PlayerTraitListener( ), PlayerTrait.class );
+		getEntityManager( ).addListener( new PlayerTraitListener( ), Player.class );
 
 		setWorldManager( new WorldManager( this, rootNode ) );
 		stateManager.attach( worldManager );

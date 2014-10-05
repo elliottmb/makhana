@@ -1,4 +1,4 @@
-package com.cogitareforma.makhana.common.entities.traits;
+package com.cogitareforma.makhana.common.entities.components;
 
 import com.jme3.asset.AssetManager;
 import com.jme3.material.Material;
@@ -6,7 +6,7 @@ import com.jme3.network.serializing.Serializable;
 import com.jme3.scene.Spatial;
 
 @Serializable
-public class ArcheryTrait extends StaticTrait
+public class StablesTrait extends StaticTrait
 {
 	// TODO
 	private static Material material;
@@ -14,7 +14,7 @@ public class ArcheryTrait extends StaticTrait
 	/**
 	 * Used by Serializer
 	 */
-	public ArcheryTrait( )
+	public StablesTrait( )
 	{
 
 	}
@@ -29,7 +29,6 @@ public class ArcheryTrait extends StaticTrait
 	@Override
 	public Spatial getSpatial( AssetManager assetManager )
 	{
-		return assetManager.loadModel( "Materials/archery.obj" );
+		return assetManager.loadModel( "Materials/stablePrototype.obj" );
 	}
-
 }
