@@ -40,8 +40,12 @@ public class Chunk
 				return true;
 			}
 		}
-
 		return false;
+	}
+
+	public boolean isInRange( Chunk other, int radius )
+	{
+		return Math.pow( other.getX( ) - x, 2 ) + Math.pow( other.getY( ) - y, 2 ) < Math.pow( radius, 2 );
 	}
 
 	@Override

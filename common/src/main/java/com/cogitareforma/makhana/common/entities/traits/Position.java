@@ -3,8 +3,10 @@ package com.cogitareforma.makhana.common.entities.traits;
 import com.cogitareforma.makhana.common.data.Chunk;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
+import com.jme3.network.serializing.Serializable;
 import com.simsilica.es.EntityComponent;
 
+@Serializable
 public class Position implements EntityComponent
 {
 	private Chunk chunk;
@@ -31,6 +33,22 @@ public class Position implements EntityComponent
 	public Quaternion getFacing( )
 	{
 		return facing;
+	}
+
+	public int getQuadrant( )
+	{
+		if ( location.x != 0 || location.y != 0 )
+		{
+			if ( location.x >= 0 )
+			{
+				return location.y >= 0 ? 1 : 4;
+			}
+			else
+			{
+				return location.y >= 0 ? 2 : 3;
+			}
+		}
+		return 0;
 	}
 
 	@Override
