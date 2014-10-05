@@ -7,6 +7,7 @@ import com.jme3.material.RenderState.BlendMode;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
+import com.jme3.scene.Node;
 import com.jme3.scene.shape.Box;
 import com.simsilica.lemur.Axis;
 import com.simsilica.lemur.Button;
@@ -21,6 +22,7 @@ import com.simsilica.lemur.Label;
 import com.simsilica.lemur.LayerComparator;
 import com.simsilica.lemur.Panel;
 import com.simsilica.lemur.Slider;
+import com.simsilica.lemur.TabbedPanel;
 import com.simsilica.lemur.component.BoxLayout;
 import com.simsilica.lemur.component.DynamicInsetsComponent;
 import com.simsilica.lemur.component.QuadBackgroundComponent;
@@ -43,6 +45,13 @@ public class LemurTest extends SimpleApplication
 	private VersionedReference< Double > alphaRef;
 	private VersionedReference< Boolean > showStatsRef;
 	private VersionedReference< Boolean > showFpsRef;
+	private VersionedReference< Double > resRef;
+	private VersionedReference< Double > qualityRef;
+	private VersionedReference< Double > mainVolumeRef;
+	private VersionedReference< Double > musicVolumeRef;
+	private VersionedReference< Double > soundVolumeRef;
+
+	private float scale;
 
 	private ColorRGBA boxColor = ColorRGBA.Blue.clone( );
 	private Container panel2;
@@ -54,7 +63,11 @@ public class LemurTest extends SimpleApplication
 	private Button optionsExit;
 	private Button optionsApply;
 	private Container hud;
-	private Container options;
+	private Styles styles;
+	private boolean isDone = false;
+	private Label resLabel;
+	private Slider res;
+	private Slider quality;
 
 	public static void main( String[ ] args )
 	{
@@ -69,7 +82,7 @@ public class LemurTest extends SimpleApplication
 		// Initialize the globals access so that the defualt
 		// components can find what they need.
 		GuiGlobals.initialize( this );
-
+		scale = cam.getHeight( ) * 0.0016f;
 		// Remove the flycam because we don't want it in this
 		// demo
 		stateManager.detach( stateManager.getState( FlyCamAppState.class ) );
@@ -79,7 +92,7 @@ public class LemurTest extends SimpleApplication
 		// different backgrounds as we define a "glass" style.
 		// We also define a custom element type called "spacer" which
 		// picks up a specific style.
-		Styles styles = GuiGlobals.getInstance( ).getStyles( );
+		styles = GuiGlobals.getInstance( ).getStyles( );
 		styles.getSelector( Slider.THUMB_ID, "glass" ).set( "text", "[]", false );
 		styles.getSelector( Panel.ELEMENT_ID, "glass" ).set( "background",
 				new QuadBackgroundComponent( new ColorRGBA( 0, 0.25f, 0.25f, 0.5f ) ) );
@@ -245,41 +258,104 @@ public class LemurTest extends SimpleApplication
 		if ( hud != null && guiNode.hasChild( hud ) )
 		{
 			guiNode.detachChild( hud );
-			// options = new Container( new BoxLayout( Axis.Y, FillMode.None )
-			// );
-			options = new Container( new BoxLayout( Axis.Y, FillMode.None ) );
-			// Container top = options.addChild( new Container( new BoxLayout(
-			// Axis.X, FillMode.Even ) ) );
-			// Container top = options.addChild( new Container( new BoxLayout(
-			// Axis.X, FillMode.Even ) ), BorderLayout.Position.North );
-			Container top = options.addChild( new Container( new BoxLayout( Axis.X, FillMode.Even ) ) );
+			Node optionsNode = new Node( );
+			Panel background = new Panel( );
+			background.setBackground( new QuadBackgroundComponent( ColorRGBA.Gray ) );
+			background.setLocalTranslation( 0, cam.getHeight( ), 0 );
+			background.setPreferredSize( new Vector3f( cam.getWidth( ), cam.getHeight( ), 0 ) );
+			optionsNode.attachChild( background );
+
+			Container top = new Container( new BoxLayout( Axis.X, FillMode.Proportional ), "glass" );
+			top.setLocalTranslation( 0, cam.getHeight( ), 0 );
+
 			top.setBackground( new QuadBackgroundComponent( ColorRGBA.DarkGray ) );
-			top.setPreferredSize( new Vector3f( cam.getWidth( ), cam.getHeight( ) / 16, 0 ) );
+			top.setPreferredSize( new Vector3f( cam.getWidth( ), cam.getHeight( ) * 0.1f, 0 ) );
+			Label name = new Label( "Options" );
+			name.scale( scale );
+			name.setPreferredSize( new Vector3f( 0.8f, 0, 0 ) );
 
-			Label name = top.addChild( new Label( "Options" ) );
+			Container buttons = new Container( new BoxLayout( Axis.X, FillMode.Even ), "glass" );
+			buttons.setPreferredSize( new Vector3f( 0.2f, 0, 0 ) );
+			Button apply = new Button( "Apply" );
+			Button exit = new Button( "Exit" );
+			apply.setFontSize( 17 * scale );
+			exit.setFontSize( 17 * scale );
 
-			Container buttons = top.addChild( new Container( new BoxLayout( Axis.X, FillMode.Even ) ) );
-			Button apply = buttons.addChild( new Button( "Apply" ) );
-			// apply.setInsetsComponent( new DynamicInsetsComponent( 0, 0, 0, 0
-			// ) );
-			Button exit = buttons.addChild( new Button( "Exit" ) );
-			// exit.setInsetsComponent( new DynamicInsetsComponent( 0, 1, 0, 0 )
-			// );
+			Container middle = new Container( );
+			middle.setPreferredSize( new Vector3f( cam.getWidth( ) * .8f, cam.getHeight( ) * .8f, 0 ) );
+			middle.setLocalTranslation( new Vector3f( cam.getWidth( ) * .1f, cam.getHeight( ) * 0.85f, 0 ) );
+			// middle.setBackground( new QuadBackgroundComponent( new ColorRGBA(
+			// .2f, .4f, .6f, 255f ) ) );
 
-			options.setLocalTranslation( 0, cam.getHeight( ), 0 );
-			// options.setPreferredSize( new Vector3f( cam.getWidth( ) / 2,
-			// cam.getHeight( ) / 2, 0 ) );
-			options.setBackground( new QuadBackgroundComponent( ColorRGBA.Gray ) );
+			Container graphics = new Container( new BoxLayout( Axis.Y, FillMode.Even ) );
+			graphics.setPreferredSize( new Vector3f( 0, .3f, 0 ) );
+			graphics.setBackground( new QuadBackgroundComponent( new ColorRGBA( .07f, .52f, .49f, 255f ) ) );
 
-			Container op = options.addChild( new Container( ) );
-			op.setPreferredSize( new Vector3f( cam.getWidth( ) / 16, cam.getHeight( ) / 16, 0 ) );
+			Container audio = new Container( new BoxLayout( Axis.Y, FillMode.Even ) );
+			audio.setPreferredSize( new Vector3f( 0, .3f, 0 ) );
+			audio.setBackground( new QuadBackgroundComponent( new ColorRGBA( .07f, .36f, .49f, 255f ) ) );
 
-			op.setBackground( new QuadBackgroundComponent( ColorRGBA.Brown ) );
-			Label graphics = op.addChild( new Label( "Graphics" ) );
+			Container input = new Container( new BoxLayout( Axis.Y, FillMode.Even ) );
+			input.setPreferredSize( new Vector3f( 0, .3f, 0 ) );
+			input.setBackground( new QuadBackgroundComponent( new ColorRGBA( .07f, .9f, .49f, 255f ) ) );
 
-			guiNode.attachChild( options );
-			System.out.println( top.getSize( ) + " " + op.getSize( ) );
-			System.out.println( top.getPreferredSize( ) + " " + op.getPreferredSize( ) );
+			Label gLabel = new Label( "Graphics" );
+			gLabel.scale( scale );
+
+			Label aLabel = new Label( "Audio" );
+			aLabel.scale( scale );
+
+			Label iLabel = new Label( "Input" );
+			iLabel.scale( scale );
+
+			resLabel = new Label( "" );
+			resLabel.scale( scale );
+
+			res = new Slider( new DefaultRangedValueModel( 0, 15, 1 ), "glass" );
+			res.setName( "Resolution" );
+			resRef = res.getModel( ).createReference( );
+
+			Checkbox fullscreen = new Checkbox( "FullScreen", "glass" );
+
+			quality = new Slider( new DefaultRangedValueModel( 0, 4, 4 ), "glass" );
+			quality.setName( "Quality" );
+			qualityRef = quality.getModel( ).createReference( );
+
+			Checkbox vsync = new Checkbox( "VSync" );
+
+			Slider mainVolume = new Slider( new DefaultRangedValueModel( 0, 100, 100 ), "glass" );
+			Slider musicVolume = new Slider( new DefaultRangedValueModel( 0, 100, 100 ), "glass" );
+			Slider soundsVolume = new Slider( new DefaultRangedValueModel( 0, 100, 100 ), "glass" );
+			mainVolumeRef = mainVolume.getModel( ).createReference( );
+			musicVolumeRef = musicVolume.getModel( ).createReference( );
+			soundVolumeRef = soundsVolume.getModel( ).createReference( );
+			isDone = true;
+
+			Checkbox console = new Checkbox( "Enable Dev Console: ", "glass" );
+
+			graphics.addChild( gLabel );
+			graphics.addChild( resLabel );
+			graphics.addChild( res );
+			graphics.addChild( fullscreen );
+			graphics.addChild( quality );
+			graphics.addChild( vsync );
+			audio.addChild( aLabel );
+			audio.addChild( mainVolume );
+			audio.addChild( musicVolume );
+			audio.addChild( soundsVolume );
+			input.addChild( iLabel );
+			input.addChild( console );
+			middle.addChild( graphics );
+			middle.addChild( audio );
+			middle.addChild( input );
+			buttons.addChild( apply );
+			buttons.addChild( exit );
+			top.addChild( name );
+			top.addChild( buttons );
+			optionsNode.attachChild( middle );
+			optionsNode.attachChild( top );
+			guiNode.attachChild( optionsNode );
+
 		}
 	}
 
@@ -424,6 +500,26 @@ public class LemurTest extends SimpleApplication
 	@Override
 	public void simpleUpdate( float tpf )
 	{
+		if ( isDone )
+		{
+			if ( resRef.update( ) )
+			{
+				res.getModel( ).setValue( Math.round( resRef.get( ) ) );
+				resLabel.setText( String.valueOf( resRef.get( ) ) );
+				System.out.println( "Resolution updated" );
+			}
+			if ( qualityRef.update( ) )
+			{
+				quality.getModel( ).setValue( Math.round( qualityRef.get( ) ) );
+				System.out.println( "Quality updated" );
+			}
+			if ( mainVolumeRef.update( ) )
+				System.out.println( "Main Volume updated" );
+			if ( musicVolumeRef.update( ) )
+				System.out.println( "Music Volume updated" );
+			if ( soundVolumeRef.update( ) )
+				System.out.println( "Sound Volume updated" );
+		}
 		if ( showTest )
 		{
 			if ( showStatsRef.update( ) )
