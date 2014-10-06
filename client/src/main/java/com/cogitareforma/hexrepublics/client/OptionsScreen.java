@@ -24,13 +24,10 @@ public class OptionsScreen extends Screen
 {
 
 	private float scale;
-
 	private Label resLabel;
 	private Slider res;
 	private Slider quality;
 
-	// Define some model references we will use in
-	// update.
 	private VersionedReference< Double > resRef;
 	private VersionedReference< Double > qualityRef;
 	private VersionedReference< Double > mainVolumeRef;
@@ -50,7 +47,7 @@ public class OptionsScreen extends Screen
 		// TODO Auto-generated method stub
 		super.initialize( screenManager, app );
 
-		Camera cam = app.getCamera( );
+		Camera cam = screenManager.getApp( ).getCamera( );
 
 		scale = cam.getHeight( ) * 0.0016f;
 		Node optionsNode = new Node( );
@@ -83,9 +80,7 @@ public class OptionsScreen extends Screen
 
 		Container middle = new Container( );
 		middle.setPreferredSize( new Vector3f( cam.getWidth( ) * .8f, cam.getHeight( ) * .8f, 0 ) );
-		middle.setLocalTranslation( new Vector3f( cam.getWidth( ) * .1f, cam.getHeight( ) * 0.85f, 0 ) );
-		// middle.setBackground( new QuadBackgroundComponent( new ColorRGBA(
-		// .2f, .4f, .6f, 255f ) ) );
+		middle.setLocalTranslation( cam.getWidth( ) * .1f, cam.getHeight( ) * 0.85f, 0  );
 
 		Container graphics = new Container( new BoxLayout( Axis.Y, FillMode.Even ) );
 		graphics.setPreferredSize( new Vector3f( 0, .3f, 0 ) );
@@ -131,6 +126,8 @@ public class OptionsScreen extends Screen
 		soundVolumeRef = soundsVolume.getModel( ).createReference( );
 
 		Checkbox console = new Checkbox( "Enable Dev Console: ", "glass" );
+
+		// TODO all input keys
 
 		graphics.addChild( gLabel );
 		graphics.addChild( resLabel );
