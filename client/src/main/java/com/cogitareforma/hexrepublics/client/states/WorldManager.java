@@ -59,51 +59,8 @@ public class WorldManager extends AbstractAppState
 
 	private ClientMain app;
 	private AssetManager assetManager;
-	private Material matBuilding;
 	private Node buildingRoot;
 	private HashMap< EntityId, Spatial > buildings;
-	private Material matHealthBar;
-	private Camera miniCam;
-	private ViewPort miniView;
-	private BitmapFont myFont;
-
-	private int currentTurn = 0;
-	private TraitEventListener worldListener = new TraitEventListener( )
-	{
-		@Override
-		public void onAdded( EntityData entityData, Set< Entity > entities )
-		{
-			for ( Entity e : entities )
-			{
-				WorldTrait wt = e.get( WorldTrait.class );
-				if ( wt != null )
-				{
-					setCurrentTurn( wt.getCurrentTurn( ) );
-					break;
-				}
-			}
-		}
-
-		@Override
-		public void onChanged( EntityData entityData, Set< Entity > entities )
-		{
-			for ( Entity e : entities )
-			{
-				WorldTrait wt = e.get( WorldTrait.class );
-				if ( wt != null )
-				{
-					setCurrentTurn( wt.getCurrentTurn( ) );
-					break;
-				}
-			}
-		}
-
-		@Override
-		public void onRemoved( EntityData entityData, Set< Entity > entities )
-		{
-		}
-	};
-
 	private TraitEventListener capitalListener = new TraitEventListener( )
 	{
 		@Override
@@ -149,7 +106,7 @@ public class WorldManager extends AbstractAppState
 			}
 		}
 	};
-
+	private int currentTurn = 0;
 	private TraitEventListener healthBarListener = new TraitEventListener( )
 	{
 		@Override
@@ -194,7 +151,6 @@ public class WorldManager extends AbstractAppState
 
 		}
 	};
-
 	private TraitEventListener locationListener = new TraitEventListener( )
 	{
 		@Override
@@ -320,6 +276,19 @@ public class WorldManager extends AbstractAppState
 			}
 		}
 	};
+	private Material matBuilding;
+
+	private Material matHealthBar;
+
+	private Camera miniCam;
+
+	private ViewPort miniView;
+
+	private BitmapFont myFont;
+
+	private HashMap< CreatedBy, Material > playerColors;
+
+	private Node rootNode;
 
 	private TraitEventListener tileListener = new TraitEventListener( )
 	{
@@ -390,12 +359,44 @@ public class WorldManager extends AbstractAppState
 			}
 		}
 	};
-
-	private Node rootNode;
 	private Node unitRoot;
 	private HashMap< EntityId, Node > units;
+	private TraitEventListener worldListener = new TraitEventListener( )
+	{
+		@Override
+		public void onAdded( EntityData entityData, Set< Entity > entities )
+		{
+			for ( Entity e : entities )
+			{
+				WorldTrait wt = e.get( WorldTrait.class );
+				if ( wt != null )
+				{
+					setCurrentTurn( wt.getCurrentTurn( ) );
+					break;
+				}
+			}
+		}
+
+		@Override
+		public void onChanged( EntityData entityData, Set< Entity > entities )
+		{
+			for ( Entity e : entities )
+			{
+				WorldTrait wt = e.get( WorldTrait.class );
+				if ( wt != null )
+				{
+					setCurrentTurn( wt.getCurrentTurn( ) );
+					break;
+				}
+			}
+		}
+
+		@Override
+		public void onRemoved( EntityData entityData, Set< Entity > entities )
+		{
+		}
+	};
 	private Node worldRoot;
-	private HashMap< CreatedBy, Material > playerColors;
 
 	public WorldManager( ClientMain app, Node rootNode )
 	{

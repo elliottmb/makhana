@@ -25,6 +25,6 @@ public class Health implements EntityComponent
 	@Override
 	public String toString( )
 	{
-		return "HealthTrait[" + health + "]";
+		return "Health[" + health + "]";
 	}
 }
