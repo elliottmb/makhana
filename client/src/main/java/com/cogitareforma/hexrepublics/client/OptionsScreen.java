@@ -10,12 +10,14 @@ import com.jme3.scene.Node;
 import com.simsilica.lemur.Axis;
 import com.simsilica.lemur.Button;
 import com.simsilica.lemur.Checkbox;
+import com.simsilica.lemur.Command;
 import com.simsilica.lemur.Container;
 import com.simsilica.lemur.DefaultRangedValueModel;
 import com.simsilica.lemur.FillMode;
 import com.simsilica.lemur.Label;
 import com.simsilica.lemur.Panel;
 import com.simsilica.lemur.Slider;
+import com.simsilica.lemur.Button.ButtonAction;
 import com.simsilica.lemur.component.BoxLayout;
 import com.simsilica.lemur.component.QuadBackgroundComponent;
 import com.simsilica.lemur.core.VersionedReference;
@@ -27,6 +29,8 @@ public class OptionsScreen extends Screen
 	private Label resLabel;
 	private Slider res;
 	private Slider quality;
+	private Button optionsExit;
+	private Button optionsApply;
 
 	private VersionedReference< Double > resRef;
 	private VersionedReference< Double > qualityRef;
@@ -38,13 +42,60 @@ public class OptionsScreen extends Screen
 	public void cleanup( )
 	{
 		// TODO Auto-generated method stub
+	}
 
+	@SuppressWarnings( "unchecked" )
+	private void setUpButtons( ScreenManager screenManager )
+	{
+		optionsExit = new Button( "Exit" );
+		optionsExit.addCommands( ButtonAction.Down, new Command< Button >( )
+		{
+			public void execute( Button b )
+			{
+				b.move( 1, -1, 0 );
+			}
+		} );
+		optionsExit.addCommands( ButtonAction.Up, new Command< Button >( )
+		{
+			public void execute( Button b )
+			{
+				b.move( -1, 1, 0 );
+			}
+		} );
+		optionsExit.addCommands( ButtonAction.Click, new Command< Button >( )
+		{
+			public void execute( Button b )
+			{
+				System.out.println( "Exit Options Clicked: " + screenManager.setScreen( StartScreen.class ) );
+			}
+		} );
+		optionsApply = new Button( "Apply" );
+		optionsApply.addCommands( ButtonAction.Down, new Command< Button >( )
+		{
+			public void execute( Button b )
+			{
+				b.move( 1, -1, 0 );
+			}
+		} );
+		optionsApply.addCommands( ButtonAction.Up, new Command< Button >( )
+		{
+			public void execute( Button b )
+			{
+				b.move( -1, 1, 0 );
+			}
+		} );
+		optionsApply.addCommands( ButtonAction.Click, new Command< Button >( )
+		{
+			public void execute( Button b )
+			{
+				System.out.println( "Apply in options Clicked" );
+			}
+		} );
 	}
 
 	@Override
 	public void initialize( ScreenManager screenManager, Application app )
 	{
-		// TODO Auto-generated method stub
 		super.initialize( screenManager, app );
 
 		Camera cam = screenManager.getApp( ).getCamera( );
@@ -68,19 +119,13 @@ public class OptionsScreen extends Screen
 
 		Container buttons = new Container( new BoxLayout( Axis.X, FillMode.Even ), "glass" );
 		buttons.setPreferredSize( new Vector3f( 0.2f, 0, 0 ) );
-		Button apply = new Button( "Apply" );
-		Button exit = new Button( "Exit" );
-		apply.setFontSize( 17 * scale );
-		exit.setFontSize( 17 * scale );
-
-		exit.addClickCommands( ( e ) ->
-		{
-			System.out.println( "Exit Options Clicked: " + screenManager.setScreen( StartScreen.class ) );
-		} );
+		setUpButtons( screenManager );
+		optionsApply.setFontSize( 17 * scale );
+		optionsExit.setFontSize( 17 * scale );
 
 		Container middle = new Container( );
 		middle.setPreferredSize( new Vector3f( cam.getWidth( ) * .8f, cam.getHeight( ) * .8f, 0 ) );
-		middle.setLocalTranslation( cam.getWidth( ) * .1f, cam.getHeight( ) * 0.85f, 0  );
+		middle.setLocalTranslation( cam.getWidth( ) * .1f, cam.getHeight( ) * 0.85f, 0 );
 
 		Container graphics = new Container( new BoxLayout( Axis.Y, FillMode.Even ) );
 		graphics.setPreferredSize( new Vector3f( 0, .3f, 0 ) );
@@ -109,14 +154,17 @@ public class OptionsScreen extends Screen
 		res = new Slider( new DefaultRangedValueModel( 0, 15, 1 ), "glass" );
 		res.setName( "Resolution" );
 		resRef = res.getModel( ).createReference( );
+		resLabel.setText( String.valueOf( resRef.get( ) ) );
 
 		Checkbox fullscreen = new Checkbox( "FullScreen", "glass" );
+		fullscreen.scale( scale );
 
 		quality = new Slider( new DefaultRangedValueModel( 0, 4, 4 ), "glass" );
 		quality.setName( "Quality" );
 		qualityRef = quality.getModel( ).createReference( );
 
 		Checkbox vsync = new Checkbox( "VSync" );
+		vsync.scale( scale );
 
 		Slider mainVolume = new Slider( new DefaultRangedValueModel( 0, 100, 100 ), "glass" );
 		Slider musicVolume = new Slider( new DefaultRangedValueModel( 0, 100, 100 ), "glass" );
@@ -126,6 +174,7 @@ public class OptionsScreen extends Screen
 		soundVolumeRef = soundsVolume.getModel( ).createReference( );
 
 		Checkbox console = new Checkbox( "Enable Dev Console: ", "glass" );
+		console.scale( scale );
 
 		// TODO all input keys
 
@@ -144,8 +193,8 @@ public class OptionsScreen extends Screen
 		middle.addChild( graphics );
 		middle.addChild( audio );
 		middle.addChild( input );
-		buttons.addChild( apply );
-		buttons.addChild( exit );
+		buttons.addChild( optionsApply );
+		buttons.addChild( optionsExit );
 		top.addChild( name );
 		top.addChild( buttons );
 		optionsNode.attachChild( middle );

@@ -26,8 +26,7 @@ public class StartScreen extends Screen
 	private Button playButton;
 	private Button optionsButton;
 	private Button exitButton;
-	private Button optionsExit;
-	private Button optionsApply;
+	private float scale;
 
 	@Override
 	public void cleanup( )
@@ -109,51 +108,6 @@ public class StartScreen extends Screen
 				screenManager.getApp( ).stop( );
 			}
 		} );
-		// TODO do options buttons need to be moved to OptionsScreen?
-		optionsExit = new Button( "Exit" );
-		optionsExit.addCommands( ButtonAction.Down, new Command< Button >( )
-		{
-			public void execute( Button b )
-			{
-				b.move( 1, -1, 0 );
-			}
-		} );
-		optionsExit.addCommands( ButtonAction.Up, new Command< Button >( )
-		{
-			public void execute( Button b )
-			{
-				b.move( -1, 1, 0 );
-			}
-		} );
-		optionsExit.addCommands( ButtonAction.Click, new Command< Button >( )
-		{
-			public void execute( Button b )
-			{
-				System.out.println( "Exit in options Clicked" );
-			}
-		} );
-		optionsApply = new Button( "Apply" );
-		optionsApply.addCommands( ButtonAction.Down, new Command< Button >( )
-		{
-			public void execute( Button b )
-			{
-				b.move( 1, -1, 0 );
-			}
-		} );
-		optionsApply.addCommands( ButtonAction.Up, new Command< Button >( )
-		{
-			public void execute( Button b )
-			{
-				b.move( -1, 1, 0 );
-			}
-		} );
-		optionsApply.addCommands( ButtonAction.Click, new Command< Button >( )
-		{
-			public void execute( Button b )
-			{
-				System.out.println( "Apply in options Clicked" );
-			}
-		} );
 	}
 
 	@Override
@@ -161,6 +115,7 @@ public class StartScreen extends Screen
 	{
 		super.initialize( screenManager, app );
 		Camera cam = screenManager.getApp( ).getCamera( );
+		scale = cam.getHeight( ) * 0.0016f;
 
 		Node start = new Node( );
 
@@ -172,21 +127,25 @@ public class StartScreen extends Screen
 		Container buttonPanel = new Container( "glass" );
 		buttonPanel.setPreferredSize( new Vector3f( cam.getWidth( ) * .2f, cam.getHeight( ) * .2f, 0 ) );
 		buttonPanel.setBackground( new QuadBackgroundComponent( new ColorRGBA( 0, 0.5f, 0.5f, 0.5f ), 5, 5, 0.02f, false ) );
-		buttonPanel.setLocalTranslation(  cam.getWidth( ) * .05f, cam.getHeight( ) * .2f, 0  );
+		buttonPanel.setLocalTranslation( cam.getWidth( ) * .05f, cam.getHeight( ) * .2f, 0 );
 
 		setUpButtons( screenManager );
+
+		playButton.setFontSize( 17 * scale );
+		optionsButton.setFontSize( 17 * scale );
+		exitButton.setFontSize( 17 * scale );
 
 		buttonPanel.addChild( playButton );
 		buttonPanel.addChild( optionsButton );
 		buttonPanel.addChild( exitButton );
 
-		// TODO fix size of things for small screens.
-
 		Container titlePanel = new Container( "glass" );
-		titlePanel.setPreferredSize( new Vector3f( cam.getWidth( ) * .1f, 50f, 0 ) );
+		titlePanel.setPreferredSize( new Vector3f( cam.getWidth( ) * .15f, 50f, 0 ) );
 		titlePanel.setBackground( new QuadBackgroundComponent( new ColorRGBA( 0, 0.5f, 0.5f, 0.5f ), 5, 5, 0.02f, false ) );
-		titlePanel.setLocalTranslation( cam.getWidth( ) * .9f, cam.getHeight( ), 0  );
-		titlePanel.addChild( new Label( "Makhana" ) );
+		titlePanel.setLocalTranslation( cam.getWidth( ) * .9f, cam.getHeight( ), 0 );
+		Label title = new Label( "Makhana" );
+		title.scale( scale );
+		titlePanel.addChild( title );
 
 		start.attachChild( titlePanel );
 		start.attachChild( buttonPanel );

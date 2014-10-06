@@ -7,6 +7,7 @@ import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.Camera;
 import com.jme3.scene.Node;
+import com.simsilica.lemur.Button;
 import com.simsilica.lemur.Container;
 import com.simsilica.lemur.Panel;
 import com.simsilica.lemur.TabbedPanel;
@@ -34,6 +35,15 @@ public class NetworkScreen extends Screen
 		background.setLocalTranslation( 0, cam.getHeight( ), 0 );
 		background.setPreferredSize( new Vector3f( cam.getWidth( ), cam.getHeight( ), 0 ) );
 		networkNode.attachChild( background );
+
+		Container exitContainer = new Container( );
+		exitContainer.setPreferredSize( new Vector3f( cam.getWidth( ) * .1f, 50f, 0 ) );
+		exitContainer.setBackground( new QuadBackgroundComponent( new ColorRGBA( 0, 0.5f, 0.5f, 0.5f ), 5, 5, 0.02f, false ) );
+		exitContainer.setLocalTranslation( cam.getWidth( ) * .9f, cam.getHeight( ), 0 );
+
+		Button back = new Button( "Back" );
+
+		exitContainer.addChild( back );
 
 		Container networkList = new Container( );
 		networkList.setPreferredSize( new Vector3f( cam.getWidth( ) * .8f, cam.getHeight( ) * .8f, 0 ) );
