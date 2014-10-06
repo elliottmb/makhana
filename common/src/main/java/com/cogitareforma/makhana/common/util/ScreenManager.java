@@ -5,11 +5,14 @@ import java.util.List;
 
 import com.jme3.app.Application;
 import com.jme3.app.state.AbstractAppState;
+import com.jme3.app.state.AppStateManager;
+import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.util.SafeArrayList;
 
 public class ScreenManager extends AbstractAppState
 {
+
 	private Application app;
 
 	private Class< ? extends Screen > foregroundScreen;
@@ -32,6 +35,8 @@ public class ScreenManager extends AbstractAppState
 
 	private Node screenHolder;
 
+	private Node rootGuiNode;
+
 	/**
 	 * Holds the active screens once they are initialized.
 	 */
@@ -47,7 +52,7 @@ public class ScreenManager extends AbstractAppState
 	 */
 	private final SafeArrayList< Screen > visible;
 
-	public ScreenManager( Application app )
+	public ScreenManager( Application app, Node rootGuiNode )
 	{
 		this.app = app;
 		initializing = new SafeArrayList< Screen >( Screen.class );
@@ -57,7 +62,19 @@ public class ScreenManager extends AbstractAppState
 		visible = new SafeArrayList< Screen >( Screen.class );
 		hiding = new SafeArrayList< Screen >( Screen.class );
 		foregroundScreen = null;
+
 		screenHolder = new Node( "screenHolder" );
+
+		this.rootGuiNode = rootGuiNode;
+
+		rootGuiNode.attachChild( screenHolder );
+	}
+
+	@Override
+	public void stateDetached( AppStateManager stateManager )
+	{
+		rootGuiNode.detachChild( screenHolder );
+		super.stateDetached( stateManager );
 	}
 
 	public boolean addScreen( Screen screen )
@@ -247,8 +264,10 @@ public class ScreenManager extends AbstractAppState
 		if ( array.length == 0 )
 			return;
 
+		int depth = 0;
 		synchronized ( screens )
 		{
+			depth = visible.size( );
 			// Move the screens that will be initialized
 			// into the active array. In all but one case the
 			// order doesn't matter but if we do this here then
@@ -260,7 +279,12 @@ public class ScreenManager extends AbstractAppState
 		}
 		for ( Screen screen : array )
 		{
-			screenHolder.attachChild( screen.getScreenNode( ) );
+			Node screenNode = screen.getScreenNode( );
+			screenHolder.attachChild( screenNode );
+
+			Vector3f pos = screenNode.getLocalTranslation( );
+			screenNode.setLocalTranslation( new Vector3f( pos.x, pos.y, depth++ * 100 ) );
+
 			screen.setEnabled( true );
 		}
 	}
@@ -295,10 +319,29 @@ public class ScreenManager extends AbstractAppState
 		}
 	}
 
+	public < T extends Screen > boolean setScreen( Class< T > screenClass )
+	{
+		return setScreen( getScreen( screenClass ) );
+	}
+
 	public boolean setScreen( Screen screen )
 	{
-		// TODO:
-		return false;
+		Screen[ ] arrVisible = getVisible( );
+
+		synchronized ( screens )
+		{
+			if ( screens.contains( screen ) || initializing.contains( screen ) )
+			{
+				List< Screen > visibleTransfer = Arrays.asList( arrVisible );
+				hiding.addAll( visibleTransfer );
+				visible.clear( );
+				revealing.clear( );
+
+				return showScreen( screen );
+			}
+
+			return false;
+		}
 
 	}
 
@@ -359,7 +402,7 @@ public class ScreenManager extends AbstractAppState
 			// Remove just the screens that were terminated...
 			// which might now be a subset of the total terminating
 			// list.
-			terminating.removeAll( Arrays.asList( array ) );
+			hiding.removeAll( Arrays.asList( array ) );
 		}
 	}
 
@@ -367,13 +410,14 @@ public class ScreenManager extends AbstractAppState
 	public void update( float tpf )
 	{
 		hidePending( );
-		revealPending( );
 
 		// Cleanup any screens pending
 		terminatePending( );
 
 		// Initialize any screens pending
 		initializePending( );
+
+		revealPending( );
 
 		// Update enabled screens
 		Screen[ ] array = getScreens( );

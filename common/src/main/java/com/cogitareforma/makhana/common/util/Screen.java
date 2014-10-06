@@ -17,32 +17,32 @@ public abstract class Screen
 	 * time initialize() is called. Either when the Screen is detached or when
 	 * the application terminates (if it terminates normally).
 	 */
-	abstract void cleanup( );
+	public abstract void cleanup( );
 
 	public Node getScreenNode( )
 	{
 		return screenNode;
 	}
 
-	void initialize( ScreenManager screenManager, Application app )
+	public void initialize( ScreenManager screenManager, Application app )
 	{
 		initialized = true;
 		screenNode = new Node( );
 	}
 
-	boolean isEnabled( )
+	public boolean isEnabled( )
 	{
 		return enabled;
 	}
 
-	boolean isInitialized( )
+	public boolean isInitialized( )
 	{
 		return initialized;
 	}
 
-	abstract void screenAttached( ScreenManager screenManager );
+	public abstract void screenAttached( ScreenManager screenManager );
 
-	abstract void screenDetached( ScreenManager screenManager );
+	public abstract void screenDetached( ScreenManager screenManager );
 
 	/**
 	 * Enable or disable the functionality of the Screen. The effect of this
@@ -53,7 +53,7 @@ public abstract class Screen
 	 * @param active
 	 *            activate the Screen or not.
 	 */
-	void setEnabled( boolean active )
+	public void setEnabled( boolean active )
 	{
 		enabled = active;
 	}
@@ -65,5 +65,5 @@ public abstract class Screen
 	 * @param tpf
 	 *            Time since the last call to update(), in seconds.
 	 */
-	abstract void update( float tpf );
+	public abstract void update( float tpf );
 }
