@@ -40,9 +40,16 @@ public class OptionsScreen extends Screen
 	private VersionedReference< Double > mainVolumeRef;
 	private VersionedReference< Double > musicVolumeRef;
 	private VersionedReference< Double > soundVolumeRef;
+	private Container graphics;
+	private Container audio;
+	private Container input;
+	private Container current;
 
 	boolean original = false;
 	boolean rolledPanel = true;
+	private Button graphicsButton;
+	private Button audioButton;
+	private Button inputButton;
 
 	@Override
 	public void cleanup( )
@@ -97,6 +104,16 @@ public class OptionsScreen extends Screen
 				System.out.println( "Apply in options Clicked" );
 			}
 		} );
+		graphicsButton = new Button( "Graphics" );
+		graphicsButton.addCommands( ButtonAction.Click, new Command< Button >( )
+		{
+			public void execute( Button b )
+			{
+				System.out.println( "Graphics in options Clicked" );
+			}
+		} );
+		audioButton = new Button( "Audio" );
+		inputButton = new Button( "Input" );
 	}
 
 	@Override
@@ -214,12 +231,11 @@ public class OptionsScreen extends Screen
 		}
 		if ( rolledPanel )
 		{
-			Node optionsNode = new Node( );
 			Panel background = new Panel( );
 			background.setBackground( new QuadBackgroundComponent( ColorRGBA.Gray ) );
 			background.setLocalTranslation( 0, cam.getHeight( ), 0 );
 			background.setPreferredSize( new Vector3f( cam.getWidth( ), cam.getHeight( ), 0 ) );
-			optionsNode.attachChild( background );
+			getScreenNode( ).attachChild( background );
 
 			Container top = new Container( new BoxLayout( Axis.X, FillMode.Proportional ), "glass" );
 			top.setLocalTranslation( 0, cam.getHeight( ), 0 );
@@ -232,34 +248,32 @@ public class OptionsScreen extends Screen
 
 			Container buttons = new Container( new BoxLayout( Axis.X, FillMode.Even ), "glass" );
 			buttons.setPreferredSize( new Vector3f( 0.2f, 0, 0 ) );
-			setUpButtons( screenManager );
+
 			optionsApply.setFontSize( 17 * scale );
 			optionsExit.setFontSize( 17 * scale );
 			top.addChild( name );
 			top.addChild( buttons );
 
-			Container middle = new Container( new BoxLayout( Axis.Y, FillMode.Even ), "glass" );
-			middle.setPreferredSize( new Vector3f( cam.getWidth( ) * .2f, cam.getHeight( ) * .2f, 0 ) );
-			middle.setLocalTranslation( cam.getWidth( ) * .1f, cam.getHeight( ) * 0.85f, 0 );
+			Container middle = new Container( new BoxLayout( Axis.X, FillMode.Even ), "glass" );
+			middle.setPreferredSize( new Vector3f( cam.getWidth( ) * .4f, cam.getHeight( ) * .05f, 0 ) );
+			middle.setLocalTranslation( cam.getWidth( ) * .05f, cam.getHeight( ) * 0.85f, 0 );
 			middle.setBackground( new QuadBackgroundComponent( ColorRGBA.Brown ) );
-
-			Button graphicsButton = new Button( "Graphics" );
-			Button audioButton = new Button( "Audio" );
-			Button inputButton = new Button( "Input" );
 
 			middle.addChild( graphicsButton );
 			middle.addChild( audioButton );
 			middle.addChild( inputButton );
+			setUpButtons( screenManager );
 
-			Container graphics = new Container( new BoxLayout( Axis.Y, FillMode.Even ) );
-			graphics.setPreferredSize( new Vector3f( 0, .3f, 0 ) );
+			graphics = new Container( new BoxLayout( Axis.Y, FillMode.Even ) );
+			graphics.setPreferredSize( new Vector3f( cam.getWidth( ) * .9f, cam.getHeight( ) * .75f, 0 ) );
 			graphics.setBackground( new QuadBackgroundComponent( new ColorRGBA( .07f, .52f, .49f, 1 ) ) );
+			graphics.setLocalTranslation( cam.getWidth( ) * .05f, cam.getHeight( ) * 0.8f, 0 );
 
-			Container audio = new Container( new BoxLayout( Axis.Y, FillMode.Even ) );
+			audio = new Container( new BoxLayout( Axis.Y, FillMode.Even ) );
 			audio.setPreferredSize( new Vector3f( 0, .3f, 0 ) );
 			audio.setBackground( new QuadBackgroundComponent( new ColorRGBA( .07f, .36f, .49f, 1 ) ) );
 
-			Container input = new Container( new BoxLayout( Axis.Y, FillMode.Even ) );
+			input = new Container( new BoxLayout( Axis.Y, FillMode.Even ) );
 			input.setPreferredSize( new Vector3f( 0, .3f, 0 ) );
 			input.setBackground( new QuadBackgroundComponent( new ColorRGBA( .07f, .9f, .49f, 1 ) ) );
 
@@ -300,6 +314,8 @@ public class OptionsScreen extends Screen
 			Checkbox console = new Checkbox( "Enable Dev Console: ", "glass" );
 			console.setFontSize( 17 * scale );
 
+			swapContainer( graphics );
+
 			graphics.addChild( gLabel );
 			graphics.addChild( resLabel );
 			graphics.addChild( res );
@@ -312,13 +328,25 @@ public class OptionsScreen extends Screen
 			audio.addChild( soundsVolume );
 			input.addChild( iLabel );
 			input.addChild( console );
-			optionsNode.attachChild( graphics );
-			optionsNode.attachChild( audio );
-			optionsNode.attachChild( input );
-			optionsNode.attachChild( middle );
-			optionsNode.attachChild( top );
-			getScreenNode( ).attachChild( optionsNode );
+			// optionsNode.attachChild( graphics );
+			// optionsNode.attachChild( audio );
+			// optionsNode.attachChild( input );
+			getScreenNode( ).attachChild( middle );
+			getScreenNode( ).attachChild( top );
+			// getScreenNode( ).attachChild( optionsNode );
 		}
+	}
+
+	private void swapContainer( Container container )
+	{
+		if ( getScreenNode( ).hasChild( current ) )
+		{
+			if ( current == container )
+				return;
+			getScreenNode( ).detachChild( current );
+		}
+		current = container;
+		getScreenNode( ).attachChild( current );
 	}
 
 	@Override
