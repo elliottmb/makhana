@@ -9,18 +9,15 @@ import com.jme3.renderer.Camera;
 import com.jme3.scene.Node;
 import com.simsilica.lemur.Axis;
 import com.simsilica.lemur.Button;
+import com.simsilica.lemur.Button.ButtonAction;
 import com.simsilica.lemur.Checkbox;
-import com.simsilica.lemur.CheckboxModel;
 import com.simsilica.lemur.Command;
 import com.simsilica.lemur.Container;
 import com.simsilica.lemur.DefaultRangedValueModel;
 import com.simsilica.lemur.FillMode;
 import com.simsilica.lemur.Label;
 import com.simsilica.lemur.Panel;
-import com.simsilica.lemur.RollupPanel;
 import com.simsilica.lemur.Slider;
-import com.simsilica.lemur.Button.ButtonAction;
-import com.simsilica.lemur.TabbedPanel;
 import com.simsilica.lemur.component.BoxLayout;
 import com.simsilica.lemur.component.QuadBackgroundComponent;
 import com.simsilica.lemur.core.VersionedReference;
@@ -105,15 +102,74 @@ public class OptionsScreen extends Screen
 			}
 		} );
 		graphicsButton = new Button( "Graphics" );
+		graphicsButton.addCommands( ButtonAction.Down, new Command< Button >( )
+		{
+			public void execute( Button b )
+			{
+				b.move( 1, -1, 0 );
+			}
+		} );
+		graphicsButton.addCommands( ButtonAction.Up, new Command< Button >( )
+		{
+			public void execute( Button b )
+			{
+				b.move( -1, 1, 0 );
+			}
+		} );
 		graphicsButton.addCommands( ButtonAction.Click, new Command< Button >( )
 		{
 			public void execute( Button b )
 			{
 				System.out.println( "Graphics in options Clicked" );
+				swapContainer( graphics );
 			}
 		} );
 		audioButton = new Button( "Audio" );
+		audioButton.addCommands( ButtonAction.Down, new Command< Button >( )
+		{
+			public void execute( Button b )
+			{
+				b.move( 1, -1, 0 );
+			}
+		} );
+		audioButton.addCommands( ButtonAction.Up, new Command< Button >( )
+		{
+			public void execute( Button b )
+			{
+				b.move( -1, 1, 0 );
+			}
+		} );
+		audioButton.addCommands( ButtonAction.Click, new Command< Button >( )
+		{
+			public void execute( Button b )
+			{
+				System.out.println( "Audio in options Clicked" );
+				swapContainer( audio );
+			}
+		} );
 		inputButton = new Button( "Input" );
+		inputButton.addCommands( ButtonAction.Down, new Command< Button >( )
+		{
+			public void execute( Button b )
+			{
+				b.move( 1, -1, 0 );
+			}
+		} );
+		inputButton.addCommands( ButtonAction.Up, new Command< Button >( )
+		{
+			public void execute( Button b )
+			{
+				b.move( -1, 1, 0 );
+			}
+		} );
+		inputButton.addCommands( ButtonAction.Click, new Command< Button >( )
+		{
+			public void execute( Button b )
+			{
+				System.out.println( "Input in options Clicked" );
+				swapContainer( input );
+			}
+		} );
 	}
 
 	@Override
@@ -125,216 +181,113 @@ public class OptionsScreen extends Screen
 
 		scale = cam.getHeight( ) * 0.0016f;
 
-		original = false;
-		rolledPanel = true;
-		if ( original )
-		{
-			Node optionsNode = new Node( );
-			Panel background = new Panel( );
-			background.setBackground( new QuadBackgroundComponent( ColorRGBA.Gray ) );
-			background.setLocalTranslation( 0, cam.getHeight( ), 0 );
-			background.setPreferredSize( new Vector3f( cam.getWidth( ), cam.getHeight( ), 0 ) );
-			optionsNode.attachChild( background );
+		Panel background = new Panel( );
+		background.setBackground( new QuadBackgroundComponent( ColorRGBA.Gray ) );
+		background.setLocalTranslation( 0, cam.getHeight( ), 0 );
+		background.setPreferredSize( new Vector3f( cam.getWidth( ), cam.getHeight( ), 0 ) );
+		getScreenNode( ).attachChild( background );
 
-			Container top = new Container( new BoxLayout( Axis.X, FillMode.Proportional ), "glass" );
-			top.setLocalTranslation( 0, cam.getHeight( ), 0 );
+		Container top = new Container( new BoxLayout( Axis.X, FillMode.Proportional ), "glass" );
+		top.setLocalTranslation( 0, cam.getHeight( ), 0 );
 
-			top.setBackground( new QuadBackgroundComponent( ColorRGBA.DarkGray ) );
-			top.setPreferredSize( new Vector3f( cam.getWidth( ), cam.getHeight( ) * 0.1f, 0 ) );
-			Label name = new Label( "Options" );
-			name.scale( scale );
-			name.setPreferredSize( new Vector3f( 0.8f, 0, 0 ) );
+		top.setBackground( new QuadBackgroundComponent( ColorRGBA.DarkGray ) );
+		top.setPreferredSize( new Vector3f( cam.getWidth( ), cam.getHeight( ) * 0.1f, 0 ) );
+		Label name = new Label( "Options" );
+		name.scale( scale );
+		name.setPreferredSize( new Vector3f( 0.8f, 0, 0 ) );
 
-			Container buttons = new Container( new BoxLayout( Axis.X, FillMode.Even ), "glass" );
-			buttons.setPreferredSize( new Vector3f( 0.2f, 0, 0 ) );
-			setUpButtons( screenManager );
-			optionsApply.setFontSize( 17 * scale );
-			optionsExit.setFontSize( 17 * scale );
+		Container buttons = new Container( new BoxLayout( Axis.X, FillMode.Even ), "glass" );
+		buttons.setPreferredSize( new Vector3f( 0.2f, 0, 0 ) );
 
-			Container middle = new Container( );
-			middle.setPreferredSize( new Vector3f( cam.getWidth( ) * .8f, cam.getHeight( ) * .8f, 0 ) );
-			middle.setLocalTranslation( cam.getWidth( ) * .1f, cam.getHeight( ) * 0.85f, 0 );
+		top.addChild( name );
+		top.addChild( buttons );
 
-			Container graphics = new Container( new BoxLayout( Axis.Y, FillMode.Even ) );
-			graphics.setPreferredSize( new Vector3f( 0, .3f, 0 ) );
-			graphics.setBackground( new QuadBackgroundComponent( new ColorRGBA( .07f, .52f, .49f, 1 ) ) );
+		Container middle = new Container( new BoxLayout( Axis.X, FillMode.Even ), "glass" );
+		middle.setPreferredSize( new Vector3f( cam.getWidth( ) * .4f, cam.getHeight( ) * .05f, 0 ) );
+		middle.setLocalTranslation( cam.getWidth( ) * .05f, cam.getHeight( ) * 0.85f, 0 );
+		middle.setBackground( new QuadBackgroundComponent( ColorRGBA.Brown ) );
 
-			Container audio = new Container( new BoxLayout( Axis.Y, FillMode.Even ) );
-			audio.setPreferredSize( new Vector3f( 0, .3f, 0 ) );
-			audio.setBackground( new QuadBackgroundComponent( new ColorRGBA( .07f, .36f, .49f, 1 ) ) );
+		setUpButtons( screenManager );
 
-			Container input = new Container( new BoxLayout( Axis.Y, FillMode.Even ) );
-			input.setPreferredSize( new Vector3f( 0, .3f, 0 ) );
-			input.setBackground( new QuadBackgroundComponent( new ColorRGBA( .07f, .9f, .49f, 1 ) ) );
+		middle.addChild( graphicsButton );
+		middle.addChild( audioButton );
+		middle.addChild( inputButton );
 
-			Label gLabel = new Label( "Graphics" );
-			gLabel.scale( scale );
+		optionsApply.setFontSize( 17 * scale );
+		optionsExit.setFontSize( 17 * scale );
+		graphicsButton.setFontSize( 17 * scale );
+		audioButton.setFontSize( 17 * scale );
+		inputButton.setFontSize( 17 * scale );
 
-			Label aLabel = new Label( "Audio" );
-			aLabel.scale( scale );
+		graphics = new Container( new BoxLayout( Axis.Y, FillMode.Even ) );
+		graphics.setPreferredSize( new Vector3f( cam.getWidth( ) * .9f, cam.getHeight( ) * .75f, 0 ) );
+		graphics.setBackground( new QuadBackgroundComponent( new ColorRGBA( .07f, .52f, .49f, 1 ) ) );
+		graphics.setLocalTranslation( cam.getWidth( ) * .05f, cam.getHeight( ) * 0.8f, 0 );
 
-			Label iLabel = new Label( "Input" );
-			iLabel.scale( scale );
+		audio = new Container( new BoxLayout( Axis.Y, FillMode.Even ) );
+		audio.setPreferredSize( new Vector3f( cam.getWidth( ) * .9f, cam.getHeight( ) * .75f, 0 ) );
+		audio.setBackground( new QuadBackgroundComponent( new ColorRGBA( .07f, .52f, .49f, 1 ) ) );
+		audio.setLocalTranslation( cam.getWidth( ) * .05f, cam.getHeight( ) * 0.8f, 0 );
 
-			resLabel = new Label( "" );
-			resLabel.scale( scale );
+		input = new Container( new BoxLayout( Axis.Y, FillMode.Even ) );
+		input.setPreferredSize( new Vector3f( cam.getWidth( ) * .9f, cam.getHeight( ) * .75f, 0 ) );
+		input.setBackground( new QuadBackgroundComponent( new ColorRGBA( .07f, .52f, .49f, 1 ) ) );
+		input.setLocalTranslation( cam.getWidth( ) * .05f, cam.getHeight( ) * 0.8f, 0 );
 
-			res = new Slider( new DefaultRangedValueModel( 0, 15, 1 ), "glass" );
-			res.setName( "Resolution" );
-			resRef = res.getModel( ).createReference( );
-			resLabel.setText( "Resolution: " + String.valueOf( resRef.get( ) ) );
+		Label gLabel = new Label( "Graphics" );
+		gLabel.scale( scale );
 
-			Checkbox fullscreen = new Checkbox( "FullScreen", "glass" );
-			fullscreen.setFontSize( 17 * scale );
+		Label aLabel = new Label( "Audio" );
+		aLabel.scale( scale );
 
-			quality = new Slider( new DefaultRangedValueModel( 0, 4, 4 ), "glass" );
-			quality.setName( "Quality" );
-			qualityRef = quality.getModel( ).createReference( );
+		Label iLabel = new Label( "Input" );
+		iLabel.scale( scale );
 
-			Checkbox vsync = new Checkbox( "VSync" );
-			vsync.setFontSize( 17 * scale );
+		resLabel = new Label( "" );
+		resLabel.scale( scale );
 
-			Slider mainVolume = new Slider( new DefaultRangedValueModel( 0, 100, 100 ), "glass" );
-			Slider musicVolume = new Slider( new DefaultRangedValueModel( 0, 100, 100 ), "glass" );
-			Slider soundsVolume = new Slider( new DefaultRangedValueModel( 0, 100, 100 ), "glass" );
-			mainVolumeRef = mainVolume.getModel( ).createReference( );
-			musicVolumeRef = musicVolume.getModel( ).createReference( );
-			soundVolumeRef = soundsVolume.getModel( ).createReference( );
+		res = new Slider( new DefaultRangedValueModel( 0, 15, 1 ), "glass" );
+		res.setName( "Resolution" );
+		resRef = res.getModel( ).createReference( );
+		resLabel.setText( "Resolution: " + String.valueOf( resRef.get( ) ) );
 
-			Checkbox console = new Checkbox( "Enable Dev Console: ", "glass" );
-			console.setFontSize( 17 * scale );
+		Checkbox fullscreen = new Checkbox( "FullScreen", "glass" );
+		fullscreen.setFontSize( 17 * scale );
 
-			// TODO all input keys
+		quality = new Slider( new DefaultRangedValueModel( 0, 4, 4 ), "glass" );
+		quality.setName( "Quality" );
+		qualityRef = quality.getModel( ).createReference( );
 
-			graphics.addChild( gLabel );
-			graphics.addChild( resLabel );
-			graphics.addChild( res );
-			graphics.addChild( fullscreen );
-			graphics.addChild( quality );
-			graphics.addChild( vsync );
-			audio.addChild( aLabel );
-			audio.addChild( mainVolume );
-			audio.addChild( musicVolume );
-			audio.addChild( soundsVolume );
-			input.addChild( iLabel );
-			input.addChild( console );
-			middle.addChild( graphics );
-			middle.addChild( audio );
-			middle.addChild( input );
-			buttons.addChild( optionsApply );
-			buttons.addChild( optionsExit );
-			top.addChild( name );
-			top.addChild( buttons );
-			optionsNode.attachChild( middle );
-			optionsNode.attachChild( top );
-			getScreenNode( ).attachChild( optionsNode );
-		}
-		if ( rolledPanel )
-		{
-			Panel background = new Panel( );
-			background.setBackground( new QuadBackgroundComponent( ColorRGBA.Gray ) );
-			background.setLocalTranslation( 0, cam.getHeight( ), 0 );
-			background.setPreferredSize( new Vector3f( cam.getWidth( ), cam.getHeight( ), 0 ) );
-			getScreenNode( ).attachChild( background );
+		Checkbox vsync = new Checkbox( "VSync" );
+		vsync.setFontSize( 17 * scale );
 
-			Container top = new Container( new BoxLayout( Axis.X, FillMode.Proportional ), "glass" );
-			top.setLocalTranslation( 0, cam.getHeight( ), 0 );
+		Slider mainVolume = new Slider( new DefaultRangedValueModel( 0, 100, 100 ), "glass" );
+		Slider musicVolume = new Slider( new DefaultRangedValueModel( 0, 100, 100 ), "glass" );
+		Slider soundsVolume = new Slider( new DefaultRangedValueModel( 0, 100, 100 ), "glass" );
+		mainVolumeRef = mainVolume.getModel( ).createReference( );
+		musicVolumeRef = musicVolume.getModel( ).createReference( );
+		soundVolumeRef = soundsVolume.getModel( ).createReference( );
 
-			top.setBackground( new QuadBackgroundComponent( ColorRGBA.DarkGray ) );
-			top.setPreferredSize( new Vector3f( cam.getWidth( ), cam.getHeight( ) * 0.1f, 0 ) );
-			Label name = new Label( "Options" );
-			name.scale( scale );
-			name.setPreferredSize( new Vector3f( 0.8f, 0, 0 ) );
+		Checkbox console = new Checkbox( "Enable Dev Console: ", "glass" );
+		console.setFontSize( 17 * scale );
 
-			Container buttons = new Container( new BoxLayout( Axis.X, FillMode.Even ), "glass" );
-			buttons.setPreferredSize( new Vector3f( 0.2f, 0, 0 ) );
+		swapContainer( graphics );
 
-			optionsApply.setFontSize( 17 * scale );
-			optionsExit.setFontSize( 17 * scale );
-			top.addChild( name );
-			top.addChild( buttons );
+		// graphics.addChild( gLabel );
+		graphics.addChild( resLabel );
+		graphics.addChild( res );
+		graphics.addChild( fullscreen );
+		graphics.addChild( quality );
+		graphics.addChild( vsync );
+		// audio.addChild( aLabel );
+		audio.addChild( mainVolume );
+		audio.addChild( musicVolume );
+		audio.addChild( soundsVolume );
+		// input.addChild( iLabel );
+		input.addChild( console );
+		getScreenNode( ).attachChild( middle );
+		getScreenNode( ).attachChild( top );
 
-			Container middle = new Container( new BoxLayout( Axis.X, FillMode.Even ), "glass" );
-			middle.setPreferredSize( new Vector3f( cam.getWidth( ) * .4f, cam.getHeight( ) * .05f, 0 ) );
-			middle.setLocalTranslation( cam.getWidth( ) * .05f, cam.getHeight( ) * 0.85f, 0 );
-			middle.setBackground( new QuadBackgroundComponent( ColorRGBA.Brown ) );
-
-			middle.addChild( graphicsButton );
-			middle.addChild( audioButton );
-			middle.addChild( inputButton );
-			setUpButtons( screenManager );
-
-			graphics = new Container( new BoxLayout( Axis.Y, FillMode.Even ) );
-			graphics.setPreferredSize( new Vector3f( cam.getWidth( ) * .9f, cam.getHeight( ) * .75f, 0 ) );
-			graphics.setBackground( new QuadBackgroundComponent( new ColorRGBA( .07f, .52f, .49f, 1 ) ) );
-			graphics.setLocalTranslation( cam.getWidth( ) * .05f, cam.getHeight( ) * 0.8f, 0 );
-
-			audio = new Container( new BoxLayout( Axis.Y, FillMode.Even ) );
-			audio.setPreferredSize( new Vector3f( 0, .3f, 0 ) );
-			audio.setBackground( new QuadBackgroundComponent( new ColorRGBA( .07f, .36f, .49f, 1 ) ) );
-
-			input = new Container( new BoxLayout( Axis.Y, FillMode.Even ) );
-			input.setPreferredSize( new Vector3f( 0, .3f, 0 ) );
-			input.setBackground( new QuadBackgroundComponent( new ColorRGBA( .07f, .9f, .49f, 1 ) ) );
-
-			Label gLabel = new Label( "Graphics" );
-			gLabel.scale( scale );
-
-			Label aLabel = new Label( "Audio" );
-			aLabel.scale( scale );
-
-			Label iLabel = new Label( "Input" );
-			iLabel.scale( scale );
-
-			resLabel = new Label( "" );
-			resLabel.scale( scale );
-
-			res = new Slider( new DefaultRangedValueModel( 0, 15, 1 ), "glass" );
-			res.setName( "Resolution" );
-			resRef = res.getModel( ).createReference( );
-			resLabel.setText( "Resolution: " + String.valueOf( resRef.get( ) ) );
-
-			Checkbox fullscreen = new Checkbox( "FullScreen", "glass" );
-			fullscreen.setFontSize( 17 * scale );
-
-			quality = new Slider( new DefaultRangedValueModel( 0, 4, 4 ), "glass" );
-			quality.setName( "Quality" );
-			qualityRef = quality.getModel( ).createReference( );
-
-			Checkbox vsync = new Checkbox( "VSync" );
-			vsync.setFontSize( 17 * scale );
-
-			Slider mainVolume = new Slider( new DefaultRangedValueModel( 0, 100, 100 ), "glass" );
-			Slider musicVolume = new Slider( new DefaultRangedValueModel( 0, 100, 100 ), "glass" );
-			Slider soundsVolume = new Slider( new DefaultRangedValueModel( 0, 100, 100 ), "glass" );
-			mainVolumeRef = mainVolume.getModel( ).createReference( );
-			musicVolumeRef = musicVolume.getModel( ).createReference( );
-			soundVolumeRef = soundsVolume.getModel( ).createReference( );
-
-			Checkbox console = new Checkbox( "Enable Dev Console: ", "glass" );
-			console.setFontSize( 17 * scale );
-
-			swapContainer( graphics );
-
-			graphics.addChild( gLabel );
-			graphics.addChild( resLabel );
-			graphics.addChild( res );
-			graphics.addChild( fullscreen );
-			graphics.addChild( quality );
-			graphics.addChild( vsync );
-			audio.addChild( aLabel );
-			audio.addChild( mainVolume );
-			audio.addChild( musicVolume );
-			audio.addChild( soundsVolume );
-			input.addChild( iLabel );
-			input.addChild( console );
-			// optionsNode.attachChild( graphics );
-			// optionsNode.attachChild( audio );
-			// optionsNode.attachChild( input );
-			getScreenNode( ).attachChild( middle );
-			getScreenNode( ).attachChild( top );
-			// getScreenNode( ).attachChild( optionsNode );
-		}
 	}
 
 	private void swapContainer( Container container )
