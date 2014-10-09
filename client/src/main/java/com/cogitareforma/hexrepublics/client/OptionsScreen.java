@@ -2,6 +2,7 @@ package com.cogitareforma.hexrepublics.client;
 
 import com.cogitareforma.makhana.common.util.Screen;
 import com.cogitareforma.makhana.common.util.ScreenManager;
+import com.cogitareforma.makhana.common.util.YamlConfig;
 import com.jme3.app.Application;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
@@ -18,6 +19,7 @@ import com.simsilica.lemur.Insets3f;
 import com.simsilica.lemur.Label;
 import com.simsilica.lemur.Panel;
 import com.simsilica.lemur.Slider;
+import com.simsilica.lemur.TextField;
 import com.simsilica.lemur.component.BoxLayout;
 import com.simsilica.lemur.component.QuadBackgroundComponent;
 import com.simsilica.lemur.core.VersionedReference;
@@ -47,12 +49,12 @@ public class OptionsScreen extends Screen
 	private Button graphicsButton;
 	private Button audioButton;
 	private Button inputButton;
-	private Button northButton;
-	private Button southButton;
-	private Button eastButton;
-	private Button westButton;
-	private Button chatButton;
-	private Button scoreboardButton;
+	private TextField northButton;
+	private TextField southButton;
+	private TextField eastButton;
+	private TextField westButton;
+	private TextField chatButton;
+	private TextField scoreboardButton;
 
 	@Override
 	public void cleanup( )
@@ -127,7 +129,7 @@ public class OptionsScreen extends Screen
 			public void execute( Button b )
 			{
 				System.out.println( "Graphics in options Clicked" );
-				swapContainer( graphics );
+				activeContainer( graphics );
 			}
 		} );
 		audioButton = new Button( "Audio" );
@@ -150,7 +152,7 @@ public class OptionsScreen extends Screen
 			public void execute( Button b )
 			{
 				System.out.println( "Audio in options Clicked" );
-				swapContainer( audio );
+				activeContainer( audio );
 			}
 		} );
 		inputButton = new Button( "Input" );
@@ -173,7 +175,7 @@ public class OptionsScreen extends Screen
 			public void execute( Button b )
 			{
 				System.out.println( "Input in options Clicked" );
-				swapContainer( input );
+				activeContainer( input );
 			}
 		} );
 	}
@@ -182,6 +184,7 @@ public class OptionsScreen extends Screen
 	public void initialize( ScreenManager screenManager, Application app )
 	{
 		super.initialize( screenManager, app );
+		YamlConfig yamlConfig = YamlConfig.DEFAULT;
 
 		Camera cam = screenManager.getApp( ).getCamera( );
 
@@ -284,62 +287,102 @@ public class OptionsScreen extends Screen
 		console.setFontSize( 17 * scale );
 		console.setInsets( new Insets3f( cam.getHeight( ) * .02f, 0, cam.getHeight( ) * .02f, 0 ) );
 
-		Container northContainer = new Container( new BoxLayout( Axis.X, FillMode.Even ) );
-		northContainer.setPreferredSize( new Vector3f( cam.getWidth( ) * .9f, cam.getHeight( ) * .1f, 0 ) );
-		northContainer.setLocalTranslation( cam.getWidth( ) * .05f, cam.getHeight( ) * .7f, 0 );
+		Vector3f inputSectionSize = new Vector3f( cam.getWidth( ) * .9f, cam.getHeight( ) * .1f, 0 );
+		Vector3f inputTextFieldSize = new Vector3f( cam.getWidth( ) * 0.5f, cam.getHeight( ) * 0.1f, 0 );
+		Insets3f inputInsets = new Insets3f( cam.getHeight( ) * 0.02f, 0, 0, 0 );
+
+		// Container northContainer = new Container( new BoxLayout( Axis.X,
+		// FillMode.Even ) );
+		// northContainer.setPreferredSize( inputSectionSize );
+		// northContainer.setLocalTranslation( cam.getWidth( ) * .05f,
+		// cam.getHeight( ) * .7f, 0 );
 		Label northLabel = new Label( "Move North " );
 		northLabel.scale( scale );
-		northContainer.addChild( northLabel );
-		northButton = new Button( "North Button" );
+		// northContainer.addChild( northLabel );
+		northButton = new TextField( "North Button", "glass" );
+		northButton.setSingleLine( true );
 		northButton.setFontSize( 17 * scale );
-		northContainer.addChild( northButton );
-		Container southContainer = new Container( new BoxLayout( Axis.X, FillMode.Even ) );
-		southContainer.setPreferredSize( new Vector3f( cam.getWidth( ) * .9f, cam.getHeight( ) * .1f, 0 ) );
-		southContainer.setLocalTranslation( cam.getWidth( ) * .05f, cam.getHeight( ) * .6f, 0 );
+		northButton.setInsets( inputInsets );
+		northButton.setLocalTranslation( cam.getWidth( ) * 0.1f, cam.getHeight( ) * 0.7f, 0 );
+		input.addChild( northButton );
+		// northContainer.addChild( northButton );
+		// Container southContainer = new Container( new BoxLayout( Axis.X,
+		// FillMode.Even ) );
+		// southContainer.setPreferredSize( inputSectionSize );
+		// southContainer.setLocalTranslation( cam.getWidth( ) * .05f,
+		// cam.getHeight( ) * .6f, 0 );
 		Label southLabel = new Label( "Move South " );
 		southLabel.scale( scale );
-		southContainer.addChild( southLabel );
-		southButton = new Button( "South Button" );
+		// southContainer.addChild( southLabel );
+		southButton = new TextField( "South Button", "glass" );
+		southButton.setSingleLine( true );
 		southButton.setFontSize( 17 * scale );
-		southContainer.addChild( southButton );
-		Container eastContainer = new Container( new BoxLayout( Axis.X, FillMode.Even ) );
-		eastContainer.setPreferredSize( new Vector3f( cam.getWidth( ) * .9f, cam.getHeight( ) * .1f, 0 ) );
-		eastContainer.setLocalTranslation( cam.getWidth( ) * .05f, cam.getHeight( ) * .5f, 0 );
+		southButton.setInsets( inputInsets );
+		southButton.setLocalTranslation( cam.getWidth( ) * 0.1f, cam.getHeight( ) * 0.6f, 0 );
+		input.addChild( southButton );
+		// southContainer.addChild( southButton );
+		// Container eastContainer = new Container( new BoxLayout( Axis.X,
+		// FillMode.Even ) );
+		// eastContainer.setPreferredSize( inputSectionSize );
+		// eastContainer.setLocalTranslation( cam.getWidth( ) * .05f,
+		// cam.getHeight( ) * .5f, 0 );
 		Label eastLabel = new Label( "Move East " );
 		eastLabel.scale( scale );
-		eastContainer.addChild( eastLabel );
-		eastButton = new Button( "East Button" );
+		// eastContainer.addChild( eastLabel );
+		eastButton = new TextField( "East Button", "glass" );
+		eastButton.setSingleLine( true );
 		eastButton.setFontSize( 17 * scale );
-		eastContainer.addChild( eastButton );
-		Container westContainer = new Container( new BoxLayout( Axis.X, FillMode.Even ) );
-		westContainer.setPreferredSize( new Vector3f( cam.getWidth( ) * .9f, cam.getHeight( ) * .1f, 0 ) );
-		westContainer.setLocalTranslation( cam.getWidth( ) * .05f, cam.getHeight( ) * .4f, 0 );
+		eastButton.setInsets( inputInsets );
+		eastButton.setLocalTranslation( cam.getWidth( ) * 0.1f, cam.getHeight( ) * 0.5f, 0 );
+		input.addChild( eastButton );
+		// eastContainer.addChild( eastButton );
+		// Container westContainer = new Container( new BoxLayout( Axis.X,
+		// FillMode.Even ) );
+		// westContainer.setPreferredSize( inputSectionSize );
+		// westContainer.setLocalTranslation( cam.getWidth( ) * .05f,
+		// cam.getHeight( ) * .4f, 0 );
 		Label westLabel = new Label( "Move West " );
 		westLabel.scale( scale );
-		westContainer.addChild( westLabel );
-		westButton = new Button( "West Button" );
+		// westContainer.addChild( westLabel );
+		westButton = new TextField( "West Button", "glass" );
+		westButton.setSingleLine( true );
 		westButton.setFontSize( 17 * scale );
-		westContainer.addChild( westButton );
-		Container chatContainer = new Container( new BoxLayout( Axis.X, FillMode.Even ) );
-		chatContainer.setPreferredSize( new Vector3f( cam.getWidth( ) * .9f, cam.getHeight( ) * .1f, 0 ) );
-		chatContainer.setLocalTranslation( cam.getWidth( ) * .05f, cam.getHeight( ) * .3f, 0 );
+		westButton.setInsets( inputInsets );
+		westButton.setLocalTranslation( cam.getWidth( ) * 0.1f, cam.getHeight( ) * 0.4f, 0 );
+		input.addChild( westButton );
+		// westContainer.addChild( westButton );
+		// Container chatContainer = new Container( new BoxLayout( Axis.X,
+		// FillMode.Even ) );
+		// chatContainer.setPreferredSize( inputSectionSize );
+		// chatContainer.setLocalTranslation( cam.getWidth( ) * .05f,
+		// cam.getHeight( ) * .3f, 0 );
 		Label chatLabel = new Label( "Chat       " );
 		chatLabel.scale( scale );
-		chatContainer.addChild( chatLabel );
-		chatButton = new Button( "Chat Button" );
+		// chatContainer.addChild( chatLabel );
+		chatButton = new TextField( "Chat Button", "glass" );
+		chatButton.setSingleLine( true );
 		chatButton.setFontSize( 17 * scale );
-		chatContainer.addChild( chatButton );
-		Container scoreContainer = new Container( new BoxLayout( Axis.X, FillMode.Even ) );
-		scoreContainer.setPreferredSize( new Vector3f( cam.getWidth( ) * .9f, cam.getHeight( ) * .1f, 0 ) );
-		scoreContainer.setLocalTranslation( cam.getWidth( ) * .05f, cam.getHeight( ) * .2f, 0 );
+		chatButton.setInsets( inputInsets );
+		chatButton.setLocalTranslation( cam.getWidth( ) * 0.1f, cam.getHeight( ) * 0.3f, 0 );
+		input.addChild( chatButton );
+		// chatContainer.addChild( chatButton );
+		// Container scoreContainer = new Container( new BoxLayout( Axis.X,
+		// FillMode.Even ) );
+		// scoreContainer.setPreferredSize( inputSectionSize );
+		// scoreContainer.setLocalTranslation( cam.getWidth( ) * .05f,
+		// cam.getHeight( ) * .2f, 0 );
 		Label scoreLabel = new Label( "Scoreboard" );
 		scoreLabel.scale( scale );
-		scoreContainer.addChild( scoreLabel );
-		scoreboardButton = new Button( "Score Button" );
+		// scoreContainer.addChild( scoreLabel );
+		scoreboardButton = new TextField( "Score Button", "glass" );
+		scoreboardButton.setSingleLine( true );
 		scoreboardButton.setFontSize( 17 * scale );
-		scoreContainer.addChild( scoreboardButton );
+		scoreboardButton.setInsets( inputInsets );
+		scoreboardButton.setLocalTranslation( cam.getWidth( ) * 0.1f, cam.getHeight( ) * 0.2f, 0 );
+		input.addChild( scoreboardButton );
+		// scoreContainer.addChild( scoreboardButton );
 
-		swapContainer( graphics );
+		activeContainer( graphics );
 
 		graphics.addChild( resLabel );
 		graphics.addChild( res );
@@ -353,18 +396,18 @@ public class OptionsScreen extends Screen
 		audio.addChild( soundLabel );
 		audio.addChild( soundsVolume );
 		input.addChild( console );
-		input.addChild( northContainer );
-		input.addChild( southContainer );
-		input.addChild( eastContainer );
-		input.addChild( westContainer );
-		input.addChild( chatContainer );
-		input.addChild( scoreContainer );
+		// input.addChild( northContainer );
+		// input.addChild( southContainer );
+		// input.addChild( eastContainer );
+		// input.addChild( westContainer );
+		// input.addChild( chatContainer );
+		// input.addChild( scoreContainer );
 		getScreenNode( ).attachChild( middle );
 		getScreenNode( ).attachChild( top );
 
 	}
 
-	private void swapContainer( Container container )
+	private void activeContainer( Container container )
 	{
 		if ( getScreenNode( ).hasChild( current ) )
 		{
