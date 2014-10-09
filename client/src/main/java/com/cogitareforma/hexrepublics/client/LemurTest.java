@@ -6,9 +6,11 @@ import com.jme3.app.SimpleApplication;
 import com.jme3.math.ColorRGBA;
 import com.simsilica.lemur.Checkbox;
 import com.simsilica.lemur.GuiGlobals;
+import com.simsilica.lemur.Insets3f;
 import com.simsilica.lemur.Panel;
 import com.simsilica.lemur.Slider;
 import com.simsilica.lemur.component.QuadBackgroundComponent;
+import com.simsilica.lemur.style.BaseStyles;
 import com.simsilica.lemur.style.Styles;
 
 public class LemurTest extends SimpleApplication
@@ -53,6 +55,8 @@ public class LemurTest extends SimpleApplication
 				new QuadBackgroundComponent( new ColorRGBA( 0, 0.5f, 0.5f, 0.5f ) ) );
 		styles.getSelector( "spacer", "glass" ).set( "background", new QuadBackgroundComponent( new ColorRGBA( 1, 0.0f, 0.0f, 0.0f ) ) );
 		styles.getSelector( "header", "glass" ).set( "background", new QuadBackgroundComponent( new ColorRGBA( 0, 0.75f, 0.75f, 0.5f ) ) );
+		// BaseStyles.loadGlassStyle( ); // TODO: should be included but gets
+		// error: Groovy scripting engine not available.
 
 		screenManager.addScreen( new StartScreen( ) );
 		screenManager.addScreen( new OptionsScreen( ) );
