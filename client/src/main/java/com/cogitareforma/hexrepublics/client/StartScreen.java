@@ -13,8 +13,11 @@ import com.simsilica.lemur.Button.ButtonAction;
 import com.simsilica.lemur.Command;
 import com.simsilica.lemur.Container;
 import com.simsilica.lemur.FillMode;
+import com.simsilica.lemur.Insets3f;
 import com.simsilica.lemur.Label;
 import com.simsilica.lemur.Panel;
+import com.simsilica.lemur.TextField;
+import com.simsilica.lemur.component.BoxLayout;
 import com.simsilica.lemur.component.QuadBackgroundComponent;
 import com.simsilica.lemur.component.SpringGridLayout;
 import com.simsilica.lemur.style.ElementId;
@@ -27,12 +30,15 @@ public class StartScreen extends Screen
 	private Button optionsButton;
 	private Button exitButton;
 	private float scale;
+	private Container loginContainer;
+	private Button login;
+	private Button cancel;
+	private Label errors;
 
 	@Override
 	public void cleanup( )
 	{
 		// TODO Auto-generated method stub
-
 	}
 
 	@SuppressWarnings( "unchecked" )
@@ -58,7 +64,7 @@ public class StartScreen extends Screen
 			public void execute( Button b )
 			{
 				System.out.println( "Play Game Clicked" );
-				screenManager.showScreen( NetworkScreen.class );
+				getScreenNode( ).attachChild( loginContainer );
 			}
 		} );
 		optionsButton = new Button( "Options" );
@@ -81,7 +87,6 @@ public class StartScreen extends Screen
 			public void execute( Button b )
 			{
 				System.out.println( "Options Clicked" );
-
 				screenManager.showScreen( OptionsScreen.class );
 			}
 		} );
@@ -108,6 +113,52 @@ public class StartScreen extends Screen
 				screenManager.getApp( ).stop( );
 			}
 		} );
+		login = new Button( "Login" );
+		login.addCommands( ButtonAction.Down, new Command< Button >( )
+		{
+			public void execute( Button b )
+			{
+				b.move( 1, -1, 0 );
+			}
+		} );
+		login.addCommands( ButtonAction.Up, new Command< Button >( )
+		{
+			public void execute( Button b )
+			{
+				b.move( -1, 1, 0 );
+			}
+		} );
+		login.addCommands( ButtonAction.Click, new Command< Button >( )
+		{
+			public void execute( Button b )
+			{
+				System.out.println( "Login Clicked" );
+				screenManager.showScreen( NetworkScreen.class );
+			}
+		} );
+		cancel = new Button( "Cancel" );
+		cancel.addCommands( ButtonAction.Down, new Command< Button >( )
+		{
+			public void execute( Button b )
+			{
+				b.move( 1, -1, 0 );
+			}
+		} );
+		cancel.addCommands( ButtonAction.Up, new Command< Button >( )
+		{
+			public void execute( Button b )
+			{
+				b.move( -1, 1, 0 );
+			}
+		} );
+		cancel.addCommands( ButtonAction.Click, new Command< Button >( )
+		{
+			public void execute( Button b )
+			{
+				System.out.println( "Cancel Clicked" );
+				getScreenNode( ).detachChild( loginContainer );
+			}
+		} );
 	}
 
 	@Override
@@ -117,7 +168,7 @@ public class StartScreen extends Screen
 		Camera cam = screenManager.getApp( ).getCamera( );
 		scale = cam.getHeight( ) * 0.0016f;
 
-		Node start = new Node( );
+		setUpButtons( screenManager );
 
 		Panel background = new Panel( );
 		background.setBackground( new QuadBackgroundComponent( ColorRGBA.Gray ) );
@@ -127,51 +178,82 @@ public class StartScreen extends Screen
 		Container buttonPanel = new Container( "glass" );
 		buttonPanel.setPreferredSize( new Vector3f( cam.getWidth( ) * .2f, cam.getHeight( ) * .2f, 0 ) );
 		buttonPanel.setBackground( new QuadBackgroundComponent( new ColorRGBA( 0, 0.5f, 0.5f, 0.5f ), 5, 5, 0.02f, false ) );
-		buttonPanel.setLocalTranslation( cam.getWidth( ) * .05f, cam.getHeight( ) * .2f, 0 );
-
-		setUpButtons( screenManager );
-
-		playButton.setFontSize( 17 * scale );
-		optionsButton.setFontSize( 17 * scale );
-		exitButton.setFontSize( 17 * scale );
+		buttonPanel.setLocalTranslation( cam.getWidth( ) * .03f, cam.getHeight( ) * .2f, 0 );
 
 		buttonPanel.addChild( playButton );
 		buttonPanel.addChild( optionsButton );
 		buttonPanel.addChild( exitButton );
 
 		Container titlePanel = new Container( "glass" );
-		titlePanel.setPreferredSize( new Vector3f( cam.getWidth( ) * .15f, 50f, 0 ) );
+		titlePanel.setPreferredSize( new Vector3f( cam.getWidth( ) * .2f, 70f, 0 ) );
 		titlePanel.setBackground( new QuadBackgroundComponent( new ColorRGBA( 0, 0.5f, 0.5f, 0.5f ), 5, 5, 0.02f, false ) );
-		titlePanel.setLocalTranslation( cam.getWidth( ) * .9f, cam.getHeight( ), 0 );
+		titlePanel.setLocalTranslation( cam.getWidth( ) * .7f, cam.getHeight( ) * .85f, 0 );
 		Label title = new Label( "Makhana" );
-		title.scale( scale );
+		title.setFontSize( 32 * scale );
 		titlePanel.addChild( title );
 
-		start.attachChild( titlePanel );
-		start.attachChild( buttonPanel );
+		loginContainer = new Container( new BoxLayout( Axis.Y, FillMode.None ), "glass" );
+		loginContainer.setPreferredSize( new Vector3f( cam.getWidth( ) * .25f, cam.getHeight( ) * .35f, 0 ) );
+		loginContainer.setBackground( new QuadBackgroundComponent( new ColorRGBA( 0, 0.5f, 0.5f, 0.5f ), 5, 5, 0.02f, false ) );
+		loginContainer.setLocalTranslation( ( cam.getWidth( ) - loginContainer.getPreferredSize( ).x ) / 2f,
+				( cam.getHeight( ) + loginContainer.getPreferredSize( ).y ) / 2f, 0 );
 
-		getScreenNode( ).attachChild( start );
+		Insets3f textfieldInsets = new Insets3f( 0, 0, 16f * scale, 0 );
+		Label usernameLabel = new Label( "Username: ", "glass" );
+		usernameLabel.setFontSize( 17 * scale );
+		loginContainer.addChild( usernameLabel );
+
+		TextField username = new TextField( "sdfsdfsdf ", "glass" );
+		username.setSingleLine( true );
+		username.setFontSize( 17 * scale );
+		username.setInsets( textfieldInsets );
+
+		loginContainer.addChild( username );
+
+		Label passwordLabel = new Label( "Password: ", "glass" );
+		passwordLabel.setFontSize( 17 * scale );
+		TextField password = new TextField( "sdfsdf", "glass" );
+		password.setSingleLine( true );
+		password.setFontSize( 17 * scale );
+		password.setInsets( textfieldInsets );
+		loginContainer.addChild( passwordLabel );
+		loginContainer.addChild( password );
+
+		Container buttons = new Container( new BoxLayout( Axis.X, FillMode.Even ) );
+		buttons.setPreferredSize( new Vector3f( cam.getWidth( ) * .05f, cam.getHeight( ) * .05f, 0 ) );
+		errors = new Label( "TEST" );
+		errors.setFontSize( 17 * scale );
+		errors.setInsets( textfieldInsets );
+		loginContainer.addChild( errors );
+		buttons.addChild( login );
+		buttons.addChild( cancel );
+		loginContainer.addChild( buttons );
+
+		playButton.setFontSize( 17 * scale );
+		optionsButton.setFontSize( 17 * scale );
+		exitButton.setFontSize( 17 * scale );
+		login.setFontSize( 17 * scale );
+		cancel.setFontSize( 17 * scale );
+
+		getScreenNode( ).attachChild( titlePanel );
+		getScreenNode( ).attachChild( buttonPanel );
 	}
 
 	@Override
 	public void screenAttached( ScreenManager screenManager )
 	{
 		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void screenDetached( ScreenManager screenManager )
 	{
 		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void update( float tpf )
 	{
 		// TODO Auto-generated method stub
-
 	}
-
 }
