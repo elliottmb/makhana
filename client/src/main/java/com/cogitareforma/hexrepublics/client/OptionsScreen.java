@@ -209,7 +209,6 @@ public class OptionsScreen extends Screen
 
 		Container top = new Container( new BoxLayout( Axis.X, FillMode.Proportional ), "glass" );
 		top.setLocalTranslation( 0, cam.getHeight( ), 0 );
-
 		top.setBackground( new QuadBackgroundComponent( ColorRGBA.DarkGray ) );
 		top.setPreferredSize( new Vector3f( cam.getWidth( ), cam.getHeight( ) * 0.1f, 0 ) );
 		Label name = new Label( "Options" );
@@ -300,7 +299,7 @@ public class OptionsScreen extends Screen
 		console.setFontSize( 17 * scale );
 		console.setInsets( new Insets3f( cam.getHeight( ) * .02f, 0, cam.getHeight( ) * .02f, 0 ) );
 
-		Insets3f inputInsets = new Insets3f( 20f, 0, 0, 0 );
+		Insets3f inputInsets = new Insets3f( 0, 0, scale * 16f, 0 );
 
 		Label northLabel = new Label( "Move North " );
 		northLabel.scale( scale );
@@ -309,8 +308,6 @@ public class OptionsScreen extends Screen
 		northText.setSingleLine( true );
 		northText.setFontSize( 17 * scale );
 		northText.setInsets( inputInsets );
-		northText.setPreferredWidth( 5 );
-		northText.setLocalTranslation( cam.getWidth( ) * 0.1f, cam.getHeight( ) * 0.7f, 0 );
 		input.addChild( northText );
 
 		Label southLabel = new Label( "Move South " );
@@ -320,7 +317,8 @@ public class OptionsScreen extends Screen
 		southText.setSingleLine( true );
 		southText.setFontSize( 17 * scale );
 		southText.setInsets( inputInsets );
-		southText.setLocalTranslation( cam.getWidth( ) * 0.1f, cam.getHeight( ) * 0.6f, 0 );
+		// southText.setLocalTranslation( cam.getWidth( ) * 0.1f, cam.getHeight(
+		// ) * 0.6f, 0 );
 		input.addChild( southText );
 
 		Label eastLabel = new Label( "Move East " );
@@ -330,7 +328,8 @@ public class OptionsScreen extends Screen
 		eastText.setSingleLine( true );
 		eastText.setFontSize( 17 * scale );
 		eastText.setInsets( inputInsets );
-		eastText.setLocalTranslation( cam.getWidth( ) * 0.1f, cam.getHeight( ) * 0.5f, 0 );
+		// eastText.setLocalTranslation( cam.getWidth( ) * 0.1f, cam.getHeight(
+		// ) * 0.5f, 0 );
 		input.addChild( eastText );
 
 		Label westLabel = new Label( "Move West " );
@@ -340,7 +339,8 @@ public class OptionsScreen extends Screen
 		westText.setSingleLine( true );
 		westText.setFontSize( 17 * scale );
 		westText.setInsets( inputInsets );
-		westText.setLocalTranslation( cam.getWidth( ) * 0.1f, cam.getHeight( ) * 0.4f, 0 );
+		// westText.setLocalTranslation( cam.getWidth( ) * 0.1f, cam.getHeight(
+		// ) * 0.4f, 0 );
 		input.addChild( westText );
 
 		Label chatLabel = new Label( "Chat       " );
@@ -350,7 +350,8 @@ public class OptionsScreen extends Screen
 		chatText.setSingleLine( true );
 		chatText.setFontSize( 17 * scale );
 		chatText.setInsets( inputInsets );
-		chatText.setLocalTranslation( cam.getWidth( ) * 0.1f, cam.getHeight( ) * 0.3f, 0 );
+		// chatText.setLocalTranslation( cam.getWidth( ) * 0.1f, cam.getHeight(
+		// ) * 0.3f, 0 );
 		input.addChild( chatText );
 
 		Label scoreLabel = new Label( "Scoreboard" );
@@ -360,7 +361,8 @@ public class OptionsScreen extends Screen
 		scoreboardText.setSingleLine( true );
 		scoreboardText.setFontSize( 17 * scale );
 		scoreboardText.setInsets( inputInsets );
-		scoreboardText.setLocalTranslation( cam.getWidth( ) * 0.1f, cam.getHeight( ) * 0.2f, 0 );
+		// scoreboardText.setLocalTranslation( cam.getWidth( ) * 0.1f,
+		// cam.getHeight( ) * 0.2f, 0 );
 		input.addChild( scoreboardText );
 
 		activeContainer( graphics );
