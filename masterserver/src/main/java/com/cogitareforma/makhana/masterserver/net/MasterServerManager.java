@@ -121,7 +121,7 @@ public class MasterServerManager extends ServerManager< MasterServer >
 			getServer( ).addConnectionListener( new ConnListener( this ) );
 
 			logger.log( Level.FINE, "Registering message listeners with server." );
-			List< Object > messageListeners = PackageUtils.createAllInPackage( "com.cogitareforma.hexrepublics.masterserver.net.listener",
+			List< Object > messageListeners = PackageUtils.createAllInPackage( "com.cogitareforma.makhana.masterserver.net.listener",
 					this );
 			for ( Object messageListener : messageListeners )
 			{

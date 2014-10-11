@@ -180,7 +180,7 @@ public class ComponentUtil
 		try
 		{
 			return PackageUtils.getAllConcreteClassesFromNames( PackageUtils
-					.getAllClassNamesInPackage( "com.cogitareforma.hexrepublics.common.entities.traits" ) );
+					.getAllClassNamesInPackage( "com.cogitareforma.makhana.common.entities.components" ) );
 		}
 		catch ( IOException e )
 		{
