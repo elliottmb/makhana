@@ -27,33 +27,32 @@ public class SerializerRegistrar
 	{
 		try
 		{
-			// Load our Entity Traits/Components
-			PackageUtils.getAllClassNamesInPackage( "com.cogitareforma.hexrepublics.common.entities.traits" ).forEach( consumingSerializer );
+			// Load our Entity Components
+			PackageUtils.getAllClassNamesInPackage( "com.cogitareforma.makhana.common.entities.components" ).forEach( consumingSerializer );
 
 			// Load our Data Types
-			PackageUtils.getAllClassNamesInPackage( "com.cogitareforma.hexrepublics.common.data" ).forEach( consumingSerializer );
+			PackageUtils.getAllClassNamesInPackage( "com.cogitareforma.makhana.common.data" ).forEach( consumingSerializer );
 
 			// Load our Network Messages
-			PackageUtils.getAllClassNamesInPackage( "com.cogitareforma.hexrepublics.common.net.msg" ).forEach( consumingSerializer );
+			PackageUtils.getAllClassNamesInPackage( "com.cogitareforma.makhana.common.net.msg" ).forEach( consumingSerializer );
 
 			// Lazy Load Zay-ES Messages and Classes
 			EntitySerializers.initialize( );
 
 			// Load our Entity Filters
 			Serializer fs = new FieldSerializer( );
-			PackageUtils.getAllClassNamesInPackage( "com.cogitareforma.hexrepublics.common.entities.filters" ).forEach(
-					( String className ) ->
-					{
-						try
-						{
-							logger.log( Level.FINEST, "Attempting to register class " + className + " with the Serializer" );
-							Serializer.registerClass( Class.forName( className ), fs );
-						}
-						catch ( Exception e )
-						{
-							logger.log( Level.SEVERE, "Unable to register class " + className + " with the Serializer" );
-						}
-					} );
+			PackageUtils.getAllClassNamesInPackage( "com.cogitareforma.makhana.common.entities.filters" ).forEach( ( String className ) ->
+			{
+				try
+				{
+					logger.log( Level.FINEST, "Attempting to register class " + className + " with the Serializer" );
+					Serializer.registerClass( Class.forName( className ), fs );
+				}
+				catch ( Exception e )
+				{
+					logger.log( Level.SEVERE, "Unable to register class " + className + " with the Serializer" );
+				}
+			} );
 		}
 		catch ( Exception e )
 		{
