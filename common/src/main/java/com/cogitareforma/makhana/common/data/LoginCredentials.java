@@ -1,12 +1,15 @@
 package com.cogitareforma.makhana.common.data;
 
+import java.io.Serializable;
 import java.security.Key;
 
-import com.jme3.network.serializing.Serializable;
-
-@Serializable
-public class LoginCredentials
+public class LoginCredentials implements Serializable
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2449672755683144622L;
+
 	/**
 	 * The accountName to log in with.
 	 */
