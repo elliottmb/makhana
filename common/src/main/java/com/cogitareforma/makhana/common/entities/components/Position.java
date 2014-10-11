@@ -13,6 +13,13 @@ public class Position implements EntityComponent
 	private Vector3f location;
 	private Quaternion facing;
 
+	/**
+	 * Used by the serializer.
+	 */
+	public Position( )
+	{
+	}
+
 	public Position( Chunk chunk, Vector3f location, Quaternion facing )
 	{
 		this.chunk = chunk;

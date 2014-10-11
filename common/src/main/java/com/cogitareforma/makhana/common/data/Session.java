@@ -15,6 +15,13 @@ public class Session
 	private String displayName;
 
 	/**
+	 * Used by the serializer.
+	 */
+	public Session( )
+	{
+	}
+
+	/**
 	 * 
 	 * @param sessionId
 	 * @param displayName

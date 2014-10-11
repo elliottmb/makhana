@@ -1,9 +1,11 @@
 package com.cogitareforma.makhana.common.data;
 
-import java.io.Serializable;
 import java.security.Key;
 
-public class LoginCredentials implements Serializable
+import com.jme3.network.serializing.Serializable;
+
+@Serializable
+public class LoginCredentials implements java.io.Serializable
 {
 	/**
 	 * 
@@ -24,6 +26,13 @@ public class LoginCredentials implements Serializable
 	 * The Cipher Key to be used when communicating
 	 */
 	private Key sessionKey;
+
+	/**
+	 * Used by the serializer.
+	 */
+	public LoginCredentials( )
+	{
+	}
 
 	/**
 	 * 

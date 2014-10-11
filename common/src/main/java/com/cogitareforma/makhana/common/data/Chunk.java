@@ -7,6 +7,13 @@ public class Chunk
 {
 	private short x;
 	private short y;
+	
+	/**
+	 * Used by the serializer.
+	 */
+	public Chunk( )
+	{
+	}
 
 	public Chunk( short x, short y )
 	{

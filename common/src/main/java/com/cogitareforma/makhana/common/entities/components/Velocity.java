@@ -10,6 +10,13 @@ public class Velocity implements EntityComponent
 	private Vector3f linear;
 	private Vector3f angular;
 
+	/**
+	 * Used by the serializer.
+	 */
+	public Velocity( )
+	{
+	}
+
 	public Velocity( Vector3f linear )
 	{
 		this( linear, new Vector3f( ) );

@@ -12,6 +12,13 @@ public class Health implements EntityComponent
 {
 	private float health;
 
+	/**
+	 * Used by the serializer
+	 */
+	public Health( )
+	{
+	}
+
 	public Health( float health )
 	{
 		this.health = health;

@@ -22,6 +22,13 @@ public class WelcomeMessage extends AbstractMessage
 	 */
 	private String notice;
 
+	/**
+	 * Used by the serializer
+	 */
+	public WelcomeMessage( )
+	{
+	}
+
 	public WelcomeMessage( Key publicKey, String notice )
 	{
 		this.publicKey = publicKey;

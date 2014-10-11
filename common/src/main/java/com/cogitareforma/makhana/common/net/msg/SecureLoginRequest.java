@@ -29,6 +29,14 @@ public class SecureLoginRequest extends AbstractMessage
 	 */
 	private boolean isServer;
 
+
+	/**
+	 * Used by the serializer.
+	 */
+	public SecureLoginRequest( )
+	{
+	}
+
 	/**
 	 * 
 	 * @param loginCredentials
