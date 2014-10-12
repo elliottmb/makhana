@@ -1,7 +1,7 @@
 package com.cogitareforma.hexrepublics.client;
 
-import com.cogitareforma.makhana.common.util.Screen;
-import com.cogitareforma.makhana.common.util.ScreenManager;
+import com.cogitareforma.makhana.ui.Screen;
+import com.cogitareforma.makhana.ui.ScreenManager;
 import com.jme3.app.Application;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;

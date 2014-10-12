@@ -1,4 +1,4 @@
-package com.cogitareforma.makhana.common.util;
+package com.cogitareforma.makhana.ui;
 
 import java.util.Arrays;
 import java.util.List;
