@@ -40,8 +40,26 @@ public abstract class Screen
 		return initialized;
 	}
 
+	/**
+	 * Called by ScreenManager when transitioning this Screen from hidden to
+	 * displayed. This is called before the Screen's containing node is attached
+	 * to the ScreenManager's scene graph. It should be safe to modify the scene
+	 * graph of the Screen.
+	 *
+	 * @param screenManager
+	 *            Screen manager to which the screen was attached to.
+	 */
 	public abstract void screenAttached( ScreenManager screenManager );
 
+	/**
+	 * Called by ScreenManager when transitioning this Screen from displayed to
+	 * hidden. This is called after the Screen's containing node is detached
+	 * from the ScreenManager's scene graph. It should be safe to modify the
+	 * scene graph of the Screen.
+	 *
+	 * @param screenManager
+	 *            Screen manager to which the screen was attached to.
+	 */
 	public abstract void screenDetached( ScreenManager screenManager );
 
 	/**

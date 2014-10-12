@@ -79,7 +79,6 @@ public class ScreenManager extends AbstractAppState
 		{
 			if ( !screens.contains( screen ) && !initializing.contains( screen ) )
 			{
-				screen.screenAttached( this );
 				initializing.add( screen );
 				return true;
 			}
@@ -221,6 +220,7 @@ public class ScreenManager extends AbstractAppState
 		{
 			screenHolder.detachChild( screen.getScreenNode( ) );
 			screen.setEnabled( false );
+			screen.screenDetached( this );
 		}
 		synchronized ( screens )
 		{
@@ -290,7 +290,6 @@ public class ScreenManager extends AbstractAppState
 		{
 			if ( screens.contains( screen ) )
 			{
-				screen.screenDetached( this );
 				screens.remove( screen );
 				hiding.add( screen );
 				terminating.add( screen );
@@ -298,7 +297,6 @@ public class ScreenManager extends AbstractAppState
 			}
 			else if ( initializing.contains( screen ) )
 			{
-				screen.screenDetached( this );
 				hiding.add( screen );
 				initializing.remove( screen );
 				return true;
@@ -330,6 +328,7 @@ public class ScreenManager extends AbstractAppState
 		}
 		for ( Screen screen : array )
 		{
+			screen.screenAttached( this );
 			Node screenNode = screen.getScreenNode( );
 			screenHolder.attachChild( screenNode );
 
@@ -417,6 +416,7 @@ public class ScreenManager extends AbstractAppState
 	@Override
 	public void update( float tpf )
 	{
+		// Hide any screens pending
 		hidePending( );
 
 		// Cleanup any screens pending
@@ -425,6 +425,7 @@ public class ScreenManager extends AbstractAppState
 		// Initialize any screens pending
 		initializePending( );
 
+		// Reveal any screens pending
 		revealPending( );
 
 		// Update enabled screens
