@@ -53,6 +53,8 @@ public class SerializerRegistrar
 					logger.log( Level.SEVERE, "Unable to register class " + className + " with the Serializer" );
 				}
 			} );
+
+			Serializer.registerClass( Class.forName( "javax.crypto.SealedObject" ), new SerializableSerializer( ) );
 		}
 		catch ( Exception e )
 		{

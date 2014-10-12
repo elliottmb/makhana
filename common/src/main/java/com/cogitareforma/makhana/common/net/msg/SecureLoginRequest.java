@@ -5,6 +5,8 @@ import java.security.InvalidKeyException;
 import java.security.Key;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -26,7 +28,12 @@ import com.jme3.network.serializing.Serializable;
 @Serializable
 public class SecureLoginRequest extends AbstractMessage
 {
-	private String encodedAESKey;
+	/**
+	 * The logger for this class.
+	 */
+	private final static Logger logger = Logger.getLogger( SecureLoginRequest.class.getName( ) );
+
+	private String encodedEncryptedAESKey;
 
 	private SealedObject sealedCredentials;
 
@@ -70,7 +77,7 @@ public class SecureLoginRequest extends AbstractMessage
 			Cipher credentialCipher = Cipher.getInstance( "AES" );
 			credentialCipher.init( Cipher.ENCRYPT_MODE, aeskeySpec );
 
-			this.encodedAESKey = Base64.getEncoder( ).encodeToString( keyCipher.doFinal( key.getEncoded( ) ) );
+			this.encodedEncryptedAESKey = Base64.getEncoder( ).encodeToString( keyCipher.doFinal( aesKey ) );
 			// TODO: Investigate implementing SerializableSerializer to handle
 			// this class type, or look into extending it and using jMonkey's
 			// @Serializable
@@ -106,7 +113,46 @@ public class SecureLoginRequest extends AbstractMessage
 
 	}
 
+	public Key getAESKey( Key privateKey )
+	{
+		Key key = null;
+		try
+		{
+			Cipher keyCipher = Cipher.getInstance( privateKey.getAlgorithm( ) );
+			keyCipher.init( Cipher.DECRYPT_MODE, privateKey );
+
+			byte[ ] encryptedAESKeyBytes = Base64.getDecoder( ).decode( encodedEncryptedAESKey );
+
+			byte[ ] aesKey = keyCipher.doFinal( encryptedAESKeyBytes );
+
+			key = new SecretKeySpec( aesKey, "AES" );
+		}
+		catch ( NoSuchAlgorithmException e )
+		{
+			logger.log( Level.WARNING, "No Such Algorithm: " + e.getMessage( ) );
+		}
+		catch ( NoSuchPaddingException e )
+		{
+			logger.log( Level.WARNING, "No Such Padding: " + e.getMessage( ) );
+		}
+		catch ( InvalidKeyException e )
+		{
+			logger.log( Level.WARNING, "Invalid key: " + e.getMessage( ) );
+		}
+		catch ( IllegalBlockSizeException e )
+		{
+			logger.log( Level.WARNING, "Illegal Block Size: " + e.getMessage( ) );
+		}
+		catch ( BadPaddingException e )
+		{
+			logger.log( Level.WARNING, "Bad Padding: " + e.getMessage( ) );
+		}
+
+		return key;
+	}
+
 	/**
+	 * 
 	 * Returns the SealedObject containing the LoginCredentials object.
 	 * 
 	 * @return the Sealed LoginCredentials
@@ -128,23 +174,23 @@ public class SecureLoginRequest extends AbstractMessage
 	{
 		try
 		{
-			return ( LoginCredentials ) sealedCredentials.getObject( privateKey );
+			return ( LoginCredentials ) sealedCredentials.getObject( getAESKey( privateKey ) );
 		}
 		catch ( InvalidKeyException e )
 		{
-
+			logger.log( Level.WARNING, "Invalid key: " + e.getMessage( ) );
 		}
 		catch ( ClassNotFoundException e )
 		{
-
+			logger.log( Level.WARNING, "Class Not Found: " + e.getMessage( ) );
 		}
 		catch ( NoSuchAlgorithmException e )
 		{
-
+			logger.log( Level.WARNING, "No Such Algorithm: " + e.getMessage( ) );
 		}
 		catch ( IOException e )
 		{
-
+			logger.log( Level.WARNING, "IO Exception: " + e.getMessage( ) );
 		}
 
 		return null;
