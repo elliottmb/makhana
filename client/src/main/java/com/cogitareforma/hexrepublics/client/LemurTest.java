@@ -1,6 +1,6 @@
 package com.cogitareforma.hexrepublics.client;
 
-import com.cogitareforma.makhana.ui.ScreenManager;
+import com.cogitareforma.makhana.common.ui.ScreenManager;
 import com.jme3.app.FlyCamAppState;
 import com.jme3.app.SimpleApplication;
 import com.jme3.math.ColorRGBA;

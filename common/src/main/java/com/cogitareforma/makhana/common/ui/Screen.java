@@ -1,4 +1,4 @@
-package com.cogitareforma.makhana.ui;
+package com.cogitareforma.makhana.common.ui;
 
 import com.jme3.app.Application;
 import com.jme3.scene.Node;
