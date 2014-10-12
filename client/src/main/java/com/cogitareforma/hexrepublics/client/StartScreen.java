@@ -12,6 +12,7 @@ import com.simsilica.lemur.Button.ButtonAction;
 import com.simsilica.lemur.Command;
 import com.simsilica.lemur.Container;
 import com.simsilica.lemur.FillMode;
+import com.simsilica.lemur.HAlignment;
 import com.simsilica.lemur.Insets3f;
 import com.simsilica.lemur.Label;
 import com.simsilica.lemur.Panel;
@@ -31,6 +32,8 @@ public class StartScreen extends Screen
 	private Button login;
 	private Button cancel;
 	private Label errors;
+	private Button logout;
+	private Container loginStats;
 
 	@Override
 	public void cleanup( )
@@ -84,7 +87,7 @@ public class StartScreen extends Screen
 			public void execute( Button b )
 			{
 				System.out.println( "Options Clicked" );
-				screenManager.showScreen( OptionsScreen.class );
+				screenManager.setScreen( OptionsScreen.class );
 			}
 		} );
 		exitButton = new Button( "Exit" );
@@ -130,7 +133,9 @@ public class StartScreen extends Screen
 			public void execute( Button b )
 			{
 				System.out.println( "Login Clicked" );
-				screenManager.showScreen( NetworkScreen.class );
+				screenManager.setScreen( NetworkScreen.class );
+				getScreenNode( ).detachChild( loginContainer );
+				getScreenNode( ).attachChild( loginStats );
 			}
 		} );
 		cancel = new Button( "Cancel" );
@@ -154,6 +159,29 @@ public class StartScreen extends Screen
 			{
 				System.out.println( "Cancel Clicked" );
 				getScreenNode( ).detachChild( loginContainer );
+			}
+		} );
+		logout = new Button( "Logout" );
+		logout.addCommands( ButtonAction.Down, new Command< Button >( )
+		{
+			public void execute( Button b )
+			{
+				b.move( 1, -1, 0 );
+			}
+		} );
+		logout.addCommands( ButtonAction.Up, new Command< Button >( )
+		{
+			public void execute( Button b )
+			{
+				b.move( -1, 1, 0 );
+			}
+		} );
+		logout.addCommands( ButtonAction.Click, new Command< Button >( )
+		{
+			public void execute( Button b )
+			{
+				System.out.println( "Logout Clicked" );
+				getScreenNode( ).detachChild( loginStats );
 			}
 		} );
 	}
@@ -225,6 +253,20 @@ public class StartScreen extends Screen
 		buttons.addChild( login );
 		buttons.addChild( cancel );
 		loginContainer.addChild( buttons );
+
+		loginStats = new Container( new BoxLayout( Axis.Y, FillMode.Proportional ), "glass" );
+		loginStats.setPreferredSize( new Vector3f( cam.getWidth( ) * .3f, cam.getHeight( ) * .1f, 0 ) );
+		loginStats.setLocalTranslation( cam.getWidth( ) * .7f, cam.getHeight( ) * .15f, 0 );
+		loginStats.setBackground( new QuadBackgroundComponent( new ColorRGBA( 0, 0.5f, 0.5f, 0.5f ), 5, 5, 0.02f, false ) );
+
+		Label loggedIn = new Label( "Logged in: TESTFUCK" );
+		loggedIn.setFontSize( 14 * scale );
+		loggedIn.setTextHAlignment( HAlignment.Right );
+		logout.setFontSize( 14 * scale );
+		logout.setTextHAlignment( HAlignment.Right );
+
+		loginStats.addChild( loggedIn );
+		loginStats.addChild( logout );
 
 		playButton.setFontSize( 17 * scale );
 		optionsButton.setFontSize( 17 * scale );

@@ -36,6 +36,17 @@ public class NetworkScreen extends Screen
 	private Container server4;
 	private Container server5;
 	private Container server6;
+	private Container server7;
+	private Container server8;
+	private Container label;
+	private Button serverNameLabel;
+	private Button serverPlayersLabel;
+	private Button serverPingLabel;
+	private Button serverOtherLabel;
+	private Button firstPage;
+	private Button prevPage;
+	private Button nextPage;
+	private Button lastPage;
 
 	@Override
 	public void cleanup( )
@@ -66,7 +77,7 @@ public class NetworkScreen extends Screen
 			public void execute( Button b )
 			{
 				System.out.println( "Servers Clicked" );
-				activateContainer( serverContainer );
+				// activateContainer( serverContainer );
 			}
 		} );
 		favorites = new Button( "Favorites" );
@@ -89,7 +100,7 @@ public class NetworkScreen extends Screen
 			public void execute( Button b )
 			{
 				System.out.println( "Favorites Clicked" );
-				activateContainer( favoritesContainer );
+				// activateContainer( favoritesContainer );
 			}
 		} );
 		history = new Button( "History" );
@@ -112,7 +123,7 @@ public class NetworkScreen extends Screen
 			public void execute( Button b )
 			{
 				System.out.println( "History Clicked" );
-				activateContainer( historyContainer );
+				// activateContainer( historyContainer );
 			}
 		} );
 		back = new Button( "Back" );
@@ -135,6 +146,94 @@ public class NetworkScreen extends Screen
 			public void execute( Button b )
 			{
 				System.out.println( "Exit Network Clicked: " + screenManager.setScreen( StartScreen.class ) );
+			}
+		} );
+		lastPage = new Button( "|>" );
+		lastPage.addCommands( ButtonAction.Down, new Command< Button >( )
+		{
+			public void execute( Button b )
+			{
+				b.move( 1, -1, 0 );
+			}
+		} );
+		lastPage.addCommands( ButtonAction.Up, new Command< Button >( )
+		{
+			public void execute( Button b )
+			{
+				b.move( -1, 1, 0 );
+			}
+		} );
+		lastPage.addCommands( ButtonAction.Click, new Command< Button >( )
+		{
+			public void execute( Button b )
+			{
+				System.out.println( "Last Page Clicked" );
+			}
+		} );
+		nextPage = new Button( ">" );
+		nextPage.addCommands( ButtonAction.Down, new Command< Button >( )
+		{
+			public void execute( Button b )
+			{
+				b.move( 1, -1, 0 );
+			}
+		} );
+		nextPage.addCommands( ButtonAction.Up, new Command< Button >( )
+		{
+			public void execute( Button b )
+			{
+				b.move( -1, 1, 0 );
+			}
+		} );
+		nextPage.addCommands( ButtonAction.Click, new Command< Button >( )
+		{
+			public void execute( Button b )
+			{
+				System.out.println( "Next Page Clicked" );
+			}
+		} );
+		prevPage = new Button( "<" );
+		prevPage.addCommands( ButtonAction.Down, new Command< Button >( )
+		{
+			public void execute( Button b )
+			{
+				b.move( 1, -1, 0 );
+			}
+		} );
+		prevPage.addCommands( ButtonAction.Up, new Command< Button >( )
+		{
+			public void execute( Button b )
+			{
+				b.move( -1, 1, 0 );
+			}
+		} );
+		prevPage.addCommands( ButtonAction.Click, new Command< Button >( )
+		{
+			public void execute( Button b )
+			{
+				System.out.println( "Prev Page Clicked" );
+			}
+		} );
+		firstPage = new Button( "<|" );
+		firstPage.addCommands( ButtonAction.Down, new Command< Button >( )
+		{
+			public void execute( Button b )
+			{
+				b.move( 1, -1, 0 );
+			}
+		} );
+		firstPage.addCommands( ButtonAction.Up, new Command< Button >( )
+		{
+			public void execute( Button b )
+			{
+				b.move( -1, 1, 0 );
+			}
+		} );
+		firstPage.addCommands( ButtonAction.Click, new Command< Button >( )
+		{
+			public void execute( Button b )
+			{
+				System.out.println( "First Page Clicked" );
 			}
 		} );
 	}
@@ -192,102 +291,231 @@ public class NetworkScreen extends Screen
 		tabs.addChild( favorites );
 		tabs.addChild( history );
 
+		label = new Container( new BoxLayout( Axis.X, FillMode.Even ) );
+		label.setPreferredSize( new Vector3f( cam.getWidth( ) * .9f, cam.getHeight( ) * .05f, 0 ) );
+		label.setLocalTranslation( cam.getWidth( ) * .05f, cam.getHeight( ) * .8f, 0 );
+		label.setBackground( new QuadBackgroundComponent( ColorRGBA.LightGray ) );
+
+		serverNameLabel = new Button( "Name" );
+		serverNameLabel.setFontSize( 17 * scale );
+		serverPlayersLabel = new Button( "Players" );
+		serverPlayersLabel.setFontSize( 17 * scale );
+		serverPingLabel = new Button( "Ping" );
+		serverPingLabel.setFontSize( 17 * scale );
+		serverOtherLabel = new Button( "Other" );
+		serverOtherLabel.setFontSize( 17 * scale );
+		label.addChild( serverNameLabel );
+		label.addChild( serverPlayersLabel );
+		label.addChild( serverPingLabel );
+		label.addChild( serverOtherLabel );
+
 		serverContainer = new Container( new BoxLayout( Axis.Y, FillMode.Proportional ) );
 		serverContainer.setBackground( new QuadBackgroundComponent( ColorRGBA.DarkGray ) );
 		serverContainer.setPreferredSize( new Vector3f( cam.getWidth( ) * .9f, cam.getHeight( ) * .65f, 0 ) );
-		serverContainer.setLocalTranslation( cam.getWidth( ) * .05f, cam.getHeight( ) * 0.8f, 0 );
+		serverContainer.setLocalTranslation( cam.getWidth( ) * .05f, cam.getHeight( ) * 0.75f, 0 );
 
-		favoritesContainer = new Container( new BoxLayout( Axis.Y, FillMode.None ) );
-		favoritesContainer.setBackground( new QuadBackgroundComponent( ColorRGBA.LightGray ) );
-		favoritesContainer.setPreferredSize( new Vector3f( cam.getWidth( ) * .9f, cam.getHeight( ) * .65f, 0 ) );
-		favoritesContainer.setLocalTranslation( cam.getWidth( ) * .05f, cam.getHeight( ) * 0.8f, 0 );
-
-		historyContainer = new Container( new BoxLayout( Axis.Y, FillMode.None ) );
-		historyContainer.setBackground( new QuadBackgroundComponent( ColorRGBA.Brown ) );
-		historyContainer.setPreferredSize( new Vector3f( cam.getWidth( ) * .9f, cam.getHeight( ) * .65f, 0 ) );
-		historyContainer.setLocalTranslation( cam.getWidth( ) * .05f, cam.getHeight( ) * 0.8f, 0 );
-
-		Vector3f serverCellSize = new Vector3f( cam.getWidth( ) * .9f, cam.getHeight( ) * .15f, 0 );
-		Label s1 = new Label( "Server 1" );
-		s1.setFontSize( 17 * scale );
-		Label s2 = new Label( "Server 2" );
-		s2.setFontSize( 17 * scale );
-		Label s3 = new Label( "Server 3" );
-		s3.setFontSize( 17 * scale );
-		Label s4 = new Label( "Server 4" );
-		s4.setFontSize( 17 * scale );
-		Label s5 = new Label( "Server 5" );
-		s5.setFontSize( 17 * scale );
-		Label s6 = new Label( "Server 6" );
-		s6.setFontSize( 17 * scale );
+		Vector3f serverCellSize = new Vector3f( cam.getWidth( ) * .9f, cam.getHeight( ) * 0.1125f, 0 );
 
 		server1 = new Container( new BoxLayout( Axis.X, FillMode.Even ) );
 		server1.setBackground( new QuadBackgroundComponent( ColorRGBA.DarkGray ) );
-		server1.setPreferredSize( serverCellSize );
-		server1.addChild( s1 );
+		server1.setPreferredSize( serverCellSize.clone( ) );
 
 		server2 = new Container( new BoxLayout( Axis.X, FillMode.Even ) );
 		server2.setBackground( new QuadBackgroundComponent( ColorRGBA.Brown ) );
-		server2.setPreferredSize( serverCellSize );
-		server2.addChild( s2 );
+		server2.setPreferredSize( serverCellSize.clone( ) );
 
 		server3 = new Container( new BoxLayout( Axis.X, FillMode.Even ) );
 		server3.setBackground( new QuadBackgroundComponent( ColorRGBA.DarkGray ) );
-		server3.setPreferredSize( serverCellSize );
-		server3.addChild( s3 );
+		server3.setPreferredSize( serverCellSize.clone( ) );
 
 		server4 = new Container( new BoxLayout( Axis.X, FillMode.Even ) );
 		server4.setBackground( new QuadBackgroundComponent( ColorRGBA.Brown ) );
-		server4.setPreferredSize( serverCellSize );
-		server4.addChild( s4 );
+		server4.setPreferredSize( serverCellSize.clone( ) );
 
 		server5 = new Container( new BoxLayout( Axis.X, FillMode.Even ) );
 		server5.setBackground( new QuadBackgroundComponent( ColorRGBA.DarkGray ) );
-		server5.setPreferredSize( serverCellSize );
-		server5.addChild( s5 );
+		server5.setPreferredSize( serverCellSize.clone( ) );
 
 		server6 = new Container( new BoxLayout( Axis.X, FillMode.Even ) );
 		server6.setBackground( new QuadBackgroundComponent( ColorRGBA.Brown ) );
-		server6.setPreferredSize( serverCellSize );
-		server6.addChild( s6 );
+		server6.setPreferredSize( serverCellSize.clone( ) );
 
-		current = serverContainer;
-		activateContainer( serverContainer );
-		activateServerLists( serverContainer, 1 );
+		server7 = new Container( new BoxLayout( Axis.X, FillMode.Even ) );
+		server7.setBackground( new QuadBackgroundComponent( ColorRGBA.DarkGray ) );
+		server7.setPreferredSize( serverCellSize.clone( ) );
+
+		server8 = new Container( new BoxLayout( Axis.X, FillMode.Even ) );
+		server8.setBackground( new QuadBackgroundComponent( ColorRGBA.Brown ) );
+		server8.setPreferredSize( serverCellSize.clone( ) );
+
+		Label server1Name = new Label( "Test1" );
+		server1Name.setFontSize( 17 * scale );
+		Label server1Size = new Label( "456" );
+		server1Size.setFontSize( 17 * scale );
+		Label server1Ping = new Label( "10" );
+		server1Ping.setFontSize( 17 * scale );
+		Label server1Other = new Label( "NO" );
+		server1Other.setFontSize( 17 * scale );
+
+		Label server2Name = new Label( "Test1" );
+		server2Name.setFontSize( 17 * scale );
+		Label server2Size = new Label( "654" );
+		server2Size.setFontSize( 17 * scale );
+		Label server2Ping = new Label( "50" );
+		server2Ping.setFontSize( 17 * scale );
+		Label server2Other = new Label( "NO" );
+		server2Other.setFontSize( 17 * scale );
+
+		Label server3Name = new Label( "Test1" );
+		server3Name.setFontSize( 17 * scale );
+		Label server3Size = new Label( "548" );
+		server3Size.setFontSize( 17 * scale );
+		Label server3Ping = new Label( "100" );
+		server3Ping.setFontSize( 17 * scale );
+		Label server3Other = new Label( "NO" );
+		server3Other.setFontSize( 17 * scale );
+
+		Label server4Name = new Label( "Test1" );
+		server4Name.setFontSize( 17 * scale );
+		Label server4Size = new Label( "5498" );
+		server4Size.setFontSize( 17 * scale );
+		Label server4Ping = new Label( "45" );
+		server4Ping.setFontSize( 17 * scale );
+		Label server4Other = new Label( "No" );
+		server4Other.setFontSize( 17 * scale );
+
+		Label server5Name = new Label( "Test1v" );
+		server5Name.setFontSize( 17 * scale );
+		Label server5Size = new Label( "6549" );
+		server5Size.setFontSize( 17 * scale );
+		Label server5Ping = new Label( "500" );
+		server5Ping.setFontSize( 17 * scale );
+		Label server5Other = new Label( "NO" );
+		server5Other.setFontSize( 17 * scale );
+
+		Label server6Name = new Label( "Test1" );
+		server6Name.setFontSize( 17 * scale );
+		Label server6Size = new Label( "6548" );
+		server6Size.setFontSize( 17 * scale );
+		Label server6Ping = new Label( "50" );
+		server6Ping.setFontSize( 17 * scale );
+		Label server6Other = new Label( "NO" );
+		server6Other.setFontSize( 17 * scale );
+
+		Label server7Name = new Label( "Test1" );
+		server7Name.setFontSize( 17 * scale );
+		Label server7Size = new Label( "1589" );
+		server7Size.setFontSize( 17 * scale );
+		Label server7Ping = new Label( "506" );
+		server7Ping.setFontSize( 17 * scale );
+		Label server7Other = new Label( "NO" );
+		server7Other.setFontSize( 17 * scale );
+
+		Label server8Name = new Label( "Test1" );
+		server8Name.setFontSize( 17 * scale );
+		Label server8Size = new Label( "987" );
+		server8Size.setFontSize( 17 * scale );
+		Label server8Ping = new Label( "1" );
+		server8Ping.setFontSize( 17 * scale );
+		Label server8Other = new Label( "YES" );
+		server8Other.setFontSize( 17 * scale );
+
+		server1.addChild( server1Name );
+		server1.addChild( server1Size );
+		server1.addChild( server1Ping );
+		server1.addChild( server1Other );
+		server2.addChild( server2Name );
+		server2.addChild( server2Size );
+		server2.addChild( server2Ping );
+		server2.addChild( server2Other );
+		server3.addChild( server3Name );
+		server3.addChild( server3Size );
+		server3.addChild( server3Ping );
+		server3.addChild( server3Other );
+		server4.addChild( server4Name );
+		server4.addChild( server4Size );
+		server4.addChild( server4Ping );
+		server4.addChild( server4Other );
+		server5.addChild( server5Name );
+		server5.addChild( server5Size );
+		server5.addChild( server5Ping );
+		server5.addChild( server5Other );
+		server6.addChild( server6Name );
+		server6.addChild( server6Size );
+		server6.addChild( server6Ping );
+		server6.addChild( server6Other );
+		server7.addChild( server7Name );
+		server7.addChild( server7Size );
+		server7.addChild( server7Ping );
+		server7.addChild( server7Other );
+		server8.addChild( server8Name );
+		server8.addChild( server8Size );
+		server8.addChild( server8Ping );
+		server8.addChild( server8Other );
+
+		Container pageButtons = new Container( new BoxLayout( Axis.X, FillMode.Even ) );
+		pageButtons.setPreferredSize( new Vector3f( cam.getWidth( ) * .15f, cam.getHeight( ) * .05f, 0 ) );
+		pageButtons.setLocalTranslation( cam.getWidth( ) * .8f, cam.getHeight( ) * .1f, 0 );
+		pageButtons.setBackground( new QuadBackgroundComponent( ColorRGBA.DarkGray ) );
+
+		firstPage.setFontSize( 17 * scale );
+		prevPage.setFontSize( 17 * scale );
+		Label currentPage = new Label( "12 of 15" );
+		currentPage.setFontSize( 17 * scale );
+		nextPage.setFontSize( 17 * scale );
+
+		lastPage.setFontSize( 17 * scale );
+		pageButtons.addChild( firstPage );
+		pageButtons.addChild( prevPage );
+		pageButtons.addChild( currentPage );
+		pageButtons.addChild( nextPage );
+		pageButtons.addChild( lastPage );
+
+		activateServerLists( );
 
 		getScreenNode( ).attachChild( tabs );
+		getScreenNode( ).attachChild( label );
+		getScreenNode( ).attachChild( pageButtons );
 	}
 
-	private void activateContainer( Container container )
+	private void activateServerLists( )
 	{
-		if ( getScreenNode( ).hasChild( current ) )
-		{
-			if ( current == container )
-				return;
-			getScreenNode( ).detachChild( current );
-		}
-		current = container;
-		getScreenNode( ).attachChild( current );
+		serverContainer.addChild( server1 );
+		serverContainer.addChild( server2 );
+		serverContainer.addChild( server3 );
+		serverContainer.addChild( server4 );
+		serverContainer.addChild( server5 );
+		serverContainer.addChild( server6 );
+		serverContainer.addChild( server7 );
+		serverContainer.addChild( server8 );
+		getScreenNode( ).attachChild( serverContainer );
 	}
 
-	/**
-	 * Used to start each new tab screen.
-	 * 
-	 * @param container
-	 * @param page
-	 */
-	private void activateServerLists( Container container, int page )
+	private void updateServers( int page, String type )
 	{
-		if ( getScreenNode( ).hasChild( current ) && current.hasChild( server1 ) )
+		if ( type.equals( "Servers" ) )
 		{
-
+			// TODO show all servers
 		}
-		container.addChild( server1 );
-		container.addChild( server2 );
-		container.addChild( server3 );
-		container.addChild( server4 );
-		container.addChild( server5 );
-		container.addChild( server6 );
+		if ( type.equals( "Favorites" ) )
+		{
+			// TODO show favorites
+		}
+		if ( type.equals( "History" ) )
+		{
+			// TODO show history
+		}
+	}
+
+	private void sortServers( Button button )
+	{
+		// TODO sort server list according to what button is pressed.
+	}
+
+	private void pageServers( int page )
+	{
+		// TODO change server list according to page and whether last, prev,
+		// next or first page buttons are pressed.
 	}
 
 	@Override
