@@ -1,5 +1,6 @@
 package com.cogitareforma.makhana.common.net;
 
+import java.security.Key;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -28,6 +29,8 @@ public class MasterConnManager< A extends Application > extends ConnectionManage
 	 * The account of this connection
 	 */
 	private Account account;
+
+	private Key publicKey;
 
 	/**
 	 * Creates an instance of the MasterConnManager with the supplied owning
@@ -99,6 +102,23 @@ public class MasterConnManager< A extends Application > extends ConnectionManage
 	{
 		logger.log( Level.INFO, "Setting user account: " + account );
 		this.account = account;
+	}
+
+	/**
+	 * @return the publicKey
+	 */
+	public Key getPublicKey( )
+	{
+		return publicKey;
+	}
+
+	/**
+	 * @param publicKey
+	 *            the publicKey to set
+	 */
+	public void setPublicKey( Key publicKey )
+	{
+		this.publicKey = publicKey;
 	}
 
 }

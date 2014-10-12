@@ -6,6 +6,7 @@ import java.util.logging.Logger;
 import com.cogitareforma.makhana.common.data.Account;
 import com.cogitareforma.makhana.common.net.SessionManager;
 import com.cogitareforma.makhana.common.net.msg.NetworkChatMessage;
+import com.cogitareforma.makhana.common.net.msg.WelcomeMessage;
 import com.jme3.network.ConnectionListener;
 import com.jme3.network.HostedConnection;
 import com.jme3.network.Server;
@@ -45,6 +46,7 @@ public class ConnListener implements ConnectionListener
 	public void connectionAdded( Server server, HostedConnection source )
 	{
 		logger.log( Level.INFO, "New incoming connection=" + source.toString( ) );
+		source.send( new WelcomeMessage( serverManager.getKeyPair( ).getPublic( ), "No notice yet! Maybe one day!" ) );
 	}
 
 	@Override

@@ -308,6 +308,10 @@ public class ClientMain extends SimpleApplication
 			{
 				logger.log( Level.INFO, "Attempting to login with accountname " + accountname );
 				masterConnection.sendLogin( accountname, password, false );
+				// TODO
+				// masterConnection.send( new SecureLoginRequest( new
+				// LoginCredentials( accountname, password, null ),
+				// masterConnection.getPublicKey( ), false ) );
 				logger.log( Level.INFO, "Account: " + masterConnection.getAccount( ) );
 			}
 			return null;

@@ -1,6 +1,8 @@
 package com.cogitareforma.makhana.masterserver.net;
 
 import java.io.IOException;
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -24,6 +26,8 @@ public class MasterServerManager extends ServerManager< MasterServer >
 	 */
 	private final static Logger logger = Logger.getLogger( MasterServerManager.class.getName( ) );
 
+	private KeyPair keyPair;
+
 	/**
 	 * This MasterServerManager's server status manager
 	 */
@@ -39,7 +43,18 @@ public class MasterServerManager extends ServerManager< MasterServer >
 	public MasterServerManager( MasterServer app )
 	{
 		super( app );
-		serverStatusManager = new ServerStatusManager( );
+		this.serverStatusManager = new ServerStatusManager( );
+		try
+		{
+			KeyPairGenerator kpg = KeyPairGenerator.getInstance( "RSA" );
+			kpg.initialize( 1024 );
+
+			this.keyPair = kpg.genKeyPair( );
+		}
+		catch ( Exception e )
+		{
+			logger.log( Level.SEVERE, "Error creating keypair " + e.getMessage( ) );
+		}
 	}
 
 	/**
@@ -70,6 +85,11 @@ public class MasterServerManager extends ServerManager< MasterServer >
 				}
 			}
 		}
+	}
+
+	public KeyPair getKeyPair( )
+	{
+		return keyPair;
 	}
 
 	/**

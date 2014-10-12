@@ -4,11 +4,16 @@ import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.Key;
 import java.security.NoSuchAlgorithmException;
+import java.util.Base64;
 
+import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.KeyGenerator;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SealedObject;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
 
 import com.cogitareforma.makhana.common.data.LoginCredentials;
 import com.jme3.network.AbstractMessage;
@@ -21,6 +26,7 @@ import com.jme3.network.serializing.Serializable;
 @Serializable
 public class SecureLoginRequest extends AbstractMessage
 {
+	private String encodedAESKey;
 
 	private SealedObject sealedCredentials;
 
@@ -52,9 +58,24 @@ public class SecureLoginRequest extends AbstractMessage
 
 		try
 		{
-			Cipher cipher = Cipher.getInstance( publicKey.getAlgorithm( ) );
-			cipher.init( Cipher.ENCRYPT_MODE, publicKey );
-			this.sealedCredentials = new SealedObject( loginCredentials, cipher );
+			Cipher keyCipher = Cipher.getInstance( publicKey.getAlgorithm( ) );
+			keyCipher.init( Cipher.ENCRYPT_MODE, publicKey );
+
+			KeyGenerator kgen = KeyGenerator.getInstance( "AES" );
+			kgen.init( 128 );
+
+			SecretKey key = kgen.generateKey( );
+			byte[ ] aesKey = key.getEncoded( );
+			SecretKeySpec aeskeySpec = new SecretKeySpec( aesKey, "AES" );
+			Cipher credentialCipher = Cipher.getInstance( "AES" );
+			credentialCipher.init( Cipher.ENCRYPT_MODE, aeskeySpec );
+
+			this.encodedAESKey = Base64.getEncoder( ).encodeToString( keyCipher.doFinal( key.getEncoded( ) ) );
+			// TODO: Investigate implementing SerializableSerializer to handle
+			// this class type, or look into extending it and using jMonkey's
+			// @Serializable
+			this.sealedCredentials = new SealedObject( loginCredentials, credentialCipher );
+
 			this.isServer = isServer;
 		}
 		catch ( NoSuchAlgorithmException e )
@@ -76,6 +97,11 @@ public class SecureLoginRequest extends AbstractMessage
 		catch ( IOException e )
 		{
 			throw new IllegalStateException( "I/O Error:" + e.getMessage( ) );
+		}
+		catch ( BadPaddingException e )
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace( );
 		}
 
 	}

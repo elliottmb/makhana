@@ -215,7 +215,7 @@ public class StartViewController extends GeneralController implements KeyInputHa
 				gotoNetwork( );
 			}
 
-			if ( getApp( ).getMasterConnManager( ).isConnected( ) )
+			if ( getApp( ).getMasterConnManager( ).isConnected( ) && getApp( ).getMasterConnManager( ).getPublicKey( ) != null )
 			{
 				if ( !loginButton.isEnabled( ) )
 				{
