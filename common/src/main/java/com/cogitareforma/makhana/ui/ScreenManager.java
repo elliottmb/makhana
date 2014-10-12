@@ -18,6 +18,11 @@ public class ScreenManager extends AbstractAppState
 	private Class< ? extends Screen > foregroundScreen;
 
 	/**
+	 * 
+	 */
+	private final SafeArrayList< Screen > hiding;
+
+	/**
 	 * List holding the attached screens that are pending initialization. Once
 	 * initialized they will be added to the running screens.
 	 */
@@ -26,16 +31,13 @@ public class ScreenManager extends AbstractAppState
 	/**
 	 * 
 	 */
-	private final SafeArrayList< Screen > hiding;
-
-	/**
-	 * 
-	 */
 	private final SafeArrayList< Screen > revealing;
 
-	private Node screenHolder;
-
 	private Node rootGuiNode;
+
+	private ScreenContext screenContext;
+
+	private Node screenHolder;
 
 	/**
 	 * Holds the active screens once they are initialized.
@@ -55,26 +57,20 @@ public class ScreenManager extends AbstractAppState
 	public ScreenManager( Application app, Node rootGuiNode )
 	{
 		this.app = app;
-		initializing = new SafeArrayList< Screen >( Screen.class );
-		screens = new SafeArrayList< Screen >( Screen.class );
-		terminating = new SafeArrayList< Screen >( Screen.class );
-		revealing = new SafeArrayList< Screen >( Screen.class );
-		visible = new SafeArrayList< Screen >( Screen.class );
-		hiding = new SafeArrayList< Screen >( Screen.class );
-		foregroundScreen = null;
+		this.initializing = new SafeArrayList< Screen >( Screen.class );
+		this.screens = new SafeArrayList< Screen >( Screen.class );
+		this.terminating = new SafeArrayList< Screen >( Screen.class );
+		this.revealing = new SafeArrayList< Screen >( Screen.class );
+		this.visible = new SafeArrayList< Screen >( Screen.class );
+		this.hiding = new SafeArrayList< Screen >( Screen.class );
+		this.foregroundScreen = null;
 
-		screenHolder = new Node( "screenHolder" );
+		this.screenHolder = new Node( "screenHolder" );
+		this.screenContext = new ScreenContext( this );
 
 		this.rootGuiNode = rootGuiNode;
 
 		rootGuiNode.attachChild( screenHolder );
-	}
-
-	@Override
-	public void stateDetached( AppStateManager stateManager )
-	{
-		rootGuiNode.detachChild( screenHolder );
-		super.stateDetached( stateManager );
 	}
 
 	public boolean addScreen( Screen screen )
@@ -110,11 +106,27 @@ public class ScreenManager extends AbstractAppState
 		return app;
 	}
 
+	protected Screen[ ] getHiding( )
+	{
+		synchronized ( screens )
+		{
+			return hiding.getArray( );
+		}
+	}
+
 	protected Screen[ ] getInitializing( )
 	{
 		synchronized ( screens )
 		{
 			return initializing.getArray( );
+		}
+	}
+
+	protected Screen[ ] getRevealing( )
+	{
+		synchronized ( screens )
+		{
+			return revealing.getArray( );
 		}
 	}
 
@@ -162,6 +174,11 @@ public class ScreenManager extends AbstractAppState
 		return null;
 	}
 
+	public ScreenContext getScreenContext( )
+	{
+		return screenContext;
+	}
+
 	protected Screen[ ] getScreens( )
 	{
 		synchronized ( screens )
@@ -186,27 +203,31 @@ public class ScreenManager extends AbstractAppState
 		}
 	}
 
-	protected Screen[ ] getRevealing( )
-	{
-		synchronized ( screens )
-		{
-			return revealing.getArray( );
-		}
-	}
-
-	protected Screen[ ] getHiding( )
-	{
-		synchronized ( screens )
-		{
-			return hiding.getArray( );
-		}
-	}
-
 	public boolean hasScreen( Screen screen )
 	{
 		synchronized ( screens )
 		{
 			return screens.contains( screen ) || initializing.contains( screen );
+		}
+	}
+
+	protected void hidePending( )
+	{
+		Screen[ ] array = getHiding( );
+		if ( array.length == 0 )
+			return;
+
+		for ( Screen screen : array )
+		{
+			screenHolder.detachChild( screen.getScreenNode( ) );
+			screen.setEnabled( false );
+		}
+		synchronized ( screens )
+		{
+			// Remove just the screens that were terminated...
+			// which might now be a subset of the total terminating
+			// list.
+			hiding.removeAll( Arrays.asList( array ) );
 		}
 	}
 
@@ -258,6 +279,36 @@ public class ScreenManager extends AbstractAppState
 		}
 	}
 
+	public < T extends Screen > boolean removeScreen( Class< T > screenClass )
+	{
+		return removeScreen( getScreen( screenClass ) );
+	}
+
+	public boolean removeScreen( Screen screen )
+	{
+		synchronized ( screens )
+		{
+			if ( screens.contains( screen ) )
+			{
+				screen.screenDetached( this );
+				screens.remove( screen );
+				hiding.add( screen );
+				terminating.add( screen );
+				return true;
+			}
+			else if ( initializing.contains( screen ) )
+			{
+				screen.screenDetached( this );
+				hiding.add( screen );
+				initializing.remove( screen );
+				return true;
+			}
+
+			return false;
+
+		}
+	}
+
 	protected void revealPending( )
 	{
 		Screen[ ] array = getRevealing( );
@@ -286,36 +337,6 @@ public class ScreenManager extends AbstractAppState
 			screenNode.setLocalTranslation( new Vector3f( pos.x, pos.y, depth++ * 100 ) );
 
 			screen.setEnabled( true );
-		}
-	}
-
-	public < T extends Screen > boolean removeScreen( Class< T > screenClass )
-	{
-		return removeScreen( getScreen( screenClass ) );
-	}
-
-	public boolean removeScreen( Screen screen )
-	{
-		synchronized ( screens )
-		{
-			if ( screens.contains( screen ) )
-			{
-				screen.screenDetached( this );
-				screens.remove( screen );
-				hiding.add( screen );
-				terminating.add( screen );
-				return true;
-			}
-			else if ( initializing.contains( screen ) )
-			{
-				screen.screenDetached( this );
-				hiding.add( screen );
-				initializing.remove( screen );
-				return true;
-			}
-
-			return false;
-
 		}
 	}
 
@@ -367,6 +388,13 @@ public class ScreenManager extends AbstractAppState
 		}
 	}
 
+	@Override
+	public void stateDetached( AppStateManager stateManager )
+	{
+		rootGuiNode.detachChild( screenHolder );
+		super.stateDetached( stateManager );
+	}
+
 	protected void terminatePending( )
 	{
 		Screen[ ] array = getTerminating( );
@@ -383,26 +411,6 @@ public class ScreenManager extends AbstractAppState
 			// which might now be a subset of the total terminating
 			// list.
 			terminating.removeAll( Arrays.asList( array ) );
-		}
-	}
-
-	protected void hidePending( )
-	{
-		Screen[ ] array = getHiding( );
-		if ( array.length == 0 )
-			return;
-
-		for ( Screen screen : array )
-		{
-			screenHolder.detachChild( screen.getScreenNode( ) );
-			screen.setEnabled( false );
-		}
-		synchronized ( screens )
-		{
-			// Remove just the screens that were terminated...
-			// which might now be a subset of the total terminating
-			// list.
-			hiding.removeAll( Arrays.asList( array ) );
 		}
 	}
 

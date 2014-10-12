@@ -1,6 +1,7 @@
 package com.cogitareforma.hexrepublics.client;
 
 import com.cogitareforma.makhana.ui.Screen;
+import com.cogitareforma.makhana.ui.ScreenContext;
 import com.cogitareforma.makhana.ui.ScreenManager;
 import com.jme3.app.Application;
 import com.jme3.math.ColorRGBA;
@@ -21,7 +22,6 @@ import com.simsilica.lemur.component.QuadBackgroundComponent;
 public class NetworkScreen extends Screen
 {
 
-	private float scale;
 	private Button servers;
 	private Button favorites;
 	private Button history;
@@ -243,7 +243,7 @@ public class NetworkScreen extends Screen
 	{
 		super.initialize( screenManager, app );
 		Camera cam = screenManager.getApp( ).getCamera( );
-		scale = cam.getHeight( ) * 0.0016f;
+		ScreenContext sc = screenManager.getScreenContext( );
 
 		setUpButtons( screenManager );
 
@@ -258,7 +258,7 @@ public class NetworkScreen extends Screen
 		top.setBackground( new QuadBackgroundComponent( ColorRGBA.DarkGray ) );
 		top.setPreferredSize( new Vector3f( cam.getWidth( ), cam.getHeight( ) * 0.1f, 0 ) );
 		Label name = new Label( "Network" );
-		name.scale( scale );
+		name.scale( sc.getHeightScalar( ) );
 		name.setPreferredSize( new Vector3f( 0.8f, 0, 0 ) );
 
 		Container buttons = new Container( new BoxLayout( Axis.X, FillMode.Even ), "glass" );
@@ -267,7 +267,7 @@ public class NetworkScreen extends Screen
 		top.addChild( name );
 		top.addChild( buttons );
 
-		back.setFontSize( 17 * scale );
+		back.setFontSize( sc.getMediumFontSize( ) );
 		buttons.addChild( back );
 
 		getScreenNode( ).attachChild( top );
@@ -278,13 +278,13 @@ public class NetworkScreen extends Screen
 		tabs.setBackground( new QuadBackgroundComponent( ColorRGBA.Brown ) );
 
 		Insets3f buttonInsets = new Insets3f( 0, 0, 0, cam.getWidth( ) * 0.05f );
-		servers.setFontSize( 17 * scale );
+		servers.setFontSize( sc.getMediumFontSize( ) );
 		servers.setInsets( buttonInsets );
 
-		favorites.setFontSize( 17 * scale );
+		favorites.setFontSize( sc.getMediumFontSize( ) );
 		favorites.setInsets( buttonInsets );
 
-		history.setFontSize( 17 * scale );
+		history.setFontSize( sc.getMediumFontSize( ) );
 		history.setInsets( buttonInsets );
 
 		tabs.addChild( servers );
@@ -297,13 +297,13 @@ public class NetworkScreen extends Screen
 		label.setBackground( new QuadBackgroundComponent( ColorRGBA.LightGray ) );
 
 		serverNameLabel = new Button( "Name" );
-		serverNameLabel.setFontSize( 17 * scale );
+		serverNameLabel.setFontSize( sc.getMediumFontSize( ) );
 		serverPlayersLabel = new Button( "Players" );
-		serverPlayersLabel.setFontSize( 17 * scale );
+		serverPlayersLabel.setFontSize( sc.getMediumFontSize( ) );
 		serverPingLabel = new Button( "Ping" );
-		serverPingLabel.setFontSize( 17 * scale );
+		serverPingLabel.setFontSize( sc.getMediumFontSize( ) );
 		serverOtherLabel = new Button( "Other" );
-		serverOtherLabel.setFontSize( 17 * scale );
+		serverOtherLabel.setFontSize( sc.getMediumFontSize( ) );
 		label.addChild( serverNameLabel );
 		label.addChild( serverPlayersLabel );
 		label.addChild( serverPingLabel );
@@ -349,76 +349,76 @@ public class NetworkScreen extends Screen
 		server8.setPreferredSize( serverCellSize.clone( ) );
 
 		Label server1Name = new Label( "Test1" );
-		server1Name.setFontSize( 17 * scale );
+		server1Name.setFontSize( sc.getMediumFontSize( ) );
 		Label server1Size = new Label( "456" );
-		server1Size.setFontSize( 17 * scale );
+		server1Size.setFontSize( sc.getMediumFontSize( ) );
 		Label server1Ping = new Label( "10" );
-		server1Ping.setFontSize( 17 * scale );
+		server1Ping.setFontSize( sc.getMediumFontSize( ) );
 		Label server1Other = new Label( "NO" );
-		server1Other.setFontSize( 17 * scale );
+		server1Other.setFontSize( sc.getMediumFontSize( ) );
 
 		Label server2Name = new Label( "Test1" );
-		server2Name.setFontSize( 17 * scale );
+		server2Name.setFontSize( sc.getMediumFontSize( ) );
 		Label server2Size = new Label( "654" );
-		server2Size.setFontSize( 17 * scale );
+		server2Size.setFontSize( sc.getMediumFontSize( ) );
 		Label server2Ping = new Label( "50" );
-		server2Ping.setFontSize( 17 * scale );
+		server2Ping.setFontSize( sc.getMediumFontSize( ) );
 		Label server2Other = new Label( "NO" );
-		server2Other.setFontSize( 17 * scale );
+		server2Other.setFontSize( sc.getMediumFontSize( ) );
 
 		Label server3Name = new Label( "Test1" );
-		server3Name.setFontSize( 17 * scale );
+		server3Name.setFontSize( sc.getMediumFontSize( ) );
 		Label server3Size = new Label( "548" );
-		server3Size.setFontSize( 17 * scale );
+		server3Size.setFontSize( sc.getMediumFontSize( ) );
 		Label server3Ping = new Label( "100" );
-		server3Ping.setFontSize( 17 * scale );
+		server3Ping.setFontSize( sc.getMediumFontSize( ) );
 		Label server3Other = new Label( "NO" );
-		server3Other.setFontSize( 17 * scale );
+		server3Other.setFontSize( sc.getMediumFontSize( ) );
 
 		Label server4Name = new Label( "Test1" );
-		server4Name.setFontSize( 17 * scale );
+		server4Name.setFontSize( sc.getMediumFontSize( ) );
 		Label server4Size = new Label( "5498" );
-		server4Size.setFontSize( 17 * scale );
+		server4Size.setFontSize( sc.getMediumFontSize( ) );
 		Label server4Ping = new Label( "45" );
-		server4Ping.setFontSize( 17 * scale );
+		server4Ping.setFontSize( sc.getMediumFontSize( ) );
 		Label server4Other = new Label( "No" );
-		server4Other.setFontSize( 17 * scale );
+		server4Other.setFontSize( sc.getMediumFontSize( ) );
 
 		Label server5Name = new Label( "Test1v" );
-		server5Name.setFontSize( 17 * scale );
+		server5Name.setFontSize( sc.getMediumFontSize( ) );
 		Label server5Size = new Label( "6549" );
-		server5Size.setFontSize( 17 * scale );
+		server5Size.setFontSize( sc.getMediumFontSize( ) );
 		Label server5Ping = new Label( "500" );
-		server5Ping.setFontSize( 17 * scale );
+		server5Ping.setFontSize( sc.getMediumFontSize( ) );
 		Label server5Other = new Label( "NO" );
-		server5Other.setFontSize( 17 * scale );
+		server5Other.setFontSize( sc.getMediumFontSize( ) );
 
 		Label server6Name = new Label( "Test1" );
-		server6Name.setFontSize( 17 * scale );
+		server6Name.setFontSize( sc.getMediumFontSize( ) );
 		Label server6Size = new Label( "6548" );
-		server6Size.setFontSize( 17 * scale );
+		server6Size.setFontSize( sc.getMediumFontSize( ) );
 		Label server6Ping = new Label( "50" );
-		server6Ping.setFontSize( 17 * scale );
+		server6Ping.setFontSize( sc.getMediumFontSize( ) );
 		Label server6Other = new Label( "NO" );
-		server6Other.setFontSize( 17 * scale );
+		server6Other.setFontSize( sc.getMediumFontSize( ) );
 
 		Label server7Name = new Label( "Test1" );
-		server7Name.setFontSize( 17 * scale );
+		server7Name.setFontSize( sc.getMediumFontSize( ) );
 		Label server7Size = new Label( "1589" );
-		server7Size.setFontSize( 17 * scale );
+		server7Size.setFontSize( sc.getMediumFontSize( ) );
 		Label server7Ping = new Label( "506" );
-		server7Ping.setFontSize( 17 * scale );
+		server7Ping.setFontSize( sc.getMediumFontSize( ) );
 		Label server7Other = new Label( "NO" );
-		server7Other.setFontSize( 17 * scale );
+		server7Other.setFontSize( sc.getMediumFontSize( ) );
 
 		Label server8Name = new Label( "Test1" );
-		server8Name.setFontSize( 17 * scale );
+		server8Name.setFontSize( sc.getMediumFontSize( ) );
 		Label server8Size = new Label( "987" );
-		server8Size.setFontSize( 17 * scale );
+		server8Size.setFontSize( sc.getMediumFontSize( ) );
 		Label server8Ping = new Label( "1" );
-		server8Ping.setFontSize( 17 * scale );
+		server8Ping.setFontSize( sc.getMediumFontSize( ) );
 		Label server8Other = new Label( "YES" );
-		server8Other.setFontSize( 17 * scale );
+		server8Other.setFontSize( sc.getMediumFontSize( ) );
 
 		server1.addChild( server1Name );
 		server1.addChild( server1Size );
@@ -458,13 +458,13 @@ public class NetworkScreen extends Screen
 		pageButtons.setLocalTranslation( cam.getWidth( ) * .8f, cam.getHeight( ) * .1f, 0 );
 		pageButtons.setBackground( new QuadBackgroundComponent( ColorRGBA.DarkGray ) );
 
-		firstPage.setFontSize( 17 * scale );
-		prevPage.setFontSize( 17 * scale );
+		firstPage.setFontSize( sc.getMediumFontSize( ) );
+		prevPage.setFontSize( sc.getMediumFontSize( ) );
 		Label currentPage = new Label( "12 of 15" );
-		currentPage.setFontSize( 17 * scale );
-		nextPage.setFontSize( 17 * scale );
+		currentPage.setFontSize( sc.getMediumFontSize( ) );
+		nextPage.setFontSize( sc.getMediumFontSize( ) );
 
-		lastPage.setFontSize( 17 * scale );
+		lastPage.setFontSize( sc.getMediumFontSize( ) );
 		pageButtons.addChild( firstPage );
 		pageButtons.addChild( prevPage );
 		pageButtons.addChild( currentPage );

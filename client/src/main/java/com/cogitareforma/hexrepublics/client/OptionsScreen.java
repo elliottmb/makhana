@@ -2,6 +2,7 @@ package com.cogitareforma.hexrepublics.client;
 
 import com.cogitareforma.makhana.common.util.YamlConfig;
 import com.cogitareforma.makhana.ui.Screen;
+import com.cogitareforma.makhana.ui.ScreenContext;
 import com.cogitareforma.makhana.ui.ScreenManager;
 import com.jme3.app.Application;
 import com.jme3.math.ColorRGBA;
@@ -26,8 +27,6 @@ import com.simsilica.lemur.core.VersionedReference;
 
 public class OptionsScreen extends Screen
 {
-
-	private float scale;
 	private Label resLabel;
 	private Slider res;
 	private Slider quality;
@@ -198,8 +197,7 @@ public class OptionsScreen extends Screen
 		YamlConfig yamlConfig = YamlConfig.DEFAULT;
 
 		Camera cam = screenManager.getApp( ).getCamera( );
-
-		scale = cam.getHeight( ) * 0.0016f;
+		ScreenContext sc = screenManager.getScreenContext( );
 
 		Panel background = new Panel( );
 		background.setBackground( new QuadBackgroundComponent( ColorRGBA.Gray ) );
@@ -212,7 +210,7 @@ public class OptionsScreen extends Screen
 		top.setBackground( new QuadBackgroundComponent( ColorRGBA.DarkGray ) );
 		top.setPreferredSize( new Vector3f( cam.getWidth( ), cam.getHeight( ) * 0.1f, 0 ) );
 		Label name = new Label( "Options" );
-		name.scale( scale );
+		name.scale( sc.getHeightScalar( ) );
 		name.setPreferredSize( new Vector3f( 0.8f, 0, 0 ) );
 
 		Container buttons = new Container( new BoxLayout( Axis.X, FillMode.Even ), "glass" );
@@ -232,13 +230,13 @@ public class OptionsScreen extends Screen
 		middle.addChild( audioButton );
 		middle.addChild( inputButton );
 
-		optionsApply.setFontSize( 17 * scale );
-		optionsExit.setFontSize( 17 * scale );
+		optionsApply.setFontSize( sc.getMediumFontSize( ) );
+		optionsExit.setFontSize( sc.getMediumFontSize( ) );
 		buttons.addChild( optionsApply );
 		buttons.addChild( optionsExit );
-		graphicsButton.setFontSize( 17 * scale );
-		audioButton.setFontSize( 17 * scale );
-		inputButton.setFontSize( 17 * scale );
+		graphicsButton.setFontSize( sc.getMediumFontSize( ) );
+		audioButton.setFontSize( sc.getMediumFontSize( ) );
+		inputButton.setFontSize( sc.getMediumFontSize( ) );
 
 		graphics = new Container( new BoxLayout( Axis.Y, FillMode.None ) );
 		graphics.setPreferredSize( new Vector3f( cam.getWidth( ) * .9f, cam.getHeight( ) * .75f, 0 ) );
@@ -256,7 +254,7 @@ public class OptionsScreen extends Screen
 		input.setLocalTranslation( cam.getWidth( ) * .05f, cam.getHeight( ) * 0.8f, 0 );
 
 		resLabel = new Label( "" );
-		resLabel.scale( scale );
+		resLabel.scale( sc.getHeightScalar( ) );
 
 		res = new Slider( new DefaultRangedValueModel( 0, 15, 1 ), "glass" );
 		res.setName( "Resolution" );
@@ -266,7 +264,7 @@ public class OptionsScreen extends Screen
 		resLabel.setText( "Resolution: " + String.valueOf( resRef.get( ) ) );
 
 		Checkbox fullscreen = new Checkbox( "FullScreen", "glass" );
-		fullscreen.setFontSize( 17 * scale );
+		fullscreen.setFontSize( sc.getMediumFontSize( ) );
 		fullscreen.setInsets( new Insets3f( cam.getHeight( ) * .02f, 0, cam.getHeight( ) * .02f, 0 ) );
 
 		quality = new Slider( new DefaultRangedValueModel( 0, 4, 4 ), "glass" );
@@ -275,15 +273,15 @@ public class OptionsScreen extends Screen
 		qualityRef = quality.getModel( ).createReference( );
 
 		Checkbox vsync = new Checkbox( "VSync" );
-		vsync.setFontSize( 17 * scale );
+		vsync.setFontSize( sc.getMediumFontSize( ) );
 		vsync.setInsets( new Insets3f( cam.getHeight( ) * .02f, 0, cam.getHeight( ) * .02f, 0 ) );
 
 		Label mainLabel = new Label( "Main Volume" );
-		mainLabel.scale( scale );
+		mainLabel.scale( sc.getHeightScalar( ) );
 		Label musicLabel = new Label( "Music Volume" );
-		musicLabel.scale( scale );
+		musicLabel.scale( sc.getHeightScalar( ) );
 		Label soundLabel = new Label( "Sound Volume" );
-		soundLabel.scale( scale );
+		soundLabel.scale( sc.getHeightScalar( ) );
 
 		Slider mainVolume = new Slider( new DefaultRangedValueModel( 0, 100, 100 ), "glass" );
 		mainVolume.setInsets( new Insets3f( cam.getHeight( ) * .02f, 0, cam.getHeight( ) * .02f, 0 ) );
@@ -296,70 +294,70 @@ public class OptionsScreen extends Screen
 		soundVolumeRef = soundsVolume.getModel( ).createReference( );
 
 		Checkbox console = new Checkbox( "Enable Dev Console: ", "glass" );
-		console.setFontSize( 17 * scale );
+		console.setFontSize( sc.getMediumFontSize( ) );
 		console.setInsets( new Insets3f( cam.getHeight( ) * .02f, 0, cam.getHeight( ) * .02f, 0 ) );
 
-		Insets3f inputInsets = new Insets3f( 0, 0, scale * 16f, 0 );
+		Insets3f inputInsets = new Insets3f( 0, 0, sc.getHeightScalar( ) * 16f, 0 );
 
 		Label northLabel = new Label( "Move North " );
-		northLabel.scale( scale );
+		northLabel.scale( sc.getHeightScalar( ) );
 
 		northText = new TextField( "North Button: ", "glass" );
 		northText.setSingleLine( true );
-		northText.setFontSize( 17 * scale );
+		northText.setFontSize( sc.getMediumFontSize( ) );
 		northText.setInsets( inputInsets );
 		input.addChild( northText );
 
 		Label southLabel = new Label( "Move South " );
-		southLabel.scale( scale );
+		southLabel.scale( sc.getHeightScalar( ) );
 
 		southText = new TextField( "South Button: ", "glass" );
 		southText.setSingleLine( true );
-		southText.setFontSize( 17 * scale );
+		southText.setFontSize( sc.getMediumFontSize( ) );
 		southText.setInsets( inputInsets );
 		// southText.setLocalTranslation( cam.getWidth( ) * 0.1f, cam.getHeight(
 		// ) * 0.6f, 0 );
 		input.addChild( southText );
 
 		Label eastLabel = new Label( "Move East " );
-		eastLabel.scale( scale );
+		eastLabel.scale( sc.getHeightScalar( ) );
 
 		eastText = new TextField( "East Button: ", "glass" );
 		eastText.setSingleLine( true );
-		eastText.setFontSize( 17 * scale );
+		eastText.setFontSize( sc.getMediumFontSize( ) );
 		eastText.setInsets( inputInsets );
 		// eastText.setLocalTranslation( cam.getWidth( ) * 0.1f, cam.getHeight(
 		// ) * 0.5f, 0 );
 		input.addChild( eastText );
 
 		Label westLabel = new Label( "Move West " );
-		westLabel.scale( scale );
+		westLabel.scale( sc.getHeightScalar( ) );
 
 		westText = new TextField( "West Button: ", "glass" );
 		westText.setSingleLine( true );
-		westText.setFontSize( 17 * scale );
+		westText.setFontSize( sc.getMediumFontSize( ) );
 		westText.setInsets( inputInsets );
 		// westText.setLocalTranslation( cam.getWidth( ) * 0.1f, cam.getHeight(
 		// ) * 0.4f, 0 );
 		input.addChild( westText );
 
 		Label chatLabel = new Label( "Chat       " );
-		chatLabel.scale( scale );
+		chatLabel.scale( sc.getHeightScalar( ) );
 
 		chatText = new TextField( "Chat Button: ", "glass" );
 		chatText.setSingleLine( true );
-		chatText.setFontSize( 17 * scale );
+		chatText.setFontSize( sc.getMediumFontSize( ) );
 		chatText.setInsets( inputInsets );
 		// chatText.setLocalTranslation( cam.getWidth( ) * 0.1f, cam.getHeight(
 		// ) * 0.3f, 0 );
 		input.addChild( chatText );
 
 		Label scoreLabel = new Label( "Scoreboard" );
-		scoreLabel.scale( scale );
+		scoreLabel.scale( sc.getHeightScalar( ) );
 
 		scoreboardText = new TextField( "Score Button: ", "glass" );
 		scoreboardText.setSingleLine( true );
-		scoreboardText.setFontSize( 17 * scale );
+		scoreboardText.setFontSize( sc.getMediumFontSize( ) );
 		scoreboardText.setInsets( inputInsets );
 		// scoreboardText.setLocalTranslation( cam.getWidth( ) * 0.1f,
 		// cam.getHeight( ) * 0.2f, 0 );

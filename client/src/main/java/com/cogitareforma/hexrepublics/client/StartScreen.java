@@ -1,6 +1,7 @@
 package com.cogitareforma.hexrepublics.client;
 
 import com.cogitareforma.makhana.ui.Screen;
+import com.cogitareforma.makhana.ui.ScreenContext;
 import com.cogitareforma.makhana.ui.ScreenManager;
 import com.jme3.app.Application;
 import com.jme3.math.ColorRGBA;
@@ -27,7 +28,7 @@ public class StartScreen extends Screen
 	private Button playButton;
 	private Button optionsButton;
 	private Button exitButton;
-	private float scale;
+
 	private Container loginContainer;
 	private Button login;
 	private Button cancel;
@@ -191,7 +192,7 @@ public class StartScreen extends Screen
 	{
 		super.initialize( screenManager, app );
 		Camera cam = screenManager.getApp( ).getCamera( );
-		scale = cam.getHeight( ) * 0.0016f;
+		ScreenContext sc = screenManager.getScreenContext( );
 
 		setUpButtons( screenManager );
 
@@ -214,7 +215,7 @@ public class StartScreen extends Screen
 		titlePanel.setBackground( new QuadBackgroundComponent( new ColorRGBA( 0, 0.5f, 0.5f, 0.5f ), 5, 5, 0.02f, false ) );
 		titlePanel.setLocalTranslation( cam.getWidth( ) * .7f, cam.getHeight( ) * .85f, 0 );
 		Label title = new Label( "Makhana" );
-		title.setFontSize( 32 * scale );
+		title.setFontSize( sc.getHeadingFontSize( ) );
 		titlePanel.addChild( title );
 
 		loginContainer = new Container( new BoxLayout( Axis.Y, FillMode.None ), "glass" );
@@ -223,23 +224,23 @@ public class StartScreen extends Screen
 		loginContainer.setLocalTranslation( ( cam.getWidth( ) - loginContainer.getPreferredSize( ).x ) / 2f,
 				( cam.getHeight( ) + loginContainer.getPreferredSize( ).y ) / 2f, 0 );
 
-		Insets3f textfieldInsets = new Insets3f( 0, 0, 16f * scale, 0 );
+		Insets3f textfieldInsets = new Insets3f( 0, 0, 16f * sc.getHeightScalar( ), 0 );
 		Label usernameLabel = new Label( "Username: ", "glass" );
-		usernameLabel.setFontSize( 17 * scale );
+		usernameLabel.setFontSize( sc.getMediumFontSize( ) );
 		loginContainer.addChild( usernameLabel );
 
 		TextField username = new TextField( "sdfsdfsdf ", "glass" );
 		username.setSingleLine( true );
-		username.setFontSize( 17 * scale );
+		username.setFontSize( sc.getMediumFontSize( ) );
 		username.setInsets( textfieldInsets );
 
 		loginContainer.addChild( username );
 
 		Label passwordLabel = new Label( "Password: ", "glass" );
-		passwordLabel.setFontSize( 17 * scale );
+		passwordLabel.setFontSize( sc.getMediumFontSize( ) );
 		TextField password = new TextField( "sdfsdf", "glass" );
 		password.setSingleLine( true );
-		password.setFontSize( 17 * scale );
+		password.setFontSize( sc.getMediumFontSize( ) );
 		password.setInsets( textfieldInsets );
 		loginContainer.addChild( passwordLabel );
 		loginContainer.addChild( password );
@@ -247,7 +248,7 @@ public class StartScreen extends Screen
 		Container buttons = new Container( new BoxLayout( Axis.X, FillMode.Even ) );
 		buttons.setPreferredSize( new Vector3f( cam.getWidth( ) * .05f, cam.getHeight( ) * .05f, 0 ) );
 		errors = new Label( "TEST" );
-		errors.setFontSize( 17 * scale );
+		errors.setFontSize( sc.getMediumFontSize( ) );
 		errors.setInsets( textfieldInsets );
 		loginContainer.addChild( errors );
 		buttons.addChild( login );
@@ -260,19 +261,19 @@ public class StartScreen extends Screen
 		loginStats.setBackground( new QuadBackgroundComponent( new ColorRGBA( 0, 0.5f, 0.5f, 0.5f ), 5, 5, 0.02f, false ) );
 
 		Label loggedIn = new Label( "Logged in: TESTFUCK" );
-		loggedIn.setFontSize( 14 * scale );
+		loggedIn.setFontSize( sc.getSmallFontSize( ) );
 		loggedIn.setTextHAlignment( HAlignment.Right );
-		logout.setFontSize( 14 * scale );
+		logout.setFontSize( sc.getSmallFontSize( ) );
 		logout.setTextHAlignment( HAlignment.Right );
 
 		loginStats.addChild( loggedIn );
 		loginStats.addChild( logout );
 
-		playButton.setFontSize( 17 * scale );
-		optionsButton.setFontSize( 17 * scale );
-		exitButton.setFontSize( 17 * scale );
-		login.setFontSize( 17 * scale );
-		cancel.setFontSize( 17 * scale );
+		playButton.setFontSize( sc.getMediumFontSize( ) );
+		optionsButton.setFontSize( sc.getMediumFontSize( ) );
+		exitButton.setFontSize( sc.getMediumFontSize( ) );
+		login.setFontSize( sc.getMediumFontSize( ) );
+		cancel.setFontSize( sc.getMediumFontSize( ) );
 
 		getScreenNode( ).attachChild( titlePanel );
 		getScreenNode( ).attachChild( buttonPanel );
