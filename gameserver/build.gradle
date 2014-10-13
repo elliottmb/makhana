@@ -3,7 +3,7 @@ apply plugin: "java"
 sourceCompatibility = 1.8
 sourceSets.main.java.srcDirs = [ "src/main/java" ]
 
-project.ext.mainClassName = "com.cogitareforma.hexrepublics.gameserver.GameServer"
+project.ext.mainClassName = "com.cogitareforma.makhana.gameserver.GameServer"
 project.ext.assetsDir = new File("src/main/resources");
 
 task run(dependsOn: classes, type: JavaExec) {
