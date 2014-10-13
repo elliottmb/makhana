@@ -15,6 +15,7 @@ public class ScreenManager extends AbstractAppState
 
 	private Application app;
 
+	// TODO: Incorporate, currently doesn't get used correctly
 	private Class< ? extends Screen > foregroundScreen;
 
 	/**

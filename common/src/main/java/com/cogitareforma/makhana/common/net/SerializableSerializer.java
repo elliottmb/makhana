@@ -30,9 +30,7 @@ public class SerializableSerializer extends Serializer
 
 		data.get( byteArray );
 
-		System.out.println( byteArray );
-
-		// creating a stream pipe-line, from b to a
+		// Create a stream pathway from b to a
 		ByteArrayInputStream b = new ByteArrayInputStream( byteArray );
 		ObjectInput a = new extObjectInputStream( b );
 		try
@@ -40,18 +38,15 @@ public class SerializableSerializer extends Serializer
 			Object obj = a.readObject( );
 			return ( T ) obj;
 		}
-		catch ( ClassNotFoundException e )
+		catch ( Exception e )
 		{
-			// TODO Auto-generated catch block
-			e.printStackTrace( );
+			throw new IOException( e.toString( ) );
 		}
 		finally
 		{
 			a.close( );
 		}
 
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@Override
@@ -67,7 +62,7 @@ public class SerializableSerializer extends Serializer
 
 		if ( object instanceof Serializable )
 		{
-			// creating a stream pipe-line, from a to b
+			// Create a stream pathway from a to b
 			ByteArrayOutputStream b = new ByteArrayOutputStream( );
 			ObjectOutput a = new ObjectOutputStream( b );
 			byte[ ] content;
@@ -78,17 +73,18 @@ public class SerializableSerializer extends Serializer
 				a.flush( );
 				content = b.toByteArray( );
 			}
+			catch ( Exception e )
+			{
+				throw new IOException( e.toString( ) );
+			}
 			finally
 			{
 				a.close( );
 			}
 
-			System.out.println( content );
 			buffer.put( content );
 
 		}
-		// TODO Auto-generated method stub
-
 	}
 
 }
@@ -103,7 +99,7 @@ final class extObjectInputStream extends ObjectInputStream
 		super( in );
 	}
 
-	protected Class resolveClass( ObjectStreamClass v ) throws IOException, ClassNotFoundException
+	protected Class< ? > resolveClass( ObjectStreamClass v ) throws IOException, ClassNotFoundException
 	{
 
 		try

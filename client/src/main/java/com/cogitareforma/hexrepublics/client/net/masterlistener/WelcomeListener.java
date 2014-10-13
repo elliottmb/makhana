@@ -47,8 +47,7 @@ public class WelcomeListener implements MessageListener< Client >
 			logger.log( Level.INFO, "Received a welcoem message." );
 			WelcomeMessage welcomeMessage = ( WelcomeMessage ) message;
 			logger.log( Level.INFO, welcomeMessage.getNotice( ) );
-			logger.log( Level.INFO, "Setting Manager's public key " + welcomeMessage.getPublicKey( ).getEncoded( ) );
-
+			logger.log( Level.INFO, String.format( "Setting Manager's public key: %s", welcomeMessage.getPublicKey( ) ) );
 			manager.setPublicKey( welcomeMessage.getPublicKey( ) );
 		}
 	}

@@ -1,4 +1,4 @@
-package com.cogitareforma.hexrepublics.client;
+package com.cogitareforma.makhana.client.ui;
 
 import com.cogitareforma.makhana.common.ui.Screen;
 import com.cogitareforma.makhana.common.ui.ScreenContext;

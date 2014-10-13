@@ -1,4 +1,4 @@
-package com.cogitareforma.hexrepublics.gameserver.eventsystem.handlers;
+package com.cogitareforma.makhana.gameserver.eventsystem.handlers;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;

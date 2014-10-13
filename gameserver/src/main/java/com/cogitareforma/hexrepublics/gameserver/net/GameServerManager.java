@@ -9,12 +9,6 @@ import java.util.logging.Logger;
 
 import org.apache.commons.lang3.RandomUtils;
 
-import com.cogitareforma.hexrepublics.gameserver.GameServer;
-import com.cogitareforma.hexrepublics.gameserver.eventsystem.events.ActionCompletedEvent;
-import com.cogitareforma.hexrepublics.gameserver.eventsystem.events.ServerPlayerJoinEvent;
-import com.cogitareforma.hexrepublics.gameserver.eventsystem.handlers.ActionCompletedEventHandler;
-import com.cogitareforma.hexrepublics.gameserver.eventsystem.handlers.ServerPlayerJoinEventHandler;
-import com.cogitareforma.hexrepublics.gameserver.eventsystem.handlers.TileOwnerChangedEventHandler;
 import com.cogitareforma.makhana.common.data.Account;
 import com.cogitareforma.makhana.common.data.ServerStatus;
 import com.cogitareforma.makhana.common.entities.components.ActionTrait;
@@ -30,6 +24,12 @@ import com.cogitareforma.makhana.common.net.ServerManager;
 import com.cogitareforma.makhana.common.net.msg.ServerStatusResponse;
 import com.cogitareforma.makhana.common.util.PackageUtils;
 import com.cogitareforma.makhana.common.util.YamlConfig;
+import com.cogitareforma.makhana.gameserver.GameServer;
+import com.cogitareforma.makhana.gameserver.eventsystem.events.ActionCompletedEvent;
+import com.cogitareforma.makhana.gameserver.eventsystem.events.ServerPlayerJoinEvent;
+import com.cogitareforma.makhana.gameserver.eventsystem.handlers.ActionCompletedEventHandler;
+import com.cogitareforma.makhana.gameserver.eventsystem.handlers.ServerPlayerJoinEventHandler;
+import com.cogitareforma.makhana.gameserver.eventsystem.handlers.TileOwnerChangedEventHandler;
 import com.jme3.math.FastMath;
 import com.jme3.network.MessageListener;
 import com.jme3.network.Network;

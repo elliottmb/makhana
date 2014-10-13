@@ -1,4 +1,4 @@
-package com.cogitareforma.hexrepublics.gameserver;
+package com.cogitareforma.makhana.gameserver;
 
 import java.io.BufferedReader;
 import java.io.IOException;

@@ -1,4 +1,4 @@
-package com.cogitareforma.hexrepublics.gameserver.eventsystem.events;
+package com.cogitareforma.makhana.gameserver.eventsystem.events;
 
 import com.cogitareforma.makhana.common.entities.components.Player;
 import com.cogitareforma.makhana.common.eventsystem.EntityEventManager;

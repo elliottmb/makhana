@@ -1,11 +1,10 @@
-package com.cogitareforma.hexrepublics.gameserver.eventsystem.handlers;
+package com.cogitareforma.makhana.gameserver.eventsystem.handlers;
 
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.cogitareforma.hexrepublics.gameserver.eventsystem.events.ActionCompletedEvent;
 import com.cogitareforma.makhana.common.entities.ActionType;
 import com.cogitareforma.makhana.common.entities.ComponentUtil;
 import com.cogitareforma.makhana.common.entities.components.ActionTrait;
@@ -16,6 +15,7 @@ import com.cogitareforma.makhana.common.entities.components.StrengthTrait;
 import com.cogitareforma.makhana.common.entities.components.TileTrait;
 import com.cogitareforma.makhana.common.eventsystem.EntityEvent;
 import com.cogitareforma.makhana.common.eventsystem.EntityEventHandler;
+import com.cogitareforma.makhana.gameserver.eventsystem.events.ActionCompletedEvent;
 import com.simsilica.es.ComponentFilter;
 import com.simsilica.es.CreatedBy;
 import com.simsilica.es.Entity;

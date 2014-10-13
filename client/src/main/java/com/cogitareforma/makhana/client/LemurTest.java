@@ -1,5 +1,8 @@
-package com.cogitareforma.hexrepublics.client;
+package com.cogitareforma.makhana.client;
 
+import com.cogitareforma.makhana.client.ui.NetworkScreen;
+import com.cogitareforma.makhana.client.ui.OptionsScreen;
+import com.cogitareforma.makhana.client.ui.StartScreen;
 import com.cogitareforma.makhana.common.ui.ScreenManager;
 import com.jme3.app.FlyCamAppState;
 import com.jme3.app.SimpleApplication;
