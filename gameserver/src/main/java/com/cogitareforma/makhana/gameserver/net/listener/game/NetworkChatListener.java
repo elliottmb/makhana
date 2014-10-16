@@ -1,4 +1,4 @@
-package com.cogitareforma.hexrepublics.gameserver.net.listener.game;
+package com.cogitareforma.makhana.gameserver.net.listener.game;
 
 import java.util.Date;
 import java.util.LinkedHashMap;
@@ -8,10 +8,10 @@ import java.util.logging.Logger;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-import com.cogitareforma.hexrepublics.gameserver.net.GameServerManager;
 import com.cogitareforma.makhana.common.data.Account;
 import com.cogitareforma.makhana.common.net.SessionManager;
 import com.cogitareforma.makhana.common.net.msg.NetworkChatMessage;
+import com.cogitareforma.makhana.gameserver.net.GameServerManager;
 import com.jme3.network.HostedConnection;
 import com.jme3.network.Message;
 import com.jme3.network.MessageListener;

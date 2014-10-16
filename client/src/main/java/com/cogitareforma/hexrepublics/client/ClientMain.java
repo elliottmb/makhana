@@ -385,7 +385,7 @@ public class ClientMain extends SimpleApplication
 	@Override
 	public void simpleInitApp( )
 	{
-		this.getContext( ).setTitle( "Hex Republics - Alpha" );
+		this.getContext( ).setTitle( "Makhana - Alpha" );
 		YamlConfig yamlConfig = YamlConfig.DEFAULT;
 		yamlConfig.buildAudioSettings( this.listener );
 

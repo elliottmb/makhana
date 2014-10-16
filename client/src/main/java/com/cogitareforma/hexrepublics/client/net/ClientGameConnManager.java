@@ -59,7 +59,7 @@ public class ClientGameConnManager extends ConnectionManager< ClientMain >
 		// Attempt to establish a new connection
 		try
 		{
-			setClient( Network.connectToServer( "Hex Republics", 2, host, port, port ) );
+			setClient( Network.connectToServer( "makhana", 2, host, port, port ) );
 			logger.log( Level.INFO, "Attempting to connect to game server at: " + host + ":" + port );
 
 			/* register all message types with the serializer */

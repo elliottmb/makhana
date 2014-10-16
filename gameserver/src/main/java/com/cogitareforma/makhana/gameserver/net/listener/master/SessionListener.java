@@ -1,11 +1,11 @@
-package com.cogitareforma.hexrepublics.gameserver.net.listener.master;
+package com.cogitareforma.makhana.gameserver.net.listener.master;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.cogitareforma.hexrepublics.gameserver.net.GameMasterConnManager;
 import com.cogitareforma.makhana.common.data.ServerStatus;
 import com.cogitareforma.makhana.common.net.msg.LoginResponse;
+import com.cogitareforma.makhana.gameserver.net.GameMasterConnManager;
 import com.jme3.network.Client;
 import com.jme3.network.Message;
 import com.jme3.network.MessageListener;

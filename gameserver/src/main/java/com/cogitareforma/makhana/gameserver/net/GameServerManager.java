@@ -1,4 +1,4 @@
-package com.cogitareforma.hexrepublics.gameserver.net;
+package com.cogitareforma.makhana.gameserver.net;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -244,7 +244,7 @@ public class GameServerManager extends ServerManager< GameServer >
 		try
 		{
 
-			setServer( Network.createServer( "Hex Republics", 2, port, port ) );
+			setServer( Network.createServer( "makhana", 2, port, port ) );
 			getServer( ).addChannel( port + 1 );
 			logger.log( Level.INFO, String.format( "We will bind to TCP: %d, UDP: %d", port, port ) );
 
@@ -257,8 +257,8 @@ public class GameServerManager extends ServerManager< GameServer >
 			getServer( ).addConnectionListener( new ConnListener( this ) );
 
 			logger.log( Level.FINE, "Registering message listeners with server." );
-			List< Object > messageListeners = PackageUtils.createAllInPackage(
-					"com.cogitareforma.hexrepublics.gameserver.net.listener.game", this );
+			List< Object > messageListeners = PackageUtils.createAllInPackage( "com.cogitareforma.makhana.gameserver.net.listener.game",
+					this );
 			for ( Object messageListener : messageListeners )
 			{
 				getServer( ).addMessageListener( ( MessageListener ) messageListener );

@@ -1,11 +1,10 @@
-package com.cogitareforma.hexrepublics.gameserver.net.listener.game;
+package com.cogitareforma.makhana.gameserver.net.listener.game;
 
 import java.util.Arrays;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.cogitareforma.hexrepublics.gameserver.net.GameServerManager;
 import com.cogitareforma.makhana.common.data.Account;
 import com.cogitareforma.makhana.common.entities.ComponentUtil;
 import com.cogitareforma.makhana.common.entities.components.LocationTrait;
@@ -17,6 +16,7 @@ import com.cogitareforma.makhana.common.net.msg.EntityActionRequest;
 import com.cogitareforma.makhana.common.net.msg.EntityCreationRequest;
 import com.cogitareforma.makhana.common.net.msg.EntityDeletionRequest;
 import com.cogitareforma.makhana.common.net.msg.EntityResponse;
+import com.cogitareforma.makhana.gameserver.net.GameServerManager;
 import com.jme3.network.HostedConnection;
 import com.jme3.network.Message;
 import com.jme3.network.MessageListener;

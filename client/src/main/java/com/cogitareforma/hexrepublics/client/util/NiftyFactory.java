@@ -1966,7 +1966,7 @@ public class NiftyFactory
 										text( new TextBuilder( )
 										{
 											{
-												text( "Hex Republics" );
+												text( "Makhana" );
 												font( "Interface/Fonts/Default.fnt" );
 												height( "100%" );
 												width( "100%" );

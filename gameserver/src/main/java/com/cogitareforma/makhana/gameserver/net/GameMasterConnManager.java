@@ -1,4 +1,4 @@
-package com.cogitareforma.hexrepublics.gameserver.net;
+package com.cogitareforma.makhana.gameserver.net;
 
 import java.util.List;
 import java.util.logging.Level;
@@ -37,7 +37,7 @@ public class GameMasterConnManager extends MasterConnManager< GameServer >
 			final String host = ( String ) YamlConfig.DEFAULT.get( "networkserver.host" );
 			final Integer port = ( Integer ) YamlConfig.DEFAULT.get( "networkserver.port" );
 
-			setClient( Network.connectToServer( "Hex Republics", 2, host, port, port + 1 ) );
+			setClient( Network.connectToServer( "makhana", 2, host, port, port + 1 ) );
 			logger.log( Level.INFO, String.format( "We will connect to master server %s with ports TCP:%d, UDP:%d.", host, port, port + 1 ) );
 
 			/* register all message types with the serializer */
@@ -46,8 +46,8 @@ public class GameMasterConnManager extends MasterConnManager< GameServer >
 
 			/* add listeners */
 			logger.log( Level.FINE, "Registering message listeners with for network connection." );
-			List< Object > messageListeners = PackageUtils.createAllInPackage(
-					"com.cogitareforma.hexrepublics.gameserver.net.listener.master", this );
+			List< Object > messageListeners = PackageUtils.createAllInPackage( "com.cogitareforma.makhana.gameserver.net.listener.master",
+					this );
 			for ( Object messageListener : messageListeners )
 			{
 				getClient( ).addMessageListener( ( MessageListener ) messageListener );

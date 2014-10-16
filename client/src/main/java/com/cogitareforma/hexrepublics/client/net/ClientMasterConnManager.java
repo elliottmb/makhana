@@ -69,7 +69,7 @@ public class ClientMasterConnManager extends MasterConnManager< ClientMain >
 			final String host = tempHost;
 			final Integer port = tempPort;
 
-			setClient( Network.connectToServer( "Hex Republics", 2, host, port, port + 1 ) );
+			setClient( Network.connectToServer( "makhana", 2, host, port, port + 1 ) );
 			logger.log( Level.INFO, String.format( "We will connect to master server %s with ports TCP:%d, UDP:%d.", host, port, port + 1 ) );
 
 			/* register all message types with the serializer */

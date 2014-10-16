@@ -129,7 +129,7 @@ public class MasterServerManager extends ServerManager< MasterServer >
 		try
 		{
 
-			setServer( Network.createServer( "Hex Republics", 2, port, port + 1 ) );
+			setServer( Network.createServer( "makhana", 2, port, port + 1 ) );
 			logger.log( Level.INFO, String.format( "We will bind to TCP: %d, UDP: %d", port, port + 1 ) );
 
 			/* register all message types with the serializer */
