@@ -38,16 +38,9 @@ public class ServerStatusListener implements MessageListener< HostedConnection >
 		{
 			ServerStatusResponse msg = ( ServerStatusResponse ) message;
 
-			if ( server.getSessionManager( ).containsConnection( source ) )
-			{
-				logger.log( Level.INFO, "Recieved a Server State message: " + msg.getServerStatus( ).toString( ) );
-				msg.getServerStatus( ).setAddress( source.getAddress( ).substring( 1 ).split( "\\:" )[ 0 ] );
-				server.getServerStatusManager( ).put( source, msg.getServerStatus( ) );
-			}
-			else
-			{
-				logger.log( Level.WARNING, "Recieved a Server State message from an unauthenticated session: " + source.getAddress( ) );
-			}
+			logger.log( Level.INFO, "Recieved a Server State message: " + msg.getServerStatus( ).toString( ) );
+			msg.getServerStatus( ).setAddress( source.getAddress( ).substring( 1 ).split( "\\:" )[ 0 ] );
+			server.getServerStatusManager( ).put( source, msg.getServerStatus( ) );
 		}
 	}
 }

@@ -56,8 +56,6 @@ public class GameMasterConnManager extends MasterConnManager< GameServer >
 			/* start client */
 			logger.log( Level.FINE, "Starting the network connectionclient." );
 			getClient( ).start( );
-			logger.log( Level.FINE, "Sending login request." );
-			sendLogin( app.getArguments( ).getOptionValue( "A" ), app.getArguments( ).getOptionValue( "P" ), true );
 		}
 		catch ( Exception e )
 		{

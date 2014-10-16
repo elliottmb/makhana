@@ -55,14 +55,14 @@ public class ConnListener implements ConnectionListener
 		logger.log( Level.INFO, "Removing the sessions for connection=" + source.toString( ) );
 		Account account = serverManager.getSessionManager( ).getFromSession( source );
 
-		SessionManager sm = serverManager.getSessionManager( );
-		sm.removeSession( source );
-		sm.removeSessions( account );
+		SessionManager sessionManager = serverManager.getSessionManager( );
+		sessionManager.removeSession( source );
+		sessionManager.removeSessions( account );
 		serverManager.getServerStatusManager( ).remove( source );
 
 		if ( account != null && !account.isServer( ) )
 		{
-			for ( HostedConnection hc : sm.getAllSessions( ) )
+			for ( HostedConnection hc : sessionManager.getAllSessions( ) )
 			{
 				hc.send( new NetworkChatMessage( null, String.format( "Server Notice: %s is now offline.", account.getAccountName( ) ) ) );
 			}

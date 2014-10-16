@@ -283,7 +283,7 @@ public class GameServerManager extends ServerManager< GameServer >
 				YamlConfig.DEFAULT.put( "gameserver.name", name );
 			}
 
-			status = new ServerStatus( name, 4, 0, 0, port );
+			status = new ServerStatus( name, 4, 0, port );
 
 			// TODO: Move to when match started
 			constructWorld( );
@@ -334,7 +334,7 @@ public class GameServerManager extends ServerManager< GameServer >
 		else
 		{
 			logger.log( Level.INFO, "Server Status was null." );
-			status = new ServerStatus( ( String ) YamlConfig.DEFAULT.get( "gameserver.name" ), 4, 0, 0, this.getApp( ).getPort( ) );
+			status = new ServerStatus( ( String ) YamlConfig.DEFAULT.get( "gameserver.name" ), 4, 0, this.getApp( ).getPort( ) );
 			getServerStatus( ).setChanged( false );
 		}
 

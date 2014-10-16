@@ -23,11 +23,6 @@ public class ServerStatus
 	private int currentPlayers;
 
 	/**
-	 * The Server's current turn
-	 */
-	private int currentTurn;
-
-	/**
 	 * The Server's max player count
 	 */
 	private int maxPlayers;
@@ -65,17 +60,14 @@ public class ServerStatus
 	 *            Maximum number of players allowed on the server.
 	 * @param currentPlayers
 	 *            Current number of players on the server.
-	 * @param currentTurn
-	 *            Current turn number.
 	 * @param serverPort
 	 *            Port to be used for connecting to the server.
 	 */
-	public ServerStatus( String serverName, int maxPlayers, int currentPlayers, int currentTurn, int serverPort )
+	public ServerStatus( String serverName, int maxPlayers, int currentPlayers, int serverPort )
 	{
 		this.maxPlayers = maxPlayers;
 		this.serverName = serverName;
 		this.currentPlayers = currentPlayers;
-		this.currentTurn = currentTurn;
 		this.port = serverPort;
 		this.address = "unknown";
 		this.changed = false;
@@ -114,16 +106,6 @@ public class ServerStatus
 	public int getCurrentPlayers( )
 	{
 		return currentPlayers;
-	}
-
-	/**
-	 * Returns this ServerState's current turn number.
-	 * 
-	 * @return The current turn number of the ServerState.
-	 */
-	public int getCurrentTurn( )
-	{
-		return currentTurn;
 	}
 
 	/**
@@ -199,18 +181,6 @@ public class ServerStatus
 	public void setCurrentPlayers( int currentPlayers )
 	{
 		this.currentPlayers = currentPlayers;
-		setChanged( true );
-	}
-
-	/**
-	 * Sets the serverState's current turn number.
-	 * 
-	 * @param currentTurn
-	 *            the current turn number of the ServerState.
-	 */
-	public void setCurrentTurn( int currentTurn )
-	{
-		this.currentTurn = currentTurn;
 		setChanged( true );
 	}
 

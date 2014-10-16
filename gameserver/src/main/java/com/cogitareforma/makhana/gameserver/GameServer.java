@@ -36,8 +36,6 @@ public class GameServer extends SimpleApplication
 		GameServer gameServer = new GameServer( );
 
 		Options options = new Options( );
-		options.addOption( "A", "account", true, "the account name registered with the master server" );
-		options.addOption( "P", "password", true, "the password registered with the master server" );
 		options.addOption( "p", "port", true, "the port this server will bind to (optional)" );
 		options.addOption( "o", "offline", true, "toggle whether account checking should be run (optional)" );
 
@@ -46,18 +44,6 @@ public class GameServer extends SimpleApplication
 		try
 		{
 			gameServer.setArguments( parser.parse( options, args ) );
-
-			if ( !gameServer.getArguments( ).hasOption( "A" ) )
-			{
-				logger.log( Level.SEVERE, "Expected account name argument, no argument found." );
-				System.exit( 1 );
-			}
-
-			if ( !gameServer.getArguments( ).hasOption( "P" ) )
-			{
-				logger.log( Level.SEVERE, "Expected password argument, no argument found." );
-				System.exit( 1 );
-			}
 		}
 		catch ( ParseException exp )
 		{

@@ -10,6 +10,7 @@ import com.jme3.network.serializing.Serializable;
  * @author Elliott Butler
  */
 @Serializable
+@Deprecated
 public class LoginRequest extends AbstractMessage
 {
 
