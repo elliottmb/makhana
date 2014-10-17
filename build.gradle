@@ -68,7 +68,6 @@ project(":common") {
     dependencies {
 		compile fileTree(dir: '../libs', includes: ['*.jar']) 
 		compile fileTree(dir: '../libs/lib', includes: ['*.jar']) 
-		compile "joda-time:joda-time:2.2"
 		compile 'org.yaml:snakeyaml:1.13'
 		compile 'commons-cli:commons-cli:1.2'
 		compile 'org.apache.commons:commons-lang3:3.3.2'

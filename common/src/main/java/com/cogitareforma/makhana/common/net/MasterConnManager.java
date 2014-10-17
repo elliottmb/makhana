@@ -5,8 +5,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.cogitareforma.makhana.common.data.Account;
-import com.cogitareforma.makhana.common.net.msg.LoginRequest;
+import com.cogitareforma.makhana.common.data.LoginCredentials;
 import com.cogitareforma.makhana.common.net.msg.LogoutRequest;
+import com.cogitareforma.makhana.common.net.msg.SecureLoginRequest;
 import com.jme3.app.Application;
 
 /**
@@ -71,14 +72,12 @@ public class MasterConnManager< A extends Application > extends ConnectionManage
 	 *            the accountname to auth as
 	 * @param password
 	 *            the password to auth as
-	 * @param isServer
-	 *            if the login is from a server
 	 * 
 	 */
-	public void sendLogin( String accountName, String password, boolean isServer )
+	public void sendLogin( String accountName, String password )
 	{
 		logger.log( Level.FINE, "Sending account and pass to the connection." );
-		send( new LoginRequest( accountName, password, isServer ) );
+		send( new SecureLoginRequest( new LoginCredentials( accountName, password, null ), getPublicKey( ), false ) );
 	}
 
 	/**

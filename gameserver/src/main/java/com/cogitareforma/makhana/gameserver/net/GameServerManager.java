@@ -335,7 +335,7 @@ public class GameServerManager extends ServerManager< GameServer >
 		{
 			logger.log( Level.INFO, "Server Status was null." );
 			status = new ServerStatus( ( String ) YamlConfig.DEFAULT.get( "gameserver.name" ), 4, 0, this.getApp( ).getPort( ) );
-			getServerStatus( ).setChanged( false );
+			getServerStatus( ).setChanged( true );
 		}
 
 		if ( getEntityDataHostService( ) != null )

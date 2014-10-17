@@ -13,7 +13,6 @@ The following are fetched via the gradle build script.
 * Apache Commons - Lang 3.3.2
 * Apache Commons - IO 2.4
 * SnakeYAML 1.13
-* Joda Time 2.2
 * JBCrypt 0.3m
 * Google Guava 17.0
 

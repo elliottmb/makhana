@@ -9,9 +9,7 @@ import com.cogitareforma.hexrepublics.client.states.EntityManager;
 import com.cogitareforma.hexrepublics.client.states.WorldManager;
 import com.cogitareforma.hexrepublics.client.util.NiftyFactory;
 import com.cogitareforma.hexrepublics.client.util.PlayerTraitListener;
-import com.cogitareforma.makhana.common.data.LoginCredentials;
 import com.cogitareforma.makhana.common.entities.components.Player;
-import com.cogitareforma.makhana.common.net.msg.SecureLoginRequest;
 import com.cogitareforma.makhana.common.util.YamlConfig;
 import com.jme3.app.SimpleApplication;
 import com.jme3.app.state.AppState;
@@ -311,8 +309,7 @@ public class ClientMain extends SimpleApplication
 				logger.log( Level.INFO, "Attempting to login with accountname " + accountname );
 				// masterConnection.sendLogin( accountname, password, false );
 				// TODO
-				masterConnection.send( new SecureLoginRequest( new LoginCredentials( accountname, password, null ), masterConnection
-						.getPublicKey( ), false ) );
+				masterConnection.sendLogin( accountname, password );
 				logger.log( Level.INFO, "Account: " + masterConnection.getAccount( ) );
 			}
 			return null;
