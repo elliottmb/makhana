@@ -1,6 +1,5 @@
 package com.cogitareforma.makhana.masterserver.db;
 
-import com.cogitareforma.makhana.common.data.Account;
 
 /**
  * AccountRepository is an interface which is implemented by a backing database.

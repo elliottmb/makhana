@@ -1,4 +1,4 @@
-package com.cogitareforma.makhana.common.data;
+package com.cogitareforma.makhana.masterserver.db;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;

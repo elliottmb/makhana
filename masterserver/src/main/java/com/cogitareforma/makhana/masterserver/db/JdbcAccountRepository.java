@@ -6,8 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
-import com.cogitareforma.makhana.common.data.Account;
-
 /**
  * 
  * @author Elliott Butler

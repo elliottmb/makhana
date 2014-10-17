@@ -5,8 +5,6 @@ import java.sql.SQLException;
 
 import org.springframework.jdbc.core.RowMapper;
 
-import com.cogitareforma.makhana.common.data.Account;
-
 /**
  * 
  * @author Elliott Butler

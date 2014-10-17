@@ -3,7 +3,6 @@ package com.cogitareforma.makhana.masterserver.net.listener;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.cogitareforma.makhana.common.data.Account;
 import com.cogitareforma.makhana.common.data.LoginCredentials;
 import com.cogitareforma.makhana.common.data.Session;
 import com.cogitareforma.makhana.common.net.DataManager;
@@ -11,6 +10,7 @@ import com.cogitareforma.makhana.common.net.msg.ChatMessage;
 import com.cogitareforma.makhana.common.net.msg.LoginResponse;
 import com.cogitareforma.makhana.common.net.msg.LogoutRequest;
 import com.cogitareforma.makhana.common.net.msg.SecureLoginRequest;
+import com.cogitareforma.makhana.masterserver.db.Account;
 import com.cogitareforma.makhana.masterserver.db.AccountRepository;
 import com.cogitareforma.makhana.masterserver.net.MasterServerManager;
 import com.jme3.network.HostedConnection;
