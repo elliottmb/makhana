@@ -64,7 +64,7 @@ public class GameServer extends SimpleApplication
 				}
 				if ( "status".equals( line ) )
 				{
-					List< HostedConnection > connections = gameServer.getGameServerManager( ).getSessionManager( ).getAllSessions( );
+					List< HostedConnection > connections = gameServer.getGameServerManager( ).getSessionManager( ).getConnections( );
 					if ( connections.size( ) > 0 )
 					{
 						StringBuilder sb = new StringBuilder( );
@@ -72,7 +72,7 @@ public class GameServer extends SimpleApplication
 						for ( HostedConnection hc : connections )
 						{
 							sb.append( String.format( "%s: %s - %s \n", hc.getId( ), hc.getAddress( ), gameServer.getGameServerManager( )
-									.getSessionManager( ).getFromSession( hc ) ) );
+									.getSessionManager( ).get( hc ) ) );
 						}
 						logger.log( Level.INFO, sb.toString( ) );
 					}

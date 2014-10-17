@@ -9,8 +9,8 @@ import java.util.logging.Logger;
 
 import org.apache.commons.lang3.RandomUtils;
 
-import com.cogitareforma.makhana.common.data.Account;
 import com.cogitareforma.makhana.common.data.ServerStatus;
+import com.cogitareforma.makhana.common.data.Session;
 import com.cogitareforma.makhana.common.entities.components.ActionTrait;
 import com.cogitareforma.makhana.common.entities.components.Player;
 import com.cogitareforma.makhana.common.entities.components.TileTrait;
@@ -104,32 +104,32 @@ public class GameServerManager extends ServerManager< GameServer >
 		advanceTurn = false;
 	}
 
-	public void createPlayerEntity( Account account )
+	public void createPlayerEntity( Session session )
 	{
 		if ( getEntityData( ) != null )
 		{
-			if ( account != null )
+			if ( session != null )
 			{
 
 				// Check if already exists
 				for ( Entity e : entityData.getEntities( Player.class ) )
 				{
 					Player playerTrait = e.get( Player.class );
-					if ( account.equals( playerTrait.getAccount( ) ) )
+					if ( session.equals( playerTrait.getSession( ) ) )
 					{
 						logger.log( Level.WARNING, "Could not create an Entity, Player already exists" );
 						entityEventManager.triggerEvent( new ServerPlayerJoinEvent( entityEventManager, e.getId( ), playerTrait,
-								getSessionManager( ).getAllSessions( ).size( ), true ) );
+								getSessionManager( ).getConnections( ).size( ), true ) );
 						return;
 					}
 				}
 
 				EntityId playerId = entityData.createEntity( );
-				logger.log( Level.INFO, "Creating an Entity for player: " + account.getAccountName( ) + ", " + playerId );
-				Player playerTrait = new Player( account );
+				logger.log( Level.INFO, "Creating an Entity for player: " + session.getDisplayName( ) + ", " + playerId );
+				Player playerTrait = new Player( session );
 				entityData.setComponent( playerId, playerTrait );
 				entityEventManager.triggerEvent( new ServerPlayerJoinEvent( entityEventManager, playerId, playerTrait, getSessionManager( )
-						.getAllSessions( ).size( ), false ) );
+						.getConnections( ).size( ), false ) );
 			}
 			else
 			{
@@ -162,14 +162,14 @@ public class GameServerManager extends ServerManager< GameServer >
 		return entityDataHostService;
 	}
 
-	public EntityId getPlayerEntityId( Account account )
+	public EntityId getPlayerEntityId( Session session )
 	{
 		if ( getEntityData( ) != null )
 		{
-			if ( account != null )
+			if ( session != null )
 			{
-				ComponentFilter< Player > accountFilter = FieldFilter.create( Player.class, "account", account );
-				return getEntityData( ).findEntity( accountFilter, Player.class );
+				ComponentFilter< Player > sessionFilter = FieldFilter.create( Player.class, "session", session );
+				return getEntityData( ).findEntity( sessionFilter, Player.class );
 			}
 			else
 			{
@@ -201,15 +201,15 @@ public class GameServerManager extends ServerManager< GameServer >
 		return theWorld;
 	}
 
-	public void removePlayerEntity( Account account )
+	public void removePlayerEntity( Session session )
 	{
 		if ( getEntityData( ) != null )
 		{
-			EntityId id = getPlayerEntityId( account );
+			EntityId id = getPlayerEntityId( session );
 
 			if ( id != null )
 			{
-				logger.log( Level.INFO, "Removing Entity for Account: " + account.getAccountName( ) );
+				logger.log( Level.INFO, "Removing Entity for Account: " + session.getDisplayName( ) );
 				getEntityData( ).removeEntity( id );
 			}
 			else
@@ -318,10 +318,10 @@ public class GameServerManager extends ServerManager< GameServer >
 
 		if ( getServerStatus( ) != null )
 		{
-			if ( getServerStatus( ).getCurrentPlayers( ) != getSessionManager( ).getAllSessions( ).size( ) )
+			if ( getServerStatus( ).getCurrentPlayers( ) != getSessionManager( ).getConnections( ).size( ) )
 			{
 				logger.log( Level.INFO, "Server Status Current Player Count does not match Authed Connection Count, fixing." );
-				getServerStatus( ).setCurrentPlayers( getSessionManager( ).getAllSessions( ).size( ) );
+				getServerStatus( ).setCurrentPlayers( getSessionManager( ).getConnections( ).size( ) );
 			}
 
 			if ( getServerStatus( ).isChanged( ) )
@@ -375,7 +375,7 @@ public class GameServerManager extends ServerManager< GameServer >
 							for ( Entity e : playerEntitySet )
 							{
 								Player pt = e.get( Player.class );
-								Player newPt = new Player( pt.getAccount( ), pt.getKills( ), pt.getDeaths( ), false );
+								Player newPt = new Player( pt.getSession( ), pt.getKills( ), pt.getDeaths( ), false );
 								e.set( newPt );
 							}
 

@@ -3,9 +3,9 @@ package com.cogitareforma.makhana.masterserver.net;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.cogitareforma.makhana.common.data.Account;
-import com.cogitareforma.makhana.common.net.SessionManager;
-import com.cogitareforma.makhana.common.net.msg.NetworkChatMessage;
+import com.cogitareforma.makhana.common.data.Session;
+import com.cogitareforma.makhana.common.net.DataManager;
+import com.cogitareforma.makhana.common.net.msg.ChatMessage;
 import com.cogitareforma.makhana.common.net.msg.WelcomeMessage;
 import com.jme3.network.ConnectionListener;
 import com.jme3.network.HostedConnection;
@@ -53,18 +53,18 @@ public class ConnListener implements ConnectionListener
 	public void connectionRemoved( Server server, HostedConnection source )
 	{
 		logger.log( Level.INFO, "Removing the sessions for connection=" + source.toString( ) );
-		Account account = serverManager.getSessionManager( ).getFromSession( source );
+		Session session = serverManager.getSessionManager( ).get( source );
 
-		SessionManager sessionManager = serverManager.getSessionManager( );
-		sessionManager.removeSession( source );
-		sessionManager.removeSessions( account );
+		DataManager< Session > sessionManager = serverManager.getSessionManager( );
+		sessionManager.remove( source );
+		sessionManager.removeConnections( session );
 		serverManager.getServerStatusManager( ).remove( source );
 
-		if ( account != null && !account.isServer( ) )
+		if ( session != null )
 		{
-			for ( HostedConnection hc : sessionManager.getAllSessions( ) )
+			for ( HostedConnection hc : sessionManager.getConnections( ) )
 			{
-				hc.send( new NetworkChatMessage( null, String.format( "Server Notice: %s is now offline.", account.getAccountName( ) ) ) );
+				hc.send( new ChatMessage( null, String.format( "Server Notice: %s is now offline.", session.getDisplayName( ) ) ) );
 			}
 			serverManager.broadcastUserList( );
 		}

@@ -9,7 +9,7 @@ import com.cogitareforma.makhana.client.ClientMain;
 import com.cogitareforma.makhana.common.data.ServerStatus;
 import com.cogitareforma.makhana.common.net.MasterConnManager;
 import com.cogitareforma.makhana.common.net.SerializerRegistrar;
-import com.cogitareforma.makhana.common.net.msg.NetworkChatMessage;
+import com.cogitareforma.makhana.common.net.msg.ChatMessage;
 import com.cogitareforma.makhana.common.net.msg.ServerListResponse;
 import com.cogitareforma.makhana.common.net.msg.UserListResponse;
 import com.cogitareforma.makhana.common.util.PackageUtils;
@@ -113,19 +113,20 @@ public class ClientMasterConnManager extends MasterConnManager< ClientMain >
 	 * 
 	 * @param message
 	 */
-	public void receiveMessage( NetworkChatMessage message )
+	public void receiveMessage( ChatMessage message )
 	{
 		if ( getApp( ).getNifty( ).getScreen( "network" ) != null )
 		{
 			Chat chat = getApp( ).getNifty( ).getScreen( "network" ).findNiftyControl( "networkChat", Chat.class );
 			/*
-			 * If the account exists, use it's name. Otherwise it's probably a
+			 * If the session exists, use it's name. Otherwise it's probably a
 			 * server notice.
 			 */
-			if ( message.getAccount( ) != null )
+			logger.log( Level.INFO, "Received a chat message" );
+			if ( message.getSession( ) != null )
 			{
 				String chatMessage = message.getMessage( );
-				String chatAccountName = message.getAccount( ).getAccountName( );
+				String chatDisplayName = message.getSession( ).getDisplayName( );
 				if ( chatMessage != null )
 				{
 					if ( chatMessage.length( ) > 0 )
@@ -134,22 +135,22 @@ public class ClientMasterConnManager extends MasterConnManager< ClientMain >
 						{
 							if ( chatMessage.substring( 0, 3 ).equals( "/me" ) )
 							{
-								chat.receivedChatLine( "* " + chatAccountName + chatMessage.substring( 3 ), null );
+								chat.receivedChatLine( "* " + chatDisplayName + chatMessage.substring( 3 ), null );
 							}
 						}
 						else
 						{
-							chat.receivedChatLine( chatAccountName + ": " + chatMessage, null );
+							chat.receivedChatLine( chatDisplayName + ": " + chatMessage, null );
 						}
 					}
 					else
 					{
-						logger.log( Level.WARNING, "Recieved a blank message by " + chatAccountName );
+						logger.log( Level.WARNING, "Received a blank message by " + chatDisplayName );
 					}
 				}
 				else
 				{
-					logger.log( Level.WARNING, "Recieved a null message by " + chatAccountName );
+					logger.log( Level.WARNING, "Received a null message by " + chatDisplayName );
 				}
 			}
 			else
@@ -218,7 +219,7 @@ public class ClientMasterConnManager extends MasterConnManager< ClientMain >
 	 */
 	public void sendMessage( String message )
 	{
-		send( new NetworkChatMessage( getAccount( ), message ) );
+		send( new ChatMessage( getSession( ), message ) );
 	}
 
 	public void setServers( ArrayList< ServerStatus > servers )

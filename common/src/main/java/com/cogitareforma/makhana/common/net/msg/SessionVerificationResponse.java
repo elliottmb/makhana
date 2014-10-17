@@ -1,6 +1,6 @@
 package com.cogitareforma.makhana.common.net.msg;
 
-import com.cogitareforma.makhana.common.data.Account;
+import com.cogitareforma.makhana.common.data.Session;
 import com.jme3.network.AbstractMessage;
 import com.jme3.network.serializing.Serializable;
 
@@ -10,22 +10,22 @@ import com.jme3.network.serializing.Serializable;
  * @author Elliott Butler
  */
 @Serializable
-public class AccountVerificationResponse extends AbstractMessage
+public class SessionVerificationResponse extends AbstractMessage
 {
 	/**
-	 * The state of the Account's verification
+	 * The state of the Session verification
 	 */
 	private boolean isVerified;
 
 	/**
-	 * The Account that was verified or not
+	 * The Session that was verified or not
 	 */
-	private Account account;
+	private Session session;
 
 	/**
 	 * Used by the serializer.
 	 */
-	public AccountVerificationResponse( )
+	public SessionVerificationResponse( )
 	{
 	}
 
@@ -33,32 +33,32 @@ public class AccountVerificationResponse extends AbstractMessage
 	 * Constructs a new AccountVerificationResponse with the given Account and
 	 * it's verification status
 	 * 
-	 * @param account
-	 *            Account that was verified
+	 * @param session
+	 *            Session that was verified
 	 * @param isVerified
 	 *            Verification status: true if the Account was verified
 	 *            successfully, otherwise false
 	 */
-	public AccountVerificationResponse( Account account, Boolean isVerified )
+	public SessionVerificationResponse( Session session, Boolean isVerified )
 	{
-		this.account = account;
+		this.session = session;
 		this.isVerified = isVerified;
 	}
 
 	/**
-	 * Returns the Account which was verified
+	 * Returns the Session which was verified
 	 * 
-	 * @return the account
+	 * @return the Session
 	 */
-	public Account getAccount( )
+	public Session getSession( )
 	{
-		return account;
+		return session;
 	}
 
 	/**
-	 * Returns the state of the Account's verification
+	 * Returns the state of the Session's verification
 	 * 
-	 * @return true if the Account was verified successfully, otherwise false
+	 * @return true if the Session was verified successfully, otherwise false
 	 */
 	public boolean isVerified( )
 	{
@@ -66,14 +66,14 @@ public class AccountVerificationResponse extends AbstractMessage
 	}
 
 	/**
-	 * Sets the Account which was verified
+	 * Sets the Session which was verified
 	 * 
 	 * @param account
-	 *            the account to set
+	 *            the Session to set
 	 */
-	public void setAccount( Account account )
+	public void setSession( Session session )
 	{
-		this.account = account;
+		this.session = session;
 	}
 
 	/**

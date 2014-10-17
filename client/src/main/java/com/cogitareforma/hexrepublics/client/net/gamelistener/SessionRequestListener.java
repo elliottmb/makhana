@@ -4,8 +4,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.cogitareforma.hexrepublics.client.net.ClientGameConnManager;
-import com.cogitareforma.makhana.common.net.msg.AccountRequest;
-import com.cogitareforma.makhana.common.net.msg.AccountResponse;
+import com.cogitareforma.makhana.common.net.msg.SessionRequest;
+import com.cogitareforma.makhana.common.net.msg.SessionResponse;
 import com.jme3.network.Client;
 import com.jme3.network.Message;
 import com.jme3.network.MessageListener;
@@ -15,13 +15,13 @@ import com.jme3.network.MessageListener;
  * @author Elliott Butler
  * 
  */
-public class AccountRequestListener implements MessageListener< Client >
+public class SessionRequestListener implements MessageListener< Client >
 {
 
 	/**
 	 * The logger for this class.
 	 */
-	private final static Logger logger = Logger.getLogger( AccountRequestListener.class.getName( ) );
+	private final static Logger logger = Logger.getLogger( SessionRequestListener.class.getName( ) );
 
 	/**
 	 * The client's manager.
@@ -34,7 +34,7 @@ public class AccountRequestListener implements MessageListener< Client >
 	 * @param manager
 	 *            the client's manager
 	 */
-	public AccountRequestListener( ClientGameConnManager manager )
+	public SessionRequestListener( ClientGameConnManager manager )
 	{
 		this.manager = manager;
 	}
@@ -42,10 +42,10 @@ public class AccountRequestListener implements MessageListener< Client >
 	@Override
 	public void messageReceived( Client source, Message message )
 	{
-		if ( message instanceof AccountRequest )
+		if ( message instanceof SessionRequest )
 		{
 			logger.log( Level.INFO, "Received an Account request, sending account details to game server." );
-			manager.send( new AccountResponse( manager.getApp( ).getMasterConnManager( ).getAccount( ) ) );
+			manager.send( new SessionResponse( manager.getApp( ).getMasterConnManager( ).getSession( ) ) );
 		}
 	}
 

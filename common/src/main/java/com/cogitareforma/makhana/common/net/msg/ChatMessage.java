@@ -1,23 +1,22 @@
 package com.cogitareforma.makhana.common.net.msg;
 
-import com.cogitareforma.makhana.common.data.Account;
+import com.cogitareforma.makhana.common.data.Session;
 import com.jme3.network.AbstractMessage;
 import com.jme3.network.serializing.Serializable;
 
 /**
  * 
- * @author Justin Kaufman
  * @author Elliott Butler
  * 
  */
 @Serializable
-public class NetworkChatMessage extends AbstractMessage
+public class ChatMessage extends AbstractMessage
 {
 
 	/**
-	 * The message's account
+	 * The message's session
 	 */
-	private Account account;
+	private Session session;
 	/**
 	 * The message's actual content
 	 */
@@ -26,32 +25,32 @@ public class NetworkChatMessage extends AbstractMessage
 	/**
 	 * Used by the serializer.
 	 */
-	public NetworkChatMessage( )
+	public ChatMessage( )
 	{
 	}
 
 	/**
-	 * Constructor for NetworkChatMessage that sets its account and its message.
+	 * Constructor for NetworkChatMessage that sets its session and its message.
 	 * 
-	 * @param account
-	 *            The message's account.
+	 * @param session
+	 *            The message's session.
 	 * @param message
 	 *            The actual message.
 	 */
-	public NetworkChatMessage( Account account, String message )
+	public ChatMessage( Session session, String message )
 	{
-		this.account = account;
+		this.session = session;
 		this.message = message;
 	}
 
 	/**
-	 * Returns this NetworkChatMessage's account.
+	 * Returns this NetworkChatMessage's session.
 	 * 
-	 * @return The account of the NetworkChatMessage.
+	 * @return The session of the NetworkChatMessage.
 	 */
-	public Account getAccount( )
+	public Session getSession( )
 	{
-		return account;
+		return session;
 	}
 
 	/**
@@ -70,9 +69,9 @@ public class NetworkChatMessage extends AbstractMessage
 	 * @param account
 	 *            the account to set this NetworkChatMessage's account to.
 	 */
-	public void setAccount( Account account )
+	public void setSession( Session session )
 	{
-		this.account = account;
+		this.session = session;
 	}
 
 	/**

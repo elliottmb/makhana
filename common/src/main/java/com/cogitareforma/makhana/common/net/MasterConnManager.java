@@ -4,8 +4,8 @@ import java.security.Key;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.cogitareforma.makhana.common.data.Account;
 import com.cogitareforma.makhana.common.data.LoginCredentials;
+import com.cogitareforma.makhana.common.data.Session;
 import com.cogitareforma.makhana.common.net.msg.LogoutRequest;
 import com.cogitareforma.makhana.common.net.msg.SecureLoginRequest;
 import com.jme3.app.Application;
@@ -29,7 +29,7 @@ public class MasterConnManager< A extends Application > extends ConnectionManage
 	/**
 	 * The account of this connection
 	 */
-	private Account account;
+	private Session session;
 
 	private Key publicKey;
 
@@ -50,9 +50,9 @@ public class MasterConnManager< A extends Application > extends ConnectionManage
 	 * 
 	 * @return the account of this connection
 	 */
-	public Account getAccount( )
+	public Session getSession( )
 	{
-		return account;
+		return session;
 	}
 
 	/**
@@ -62,7 +62,7 @@ public class MasterConnManager< A extends Application > extends ConnectionManage
 	 */
 	public boolean isLoggedIn( )
 	{
-		return getAccount( ) != null;
+		return getSession( ) != null;
 	}
 
 	/**
@@ -88,7 +88,7 @@ public class MasterConnManager< A extends Application > extends ConnectionManage
 	{
 		logger.log( Level.FINE, "Sending logout request to the connection." );
 		send( new LogoutRequest( ) );
-		setAccount( null );
+		setSession( null );
 	}
 
 	/**
@@ -97,10 +97,10 @@ public class MasterConnManager< A extends Application > extends ConnectionManage
 	 * @param account
 	 *            the account of this connection
 	 */
-	public void setAccount( Account account )
+	public void setSession( Session session )
 	{
-		logger.log( Level.INFO, "Setting user account: " + account );
-		this.account = account;
+		logger.log( Level.INFO, "Setting session: " + session );
+		this.session = session;
 	}
 
 	/**

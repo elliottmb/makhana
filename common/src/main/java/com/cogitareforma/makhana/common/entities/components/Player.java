@@ -1,6 +1,6 @@
 package com.cogitareforma.makhana.common.entities.components;
 
-import com.cogitareforma.makhana.common.data.Account;
+import com.cogitareforma.makhana.common.data.Session;
 import com.jme3.network.serializing.Serializable;
 import com.simsilica.es.EntityComponent;
 
@@ -8,7 +8,7 @@ import com.simsilica.es.EntityComponent;
 public class Player implements EntityComponent
 {
 
-	private Account account;
+	private Session session;
 	private int deaths;
 	private int kills;
 	private boolean alive;
@@ -21,22 +21,22 @@ public class Player implements EntityComponent
 		this( null, 0, 0, false );
 	}
 
-	public Player( Account account )
+	public Player( Session session )
 	{
-		this( account, 0, 0, false );
+		this( session, 0, 0, false );
 	}
 
-	public Player( Account account, int kills, int deaths, boolean isAlive )
+	public Player( Session session, int kills, int deaths, boolean isAlive )
 	{
-		this.account = account;
+		this.session = session;
 		this.kills = kills;
 		this.deaths = deaths;
 		this.alive = isAlive;
 	}
 
-	public Account getAccount( )
+	public Session getSession( )
 	{
-		return account;
+		return session;
 	}
 
 	/**
@@ -66,6 +66,6 @@ public class Player implements EntityComponent
 	@Override
 	public String toString( )
 	{
-		return "PlayerTrait[" + account + ", kills: " + kills + ", deaths: " + deaths + ", isAlive: " + alive + "]";
+		return "PlayerTrait[" + session + ", kills: " + kills + ", deaths: " + deaths + ", isAlive: " + alive + "]";
 	}
 }

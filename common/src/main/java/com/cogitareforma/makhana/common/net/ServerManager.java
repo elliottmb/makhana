@@ -3,6 +3,7 @@ package com.cogitareforma.makhana.common.net;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.cogitareforma.makhana.common.data.Session;
 import com.jme3.app.Application;
 import com.jme3.network.Message;
 import com.jme3.network.Server;
@@ -36,7 +37,7 @@ public abstract class ServerManager< A extends Application >
 	/**
 	 * The SessionManager to associate with this MasterServer.
 	 */
-	private SessionManager sessionManager;
+	private DataManager< Session > sessionManager;
 
 	/**
 	 * Creates an instance of the ServerManager with the supplied owning
@@ -48,7 +49,7 @@ public abstract class ServerManager< A extends Application >
 	public ServerManager( A app )
 	{
 		this.app = app;
-		sessionManager = new SessionManager( );
+		sessionManager = new DataManager< Session >( );
 	}
 
 	/**
@@ -89,7 +90,7 @@ public abstract class ServerManager< A extends Application >
 	 * 
 	 * @return the SessionManager associated with this server
 	 */
-	public SessionManager getSessionManager( )
+	public DataManager< Session > getSessionManager( )
 	{
 		return sessionManager;
 	}

@@ -5,10 +5,11 @@ import java.util.logging.Logger;
 
 import com.cogitareforma.makhana.common.data.Account;
 import com.cogitareforma.makhana.common.data.LoginCredentials;
-import com.cogitareforma.makhana.common.net.SessionManager;
+import com.cogitareforma.makhana.common.data.Session;
+import com.cogitareforma.makhana.common.net.DataManager;
+import com.cogitareforma.makhana.common.net.msg.ChatMessage;
 import com.cogitareforma.makhana.common.net.msg.LoginResponse;
 import com.cogitareforma.makhana.common.net.msg.LogoutRequest;
-import com.cogitareforma.makhana.common.net.msg.NetworkChatMessage;
 import com.cogitareforma.makhana.common.net.msg.SecureLoginRequest;
 import com.cogitareforma.makhana.masterserver.db.AccountRepository;
 import com.cogitareforma.makhana.masterserver.net.MasterServerManager;
@@ -49,7 +50,7 @@ public class SessionListener implements MessageListener< HostedConnection >
 	@Override
 	public void messageReceived( HostedConnection source, Message message )
 	{
-		SessionManager sessionManager = serverManager.getSessionManager( );
+		DataManager< Session > sessionManager = serverManager.getSessionManager( );
 
 		if ( message instanceof SecureLoginRequest )
 		{
@@ -68,8 +69,8 @@ public class SessionListener implements MessageListener< HostedConnection >
 					Account account = acountRepository.getAccount( loginCredentials.getAccountName( ) );
 					if ( account != null )
 					{
-
-						if ( !sessionManager.containsAccount( account ) )
+						Session newSession = new Session( account.getAccountId( ) * 2 + 1337, account.getAccountName( ) );
+						if ( !sessionManager.contains( newSession ) )
 						{
 							if ( account.isValidPassword( loginCredentials.getPassword( ) ) )
 							{
@@ -77,16 +78,16 @@ public class SessionListener implements MessageListener< HostedConnection >
 								{
 									logger.log( Level.INFO, "User logged in with a valid accountName and password." );
 									account.setAddress( source.getAddress( ) );
-									sessionManager.put( source, account );
-									source.send( new LoginResponse( account ) );
+									sessionManager.put( source, newSession );
+									source.send( new LoginResponse( newSession ) );
 									if ( !account.isServer( ) )
 									{
-										for ( HostedConnection hc : sessionManager.getAllSessions( ) )
+										for ( HostedConnection hc : sessionManager.getConnections( ) )
 										{
-											Account act = sessionManager.getFromSession( hc );
-											if ( !act.isServer( ) && !act.isInGame( ) )
+											Session act = sessionManager.get( hc );
+											if ( !act.isInGame( ) )
 											{
-												hc.send( new NetworkChatMessage( null, String.format( "Server Notice: %s is now online.",
+												hc.send( new ChatMessage( null, String.format( "Server Notice: %s is now online.",
 														account.getAccountName( ) ) ) );
 											}
 										}
@@ -132,17 +133,16 @@ public class SessionListener implements MessageListener< HostedConnection >
 		if ( message instanceof LogoutRequest )
 		{
 			logger.log( Level.INFO, "Received a logout request." );
-			Account account = serverManager.getSessionManager( ).getFromSession( source );
-			serverManager.getSessionManager( ).removeSession( source );
-			if ( account != null && !account.isServer( ) )
+			Session session = serverManager.getSessionManager( ).get( source );
+			serverManager.getSessionManager( ).remove( source );
+			if ( session != null )
 			{
-				for ( HostedConnection hc : sessionManager.getAllSessions( ) )
+				for ( HostedConnection hc : sessionManager.getConnections( ) )
 				{
-					Account act = sessionManager.getFromSession( hc );
-					if ( !act.isServer( ) && !act.isInGame( ) )
+					Session act = sessionManager.get( hc );
+					if ( !act.isInGame( ) )
 					{
-						hc.send( new NetworkChatMessage( null,
-								String.format( "Server Notice: %s is now offline.", account.getAccountName( ) ) ) );
+						hc.send( new ChatMessage( null, String.format( "Server Notice: %s is now offline.", session.getDisplayName( ) ) ) );
 					}
 				}
 				serverManager.broadcastUserList( );

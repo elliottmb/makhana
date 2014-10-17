@@ -3,7 +3,7 @@ package com.cogitareforma.makhana.gameserver.net;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.cogitareforma.makhana.common.net.msg.AccountRequest;
+import com.cogitareforma.makhana.common.net.msg.SessionRequest;
 import com.jme3.network.ConnectionListener;
 import com.jme3.network.HostedConnection;
 import com.jme3.network.Server;
@@ -43,7 +43,7 @@ public class ConnListener implements ConnectionListener
 		}
 		else
 		{
-			conn.send( new AccountRequest( ) );
+			conn.send( new SessionRequest( ) );
 		}
 	}
 
@@ -59,7 +59,7 @@ public class ConnListener implements ConnectionListener
 		 */
 		if ( manager.getSessionManager( ).containsConnection( conn ) )
 		{
-			manager.getSessionManager( ).removeSession( conn );
+			manager.getSessionManager( ).remove( conn );
 		}
 	}
 

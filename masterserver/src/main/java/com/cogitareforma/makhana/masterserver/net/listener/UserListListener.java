@@ -3,7 +3,7 @@ package com.cogitareforma.makhana.masterserver.net.listener;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.cogitareforma.makhana.common.data.Account;
+import com.cogitareforma.makhana.common.data.Session;
 import com.cogitareforma.makhana.common.net.msg.UserListRequest;
 import com.cogitareforma.makhana.masterserver.net.MasterServerManager;
 import com.jme3.network.HostedConnection;
@@ -29,10 +29,10 @@ public class UserListListener implements MessageListener< HostedConnection >
 	@Override
 	public void messageReceived( HostedConnection source, Message message )
 	{
-		Account loggedInUser = server.getSessionManager( ).getFromSession( source );
+		Session loggedInUser = server.getSessionManager( ).get( source );
 		if ( message instanceof UserListRequest )
 		{
-			if ( loggedInUser == null || loggedInUser.isServer( ) )
+			if ( loggedInUser == null )
 			{
 				/*
 				 * User is either null, is not the same as the logged in user,

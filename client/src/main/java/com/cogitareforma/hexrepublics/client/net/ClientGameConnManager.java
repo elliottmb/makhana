@@ -7,7 +7,7 @@ import java.util.logging.Logger;
 import com.cogitareforma.makhana.client.ClientMain;
 import com.cogitareforma.makhana.common.net.ConnectionManager;
 import com.cogitareforma.makhana.common.net.SerializerRegistrar;
-import com.cogitareforma.makhana.common.net.msg.NetworkChatMessage;
+import com.cogitareforma.makhana.common.net.msg.ChatMessage;
 import com.cogitareforma.makhana.common.util.PackageUtils;
 import com.jme3.network.MessageListener;
 import com.jme3.network.Network;
@@ -109,14 +109,14 @@ public class ClientGameConnManager extends ConnectionManager< ClientMain >
 	 * 
 	 * @param message
 	 */
-	public void receiveMessage( NetworkChatMessage message )
+	public void receiveMessage( ChatMessage message )
 	{
 		if ( getApp( ).getNifty( ).getScreen( "lobby" ) != null )
 		{
 			Chat chat = getApp( ).getNifty( ).getScreen( "lobby" ).findNiftyControl( "lobbyChat", Chat.class );
-			if ( message.getAccount( ) != null )
+			if ( message.getSession( ) != null )
 			{
-				chat.receivedChatLine( message.getAccount( ).getAccountName( ) + ": " + message.getMessage( ), null );
+				chat.receivedChatLine( message.getSession( ).getDisplayName( ) + ": " + message.getMessage( ), null );
 			}
 			else
 			{
@@ -128,9 +128,9 @@ public class ClientGameConnManager extends ConnectionManager< ClientMain >
 			if ( getApp( ).getNifty( ).getScreen( "hud" ) != null )
 			{
 				Chat chat = getApp( ).getNifty( ).findPopupByName( "ingameChat" ).findNiftyControl( "gameChat", Chat.class );
-				if ( message.getAccount( ) != null )
+				if ( message.getSession( ) != null )
 				{
-					chat.receivedChatLine( message.getAccount( ).getAccountName( ) + ": " + message.getMessage( ), null );
+					chat.receivedChatLine( message.getSession( ).getDisplayName( ) + ": " + message.getMessage( ), null );
 				}
 				else
 				{
@@ -148,7 +148,7 @@ public class ClientGameConnManager extends ConnectionManager< ClientMain >
 	 */
 	public void sendMessage( String message )
 	{
-		send( new NetworkChatMessage( getApp( ).getMasterConnManager( ).getAccount( ), message ) );
+		send( new ChatMessage( getApp( ).getMasterConnManager( ).getSession( ), message ) );
 	}
 
 	/**

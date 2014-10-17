@@ -363,7 +363,7 @@ public class HudViewController extends GeneralPlayingController implements KeyIn
 				Player pt = entityData.getComponent( cb.getCreatorId( ), Player.class );
 				if ( pt != null )
 				{
-					if ( getApp( ).getMasterConnManager( ).getAccount( ).equals( pt.getAccount( ) ) )
+					if ( getApp( ).getMasterConnManager( ).getSession( ).equals( pt.getSession( ) ) )
 					{
 						NiftyFactory.createTileView( getApp( ).getNifty( ) );
 
@@ -594,7 +594,7 @@ public class HudViewController extends GeneralPlayingController implements KeyIn
 				}
 				System.out.println( "Player: " + id + ", Tile Count: " + tiles.size( ) + ", Unit Count: " + units + ", Building Count: "
 						+ buildings );
-				String name = entityData.getComponent( id, Player.class ).getAccount( ).getAccountName( );
+				String name = entityData.getComponent( id, Player.class ).getSession( ).getDisplayName( );
 				scoreboard.findNiftyControl( String.format( "name%sLabel", playerCount ), Label.class ).setText( name );
 				scoreboard.findNiftyControl( String.format( "unit%sLabel", playerCount ), Label.class ).setText(
 						"Units: " + Integer.toString( units ) );

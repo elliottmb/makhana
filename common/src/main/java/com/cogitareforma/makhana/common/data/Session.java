@@ -1,5 +1,8 @@
 package com.cogitareforma.makhana.common.data;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 import com.jme3.network.serializing.Serializable;
 
 @Serializable
@@ -13,6 +16,11 @@ public class Session
 	 * 
 	 */
 	private String displayName;
+
+	/**
+	 * If the account is currently in game (trivially true for servers)
+	 */
+	private transient boolean inGame;
 
 	/**
 	 * Used by the serializer.
@@ -48,4 +56,45 @@ public class Session
 		return displayName;
 	}
 
+	/**
+	 * @return the inGame
+	 */
+	public boolean isInGame( )
+	{
+		return inGame;
+	}
+
+	/**
+	 * @param inGame
+	 *            the inGame to set
+	 */
+	public void setInGame( boolean inGame )
+	{
+		this.inGame = inGame;
+	}
+
+	@Override
+	public boolean equals( Object obj )
+	{
+		if ( obj == null )
+			return false;
+		if ( this == obj )
+			return true;
+		if ( obj.getClass( ) != getClass( ) )
+			return false;
+		Session acct = ( Session ) obj;
+		return new EqualsBuilder( ).append( sessionId, acct.sessionId ).isEquals( );
+	}
+
+	@Override
+	public int hashCode( )
+	{
+		return new HashCodeBuilder( ).append( sessionId ).toHashCode( );
+	}
+
+	@Override
+	public String toString( )
+	{
+		return String.format( "Session[%d, %s]", sessionId, displayName );
+	}
 }

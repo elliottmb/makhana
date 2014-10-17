@@ -1,6 +1,6 @@
 package com.cogitareforma.makhana.common.net.msg;
 
-import com.cogitareforma.makhana.common.data.Account;
+import com.cogitareforma.makhana.common.data.Session;
 import com.jme3.network.AbstractMessage;
 import com.jme3.network.serializing.Serializable;
 
@@ -18,7 +18,7 @@ public class LoginResponse extends AbstractMessage
 	/**
 	 * The user account that the server has associated us with.
 	 */
-	private Account account;
+	private Session session;
 
 	/**
 	 * A notice, or message, which outlines the state of the response
@@ -36,9 +36,9 @@ public class LoginResponse extends AbstractMessage
 	 * Constructor sets the specified UserAccount as the user account that a
 	 * client has successfully authenticated as.
 	 */
-	public LoginResponse( Account account )
+	public LoginResponse( Session session )
 	{
-		this.account = account;
+		this.session = session;
 	}
 
 	/**
@@ -54,9 +54,9 @@ public class LoginResponse extends AbstractMessage
 	 * 
 	 * @return the associated UserAccount
 	 */
-	public Account getAccount( )
+	public Session getSession( )
 	{
-		return account;
+		return session;
 	}
 
 	/**
@@ -70,12 +70,12 @@ public class LoginResponse extends AbstractMessage
 	/**
 	 * Sets the UserAccount for this DAO.
 	 * 
-	 * @param account
+	 * @param session
 	 *            the UserAccount to set
 	 */
-	public void setAccount( Account account )
+	public void setAccount( Session session )
 	{
-		this.account = account;
+		this.session = session;
 	}
 
 	/**
@@ -92,7 +92,7 @@ public class LoginResponse extends AbstractMessage
 	 */
 	public String toString( )
 	{
-		return "account=" + ( ( account == null ) ? "null" : account.toString( ) );
+		return "session=" + ( ( session == null ) ? "null" : session.toString( ) );
 	}
 
 }

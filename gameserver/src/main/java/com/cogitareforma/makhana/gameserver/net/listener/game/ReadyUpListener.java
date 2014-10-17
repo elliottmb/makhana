@@ -3,7 +3,7 @@ package com.cogitareforma.makhana.gameserver.net.listener.game;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.cogitareforma.makhana.common.data.Account;
+import com.cogitareforma.makhana.common.data.Session;
 import com.cogitareforma.makhana.common.entities.components.Player;
 import com.cogitareforma.makhana.common.net.msg.ReadyUpRequest;
 import com.cogitareforma.makhana.gameserver.net.GameServerManager;
@@ -49,10 +49,10 @@ public class ReadyUpListener implements MessageListener< HostedConnection >
 			logger.log( Level.INFO, "Received an ReadyUpRequest from " + source.getAddress( ) );
 			ReadyUpRequest readyUp = ( ReadyUpRequest ) message;
 
-			Account account = manager.getSessionManager( ).getFromSession( source );
-			if ( account != null )
+			Session session = manager.getSessionManager( ).get( source );
+			if ( session != null )
 			{
-				EntityId id = manager.getPlayerEntityId( account );
+				EntityId id = manager.getPlayerEntityId( session );
 				if ( id != null )
 				{
 					EntityData entityData = manager.getEntityData( );
@@ -63,7 +63,7 @@ public class ReadyUpListener implements MessageListener< HostedConnection >
 						{
 							if ( pt.isAlive( ) != readyUp.isReady( ) )
 							{
-								Player newPt = new Player( pt.getAccount( ), pt.getKills( ), pt.getDeaths( ), readyUp.isReady( ) );
+								Player newPt = new Player( pt.getSession( ), pt.getKills( ), pt.getDeaths( ), readyUp.isReady( ) );
 								entityData.setComponent( id, newPt );
 							}
 						}

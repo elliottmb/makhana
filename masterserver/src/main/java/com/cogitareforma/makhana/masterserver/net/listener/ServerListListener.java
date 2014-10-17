@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.cogitareforma.makhana.common.data.Account;
 import com.cogitareforma.makhana.common.data.ServerStatus;
+import com.cogitareforma.makhana.common.data.Session;
 import com.cogitareforma.makhana.common.net.msg.ServerListRequest;
 import com.cogitareforma.makhana.common.net.msg.ServerListResponse;
 import com.cogitareforma.makhana.masterserver.net.MasterServerManager;
@@ -27,7 +27,7 @@ public class ServerListListener implements MessageListener< HostedConnection >
 	{
 		logger.log( Level.INFO, "Sending updated ServerList to requesting client " + conn.getAddress( ) );
 
-		ArrayList< ServerStatus > servers = server.getServerStatusManager( ).getAllServerStatuses( );
+		ArrayList< ServerStatus > servers = server.getServerStatusManager( ).getAll( );
 		conn.send( new ServerListResponse( servers ) );
 
 	}
@@ -40,8 +40,8 @@ public class ServerListListener implements MessageListener< HostedConnection >
 		{
 			logger.log( Level.INFO, "Recieved a ServerListRequest from " + source.getAddress( ) );
 
-			Account loggedInUser = server.getSessionManager( ).getFromSession( source );
-			if ( loggedInUser == null || loggedInUser.isServer( ) )
+			Session loggedInUser = server.getSessionManager( ).get( source );
+			if ( loggedInUser == null )
 			{
 				/*
 				 * Account is either null, or is a game server

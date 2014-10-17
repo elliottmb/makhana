@@ -3,10 +3,10 @@ package com.cogitareforma.makhana.masterserver.net.listener;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.cogitareforma.makhana.common.data.Account;
-import com.cogitareforma.makhana.common.net.SessionManager;
+import com.cogitareforma.makhana.common.data.Session;
+import com.cogitareforma.makhana.common.net.DataManager;
+import com.cogitareforma.makhana.common.net.msg.ChatMessage;
 import com.cogitareforma.makhana.common.net.msg.ClientStatusMessage;
-import com.cogitareforma.makhana.common.net.msg.NetworkChatMessage;
 import com.cogitareforma.makhana.masterserver.net.MasterServerManager;
 import com.jme3.network.HostedConnection;
 import com.jme3.network.Message;
@@ -44,26 +44,26 @@ public class ClientStatusListener implements MessageListener< HostedConnection >
 	@Override
 	public void messageReceived( HostedConnection source, Message message )
 	{
-		SessionManager sm = serverManager.getSessionManager( );
+		DataManager< Session > sm = serverManager.getSessionManager( );
 		if ( message instanceof ClientStatusMessage )
 		{
-			Account account = sm.getFromSession( source );
-			if ( account != null )
+			Session session = sm.get( source );
+			if ( session != null )
 			{
 				logger.log( Level.INFO, "Received a ClientStatus message." );
 				ClientStatusMessage clientStatus = ( ClientStatusMessage ) message;
 
-				if ( clientStatus.isInGame( ) != account.isInGame( ) )
+				if ( clientStatus.isInGame( ) != session.isInGame( ) )
 				{
-					account.setInGame( clientStatus.isInGame( ) );
+					session.setInGame( clientStatus.isInGame( ) );
 
-					for ( HostedConnection hc : sm.getAllSessions( ) )
+					for ( HostedConnection hc : sm.getConnections( ) )
 					{
-						Account act = sm.getFromSession( hc );
-						if ( !act.isServer( ) && !act.isInGame( ) )
+						Session sess = sm.get( hc );
+						if ( !sess.isInGame( ) )
 						{
-							hc.send( new NetworkChatMessage( null, String.format( "Server Notice: %s has %s.", account.getAccountName( ),
-									( account.isInGame( ) ? "joined a server" : "left a server" ) ) ) );
+							hc.send( new ChatMessage( null, String.format( "Server Notice: %s has %s.", session.getDisplayName( ),
+									( session.isInGame( ) ? "joined a server" : "left a server" ) ) ) );
 						}
 					}
 					serverManager.broadcastUserList( );

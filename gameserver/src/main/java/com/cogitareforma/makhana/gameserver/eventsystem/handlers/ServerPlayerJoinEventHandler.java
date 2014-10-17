@@ -1,5 +1,6 @@
 package com.cogitareforma.makhana.gameserver.eventsystem.handlers;
 
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.cogitareforma.makhana.common.entities.components.CapitalTrait;
@@ -35,6 +36,8 @@ public class ServerPlayerJoinEventHandler implements EntityEventHandler
 			{
 				EntityId playerEntity = joinEvent.getSource( );
 				EntityData entityData = joinEvent.getEntityEventManager( ).getEntityData( );
+
+				logger.log( Level.INFO, "Processing ServerPlayerJoinEvent for " + playerEntity );
 
 				int x = 0;
 				int y = 0;

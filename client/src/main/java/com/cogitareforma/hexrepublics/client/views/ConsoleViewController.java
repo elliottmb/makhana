@@ -75,7 +75,7 @@ public class ConsoleViewController extends GeneralController
 		{
 			if ( getApp( ).authenticated( ) )
 			{
-				console.output( getApp( ).getMasterConnManager( ).getAccount( ).getAccountName( ) );
+				console.output( getApp( ).getMasterConnManager( ).getSession( ).getDisplayName( ) );
 			}
 			else
 			{

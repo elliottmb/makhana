@@ -13,7 +13,6 @@ import javax.sql.DataSource;
 
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
-import com.cogitareforma.makhana.common.data.Account;
 import com.cogitareforma.makhana.common.data.ServerStatus;
 import com.cogitareforma.makhana.common.net.msg.ServerStatusRequest;
 import com.cogitareforma.makhana.common.util.YamlConfig;
@@ -51,7 +50,7 @@ public class MasterServer extends SimpleApplication
 				}
 				if ( "status".equals( line ) )
 				{
-					List< HostedConnection > connections = masterServer.getMasterServerManager( ).getSessionManager( ).getAllSessions( );
+					List< HostedConnection > connections = masterServer.getMasterServerManager( ).getSessionManager( ).getConnections( );
 					if ( connections.size( ) > 0 )
 					{
 						StringBuilder sb = new StringBuilder( );
@@ -59,7 +58,7 @@ public class MasterServer extends SimpleApplication
 						for ( HostedConnection hc : connections )
 						{
 							sb.append( String.format( "%s: %s - %s \n", hc.getId( ), hc.getAddress( ), masterServer
-									.getMasterServerManager( ).getSessionManager( ).getFromSession( hc ) ) );
+									.getMasterServerManager( ).getSessionManager( ).get( hc ) ) );
 						}
 						logger.log( Level.INFO, sb.toString( ) );
 					}
@@ -70,21 +69,18 @@ public class MasterServer extends SimpleApplication
 				}
 				if ( "srvstatus".equals( line ) )
 				{
-					List< HostedConnection > connections = masterServer.getMasterServerManager( ).getSessionManager( ).getAllSessions( );
+
+					List< HostedConnection > connections = masterServer.getMasterServerManager( ).getServerStatusManager( )
+							.getConnections( );
 					if ( connections.size( ) > 0 )
 					{
 						for ( HostedConnection hc : connections )
 						{
-							Account act = masterServer.getMasterServerManager( ).getSessionManager( ).getFromSession( hc );
-							if ( act.isServer( ) )
-							{
-								hc.send( new ServerStatusRequest( ) );
-							}
-						}
-						for ( ServerStatus ss : masterServer.getMasterServerManager( ).getServerStatusManager( ).getAllServerStatuses( ) )
-						{
+							ServerStatus ss = masterServer.getMasterServerManager( ).getServerStatusManager( ).get( hc );
 							System.out.println( String.format( "%s - %d / %d - %s", ss.getServerName( ), ss.getCurrentPlayers( ),
 									ss.getMaxPlayers( ), ss.getAddress( ) ) );
+							hc.send( new ServerStatusRequest( ) );
+
 						}
 					}
 					else

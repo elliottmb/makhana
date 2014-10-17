@@ -21,6 +21,7 @@ public class AccountExtractor implements ResultSetExtractor< Account >
 	{
 		Account account = new Account( );
 
+		account.setAccountId( resultSet.getInt( "id" ) );
 		account.setAccountName( resultSet.getString( "accountname" ) );
 		account.setServer( resultSet.getBoolean( "type" ) );
 		account.setHashedPassword( resultSet.getString( "password" ) );

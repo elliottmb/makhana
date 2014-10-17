@@ -8,7 +8,9 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.cogitareforma.makhana.common.data.Account;
+import com.cogitareforma.makhana.common.data.ServerStatus;
+import com.cogitareforma.makhana.common.data.Session;
+import com.cogitareforma.makhana.common.net.DataManager;
 import com.cogitareforma.makhana.common.net.SerializerRegistrar;
 import com.cogitareforma.makhana.common.net.ServerManager;
 import com.cogitareforma.makhana.common.net.msg.ServerStatusRequest;
@@ -31,7 +33,7 @@ public class MasterServerManager extends ServerManager< MasterServer >
 	/**
 	 * This MasterServerManager's server status manager
 	 */
-	private ServerStatusManager serverStatusManager;
+	private DataManager< ServerStatus > serverStatusManager;
 
 	/**
 	 * Creates an instance of the MasterServerManager with the supplied owning
@@ -43,7 +45,7 @@ public class MasterServerManager extends ServerManager< MasterServer >
 	public MasterServerManager( MasterServer app )
 	{
 		super( app );
-		this.serverStatusManager = new ServerStatusManager( );
+		this.serverStatusManager = new DataManager< ServerStatus >( );
 		try
 		{
 			KeyPairGenerator kpg = KeyPairGenerator.getInstance( "RSA" );
@@ -64,22 +66,22 @@ public class MasterServerManager extends ServerManager< MasterServer >
 	{
 		logger.log( Level.INFO, "Sending updated UserList to all active Game Clients" );
 
-		List< HostedConnection > connections = getSessionManager( ).getAllSessions( );
+		List< HostedConnection > connections = getSessionManager( ).getConnections( );
 		if ( connections.size( ) > 0 )
 		{
 			ArrayList< String > users = new ArrayList< String >( );
 			for ( HostedConnection hc : connections )
 			{
-				Account act = getSessionManager( ).getFromSession( hc );
-				if ( !act.isServer( ) && !act.isInGame( ) )
+				Session act = getSessionManager( ).get( hc );
+				if ( !act.isInGame( ) )
 				{
-					users.add( act.getAccountName( ) );
+					users.add( act.getDisplayName( ) );
 				}
 			}
 			for ( HostedConnection hc : connections )
 			{
-				Account act = getSessionManager( ).getFromSession( hc );
-				if ( !act.isServer( ) && !act.isInGame( ) )
+				Session act = getSessionManager( ).get( hc );
+				if ( !act.isInGame( ) )
 				{
 					hc.send( new UserListResponse( users ) );
 				}
@@ -97,7 +99,7 @@ public class MasterServerManager extends ServerManager< MasterServer >
 	 * 
 	 * @return the ServerStatusManager associated with this server
 	 */
-	public ServerStatusManager getServerStatusManager( )
+	public DataManager< ServerStatus > getServerStatusManager( )
 	{
 		return serverStatusManager;
 	}
@@ -107,7 +109,7 @@ public class MasterServerManager extends ServerManager< MasterServer >
 	 */
 	public void requestCurrentServerStatuses( )
 	{
-		for ( HostedConnection hc : getServerStatusManager( ).getAllGameServerConnections( ) )
+		for ( HostedConnection hc : getServerStatusManager( ).getConnections( ) )
 		{
 			hc.send( new ServerStatusRequest( ) );
 		}

@@ -5,7 +5,7 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.cogitareforma.makhana.common.data.Account;
+import com.cogitareforma.makhana.common.data.Session;
 import com.cogitareforma.makhana.common.entities.ComponentUtil;
 import com.cogitareforma.makhana.common.entities.components.LocationTrait;
 import com.cogitareforma.makhana.common.entities.components.MoveableTrait;
@@ -80,8 +80,8 @@ public class EntityRequestListener implements MessageListener< HostedConnection 
 						Entity owner = entityData.getEntity( ownerId, Player.class );
 						if ( owner != null && owner.get( Player.class ) != null )
 						{
-							Account act = manager.getSessionManager( ).getFromSession( source );
-							if ( owner.get( Player.class ).getAccount( ).equals( act ) )
+							Session session = manager.getSessionManager( ).get( source );
+							if ( owner.get( Player.class ).getSession( ).equals( session ) )
 							{
 								/*
 								 * TODO: More validation, need to check that all
@@ -206,8 +206,8 @@ public class EntityRequestListener implements MessageListener< HostedConnection 
 
 						if ( owner != null && owner.get( Player.class ) != null )
 						{
-							Account act = manager.getSessionManager( ).getFromSession( source );
-							if ( owner.get( Player.class ).getAccount( ).equals( act ) )
+							Session session = manager.getSessionManager( ).get( source );
+							if ( owner.get( Player.class ).getSession( ).equals( session ) )
 							{
 								entityData.removeEntity( entityMsg.getEntityId( ) );
 								source.send( new EntityResponse( entityMsg.getEntityId( ), EntityDeletionRequest.class.getSimpleName( ),

@@ -8,9 +8,9 @@ import java.util.logging.Logger;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-import com.cogitareforma.makhana.common.data.Account;
-import com.cogitareforma.makhana.common.net.SessionManager;
-import com.cogitareforma.makhana.common.net.msg.NetworkChatMessage;
+import com.cogitareforma.makhana.common.data.Session;
+import com.cogitareforma.makhana.common.net.DataManager;
+import com.cogitareforma.makhana.common.net.msg.ChatMessage;
 import com.cogitareforma.makhana.gameserver.net.GameServerManager;
 import com.jme3.network.HostedConnection;
 import com.jme3.network.Message;
@@ -18,16 +18,15 @@ import com.jme3.network.MessageListener;
 
 /**
  * 
- * @author Justin Kaufman
  * @author Elliott Butler
  * 
  */
-public class NetworkChatListener implements MessageListener< HostedConnection >
+public class ChatListener implements MessageListener< HostedConnection >
 {
 	/**
 	 * The logger for this class.
 	 */
-	private final static Logger logger = Logger.getLogger( NetworkChatListener.class.getName( ) );
+	private final static Logger logger = Logger.getLogger( ChatListener.class.getName( ) );
 
 	private final static int chatInterval = 500;
 
@@ -41,7 +40,7 @@ public class NetworkChatListener implements MessageListener< HostedConnection >
 	 */
 	private Map< String, Pair< Date, Boolean > > chatTime;
 
-	public NetworkChatListener( GameServerManager server )
+	public ChatListener( GameServerManager server )
 	{
 		this.server = server;
 		this.chatTime = new LinkedHashMap< String, Pair< Date, Boolean > >( );
@@ -54,14 +53,14 @@ public class NetworkChatListener implements MessageListener< HostedConnection >
 	 * @param msg
 	 *            the NetworkChatMessage to send
 	 */
-	private void broadcastMessage( NetworkChatMessage msg )
+	private void broadcastMessage( ChatMessage msg )
 	{
-		SessionManager sm = server.getSessionManager( );
-		for ( HostedConnection conn : sm.getAllSessions( ) )
+		DataManager< Session > sm = server.getSessionManager( );
+		for ( HostedConnection conn : sm.getConnections( ) )
 		{
-			Account act = sm.getFromSession( conn );
-			/* If the account is null or is that of a game server, continue */
-			if ( act == null )
+			Session session = sm.get( conn );
+			/* If the account is null, continue */
+			if ( session == null )
 			{
 				continue;
 			}
@@ -73,12 +72,12 @@ public class NetworkChatListener implements MessageListener< HostedConnection >
 	public void messageReceived( HostedConnection source, Message message )
 	{
 
-		if ( message instanceof NetworkChatMessage )
+		if ( message instanceof ChatMessage )
 		{
-			NetworkChatMessage msg = ( NetworkChatMessage ) message;
+			ChatMessage msg = ( ChatMessage ) message;
 
-			Account loggedInUser = server.getSessionManager( ).getFromSession( source );
-			if ( loggedInUser == null || !loggedInUser.equals( msg.getAccount( ) ) )
+			Session loggedInUser = server.getSessionManager( ).get( source );
+			if ( loggedInUser == null || !loggedInUser.equals( msg.getSession( ) ) )
 			{
 				/*
 				 * Account is either null, is not the same as the logged in
@@ -88,22 +87,22 @@ public class NetworkChatListener implements MessageListener< HostedConnection >
 			}
 
 			// Basic spam prevention.
-			Pair< Date, Boolean > lastMessage = chatTime.get( loggedInUser.getAccountName( ) );
+			Pair< Date, Boolean > lastMessage = chatTime.get( loggedInUser.getDisplayName( ) );
 			Date timeNow = new Date( );
 			if ( lastMessage == null || lastMessage.getLeft( ).getTime( ) <= timeNow.getTime( ) - chatInterval )
 			{
-				logger.log( Level.INFO, "Chat -> " + msg.getAccount( ).getAccountName( ) + ": " + msg.getMessage( ) );
-				chatTime.put( loggedInUser.getAccountName( ), Pair.of( timeNow, false ) );
+				logger.log( Level.INFO, "Chat -> " + msg.getSession( ).getDisplayName( ) + ": " + msg.getMessage( ) );
+				chatTime.put( loggedInUser.getDisplayName( ), Pair.of( timeNow, false ) );
 				broadcastMessage( msg );
 			}
 			else
 			{
 				if ( lastMessage.getRight( ) == false )
 				{
-					logger.log( Level.INFO, "Chat -> " + msg.getAccount( ).getAccountName( ) + " is spamming the chat." );
+					logger.log( Level.INFO, "Chat -> " + msg.getSession( ).getDisplayName( ) + " is spamming the chat." );
 					sendNotice( source, String.format( "Server Warning: You are spamming the chat, please wait %.1f seconds.",
 							( chatInterval ) / 1000.0 ) );
-					chatTime.put( loggedInUser.getAccountName( ), Pair.of( timeNow, true ) );
+					chatTime.put( loggedInUser.getDisplayName( ), Pair.of( timeNow, true ) );
 				}
 			}
 		}
@@ -117,7 +116,7 @@ public class NetworkChatListener implements MessageListener< HostedConnection >
 	 */
 	private void sendNotice( HostedConnection conn, String notice )
 	{
-		conn.send( new NetworkChatMessage( null, notice ) );
+		conn.send( new ChatMessage( null, notice ) );
 	}
 
 }

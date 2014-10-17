@@ -48,7 +48,7 @@ public class SessionListener implements MessageListener< Client >
 			logger.log( Level.INFO, "Received an authentication response." );
 			LoginResponse response = ( LoginResponse ) message;
 			logger.log( Level.INFO, "Sending authentication response to the controller." );
-			manager.setAccount( response.getAccount( ) );
+			manager.setSession( response.getSession( ) );
 			if ( response.getNotice( ) != null )
 			{
 				logger.log( Level.INFO, response.getNotice( ) );

@@ -98,7 +98,7 @@ public class LobbyViewController extends GeneralPlayingController
 				int playerCount = 1;
 				for ( EntityId id : playerSet )
 				{
-					String name = entityData.getComponent( id, Player.class ).getAccount( ).getAccountName( );
+					String name = entityData.getComponent( id, Player.class ).getSession( ).getDisplayName( );
 					players.findNiftyControl( String.format( "player%sname", playerCount ), Label.class ).setText( name );
 					playerCount++;
 				}

@@ -310,7 +310,7 @@ public class ClientMain extends SimpleApplication
 				// masterConnection.sendLogin( accountname, password, false );
 				// TODO
 				masterConnection.sendLogin( accountname, password );
-				logger.log( Level.INFO, "Account: " + masterConnection.getAccount( ) );
+				logger.log( Level.INFO, "Account: " + masterConnection.getSession( ) );
 			}
 			return null;
 		} );

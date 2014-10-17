@@ -25,6 +25,8 @@ public class Account
 	 */
 	private final static Logger logger = Logger.getLogger( Account.class.getName( ) );
 
+	private int accountId;
+
 	/**
 	 * The account's accountName.
 	 */
@@ -41,14 +43,14 @@ public class Account
 	private transient String hashedPassword;
 
 	/**
-	 * The account's type (false = user, true = server)
-	 */
-	private transient boolean isServer;
-
-	/**
 	 * If the account is currently in game (trivially true for servers)
 	 */
 	private transient boolean inGame;
+
+	/**
+	 * The account's type (false = user, true = server)
+	 */
+	private transient boolean isServer;
 
 	/**
 	 * Used by the serializer.
@@ -82,7 +84,15 @@ public class Account
 		if ( obj.getClass( ) != getClass( ) )
 			return false;
 		Account acct = ( Account ) obj;
-		return new EqualsBuilder( ).append( accountName, acct.accountName ).isEquals( );
+		return new EqualsBuilder( ).append( accountId, acct.accountId ).isEquals( );
+	}
+
+	/**
+	 * @return the accountId
+	 */
+	public int getAccountId( )
+	{
+		return accountId;
 	}
 
 	/**
@@ -157,6 +167,15 @@ public class Account
 		}
 		logger.log( Level.INFO, "Password was rejected." );
 		return false;
+	}
+
+	/**
+	 * @param accountId
+	 *            the accountId to set
+	 */
+	public void setAccountId( int accountId )
+	{
+		this.accountId = accountId;
 	}
 
 	/**

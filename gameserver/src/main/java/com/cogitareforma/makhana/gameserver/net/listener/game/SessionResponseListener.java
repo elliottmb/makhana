@@ -3,8 +3,8 @@ package com.cogitareforma.makhana.gameserver.net.listener.game;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.cogitareforma.makhana.common.net.msg.AccountResponse;
-import com.cogitareforma.makhana.common.net.msg.AccountVerificationRequest;
+import com.cogitareforma.makhana.common.net.msg.SessionResponse;
+import com.cogitareforma.makhana.common.net.msg.SessionVerificationRequest;
 import com.cogitareforma.makhana.gameserver.net.GameServerManager;
 import com.jme3.network.HostedConnection;
 import com.jme3.network.Message;
@@ -14,13 +14,13 @@ import com.jme3.network.MessageListener;
  * 
  * @author Elliott Butler
  */
-public class AccountResponseListener implements MessageListener< HostedConnection >
+public class SessionResponseListener implements MessageListener< HostedConnection >
 {
 
 	/**
 	 * The logger for this class.
 	 */
-	private final static Logger logger = Logger.getLogger( AccountResponseListener.class.getName( ) );
+	private final static Logger logger = Logger.getLogger( SessionResponseListener.class.getName( ) );
 
 	/**
 	 * The server manager
@@ -33,7 +33,7 @@ public class AccountResponseListener implements MessageListener< HostedConnectio
 	 * @param manager
 	 *            the server manager
 	 */
-	public AccountResponseListener( GameServerManager manager )
+	public SessionResponseListener( GameServerManager manager )
 	{
 		this.manager = manager;
 	}
@@ -41,25 +41,25 @@ public class AccountResponseListener implements MessageListener< HostedConnectio
 	@Override
 	public void messageReceived( HostedConnection source, Message message )
 	{
-		if ( message instanceof AccountResponse )
+		if ( message instanceof SessionResponse )
 		{
 			logger.log( Level.INFO, "Received an AccountResponse from " + source.getAddress( ) );
-			AccountResponse msg = ( AccountResponse ) message;
-			if ( msg.getAccount( ) == null )
+			SessionResponse msg = ( SessionResponse ) message;
+			if ( msg.getSession( ) == null )
 			{
 				logger.log( Level.INFO, "Account from " + source.getAddress( ) + " is null, dropping connection." );
 				source.close( "Could not authenticate a null account" );
 				return;
 			}
-			logger.log( Level.INFO, "Account from " + source.getAddress( ) + " has name: " + msg.getAccount( ).getAccountName( ) );
+			logger.log( Level.INFO, "Account from " + source.getAddress( ) + " has name: " + msg.getSession( ).getDisplayName( ) );
 
 			// Add the session temporarily
-			manager.getSessionManager( ).put( source, msg.getAccount( ) );
+			manager.getSessionManager( ).put( source, msg.getSession( ) );
 
 			if ( manager.getApp( ).isOnlineMode( ) )
 			{
 				// Send off a verification request
-				manager.getApp( ).getMasterConnManager( ).send( new AccountVerificationRequest( msg.getAccount( ) ) );
+				manager.getApp( ).getMasterConnManager( ).send( new SessionVerificationRequest( msg.getSession( ) ) );
 			}
 		}
 	}

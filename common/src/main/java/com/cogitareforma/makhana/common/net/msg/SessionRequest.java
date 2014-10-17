@@ -9,12 +9,12 @@ import com.jme3.network.serializing.Serializable;
  * @author Elliott Butler
  */
 @Serializable
-public class AccountRequest extends AbstractMessage
+public class SessionRequest extends AbstractMessage
 {
 	/**
 	 * Used by serializer.
 	 */
-	public AccountRequest( )
+	public SessionRequest( )
 	{
 	}
 
