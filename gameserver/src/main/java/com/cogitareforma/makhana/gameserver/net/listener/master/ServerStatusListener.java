@@ -5,7 +5,7 @@ import java.util.logging.Logger;
 
 import com.cogitareforma.makhana.common.net.msg.ServerStatusRequest;
 import com.cogitareforma.makhana.common.net.msg.ServerStatusResponse;
-import com.cogitareforma.makhana.gameserver.net.GameMasterConnManager;
+import com.cogitareforma.makhana.gameserver.net.MasterConnectionManager;
 import com.jme3.network.Client;
 import com.jme3.network.Message;
 import com.jme3.network.MessageListener;
@@ -25,7 +25,7 @@ public class ServerStatusListener implements MessageListener< Client >
 	/**
 	 * The servers master connection manager.
 	 */
-	private GameMasterConnManager manager;
+	private MasterConnectionManager manager;
 
 	/**
 	 * Constructor for ServerStatusListener. Sets its master connection manager.
@@ -33,7 +33,7 @@ public class ServerStatusListener implements MessageListener< Client >
 	 * @param manager
 	 *            the master connection manager to set.
 	 */
-	public ServerStatusListener( GameMasterConnManager manager )
+	public ServerStatusListener( MasterConnectionManager manager )
 	{
 		this.manager = manager;
 	}

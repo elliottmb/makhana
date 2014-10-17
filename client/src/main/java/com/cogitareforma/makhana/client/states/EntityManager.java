@@ -1,4 +1,4 @@
-package com.cogitareforma.hexrepublics.client.states;
+package com.cogitareforma.makhana.client.states;
 
 import java.util.Arrays;
 import java.util.Collections;

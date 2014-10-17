@@ -8,7 +8,6 @@ import com.jme3.network.serializing.Serializable;
  * AuthResponse is a DAO class that represents the server's response to an
  * authentication request.
  * 
- * @author Justin Kaufman
  * @author Elliott Butler
  */
 @Serializable

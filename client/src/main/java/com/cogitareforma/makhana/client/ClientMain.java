@@ -3,12 +3,12 @@ package com.cogitareforma.makhana.client;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.cogitareforma.hexrepublics.client.net.ClientGameConnManager;
-import com.cogitareforma.hexrepublics.client.net.ClientMasterConnManager;
-import com.cogitareforma.hexrepublics.client.states.EntityManager;
-import com.cogitareforma.hexrepublics.client.states.WorldManager;
-import com.cogitareforma.hexrepublics.client.util.NiftyFactory;
-import com.cogitareforma.hexrepublics.client.util.PlayerTraitListener;
+import com.cogitareforma.makhana.client.net.GameConnectionManager;
+import com.cogitareforma.makhana.client.net.MasterConnectionManager;
+import com.cogitareforma.makhana.client.states.EntityManager;
+import com.cogitareforma.makhana.client.states.WorldManager;
+import com.cogitareforma.makhana.client.util.NiftyFactory;
+import com.cogitareforma.makhana.client.util.PlayerTraitListener;
 import com.cogitareforma.makhana.common.entities.components.Player;
 import com.cogitareforma.makhana.common.util.YamlConfig;
 import com.jme3.app.SimpleApplication;
@@ -73,12 +73,12 @@ public class ClientMain extends SimpleApplication
 	/**
 	 * The Client's master connection manager.
 	 */
-	private ClientMasterConnManager masterConnection;
+	private MasterConnectionManager masterConnection;
 
 	/**
 	 * The Client's game server connection manager.
 	 */
-	private ClientGameConnManager gameConnection;
+	private GameConnectionManager gameConnection;
 
 	/**
 	 * The Client's world manager.
@@ -188,7 +188,7 @@ public class ClientMain extends SimpleApplication
 	 * 
 	 * @return Client's game connection manager.
 	 */
-	public ClientGameConnManager getGameConnManager( )
+	public GameConnectionManager getGameConnManager( )
 	{
 		return gameConnection;
 	}
@@ -198,7 +198,7 @@ public class ClientMain extends SimpleApplication
 	 * 
 	 * @return Client's master connection manager.
 	 */
-	public ClientMasterConnManager getMasterConnManager( )
+	public MasterConnectionManager getMasterConnManager( )
 	{
 		return masterConnection;
 	}
@@ -408,8 +408,8 @@ public class ClientMain extends SimpleApplication
 		// test multiview for gui
 		guiViewPort.getCamera( ).setViewPort( 0f, 1f, 0f, 1f );
 
-		masterConnection = new ClientMasterConnManager( this );
-		gameConnection = new ClientGameConnManager( this );
+		masterConnection = new MasterConnectionManager( this );
+		gameConnection = new GameConnectionManager( this );
 
 		inputManager.addMapping( "showConsole", new KeyTrigger( ( Integer ) yamlConfig.get( "client.input.consoleKey" ) ) );
 		inputManager.addMapping( "hideFPS", new KeyTrigger( KeyInput.KEY_F12 ) );

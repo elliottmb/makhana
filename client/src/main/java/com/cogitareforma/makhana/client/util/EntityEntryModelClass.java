@@ -1,4 +1,4 @@
-package com.cogitareforma.hexrepublics.client.util;
+package com.cogitareforma.makhana.client.util;
 
 import com.simsilica.es.EntityId;
 

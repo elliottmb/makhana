@@ -10,8 +10,8 @@ import java.util.logging.Logger;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-import com.cogitareforma.hexrepublics.client.states.EntityManager;
-import com.cogitareforma.hexrepublics.client.util.EntityEntryModelClass;
+import com.cogitareforma.makhana.client.states.EntityManager;
+import com.cogitareforma.makhana.client.util.EntityEntryModelClass;
 import com.cogitareforma.makhana.common.entities.ActionType;
 import com.cogitareforma.makhana.common.entities.ComponentUtil;
 import com.cogitareforma.makhana.common.entities.components.ActionTrait;

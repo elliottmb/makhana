@@ -3,7 +3,7 @@ package com.cogitareforma.hexrepublics.client.views;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.cogitareforma.hexrepublics.client.util.NiftyFactory;
+import com.cogitareforma.makhana.client.util.NiftyFactory;
 import com.jme3.app.Application;
 import com.jme3.app.state.AppStateManager;
 

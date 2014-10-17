@@ -1,9 +1,9 @@
-package com.cogitareforma.hexrepublics.client.net.gamelistener;
+package com.cogitareforma.makhana.client.net.gamelistener;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.cogitareforma.hexrepublics.client.net.ClientGameConnManager;
+import com.cogitareforma.makhana.client.net.GameConnectionManager;
 import com.cogitareforma.makhana.common.net.msg.EntityResponse;
 import com.jme3.network.Client;
 import com.jme3.network.Message;
@@ -25,7 +25,7 @@ public class EntityResponseListener implements MessageListener< Client >
 	/**
 	 * The client's manager.
 	 */
-	private ClientGameConnManager manager;
+	private GameConnectionManager manager;
 
 	/**
 	 * The default constructor accepts the client's manager.
@@ -33,7 +33,7 @@ public class EntityResponseListener implements MessageListener< Client >
 	 * @param manager
 	 *            the client's manager
 	 */
-	public EntityResponseListener( ClientGameConnManager manager )
+	public EntityResponseListener( GameConnectionManager manager )
 	{
 		this.manager = manager;
 	}

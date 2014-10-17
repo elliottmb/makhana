@@ -6,7 +6,7 @@ import java.util.logging.Logger;
 import com.cogitareforma.makhana.common.data.Session;
 import com.cogitareforma.makhana.common.net.DataManager;
 import com.cogitareforma.makhana.common.net.msg.SessionVerificationResponse;
-import com.cogitareforma.makhana.gameserver.net.GameMasterConnManager;
+import com.cogitareforma.makhana.gameserver.net.MasterConnectionManager;
 import com.jme3.network.Client;
 import com.jme3.network.HostedConnection;
 import com.jme3.network.Message;
@@ -27,7 +27,7 @@ public class SessionVerificationResponseListener implements MessageListener< Cli
 	/**
 	 * The client's controller.
 	 */
-	private GameMasterConnManager manager;
+	private MasterConnectionManager manager;
 
 	/**
 	 * The default constructor accepts the server's controller.
@@ -35,7 +35,7 @@ public class SessionVerificationResponseListener implements MessageListener< Cli
 	 * @param manager
 	 *            the client's controller
 	 */
-	public SessionVerificationResponseListener( GameMasterConnManager manager )
+	public SessionVerificationResponseListener( MasterConnectionManager manager )
 	{
 		this.manager = manager;
 	}

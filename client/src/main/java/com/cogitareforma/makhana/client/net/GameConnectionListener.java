@@ -1,29 +1,29 @@
-package com.cogitareforma.hexrepublics.client.net;
+package com.cogitareforma.makhana.client.net;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.cogitareforma.hexrepublics.client.util.NiftyFactory;
 import com.cogitareforma.hexrepublics.client.views.GeneralController;
 import com.cogitareforma.hexrepublics.client.views.HudViewController;
 import com.cogitareforma.hexrepublics.client.views.LobbyViewController;
+import com.cogitareforma.makhana.client.util.NiftyFactory;
 import com.cogitareforma.makhana.common.net.msg.ClientStatusMessage;
 import com.jme3.network.Client;
 import com.jme3.network.ClientStateListener;
 import com.jme3.network.ErrorListener;
 import com.simsilica.es.client.RemoteEntityData;
 
-public class ClientGameConnListener implements ClientStateListener, ErrorListener< Client >
+public class GameConnectionListener implements ClientStateListener, ErrorListener< Client >
 {
 	/**
 	 * The logger for this class.
 	 */
-	private final static Logger logger = Logger.getLogger( ClientGameConnListener.class.getName( ) );
+	private final static Logger logger = Logger.getLogger( GameConnectionListener.class.getName( ) );
 
 	/**
 	 * The client's manager.
 	 */
-	private ClientGameConnManager manager;
+	private GameConnectionManager manager;
 
 	/**
 	 * The default constructor accepts the client's manager.
@@ -31,7 +31,7 @@ public class ClientGameConnListener implements ClientStateListener, ErrorListene
 	 * @param manager
 	 *            the client's manager
 	 */
-	public ClientGameConnListener( ClientGameConnManager manager )
+	public GameConnectionListener( GameConnectionManager manager )
 	{
 		this.manager = manager;
 	}
@@ -50,7 +50,7 @@ public class ClientGameConnListener implements ClientStateListener, ErrorListene
 		gController.gotoScreen( "lobby", false, true, false, null, null );
 
 		logger.log( Level.INFO, "Informing Master Server of in game status" );
-		ClientMasterConnManager masterConnManager = manager.getApp( ).getMasterConnManager( );
+		MasterConnectionManager masterConnManager = manager.getApp( ).getMasterConnManager( );
 		if ( masterConnManager.isConnected( ) )
 		{
 			manager.getApp( ).getMasterConnManager( ).send( new ClientStatusMessage( true ) );
@@ -79,7 +79,7 @@ public class ClientGameConnListener implements ClientStateListener, ErrorListene
 		manager.setRemoteEntityData( null );
 
 		logger.log( Level.INFO, "Informing Master Server of out of game status" );
-		ClientMasterConnManager masterConnManager = manager.getApp( ).getMasterConnManager( );
+		MasterConnectionManager masterConnManager = manager.getApp( ).getMasterConnManager( );
 		if ( masterConnManager.isConnected( ) )
 		{
 			manager.getApp( ).getMasterConnManager( ).send( new ClientStatusMessage( false ) );

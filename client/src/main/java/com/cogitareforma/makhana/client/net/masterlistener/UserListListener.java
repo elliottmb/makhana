@@ -1,9 +1,9 @@
-package com.cogitareforma.hexrepublics.client.net.masterlistener;
+package com.cogitareforma.makhana.client.net.masterlistener;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.cogitareforma.hexrepublics.client.net.ClientMasterConnManager;
+import com.cogitareforma.makhana.client.net.MasterConnectionManager;
 import com.cogitareforma.makhana.common.net.msg.UserListResponse;
 import com.jme3.network.Client;
 import com.jme3.network.Message;
@@ -16,7 +16,7 @@ public class UserListListener implements MessageListener< Client >
 	/**
 	 * The client's controller.
 	 */
-	private ClientMasterConnManager manager;
+	private MasterConnectionManager manager;
 
 	/**
 	 * The default constructor accepts the client's manager.
@@ -24,7 +24,7 @@ public class UserListListener implements MessageListener< Client >
 	 * @param manager
 	 *            the client's manager
 	 */
-	public UserListListener( ClientMasterConnManager manager )
+	public UserListListener( MasterConnectionManager manager )
 	{
 		this.manager = manager;
 	}

@@ -1,4 +1,4 @@
-package com.cogitareforma.hexrepublics.client.net;
+package com.cogitareforma.makhana.client.net;
 
 import java.util.List;
 import java.util.logging.Level;
@@ -20,17 +20,17 @@ import de.lessvoid.nifty.controls.Chat;
  * @author Elliott Butler
  * 
  */
-public class ClientGameConnManager extends ConnectionManager< ClientMain >
+public class GameConnectionManager extends ConnectionManager< ClientMain >
 {
 
 	/**
 	 * The logger for this class.
 	 */
-	private final static Logger logger = Logger.getLogger( ClientGameConnManager.class.getName( ) );
+	private final static Logger logger = Logger.getLogger( GameConnectionManager.class.getName( ) );
 
 	private RemoteEntityData remoteEntityData;
 
-	public ClientGameConnManager( ClientMain app )
+	public GameConnectionManager( ClientMain app )
 	{
 		super( app );
 	}
@@ -68,13 +68,12 @@ public class ClientGameConnManager extends ConnectionManager< ClientMain >
 
 			/* add listeners */
 			logger.log( Level.FINE, "Registering connection listener with client." );
-			ClientGameConnListener connListener = new ClientGameConnListener( this );
+			GameConnectionListener connListener = new GameConnectionListener( this );
 			getClient( ).addClientStateListener( connListener );
 			getClient( ).addErrorListener( connListener );
 
 			logger.log( Level.FINE, "Registering message listeners with client." );
-			List< Object > messageListeners = PackageUtils.createAllInPackage( "com.cogitareforma.hexrepublics.client.net.gamelistener",
-					this );
+			List< Object > messageListeners = PackageUtils.createAllInPackage( "com.cogitareforma.makhana.client.net.gamelistener", this );
 			for ( Object messageListener : messageListeners )
 			{
 				getClient( ).addMessageListener( ( MessageListener ) messageListener );

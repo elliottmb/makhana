@@ -1,9 +1,9 @@
-package com.cogitareforma.hexrepublics.client.net.masterlistener;
+package com.cogitareforma.makhana.client.net.masterlistener;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.cogitareforma.hexrepublics.client.net.ClientMasterConnManager;
+import com.cogitareforma.makhana.client.net.MasterConnectionManager;
 import com.cogitareforma.makhana.common.net.msg.ChatMessage;
 import com.jme3.network.Client;
 import com.jme3.network.Message;
@@ -26,7 +26,7 @@ public class ChatListener implements MessageListener< Client >
 	/**
 	 * The client's manager.
 	 */
-	private ClientMasterConnManager manager;
+	private MasterConnectionManager manager;
 
 	/**
 	 * The default constructor accepts the client's manager.
@@ -34,7 +34,7 @@ public class ChatListener implements MessageListener< Client >
 	 * @param manager
 	 *            the client's manager
 	 */
-	public ChatListener( ClientMasterConnManager manager )
+	public ChatListener( MasterConnectionManager manager )
 	{
 		this.manager = manager;
 	}

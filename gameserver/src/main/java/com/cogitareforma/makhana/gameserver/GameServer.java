@@ -14,8 +14,8 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
 import com.cogitareforma.makhana.common.util.YamlConfig;
-import com.cogitareforma.makhana.gameserver.net.GameMasterConnManager;
 import com.cogitareforma.makhana.gameserver.net.GameServerManager;
+import com.cogitareforma.makhana.gameserver.net.MasterConnectionManager;
 import com.jme3.app.SimpleApplication;
 import com.jme3.network.HostedConnection;
 import com.jme3.system.JmeContext;
@@ -113,7 +113,7 @@ public class GameServer extends SimpleApplication
 	/**
 	 * The client connection manager to the Master Server
 	 */
-	private GameMasterConnManager masterConnManager;
+	private MasterConnectionManager masterConnManager;
 
 	/**
 	 * The port the server will be hosted on
@@ -121,20 +121,6 @@ public class GameServer extends SimpleApplication
 	private int port;
 
 	private boolean onlineMode;
-
-	/**
-	 * Returns if the MasterServer connection manager is logged in
-	 * 
-	 * @return logged in status
-	 */
-	public boolean authenticated( )
-	{
-		if ( masterConnManager != null )
-		{
-			return masterConnManager.isLoggedIn( );
-		}
-		return false;
-	}
 
 	/**
 	 * Returns the parsed command line arguments
@@ -161,7 +147,7 @@ public class GameServer extends SimpleApplication
 	 * 
 	 * @return current GameMasterConnManager instance
 	 */
-	public GameMasterConnManager getMasterConnManager( )
+	public MasterConnectionManager getMasterConnManager( )
 	{
 		return masterConnManager;
 	}
@@ -286,7 +272,7 @@ public class GameServer extends SimpleApplication
 
 		gameServerManager.run( port );
 
-		masterConnManager = new GameMasterConnManager( this );
+		masterConnManager = new MasterConnectionManager( this );
 	}
 
 	@Override

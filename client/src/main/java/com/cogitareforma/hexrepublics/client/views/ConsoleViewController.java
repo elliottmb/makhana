@@ -36,7 +36,7 @@ public class ConsoleViewController extends GeneralController
 		console = nifty.getScreen( "consoleScreen" ).findNiftyControl( "console", Console.class );
 		consoleCommands = new ConsoleCommands( nifty, console );
 		consoleCommands.enableCommandCompletion( true );
-		console.output( "Wecome to Hex Republics!" );
+		console.output( "Wecome to Makhana!" );
 		bindCommands( );
 	}
 

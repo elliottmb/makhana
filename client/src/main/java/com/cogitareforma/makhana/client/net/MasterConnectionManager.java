@@ -1,15 +1,20 @@
-package com.cogitareforma.hexrepublics.client.net;
+package com.cogitareforma.makhana.client.net;
 
+import java.security.Key;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.cogitareforma.makhana.client.ClientMain;
+import com.cogitareforma.makhana.common.data.LoginCredentials;
 import com.cogitareforma.makhana.common.data.ServerStatus;
-import com.cogitareforma.makhana.common.net.MasterConnManager;
+import com.cogitareforma.makhana.common.data.Session;
+import com.cogitareforma.makhana.common.net.ConnectionManager;
 import com.cogitareforma.makhana.common.net.SerializerRegistrar;
 import com.cogitareforma.makhana.common.net.msg.ChatMessage;
+import com.cogitareforma.makhana.common.net.msg.LogoutRequest;
+import com.cogitareforma.makhana.common.net.msg.SecureLoginRequest;
 import com.cogitareforma.makhana.common.net.msg.ServerListResponse;
 import com.cogitareforma.makhana.common.net.msg.UserListResponse;
 import com.cogitareforma.makhana.common.util.PackageUtils;
@@ -22,28 +27,35 @@ import de.lessvoid.nifty.controls.ListBox;
 
 /**
  * 
- * @author Justin Kaufman
  * @author Elliott Butler
  * @author Ryan Grier
  * 
  */
-public class ClientMasterConnManager extends MasterConnManager< ClientMain >
+public class MasterConnectionManager extends ConnectionManager< ClientMain >
 {
 
 	/**
 	 * The logger for this class.
 	 */
-	private final static Logger logger = Logger.getLogger( ClientMasterConnManager.class.getName( ) );
+	private final static Logger logger = Logger.getLogger( MasterConnectionManager.class.getName( ) );
+
+	private Key publicKey;
+
 	/**
 	 * List of authenticated servers.
 	 */
 	private ArrayList< ServerStatus > servers;
 
+	/**
+	 * The account of this connection
+	 */
+	private Session session;
+
 	@SuppressWarnings(
 	{
 			"rawtypes", "unchecked"
 	} )
-	public ClientMasterConnManager( ClientMain app )
+	public MasterConnectionManager( ClientMain app )
 	{
 		super( app );
 		try
@@ -78,11 +90,10 @@ public class ClientMasterConnManager extends MasterConnManager< ClientMain >
 
 			/* add listeners */
 			logger.log( Level.FINE, "Registering connection listener with client." );
-			getClient( ).addClientStateListener( new ClientMasterConnListener( this ) );
+			getClient( ).addClientStateListener( new MasterConnectionListener( this ) );
 
 			logger.log( Level.FINE, "Registering message listeners with client." );
-			List< Object > messageListeners = PackageUtils.createAllInPackage( "com.cogitareforma.hexrepublics.client.net.masterlistener",
-					this );
+			List< Object > messageListeners = PackageUtils.createAllInPackage( "com.cogitareforma.makhana.client.net.masterlistener", this );
 			for ( Object messageListener : messageListeners )
 			{
 				getClient( ).addMessageListener( ( MessageListener ) messageListener );
@@ -99,6 +110,14 @@ public class ClientMasterConnManager extends MasterConnManager< ClientMain >
 	}
 
 	/**
+	 * @return the publicKey
+	 */
+	public Key getPublicKey( )
+	{
+		return publicKey;
+	}
+
+	/**
 	 * Returns the list of current authenticated servers.
 	 * 
 	 * @return List of authenticated servers.
@@ -106,6 +125,26 @@ public class ClientMasterConnManager extends MasterConnManager< ClientMain >
 	public ArrayList< ServerStatus > getServers( )
 	{
 		return servers;
+	}
+
+	/**
+	 * Returns the account of this connection
+	 * 
+	 * @return the account of this connection
+	 */
+	public Session getSession( )
+	{
+		return session;
+	}
+
+	/**
+	 * Returns true if we are logged in, false otherwise.
+	 * 
+	 * @return true if we are logged in, false otherwise
+	 */
+	public boolean isLoggedIn( )
+	{
+		return getSession( ) != null;
 	}
 
 	/**
@@ -213,6 +252,32 @@ public class ClientMasterConnManager extends MasterConnManager< ClientMain >
 	}
 
 	/**
+	 * Sends a login to the MasterServer.
+	 * 
+	 * @param accountName
+	 *            the accountname to auth as
+	 * @param password
+	 *            the password to auth as
+	 * 
+	 */
+	public void sendLogin( String accountName, String password )
+	{
+		logger.log( Level.FINE, "Sending account and pass to the connection." );
+		send( new SecureLoginRequest( new LoginCredentials( accountName, password, null ), getPublicKey( ), false ) );
+	}
+
+	/**
+	 * Sends a logout to the MasterServer.
+	 * 
+	 */
+	public void sendLogout( )
+	{
+		logger.log( Level.FINE, "Sending logout request to the connection." );
+		send( new LogoutRequest( ) );
+		setSession( null );
+	}
+
+	/**
 	 * Sends the chat messages to all current clients.
 	 * 
 	 * @param message
@@ -222,9 +287,30 @@ public class ClientMasterConnManager extends MasterConnManager< ClientMain >
 		send( new ChatMessage( getSession( ), message ) );
 	}
 
+	/**
+	 * @param publicKey
+	 *            the publicKey to set
+	 */
+	public void setPublicKey( Key publicKey )
+	{
+		this.publicKey = publicKey;
+	}
+
 	public void setServers( ArrayList< ServerStatus > servers )
 	{
 		this.servers = servers;
+	}
+
+	/**
+	 * Sets the account of this connection
+	 * 
+	 * @param account
+	 *            the account of this connection
+	 */
+	public void setSession( Session session )
+	{
+		logger.log( Level.INFO, "Setting session: " + session );
+		this.session = session;
 	}
 
 }

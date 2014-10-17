@@ -1,4 +1,4 @@
-package com.cogitareforma.hexrepublics.client.net;
+package com.cogitareforma.makhana.client.net;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -7,17 +7,17 @@ import com.jme3.network.Client;
 import com.jme3.network.ClientStateListener;
 import com.jme3.network.ErrorListener;
 
-public class ClientMasterConnListener implements ClientStateListener, ErrorListener< Client >
+public class MasterConnectionListener implements ClientStateListener, ErrorListener< Client >
 {
 	/**
 	 * The logger for this class.
 	 */
-	private final static Logger logger = Logger.getLogger( ClientMasterConnListener.class.getName( ) );
+	private final static Logger logger = Logger.getLogger( MasterConnectionListener.class.getName( ) );
 
 	/**
 	 * The client's manager.
 	 */
-	private ClientMasterConnManager manager;
+	private MasterConnectionManager manager;
 
 	/**
 	 * The default constructor accepts the client's manager.
@@ -25,7 +25,7 @@ public class ClientMasterConnListener implements ClientStateListener, ErrorListe
 	 * @param controller
 	 *            the client's manager
 	 */
-	public ClientMasterConnListener( ClientMasterConnManager manager )
+	public MasterConnectionListener( MasterConnectionManager manager )
 	{
 		this.manager = manager;
 	}

@@ -7,6 +7,12 @@ import com.jme3.app.Application;
 import com.jme3.network.Client;
 import com.jme3.network.Message;
 
+/**
+ * 
+ * @author Elliott Butler
+ *
+ * @param <A>
+ */
 public class ConnectionManager< A extends Application >
 {
 

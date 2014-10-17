@@ -1,10 +1,10 @@
-package com.cogitareforma.hexrepublics.client.net.masterlistener;
+package com.cogitareforma.makhana.client.net.masterlistener;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.cogitareforma.hexrepublics.client.net.ClientMasterConnManager;
 import com.cogitareforma.hexrepublics.client.views.StartViewController;
+import com.cogitareforma.makhana.client.net.MasterConnectionManager;
 import com.cogitareforma.makhana.common.net.msg.LoginResponse;
 import com.jme3.network.Client;
 import com.jme3.network.Message;
@@ -27,7 +27,7 @@ public class SessionListener implements MessageListener< Client >
 	/**
 	 * The client's manager.
 	 */
-	private ClientMasterConnManager manager;
+	private MasterConnectionManager manager;
 
 	/**
 	 * The default constructor accepts the client's manager.
@@ -35,7 +35,7 @@ public class SessionListener implements MessageListener< Client >
 	 * @param controller
 	 *            the client's manager
 	 */
-	public SessionListener( ClientMasterConnManager manager )
+	public SessionListener( MasterConnectionManager manager )
 	{
 		this.manager = manager;
 	}

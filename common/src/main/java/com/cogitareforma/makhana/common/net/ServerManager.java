@@ -12,7 +12,7 @@ import com.jme3.network.Server;
  * ServerManager is a class that handles the core jMonkeyEngine server component
  * and all connected sessions for a given Application.
  * 
- * @author elliottb
+ * @author Elliott Butler
  * 
  * @param <A>
  *            The owning Application

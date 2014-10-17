@@ -5,7 +5,7 @@ import java.util.logging.Logger;
 
 import com.cogitareforma.makhana.common.data.ServerStatus;
 import com.cogitareforma.makhana.common.net.msg.WelcomeMessage;
-import com.cogitareforma.makhana.gameserver.net.GameMasterConnManager;
+import com.cogitareforma.makhana.gameserver.net.MasterConnectionManager;
 import com.jme3.network.Client;
 import com.jme3.network.Message;
 import com.jme3.network.MessageListener;
@@ -25,7 +25,7 @@ public class WelcomeListener implements MessageListener< Client >
 	/**
 	 * The client's controller.
 	 */
-	private GameMasterConnManager manager;
+	private MasterConnectionManager manager;
 
 	/**
 	 * The default constructor accepts the client's manager.
@@ -33,7 +33,7 @@ public class WelcomeListener implements MessageListener< Client >
 	 * @param manager
 	 *            the client's manage
 	 */
-	public WelcomeListener( GameMasterConnManager manager )
+	public WelcomeListener( MasterConnectionManager manager )
 	{
 		this.manager = manager;
 	}
@@ -44,8 +44,6 @@ public class WelcomeListener implements MessageListener< Client >
 		if ( message instanceof WelcomeMessage )
 		{
 			logger.log( Level.INFO, "Recieved a welcome message from master" );
-			WelcomeMessage wm = ( WelcomeMessage ) message;
-			manager.setPublicKey( wm.getPublicKey( ) );
 
 			ServerStatus ss = manager.getApp( ).getGameServerManager( ).getServerStatus( );
 			if ( ss != null )
