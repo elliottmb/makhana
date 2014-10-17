@@ -6,8 +6,8 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.cogitareforma.hexrepublics.client.ClientMain;
 import com.cogitareforma.hexrepublics.client.views.LoadingViewController;
+import com.cogitareforma.makhana.client.ClientMain;
 import com.cogitareforma.makhana.common.entities.ComponentUtil;
 import com.cogitareforma.makhana.common.entities.components.CapitalTrait;
 import com.cogitareforma.makhana.common.entities.components.Health;

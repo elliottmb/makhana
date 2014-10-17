@@ -1,6 +1,5 @@
 package com.cogitareforma.hexrepublics.client.util;
 
-import com.cogitareforma.hexrepublics.client.DebugGlobals;
 import com.cogitareforma.hexrepublics.client.views.ConsoleViewController;
 import com.cogitareforma.hexrepublics.client.views.HudViewController;
 import com.cogitareforma.hexrepublics.client.views.LoadingViewController;
@@ -10,6 +9,7 @@ import com.cogitareforma.hexrepublics.client.views.OptionsViewController;
 import com.cogitareforma.hexrepublics.client.views.SinglePlayerViewController;
 import com.cogitareforma.hexrepublics.client.views.StartViewController;
 import com.cogitareforma.hexrepublics.client.views.TileViewController;
+import com.cogitareforma.makhana.client.DebugGlobals;
 
 import de.lessvoid.nifty.Nifty;
 import de.lessvoid.nifty.builder.ControlBuilder;

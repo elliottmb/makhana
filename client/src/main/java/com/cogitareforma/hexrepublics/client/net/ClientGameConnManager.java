@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.cogitareforma.hexrepublics.client.ClientMain;
+import com.cogitareforma.makhana.client.ClientMain;
 import com.cogitareforma.makhana.common.net.ConnectionManager;
 import com.cogitareforma.makhana.common.net.SerializerRegistrar;
 import com.cogitareforma.makhana.common.net.msg.NetworkChatMessage;

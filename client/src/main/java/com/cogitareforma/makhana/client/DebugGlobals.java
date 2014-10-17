@@ -1,4 +1,4 @@
-package com.cogitareforma.hexrepublics.client;
+package com.cogitareforma.makhana.client;
 
 /**
  * 

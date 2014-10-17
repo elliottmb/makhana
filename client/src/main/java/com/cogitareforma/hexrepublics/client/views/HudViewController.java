@@ -6,9 +6,9 @@ import java.util.logging.Logger;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-import com.cogitareforma.hexrepublics.client.DebugGlobals;
 import com.cogitareforma.hexrepublics.client.states.EntityManager;
 import com.cogitareforma.hexrepublics.client.util.NiftyFactory;
+import com.cogitareforma.makhana.client.DebugGlobals;
 import com.cogitareforma.makhana.common.entities.ComponentUtil;
 import com.cogitareforma.makhana.common.entities.components.Health;
 import com.cogitareforma.makhana.common.entities.components.LocationTrait;
