@@ -5,6 +5,16 @@ import com.cogitareforma.makhana.common.ui.ScreenContext;
 import com.cogitareforma.makhana.common.ui.ScreenManager;
 import com.cogitareforma.makhana.common.util.YamlConfig;
 import com.jme3.app.Application;
+import com.jme3.input.KeyInput;
+import com.jme3.input.RawInputListener;
+import com.jme3.input.controls.ActionListener;
+import com.jme3.input.controls.AnalogListener;
+import com.jme3.input.event.JoyAxisEvent;
+import com.jme3.input.event.JoyButtonEvent;
+import com.jme3.input.event.KeyInputEvent;
+import com.jme3.input.event.MouseButtonEvent;
+import com.jme3.input.event.MouseMotionEvent;
+import com.jme3.input.event.TouchEvent;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.Camera;
@@ -23,7 +33,10 @@ import com.simsilica.lemur.Slider;
 import com.simsilica.lemur.TextField;
 import com.simsilica.lemur.component.BoxLayout;
 import com.simsilica.lemur.component.QuadBackgroundComponent;
+import com.simsilica.lemur.component.SpringGridLayout;
 import com.simsilica.lemur.core.VersionedReference;
+import com.simsilica.lemur.input.AnalogFunctionListener;
+import com.simsilica.lemur.input.FunctionId;
 
 public class OptionsScreen extends Screen
 {
@@ -43,17 +56,19 @@ public class OptionsScreen extends Screen
 	private Container input;
 	private Container current;
 
-	boolean original = false;
-	boolean rolledPanel = true;
 	private Button graphicsButton;
 	private Button audioButton;
 	private Button inputButton;
-	private TextField northText;
-	private TextField southText;
-	private TextField eastText;
-	private TextField westText;
-	private TextField chatText;
-	private TextField scoreboardText;
+	private Button northButton;
+	private Button southButton;
+	private Button eastButton;
+	private Button westButton;
+	private Button chatButton;
+	private Button scoreboardButton;
+	private Application app;
+	private char buttonKey;
+	private RawInputListener list;
+	private Button currentButton;
 
 	@Override
 	public void cleanup( )
@@ -178,22 +193,174 @@ public class OptionsScreen extends Screen
 				activeContainer( input );
 			}
 		} );
+		northButton = new Button( "North Button: ", "glass" );
+		northButton.addCommands( ButtonAction.Down, new Command< Button >( )
+		{
+			public void execute( Button b )
+			{
+				b.move( 1, -1, 0 );
+			}
+		} );
+		northButton.addCommands( ButtonAction.Up, new Command< Button >( )
+		{
+			public void execute( Button b )
+			{
+				b.move( -1, 1, 0 );
+			}
+		} );
+		northButton.addCommands( ButtonAction.Click, new Command< Button >( )
+		{
+			public void execute( Button b )
+			{
+				System.out.println( "North Clicked" );
+				northButton.setText( "<Press Key>" );
+				activeListener( );
+				setButtonName( northButton );
+			}
+		} );
+		southButton = new Button( "South Button: ", "glass" );
+		southButton.addCommands( ButtonAction.Down, new Command< Button >( )
+		{
+			public void execute( Button b )
+			{
+				b.move( 1, -1, 0 );
+			}
+		} );
+		southButton.addCommands( ButtonAction.Up, new Command< Button >( )
+		{
+			public void execute( Button b )
+			{
+				b.move( -1, 1, 0 );
+			}
+		} );
+		southButton.addCommands( ButtonAction.Click, new Command< Button >( )
+		{
+			public void execute( Button b )
+			{
+				System.out.println( "North Clicked" );
+				southButton.setText( "<Press Key>" );
+				activeListener( );
+				setButtonName( southButton );
+			}
+		} );
+		eastButton = new Button( "East Button: ", "glass" );
+		eastButton.addCommands( ButtonAction.Down, new Command< Button >( )
+		{
+			public void execute( Button b )
+			{
+				b.move( 1, -1, 0 );
+			}
+		} );
+		eastButton.addCommands( ButtonAction.Up, new Command< Button >( )
+		{
+			public void execute( Button b )
+			{
+				b.move( -1, 1, 0 );
+			}
+		} );
+		eastButton.addCommands( ButtonAction.Click, new Command< Button >( )
+		{
+			public void execute( Button b )
+			{
+				System.out.println( "North Clicked" );
+				eastButton.setText( "<Press Key>" );
+				activeListener( );
+				setButtonName( eastButton );
+			}
+		} );
+		westButton = new Button( "West Button: ", "glass" );
+		westButton.addCommands( ButtonAction.Down, new Command< Button >( )
+		{
+			public void execute( Button b )
+			{
+				b.move( 1, -1, 0 );
+			}
+		} );
+		westButton.addCommands( ButtonAction.Up, new Command< Button >( )
+		{
+			public void execute( Button b )
+			{
+				b.move( -1, 1, 0 );
+			}
+		} );
+		westButton.addCommands( ButtonAction.Click, new Command< Button >( )
+		{
+			public void execute( Button b )
+			{
+				System.out.println( "North Clicked" );
+				westButton.setText( "<Press Key>" );
+				activeListener( );
+				setButtonName( westButton );
+			}
+		} );
+		chatButton = new Button( "Chat Button: ", "glass" );
+		chatButton.addCommands( ButtonAction.Down, new Command< Button >( )
+		{
+			public void execute( Button b )
+			{
+				b.move( 1, -1, 0 );
+			}
+		} );
+		chatButton.addCommands( ButtonAction.Up, new Command< Button >( )
+		{
+			public void execute( Button b )
+			{
+				b.move( -1, 1, 0 );
+			}
+		} );
+		chatButton.addCommands( ButtonAction.Click, new Command< Button >( )
+		{
+			public void execute( Button b )
+			{
+				System.out.println( "North Clicked" );
+				chatButton.setText( "<Press Key>" );
+				activeListener( );
+				setButtonName( chatButton );
+			}
+		} );
+		scoreboardButton = new Button( "Score Button: ", "glass" );
+		scoreboardButton.addCommands( ButtonAction.Down, new Command< Button >( )
+		{
+			public void execute( Button b )
+			{
+				b.move( 1, -1, 0 );
+			}
+		} );
+		scoreboardButton.addCommands( ButtonAction.Up, new Command< Button >( )
+		{
+			public void execute( Button b )
+			{
+				b.move( -1, 1, 0 );
+			}
+		} );
+		scoreboardButton.addCommands( ButtonAction.Click, new Command< Button >( )
+		{
+			public void execute( Button b )
+			{
+				System.out.println( "North Clicked" );
+				scoreboardButton.setText( "<Press Key>" );
+				activeListener( );
+				setButtonName( scoreboardButton );
+			}
+		} );
 	}
 
 	private void printInput( )
 	{
-		System.out.println( northText.getText( ) );
-		System.out.println( southText.getText( ) );
-		System.out.println( eastText.getText( ) );
-		System.out.println( westText.getText( ) );
-		System.out.println( chatText.getText( ) );
-		System.out.println( scoreboardText.getText( ) );
+		System.out.println( northButton.getText( ) );
+		System.out.println( southButton.getText( ) );
+		System.out.println( eastButton.getText( ) );
+		System.out.println( westButton.getText( ) );
+		System.out.println( chatButton.getText( ) );
+		System.out.println( scoreboardButton.getText( ) );
 	}
 
 	@Override
 	public void initialize( ScreenManager screenManager, Application app )
 	{
 		super.initialize( screenManager, app );
+		this.app = app;
+		buttonKey = ' ';
 		YamlConfig yamlConfig = YamlConfig.DEFAULT;
 
 		Camera cam = screenManager.getApp( ).getCamera( );
@@ -248,7 +415,8 @@ public class OptionsScreen extends Screen
 		audio.setBackground( new QuadBackgroundComponent( new ColorRGBA( .07f, .52f, .49f, 1 ) ) );
 		audio.setLocalTranslation( cam.getWidth( ) * .05f, cam.getHeight( ) * 0.8f, 0 );
 
-		input = new Container( new BoxLayout( Axis.Y, FillMode.None ) );
+		// input = new Container( new BoxLayout( Axis.Y, FillMode.None ) );
+		input = new Container( new SpringGridLayout( Axis.X, Axis.Y, FillMode.None, FillMode.None ) );
 		input.setPreferredSize( new Vector3f( cam.getWidth( ) * .9f, cam.getHeight( ) * .75f, 0 ) );
 		input.setBackground( new QuadBackgroundComponent( new ColorRGBA( .07f, .52f, .49f, 1 ) ) );
 		input.setLocalTranslation( cam.getWidth( ) * .05f, cam.getHeight( ) * 0.8f, 0 );
@@ -300,67 +468,51 @@ public class OptionsScreen extends Screen
 
 		Label northLabel = new Label( "Move North " );
 		northLabel.scale( sc.getHeightScalar( ) );
+		input.addChild( northLabel, 1, 1 );
 
-		northText = new TextField( "North Button: ", "glass" );
-		northText.setSingleLine( true );
-		northText.setFontSize( sc.getMediumFontSize( ) );
-		northText.setInsets( inputInsets );
-		input.addChild( northText );
+		northButton.setFontSize( sc.getMediumFontSize( ) );
+		northButton.setInsets( inputInsets );
+		input.addChild( northButton, 2, 1 );
 
 		Label southLabel = new Label( "Move South " );
 		southLabel.scale( sc.getHeightScalar( ) );
+		input.addChild( southLabel, 1, 2 );
 
-		southText = new TextField( "South Button: ", "glass" );
-		southText.setSingleLine( true );
-		southText.setFontSize( sc.getMediumFontSize( ) );
-		southText.setInsets( inputInsets );
-		// southText.setLocalTranslation( cam.getWidth( ) * 0.1f, cam.getHeight(
-		// ) * 0.6f, 0 );
-		input.addChild( southText );
+		southButton.setFontSize( sc.getMediumFontSize( ) );
+		southButton.setInsets( inputInsets );
+		input.addChild( southButton, 2, 2 );
 
 		Label eastLabel = new Label( "Move East " );
 		eastLabel.scale( sc.getHeightScalar( ) );
+		input.addChild( eastLabel, 1, 3 );
 
-		eastText = new TextField( "East Button: ", "glass" );
-		eastText.setSingleLine( true );
-		eastText.setFontSize( sc.getMediumFontSize( ) );
-		eastText.setInsets( inputInsets );
-		// eastText.setLocalTranslation( cam.getWidth( ) * 0.1f, cam.getHeight(
-		// ) * 0.5f, 0 );
-		input.addChild( eastText );
+		eastButton.setFontSize( sc.getMediumFontSize( ) );
+		eastButton.setInsets( inputInsets );
+		input.addChild( eastButton, 2, 3 );
 
 		Label westLabel = new Label( "Move West " );
 		westLabel.scale( sc.getHeightScalar( ) );
+		input.addChild( westLabel, 1, 4 );
 
-		westText = new TextField( "West Button: ", "glass" );
-		westText.setSingleLine( true );
-		westText.setFontSize( sc.getMediumFontSize( ) );
-		westText.setInsets( inputInsets );
-		// westText.setLocalTranslation( cam.getWidth( ) * 0.1f, cam.getHeight(
-		// ) * 0.4f, 0 );
-		input.addChild( westText );
+		westButton.setFontSize( sc.getMediumFontSize( ) );
+		westButton.setInsets( inputInsets );
+		input.addChild( westButton, 2, 4 );
 
 		Label chatLabel = new Label( "Chat       " );
 		chatLabel.scale( sc.getHeightScalar( ) );
+		input.addChild( chatLabel, 1, 5 );
 
-		chatText = new TextField( "Chat Button: ", "glass" );
-		chatText.setSingleLine( true );
-		chatText.setFontSize( sc.getMediumFontSize( ) );
-		chatText.setInsets( inputInsets );
-		// chatText.setLocalTranslation( cam.getWidth( ) * 0.1f, cam.getHeight(
-		// ) * 0.3f, 0 );
-		input.addChild( chatText );
+		chatButton.setFontSize( sc.getMediumFontSize( ) );
+		chatButton.setInsets( inputInsets );
+		input.addChild( chatButton, 2, 5 );
 
 		Label scoreLabel = new Label( "Scoreboard" );
 		scoreLabel.scale( sc.getHeightScalar( ) );
+		input.addChild( scoreLabel, 1, 6 );
 
-		scoreboardText = new TextField( "Score Button: ", "glass" );
-		scoreboardText.setSingleLine( true );
-		scoreboardText.setFontSize( sc.getMediumFontSize( ) );
-		scoreboardText.setInsets( inputInsets );
-		// scoreboardText.setLocalTranslation( cam.getWidth( ) * 0.1f,
-		// cam.getHeight( ) * 0.2f, 0 );
-		input.addChild( scoreboardText );
+		scoreboardButton.setFontSize( sc.getMediumFontSize( ) );
+		scoreboardButton.setInsets( inputInsets );
+		input.addChild( scoreboardButton, 2, 6 );
 
 		activeContainer( graphics );
 
@@ -375,7 +527,7 @@ public class OptionsScreen extends Screen
 		audio.addChild( musicVolume );
 		audio.addChild( soundLabel );
 		audio.addChild( soundsVolume );
-		input.addChild( console );
+		input.addChild( console, 1, 7 );
 		getScreenNode( ).attachChild( middle );
 		getScreenNode( ).attachChild( top );
 	}
@@ -392,18 +544,79 @@ public class OptionsScreen extends Screen
 		getScreenNode( ).attachChild( current );
 	}
 
+	private char returnName( char letter )
+	{
+		buttonKey = letter;
+		return letter;
+
+	}
+
+	private void activeListener( )
+	{
+		System.out.println( "Active Listener" );
+		buttonKey = ' ';
+		list = new RawInputListener( )
+		{
+			@Override
+			public void beginInput( )
+			{
+			}
+
+			@Override
+			public void endInput( )
+			{
+			}
+
+			@Override
+			public void onJoyAxisEvent( JoyAxisEvent arg0 )
+			{
+			}
+
+			@Override
+			public void onJoyButtonEvent( JoyButtonEvent arg0 )
+			{
+			}
+
+			@Override
+			public void onMouseButtonEvent( MouseButtonEvent arg0 )
+			{
+			}
+
+			@Override
+			public void onMouseMotionEvent( MouseMotionEvent arg0 )
+			{
+			}
+
+			@Override
+			public void onTouchEvent( TouchEvent arg0 )
+			{
+			}
+
+			@Override
+			public void onKeyEvent( KeyInputEvent arg0 )
+			{
+				System.out.println( "Key: " + arg0.getKeyChar( ) );
+				returnName( arg0.getKeyChar( ) );
+			}
+		};
+		app.getInputManager( ).addRawInputListener( list );
+		// button.setText( buttonKey );
+		// app.getInputManager().removeRawInputListener( list );
+	}
+
 	@Override
 	public void screenAttached( ScreenManager screenManager )
 	{
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void screenDetached( ScreenManager screenManager )
 	{
-		// TODO Auto-generated method stub
+	}
 
+	private void setButtonName( Button button )
+	{
+		currentButton = button;
 	}
 
 	@Override
@@ -427,6 +640,12 @@ public class OptionsScreen extends Screen
 			System.out.println( "Music Volume updated" );
 		if ( soundVolumeRef.update( ) )
 			System.out.println( "Sound Volume updated" );
+		if ( buttonKey != ' ' )
+		{
+			app.getInputManager( ).removeRawInputListener( list );
+			currentButton.setText( "" + buttonKey );
+			buttonKey = ' ';
+		}
 
 	}
 
