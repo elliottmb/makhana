@@ -259,7 +259,6 @@ public class OptionsScreen extends Screen
 		res = new Slider( new DefaultRangedValueModel( 0, 15, 1 ), "glass" );
 		res.setName( "Resolution" );
 		res.setInsets( new Insets3f( cam.getHeight( ) * .02f, 0, cam.getHeight( ) * .02f, 0 ) );
-		// TODO make this good for both bigger and smaller sizes for everything.
 		resRef = res.getModel( ).createReference( );
 		resLabel.setText( "Resolution: " + String.valueOf( resRef.get( ) ) );
 

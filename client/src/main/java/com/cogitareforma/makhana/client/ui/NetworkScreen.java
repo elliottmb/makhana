@@ -1,5 +1,7 @@
 package com.cogitareforma.makhana.client.ui;
 
+import java.util.ArrayList;
+
 import com.cogitareforma.makhana.common.ui.Screen;
 import com.cogitareforma.makhana.common.ui.ScreenContext;
 import com.cogitareforma.makhana.common.ui.ScreenManager;
@@ -25,10 +27,7 @@ public class NetworkScreen extends Screen
 	private Button servers;
 	private Button favorites;
 	private Button history;
-	private Container current;
 	private Container serverContainer;
-	private Container favoritesContainer;
-	private Container historyContainer;
 	private Button back;
 	private Container server1;
 	private Container server2;
@@ -47,6 +46,8 @@ public class NetworkScreen extends Screen
 	private Button prevPage;
 	private Button nextPage;
 	private Button lastPage;
+
+	private ArrayList< String > serverList;
 
 	@Override
 	public void cleanup( )
@@ -167,7 +168,8 @@ public class NetworkScreen extends Screen
 		{
 			public void execute( Button b )
 			{
-				System.out.println( "Last Page Clicked" );
+				System.out.println( "Last Page Clicked: " + screenManager.setScreen( LoadingScreen.class ) );
+				
 			}
 		} );
 		nextPage = new Button( ">" );
