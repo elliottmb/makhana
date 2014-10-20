@@ -39,7 +39,6 @@ public class LoadingScreen extends Screen
 		this.screenManager = screenManager;
 
 		Camera cam = screenManager.getApp( ).getCamera( );
-		ScreenContext sc = screenManager.getScreenContext( );
 
 		Panel background = new Panel( );
 		background.setBackground( new QuadBackgroundComponent( ColorRGBA.Gray ) );
@@ -56,8 +55,8 @@ public class LoadingScreen extends Screen
 		bar.setProgressPercent( 0 );
 		bar.setLocalTranslation( 0, cam.getHeight( ) * .1f, 0 );
 		bar.setPreferredSize( new Vector3f( cam.getWidth( ), cam.getHeight( ) * .1f, 0 ) );
+		bar.setMessage( ( int ) ( bar.getProgressPercent( ) * 100 ) + "%" );
 
-		// bottom.addChild( bar );
 		Button yes = new Button( "CLICK" );
 		yes.addCommands( ButtonAction.Click, new Command< Button >( )
 		{
@@ -73,6 +72,7 @@ public class LoadingScreen extends Screen
 			public void execute( Button b )
 			{
 				bar.setProgressPercent( 0 );
+				bar.setMessage( ( int ) ( bar.getProgressPercent( ) * 100 ) + "%" );
 			}
 		} );
 		bottom.addChild( no );
@@ -99,6 +99,7 @@ public class LoadingScreen extends Screen
 		if ( enabled )
 		{
 			bar.setProgressPercent( bar.getProgressPercent( ) + .05 );
+			bar.setMessage( ( int ) ( bar.getProgressPercent( ) * 100 ) + "%" );
 			enabled = false;
 		}
 		if ( bar.getProgressPercent( ) == 1 )

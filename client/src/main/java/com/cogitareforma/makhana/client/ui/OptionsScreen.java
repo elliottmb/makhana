@@ -1,9 +1,12 @@
 package com.cogitareforma.makhana.client.ui;
 
+import java.util.Set;
+
 import com.cogitareforma.makhana.common.ui.Screen;
 import com.cogitareforma.makhana.common.ui.ScreenContext;
 import com.cogitareforma.makhana.common.ui.ScreenManager;
 import com.cogitareforma.makhana.common.util.YamlConfig;
+import com.google.common.collect.Sets;
 import com.jme3.app.Application;
 import com.jme3.input.KeyInput;
 import com.jme3.input.RawInputListener;
@@ -38,6 +41,8 @@ import com.simsilica.lemur.core.VersionedReference;
 import com.simsilica.lemur.input.AnalogFunctionListener;
 import com.simsilica.lemur.input.FunctionId;
 
+import de.lessvoid.nifty.input.keyboard.KeyboardInputEvent;
+
 public class OptionsScreen extends Screen
 {
 	private Label resLabel;
@@ -69,6 +74,9 @@ public class OptionsScreen extends Screen
 	private char buttonKey;
 	private RawInputListener list;
 	private Button currentButton;
+	private boolean buttonPressed;
+	private Set< Integer > avaiableKeys;
+	private char prevKey;
 
 	@Override
 	public void cleanup( )
@@ -212,10 +220,14 @@ public class OptionsScreen extends Screen
 		{
 			public void execute( Button b )
 			{
-				System.out.println( "North Clicked" );
-				northButton.setText( "<Press Key>" );
-				activeListener( );
-				setButtonName( northButton );
+				if ( !buttonPressed )
+				{
+					System.out.println( "North Clicked" );
+					prevKey = northButton.getText( ).charAt( 0 );
+					northButton.setText( "<Press Key>" );
+					activeListener( );
+					setButtonName( northButton );
+				}
 			}
 		} );
 		southButton = new Button( "South Button: ", "glass" );
@@ -237,10 +249,14 @@ public class OptionsScreen extends Screen
 		{
 			public void execute( Button b )
 			{
-				System.out.println( "North Clicked" );
-				southButton.setText( "<Press Key>" );
-				activeListener( );
-				setButtonName( southButton );
+				if ( !buttonPressed )
+				{
+					System.out.println( "North Clicked" );
+					prevKey = southButton.getText( ).charAt( 0 );
+					southButton.setText( "<Press Key>" );
+					activeListener( );
+					setButtonName( southButton );
+				}
 			}
 		} );
 		eastButton = new Button( "East Button: ", "glass" );
@@ -262,10 +278,14 @@ public class OptionsScreen extends Screen
 		{
 			public void execute( Button b )
 			{
-				System.out.println( "North Clicked" );
-				eastButton.setText( "<Press Key>" );
-				activeListener( );
-				setButtonName( eastButton );
+				if ( !buttonPressed )
+				{
+					System.out.println( "North Clicked" );
+					prevKey = eastButton.getText( ).charAt( 0 );
+					eastButton.setText( "<Press Key>" );
+					activeListener( );
+					setButtonName( eastButton );
+				}
 			}
 		} );
 		westButton = new Button( "West Button: ", "glass" );
@@ -287,10 +307,14 @@ public class OptionsScreen extends Screen
 		{
 			public void execute( Button b )
 			{
-				System.out.println( "North Clicked" );
-				westButton.setText( "<Press Key>" );
-				activeListener( );
-				setButtonName( westButton );
+				if ( !buttonPressed )
+				{
+					System.out.println( "North Clicked" );
+					prevKey = westButton.getText( ).charAt( 0 );
+					westButton.setText( "<Press Key>" );
+					activeListener( );
+					setButtonName( westButton );
+				}
 			}
 		} );
 		chatButton = new Button( "Chat Button: ", "glass" );
@@ -312,10 +336,14 @@ public class OptionsScreen extends Screen
 		{
 			public void execute( Button b )
 			{
-				System.out.println( "North Clicked" );
-				chatButton.setText( "<Press Key>" );
-				activeListener( );
-				setButtonName( chatButton );
+				if ( !buttonPressed )
+				{
+					System.out.println( "North Clicked" );
+					prevKey = chatButton.getText( ).charAt( 0 );
+					chatButton.setText( "<Press Key>" );
+					activeListener( );
+					setButtonName( chatButton );
+				}
 			}
 		} );
 		scoreboardButton = new Button( "Score Button: ", "glass" );
@@ -337,10 +365,14 @@ public class OptionsScreen extends Screen
 		{
 			public void execute( Button b )
 			{
-				System.out.println( "North Clicked" );
-				scoreboardButton.setText( "<Press Key>" );
-				activeListener( );
-				setButtonName( scoreboardButton );
+				if ( !buttonPressed )
+				{
+					System.out.println( "North Clicked" );
+					prevKey = scoreboardButton.getText( ).charAt( 0 );
+					scoreboardButton.setText( "<Press Key>" );
+					activeListener( );
+					setButtonName( scoreboardButton );
+				}
 			}
 		} );
 	}
@@ -362,6 +394,12 @@ public class OptionsScreen extends Screen
 		this.app = app;
 		buttonKey = ' ';
 		YamlConfig yamlConfig = YamlConfig.DEFAULT;
+		avaiableKeys = Sets.newHashSet(KeyInput.KEY_A, KeyInput.KEY_B, KeyInput.KEY_C, KeyInput.KEY_D, KeyInput.KEY_E, KeyInput.KEY_F, KeyInput.KEY_G, KeyInput.KEY_H,
+				KeyInput.KEY_I, KeyInput.KEY_J, KeyInput.KEY_K, KeyInput.KEY_L, KeyInput.KEY_M, KeyInput.KEY_N, KeyInput.KEY_O, KeyInput.KEY_P,
+				KeyInput.KEY_Q, KeyInput.KEY_R, KeyInput.KEY_S, KeyInput.KEY_T, KeyInput.KEY_U, KeyInput.KEY_V, KeyInput.KEY_W, KeyInput.KEY_X,
+				KeyInput.KEY_Y, KeyInput.KEY_Z, KeyInput.KEY_1, KeyInput.KEY_2, KeyInput.KEY_3, KeyInput.KEY_4, KeyInput.KEY_5, KeyInput.KEY_6,
+				KeyInput.KEY_7, KeyInput.KEY_8, KeyInput.KEY_9, KeyInput.KEY_0, KeyInput.KEY_UP, KeyInput.KEY_DOWN, KeyInput.KEY_LEFT,
+				KeyInput.KEY_RIGHT, KeyInput.KEY_GRAVE, KeyInput.KEY_TAB );
 
 		Camera cam = screenManager.getApp( ).getCamera( );
 		ScreenContext sc = screenManager.getScreenContext( );
@@ -544,11 +582,18 @@ public class OptionsScreen extends Screen
 		getScreenNode( ).attachChild( current );
 	}
 
-	private char returnName( char letter )
+	private char returnName( int number, char letter )
 	{
-		buttonKey = letter;
-		return letter;
-
+		//TODO need to add back the old key to avaiableKeys.
+		System.out.println((int)prevKey);
+		currentButton.getText( );
+		if(avaiableKeys.contains( number )){
+			avaiableKeys.remove( number );
+			buttonKey = letter;
+			return letter;
+		}
+		buttonKey = ' ';
+		return buttonKey;
 	}
 
 	private void activeListener( )
@@ -595,11 +640,12 @@ public class OptionsScreen extends Screen
 			@Override
 			public void onKeyEvent( KeyInputEvent arg0 )
 			{
-				System.out.println( "Key: " + arg0.getKeyChar( ) );
-				returnName( arg0.getKeyChar( ) );
+				System.out.println( "Key: " + arg0 );
+				returnName( arg0.getKeyCode( ), arg0.getKeyChar( ) );
 			}
 		};
 		app.getInputManager( ).addRawInputListener( list );
+		buttonPressed = true;
 		// button.setText( buttonKey );
 		// app.getInputManager().removeRawInputListener( list );
 	}
@@ -644,6 +690,7 @@ public class OptionsScreen extends Screen
 		{
 			app.getInputManager( ).removeRawInputListener( list );
 			currentButton.setText( "" + buttonKey );
+			buttonPressed = false;
 			buttonKey = ' ';
 		}
 
