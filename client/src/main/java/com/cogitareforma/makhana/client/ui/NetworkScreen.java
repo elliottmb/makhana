@@ -169,7 +169,7 @@ public class NetworkScreen extends Screen
 			public void execute( Button b )
 			{
 				System.out.println( "Last Page Clicked: " + screenManager.setScreen( LoadingScreen.class ) );
-				
+
 			}
 		} );
 		nextPage = new Button( ">" );

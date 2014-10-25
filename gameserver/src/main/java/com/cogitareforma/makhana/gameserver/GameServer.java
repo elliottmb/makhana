@@ -13,7 +13,7 @@ import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
-import com.cogitareforma.makhana.common.util.YamlConfig;
+import com.cogitareforma.makhana.common.util.MakhanaConfig;
 import com.cogitareforma.makhana.gameserver.net.GameServerManager;
 import com.cogitareforma.makhana.gameserver.net.MasterConnectionManager;
 import com.jme3.app.SimpleApplication;
@@ -94,6 +94,8 @@ public class GameServer extends SimpleApplication
 		logger.log( Level.INFO, "Shutting down" );
 		gameServer.stop( );
 	}
+
+	private MakhanaConfig configuration;
 
 	/**
 	 * The logger for this class.
@@ -195,15 +197,17 @@ public class GameServer extends SimpleApplication
 
 		port = 7331; /* default */
 
-		YamlConfig config = YamlConfig.DEFAULT;
+		this.configuration = new MakhanaConfig( );
 
 		onlineMode = true;
 
-		if ( config.containsKey( "gameserver.port" ) )
+		if ( configuration.containsKey( "gameserver.port" ) )
 		{
-			if ( config.get( "gameserver.port" ) instanceof Integer )
+			Object portValue = configuration.get( "gameserver.port" );
+			if ( portValue instanceof Integer )
 			{
-				port = ( Integer ) YamlConfig.DEFAULT.get( "gameserver.port" );
+				port = ( Integer ) portValue;
+				logger.log( Level.INFO, "Configuration port value was: " + portValue );
 			}
 			else
 			{
@@ -214,13 +218,15 @@ public class GameServer extends SimpleApplication
 		{
 			logger.log( Level.WARNING, "Configuration port value not set, defaulting to 7331" );
 		}
-		config.put( "gameserver.port", port );
+		configuration.put( "gameserver.port", port );
 
-		if ( config.containsKey( "gameserver.online" ) )
+		if ( configuration.containsKey( "gameserver.online" ) )
 		{
-			if ( config.get( "gameserver.online" ) instanceof Boolean )
+			Object onlineValue = configuration.get( "gameserver.port" );
+			if ( onlineValue instanceof Boolean )
 			{
-				onlineMode = ( Boolean ) YamlConfig.DEFAULT.get( "gameserver.online" );
+				onlineMode = ( Boolean ) onlineValue;
+				logger.log( Level.INFO, "Configuration onlineMode value was: " + onlineValue );
 			}
 			else
 			{
@@ -231,9 +237,9 @@ public class GameServer extends SimpleApplication
 		{
 			logger.log( Level.WARNING, "Configuration online mode value not set, defaulting to online" );
 		}
-		config.put( "gameserver.online", onlineMode );
+		configuration.put( "gameserver.online", onlineMode );
 
-		config.save( );
+		configuration.save( );
 
 		if ( getArguments( ).hasOption( "p" ) )
 		{
@@ -289,6 +295,23 @@ public class GameServer extends SimpleApplication
 		getGameServerManager( ).close( );
 		getMasterConnManager( ).close( );
 		super.stop( );
+	}
+
+	/**
+	 * @return the configuration
+	 */
+	public MakhanaConfig getConfiguration( )
+	{
+		return configuration;
+	}
+
+	/**
+	 * @param configuration
+	 *            the configuration to set
+	 */
+	public void setConfiguration( MakhanaConfig configuration )
+	{
+		this.configuration = configuration;
 	}
 
 }

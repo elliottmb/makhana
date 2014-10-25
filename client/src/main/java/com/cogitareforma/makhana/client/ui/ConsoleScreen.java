@@ -42,7 +42,8 @@ public class ConsoleScreen extends Screen
 		panel.setBackground( new QuadBackgroundComponent( ColorRGBA.Brown ) );
 
 		// ListBox listbox = new ListBox(consoleHistory);
-		//listbox.sestPreferredSize(new Vector3f(cam.getWidth()*.4f, cam.getHeight()*.05f, 0));
+		// listbox.sestPreferredSize(new Vector3f(cam.getWidth()*.4f,
+		// cam.getHeight()*.05f, 0));
 		// panel.addChild( listbox );
 
 		TextField text = new TextField( "" );

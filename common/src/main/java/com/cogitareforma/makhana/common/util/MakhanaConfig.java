@@ -7,7 +7,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -26,17 +25,33 @@ public class MakhanaConfig extends ConfigObject
 
 	private final static Logger logger = Logger.getLogger( MakhanaConfig.class.getName( ) );
 
+	private File file;
+
 	public MakhanaConfig( )
 	{
-		super( null );
-
-		// Put all the default values (flattened)
-		putAll( cs.parse( MakhanaConfig.class.getResource( "/default.groovy" ) ).flatten( ) );
+		this( new File( "config.groovy" ) );
 	}
 
 	public MakhanaConfig( File file )
 	{
-		this( );
+		super( null );
+
+		this.setFile( file );
+
+		if ( !file.exists( ) )
+		{
+			try
+			{
+				file.createNewFile( );
+			}
+			catch ( IOException e )
+			{
+				logger.log( Level.SEVERE, "Error creating configuration file.", e );
+			}
+		}
+
+		// Put all the default values (flattened)
+		putAll( cs.parse( MakhanaConfig.class.getResource( "/default.groovy" ) ).flatten( ) );
 
 		ConfigObject clientConfig;
 		try
@@ -190,6 +205,11 @@ public class MakhanaConfig extends ConfigObject
 		setProperty( "client.input.eastKey", KeyInput.KEY_D );
 	}
 
+	public void save( )
+	{
+		save( this.file );
+	}
+
 	public void save( File file )
 	{
 		try
@@ -202,5 +222,22 @@ public class MakhanaConfig extends ConfigObject
 		{
 			logger.log( Level.SEVERE, "Error saving configuration file.", e );
 		}
+	}
+
+	/**
+	 * @return the file
+	 */
+	public File getFile( )
+	{
+		return file;
+	}
+
+	/**
+	 * @param file
+	 *            the file to set
+	 */
+	public void setFile( File file )
+	{
+		this.file = file;
 	}
 }

@@ -10,8 +10,6 @@ import com.google.common.collect.Sets;
 import com.jme3.app.Application;
 import com.jme3.input.KeyInput;
 import com.jme3.input.RawInputListener;
-import com.jme3.input.controls.ActionListener;
-import com.jme3.input.controls.AnalogListener;
 import com.jme3.input.event.JoyAxisEvent;
 import com.jme3.input.event.JoyButtonEvent;
 import com.jme3.input.event.KeyInputEvent;
@@ -33,15 +31,10 @@ import com.simsilica.lemur.Insets3f;
 import com.simsilica.lemur.Label;
 import com.simsilica.lemur.Panel;
 import com.simsilica.lemur.Slider;
-import com.simsilica.lemur.TextField;
 import com.simsilica.lemur.component.BoxLayout;
 import com.simsilica.lemur.component.QuadBackgroundComponent;
 import com.simsilica.lemur.component.SpringGridLayout;
 import com.simsilica.lemur.core.VersionedReference;
-import com.simsilica.lemur.input.AnalogFunctionListener;
-import com.simsilica.lemur.input.FunctionId;
-
-import de.lessvoid.nifty.input.keyboard.KeyboardInputEvent;
 
 public class OptionsScreen extends Screen
 {
@@ -394,12 +387,13 @@ public class OptionsScreen extends Screen
 		this.app = app;
 		buttonKey = ' ';
 		YamlConfig yamlConfig = YamlConfig.DEFAULT;
-		avaiableKeys = Sets.newHashSet(KeyInput.KEY_A, KeyInput.KEY_B, KeyInput.KEY_C, KeyInput.KEY_D, KeyInput.KEY_E, KeyInput.KEY_F, KeyInput.KEY_G, KeyInput.KEY_H,
-				KeyInput.KEY_I, KeyInput.KEY_J, KeyInput.KEY_K, KeyInput.KEY_L, KeyInput.KEY_M, KeyInput.KEY_N, KeyInput.KEY_O, KeyInput.KEY_P,
-				KeyInput.KEY_Q, KeyInput.KEY_R, KeyInput.KEY_S, KeyInput.KEY_T, KeyInput.KEY_U, KeyInput.KEY_V, KeyInput.KEY_W, KeyInput.KEY_X,
-				KeyInput.KEY_Y, KeyInput.KEY_Z, KeyInput.KEY_1, KeyInput.KEY_2, KeyInput.KEY_3, KeyInput.KEY_4, KeyInput.KEY_5, KeyInput.KEY_6,
-				KeyInput.KEY_7, KeyInput.KEY_8, KeyInput.KEY_9, KeyInput.KEY_0, KeyInput.KEY_UP, KeyInput.KEY_DOWN, KeyInput.KEY_LEFT,
-				KeyInput.KEY_RIGHT, KeyInput.KEY_GRAVE, KeyInput.KEY_TAB );
+		avaiableKeys = Sets.newHashSet( KeyInput.KEY_A, KeyInput.KEY_B, KeyInput.KEY_C, KeyInput.KEY_D, KeyInput.KEY_E, KeyInput.KEY_F,
+				KeyInput.KEY_G, KeyInput.KEY_H, KeyInput.KEY_I, KeyInput.KEY_J, KeyInput.KEY_K, KeyInput.KEY_L, KeyInput.KEY_M,
+				KeyInput.KEY_N, KeyInput.KEY_O, KeyInput.KEY_P, KeyInput.KEY_Q, KeyInput.KEY_R, KeyInput.KEY_S, KeyInput.KEY_T,
+				KeyInput.KEY_U, KeyInput.KEY_V, KeyInput.KEY_W, KeyInput.KEY_X, KeyInput.KEY_Y, KeyInput.KEY_Z, KeyInput.KEY_1,
+				KeyInput.KEY_2, KeyInput.KEY_3, KeyInput.KEY_4, KeyInput.KEY_5, KeyInput.KEY_6, KeyInput.KEY_7, KeyInput.KEY_8,
+				KeyInput.KEY_9, KeyInput.KEY_0, KeyInput.KEY_UP, KeyInput.KEY_DOWN, KeyInput.KEY_LEFT, KeyInput.KEY_RIGHT,
+				KeyInput.KEY_GRAVE, KeyInput.KEY_TAB );
 
 		Camera cam = screenManager.getApp( ).getCamera( );
 		ScreenContext sc = screenManager.getScreenContext( );
@@ -584,10 +578,11 @@ public class OptionsScreen extends Screen
 
 	private char returnName( int number, char letter )
 	{
-		//TODO need to add back the old key to avaiableKeys.
-		System.out.println((int)prevKey);
+		// TODO need to add back the old key to avaiableKeys.
+		System.out.println( ( int ) prevKey );
 		currentButton.getText( );
-		if(avaiableKeys.contains( number )){
+		if ( avaiableKeys.contains( number ) )
+		{
 			avaiableKeys.remove( number );
 			buttonKey = letter;
 			return letter;

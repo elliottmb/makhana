@@ -22,8 +22,8 @@ import com.cogitareforma.makhana.common.eventsystem.events.TileFreedEvent;
 import com.cogitareforma.makhana.common.net.SerializerRegistrar;
 import com.cogitareforma.makhana.common.net.ServerManager;
 import com.cogitareforma.makhana.common.net.msg.ServerStatusResponse;
+import com.cogitareforma.makhana.common.util.MakhanaConfig;
 import com.cogitareforma.makhana.common.util.PackageUtils;
-import com.cogitareforma.makhana.common.util.YamlConfig;
 import com.cogitareforma.makhana.gameserver.GameServer;
 import com.cogitareforma.makhana.gameserver.eventsystem.events.ActionCompletedEvent;
 import com.cogitareforma.makhana.gameserver.eventsystem.events.ServerPlayerJoinEvent;
@@ -276,11 +276,12 @@ public class GameServerManager extends ServerManager< GameServer >
 			entityEventManager.addEventHandler( new TileOwnerChangedEventHandler( ), TileClaimedEvent.class, TileCapturedEvent.class,
 					TileFreedEvent.class );
 
-			String name = ( String ) YamlConfig.DEFAULT.get( "gameserver.name" );
+			MakhanaConfig config = getApp( ).getConfiguration( );
+			String name = ( String ) config.get( "gameserver.name" );
 			if ( name == null )
 			{
 				name = "Default server";
-				YamlConfig.DEFAULT.put( "gameserver.name", name );
+				config.put( "gameserver.name", name );
 			}
 
 			status = new ServerStatus( name, 4, 0, port );
@@ -334,7 +335,8 @@ public class GameServerManager extends ServerManager< GameServer >
 		else
 		{
 			logger.log( Level.INFO, "Server Status was null." );
-			status = new ServerStatus( ( String ) YamlConfig.DEFAULT.get( "gameserver.name" ), 4, 0, this.getApp( ).getPort( ) );
+
+			status = new ServerStatus( ( String ) getApp( ).getConfiguration( ).get( "gameserver.name" ), 4, 0, this.getApp( ).getPort( ) );
 			getServerStatus( ).setChanged( true );
 		}
 

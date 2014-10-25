@@ -1,7 +1,7 @@
 client {
 	graphics {
 		height=768
-		width=1360
+		width=1024
 		fullscreen=false
 		vsync=false
 		samples=4

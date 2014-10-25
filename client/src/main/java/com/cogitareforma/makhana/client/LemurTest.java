@@ -66,7 +66,7 @@ public class LemurTest extends SimpleApplication
 		styles.getSelector( "header", "glass" ).set( "background", new QuadBackgroundComponent( new ColorRGBA( 0, 0.75f, 0.75f, 0.5f ) ) );
 		// BaseStyles.loadGlassStyle( ); // TODO: should be included but gets
 		// error: Groovy scripting engine not available.
-		console = new ConsoleScreen();
+		console = new ConsoleScreen( );
 		screenManager.addScreen( new StartScreen( ) );
 		screenManager.addScreen( new OptionsScreen( ) );
 		screenManager.addScreen( new NetworkScreen( ) );
@@ -84,7 +84,7 @@ public class LemurTest extends SimpleApplication
 		if ( name.equals( "showConsole" ) && !keyPressed )
 		{
 			// TODO find out how to do this
-			if ( screenManager.showScreen(console) == true )
+			if ( screenManager.showScreen( console ) == true )
 			{
 				screenManager.showScreen( console );
 			}
