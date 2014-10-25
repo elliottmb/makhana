@@ -18,7 +18,6 @@ import com.cogitareforma.makhana.common.net.msg.SecureLoginRequest;
 import com.cogitareforma.makhana.common.net.msg.ServerListResponse;
 import com.cogitareforma.makhana.common.net.msg.UserListResponse;
 import com.cogitareforma.makhana.common.util.PackageUtils;
-import com.cogitareforma.makhana.common.util.YamlConfig;
 import com.jme3.network.MessageListener;
 import com.jme3.network.Network;
 
@@ -61,22 +60,22 @@ public class MasterConnectionManager extends ConnectionManager< ClientMain >
 		try
 		{
 
-			String tempHost = ( String ) YamlConfig.DEFAULT.get( "networkserver.host" );
-			Integer tempPort = ( Integer ) YamlConfig.DEFAULT.get( "networkserver.port" );
+			String tempHost = ( String ) app.getConfiguration( ).get( "networkserver.host" );
+			Integer tempPort = ( Integer ) app.getConfiguration( ).get( "networkserver.port" );
 			if ( tempHost == null || tempPort == null )
 			{
 				if ( tempHost == null )
 				{
 					tempHost = "localhost";
-					YamlConfig.DEFAULT.put( "networkserver.host", tempHost );
+					app.getConfiguration( ).put( "networkserver.host", tempHost );
 				}
 				if ( tempPort == null )
 				{
 					tempPort = new Integer( 1337 );
-					YamlConfig.DEFAULT.put( "networkserver.port", tempPort );
+					app.getConfiguration( ).put( "networkserver.port", tempPort );
 
 				}
-				YamlConfig.DEFAULT.save( );
+				app.getConfiguration( ).save( );
 			}
 			final String host = tempHost;
 			final Integer port = tempPort;

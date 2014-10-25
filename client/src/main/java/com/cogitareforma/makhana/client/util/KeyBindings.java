@@ -2,7 +2,7 @@ package com.cogitareforma.makhana.client.util;
 
 import java.lang.reflect.Field;
 
-import com.cogitareforma.makhana.common.util.YamlConfig;
+import com.cogitareforma.makhana.common.util.MakhanaConfig;
 import com.jme3.input.KeyInput;
 
 public class KeyBindings
@@ -26,13 +26,22 @@ public class KeyBindings
 		return null;
 	}
 
-	private YamlConfig con = YamlConfig.DEFAULT;
-	public int north = ( int ) con.get( "client.input.northKey" );
-	public int south = ( int ) con.get( "client.input.southKey" );
-	public int east = ( int ) con.get( "client.input.eastKey" );
-	public int west = ( int ) con.get( "client.input.westKey" );
-	public int console = ( int ) con.get( "client.input.consoleKey" );
-	public int chat = ( int ) con.get( "client.input.chatKey" );
+	public int chat;
+	public int console;
+	public int east;
+	public int north;
+	public int score;
+	public int south;
+	public int west;
 
-	public int score = ( int ) con.get( "client.input.scoreKey" );
+	public KeyBindings( MakhanaConfig config )
+	{
+		north = ( int ) config.get( "client.input.northKey" );
+		south = ( int ) config.get( "client.input.southKey" );
+		east = ( int ) config.get( "client.input.eastKey" );
+		west = ( int ) config.get( "client.input.westKey" );
+		console = ( int ) config.get( "client.input.consoleKey" );
+		chat = ( int ) config.get( "client.input.chatKey" );
+		score = ( int ) config.get( "client.input.scoreKey" );
+	}
 }

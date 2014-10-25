@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
-import com.cogitareforma.makhana.common.util.YamlConfig;
+import com.cogitareforma.makhana.common.util.MakhanaConfig;
 
 /**
  * 
@@ -26,7 +26,7 @@ public class DatabaseConfig
 	@Bean
 	public DataSource dataSource( )
 	{
-		YamlConfig config = YamlConfig.DEFAULT;
+		MakhanaConfig config = new MakhanaConfig( );
 		DriverManagerDataSource dataSource = new DriverManagerDataSource( );
 		dataSource.setDriverClassName( "com.mysql.jdbc.Driver" );
 		dataSource.setUrl( String.format( "jdbc:mysql://%s:%s/%s", config.get( "mysqldb.hostname" ), config.get( "mysqldb.port" ),

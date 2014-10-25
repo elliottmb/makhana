@@ -5,7 +5,6 @@ import java.util.Set;
 import com.cogitareforma.makhana.common.ui.Screen;
 import com.cogitareforma.makhana.common.ui.ScreenContext;
 import com.cogitareforma.makhana.common.ui.ScreenManager;
-import com.cogitareforma.makhana.common.util.YamlConfig;
 import com.google.common.collect.Sets;
 import com.jme3.app.Application;
 import com.jme3.input.KeyInput;
@@ -386,7 +385,7 @@ public class OptionsScreen extends Screen
 		super.initialize( screenManager, app );
 		this.app = app;
 		buttonKey = ' ';
-		YamlConfig yamlConfig = YamlConfig.DEFAULT;
+
 		avaiableKeys = Sets.newHashSet( KeyInput.KEY_A, KeyInput.KEY_B, KeyInput.KEY_C, KeyInput.KEY_D, KeyInput.KEY_E, KeyInput.KEY_F,
 				KeyInput.KEY_G, KeyInput.KEY_H, KeyInput.KEY_I, KeyInput.KEY_J, KeyInput.KEY_K, KeyInput.KEY_L, KeyInput.KEY_M,
 				KeyInput.KEY_N, KeyInput.KEY_O, KeyInput.KEY_P, KeyInput.KEY_Q, KeyInput.KEY_R, KeyInput.KEY_S, KeyInput.KEY_T,

@@ -22,6 +22,7 @@ import com.jme3.system.AppSettings;
  * 
  * @author Elliott Butler
  */
+@Deprecated
 public class YamlConfig
 {
 	private final static Logger logger = Logger.getLogger( YamlConfig.class.getName( ) );

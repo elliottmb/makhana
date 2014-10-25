@@ -7,7 +7,6 @@ import java.util.logging.Logger;
 import com.cogitareforma.makhana.common.net.ConnectionManager;
 import com.cogitareforma.makhana.common.net.SerializerRegistrar;
 import com.cogitareforma.makhana.common.util.PackageUtils;
-import com.cogitareforma.makhana.common.util.YamlConfig;
 import com.cogitareforma.makhana.gameserver.GameServer;
 import com.jme3.network.MessageListener;
 import com.jme3.network.Network;
@@ -34,8 +33,8 @@ public class MasterConnectionManager extends ConnectionManager< GameServer >
 		try
 		{
 
-			final String host = ( String ) YamlConfig.DEFAULT.get( "networkserver.host" );
-			final Integer port = ( Integer ) YamlConfig.DEFAULT.get( "networkserver.port" );
+			final String host = ( String ) getApp( ).getConfiguration( ).get( "networkserver.host" );
+			final Integer port = ( Integer ) getApp( ).getConfiguration( ).get( "networkserver.port" );
 
 			setClient( Network.connectToServer( "makhana", 2, host, port, port + 1 ) );
 			logger.log( Level.INFO, String.format( "We will connect to master server %s with ports TCP:%d, UDP:%d.", host, port, port + 1 ) );

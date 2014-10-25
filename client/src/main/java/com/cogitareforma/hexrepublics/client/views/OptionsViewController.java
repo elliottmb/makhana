@@ -8,7 +8,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.cogitareforma.makhana.client.util.KeyBindings;
-import com.cogitareforma.makhana.common.util.YamlConfig;
+import com.cogitareforma.makhana.common.util.MakhanaConfig;
 import com.jme3.app.Application;
 import com.jme3.app.state.AppStateManager;
 import com.jme3.audio.Listener;
@@ -77,10 +77,10 @@ public class OptionsViewController extends GeneralController
 			int second = Integer.parseInt( selected.split( "x" )[ 1 ] );
 			listener.setVolume( volume );
 
-			YamlConfig yamlConfig = YamlConfig.DEFAULT;
+			MakhanaConfig config = getApp( ).getConfiguration( );
 
-			yamlConfig.putAudioSettings( listener );
-			yamlConfig.buildAudioSettings( listener );
+			config.putAudioSettings( listener );
+			config.configureAudioSettings( listener );
 
 			if ( hasGraphicsChanged( selected, settings ) )
 			{
@@ -91,32 +91,32 @@ public class OptionsViewController extends GeneralController
 				settings.setFullscreen( fullscreen.isChecked( ) && device.isFullScreenSupported( ) );
 				getApp( ).setSettings( settings );
 
-				yamlConfig.putAppSettings( settings );
+				config.putAppSettings( settings );
 
 				getApp( ).restart( );
 			}
 			if ( hasInputChanged( ) )
 			{
-				yamlConfig.putInputSettings( "north", getKeyByValue( k, displayedKey( "northButton" ) ) );
-				yamlConfig.putInputSettings( "south", getKeyByValue( k, displayedKey( "southButton" ) ) );
-				yamlConfig.putInputSettings( "east", getKeyByValue( k, displayedKey( "eastButton" ) ) );
-				yamlConfig.putInputSettings( "west", getKeyByValue( k, displayedKey( "westButton" ) ) );
-				yamlConfig.putInputSettings( "score", getKeyByValue( k, displayedKey( "scoreButton" ) ) );
-				yamlConfig.putInputSettings( "chat", getKeyByValue( k, displayedKey( "chatButton" ) ) );
+				config.put( "client.input.northKey", getKeyByValue( k, displayedKey( "northButton" ) ) );
+				config.put( "client.input.southKey", getKeyByValue( k, displayedKey( "southButton" ) ) );
+				config.put( "client.input.eastKey", getKeyByValue( k, displayedKey( "eastButton" ) ) );
+				config.put( "client.input.westKey", getKeyByValue( k, displayedKey( "westButton" ) ) );
+				config.put( "client.input.scoreKey", getKeyByValue( k, displayedKey( "scoreButton" ) ) );
+				config.put( "client.input.chatKey", getKeyByValue( k, displayedKey( "chatButton" ) ) );
 			}
 
 			if ( console.isChecked( ) )
 			{
 				getApp( ).consoleEnabled = true;
-				yamlConfig.put( "client.input.console", true );
+				config.put( "client.input.console", true );
 			}
 			else
 			{
 				getApp( ).consoleEnabled = false;
-				yamlConfig.put( "client.input.console", false );
+				config.put( "client.input.console", false );
 			}
 
-			yamlConfig.save( );
+			config.save( );
 		}
 		if ( console.isChecked( ) )
 		{
@@ -188,7 +188,7 @@ public class OptionsViewController extends GeneralController
 
 	public void fillkeys( )
 	{
-		YamlConfig yamlConfig = YamlConfig.DEFAULT;
+
 		startKeyBinding( "northButton", "client.input.northKey" );
 		startKeyBinding( "southButton", "client.input.southKey" );
 		startKeyBinding( "eastButton", "client.input.eastKey" );
@@ -198,7 +198,7 @@ public class OptionsViewController extends GeneralController
 		/*
 		 * if ( getApp().consoleEnabled ) { console.check( ); }
 		 */
-		Boolean con = ( Boolean ) yamlConfig.get( "client.input.console" );
+		Boolean con = ( Boolean ) getApp( ).getConfiguration( ).get( "client.input.console" );
 		if ( con == true )
 		{
 			console.check( );
@@ -293,13 +293,13 @@ public class OptionsViewController extends GeneralController
 	 */
 	private boolean hasInputChanged( )
 	{
-		YamlConfig con = YamlConfig.DEFAULT;
-		int north = ( int ) con.get( "client.input.northKey" );
-		int south = ( int ) con.get( "client.input.southKey" );
-		int east = ( int ) con.get( "client.input.eastKey" );
-		int west = ( int ) con.get( "client.input.westKey" );
-		int score = ( int ) con.get( "client.input.scoreKey" );
-		int chat = ( int ) con.get( "client.input.chatKey" );
+		MakhanaConfig config = getApp( ).getConfiguration( );
+		int north = ( int ) config.get( "client.input.northKey" );
+		int south = ( int ) config.get( "client.input.southKey" );
+		int east = ( int ) config.get( "client.input.eastKey" );
+		int west = ( int ) config.get( "client.input.westKey" );
+		int score = ( int ) config.get( "client.input.scoreKey" );
+		int chat = ( int ) config.get( "client.input.chatKey" );
 		if ( north != getKeyByValue( k, displayedKey( "northButton" ) ) || south != getKeyByValue( k, displayedKey( "southButton" ) )
 				|| east != getKeyByValue( k, displayedKey( "eastButton" ) ) || west != getKeyByValue( k, displayedKey( "westButton" ) )
 				|| score != getKeyByValue( k, displayedKey( "scoreButton" ) ) || chat != getKeyByValue( k, displayedKey( "chatButton" ) ) )
@@ -341,7 +341,7 @@ public class OptionsViewController extends GeneralController
 		fillkeys( );
 		graphic.selectItem( getApp( ).getContext( ).getSettings( ).getWidth( ) + "x" + getApp( ).getContext( ).getSettings( ).getHeight( ) );
 		mainVolume.setValue( ( getApp( ).getListener( ).getVolume( ) ) * 50.0f );
-		keyBinds = new KeyBindings( );
+		keyBinds = new KeyBindings( getApp( ).getConfiguration( ) );
 	}
 
 	/**
@@ -439,8 +439,7 @@ public class OptionsViewController extends GeneralController
 	 */
 	public void startKeyBinding( String keyButton, String yamlKey )
 	{
-		YamlConfig yamlConfig = YamlConfig.DEFAULT;
 		Button button = nifty.getCurrentScreen( ).findNiftyControl( keyButton, Button.class );
-		button.setText( KeyBindings.getKeyName( ( int ) yamlConfig.get( yamlKey ) ) );
+		button.setText( KeyBindings.getKeyName( ( int ) getApp( ).getConfiguration( ).get( yamlKey ) ) );
 	}
 }

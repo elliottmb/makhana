@@ -10,7 +10,7 @@ import com.cogitareforma.makhana.client.states.WorldManager;
 import com.cogitareforma.makhana.client.util.NiftyFactory;
 import com.cogitareforma.makhana.client.util.PlayerTraitListener;
 import com.cogitareforma.makhana.common.entities.components.Player;
-import com.cogitareforma.makhana.common.util.YamlConfig;
+import com.cogitareforma.makhana.common.util.MakhanaConfig;
 import com.jme3.app.SimpleApplication;
 import com.jme3.app.state.AppState;
 import com.jme3.input.KeyInput;
@@ -36,29 +36,29 @@ public class ClientMain extends SimpleApplication
 {
 	public static void main( String[ ] args )
 	{
-		AppSettings settings = new AppSettings( true );
-
 		ClientMain app = new ClientMain( );
-
-		YamlConfig yamlConfig = YamlConfig.DEFAULT;
-
-		if ( yamlConfig != null )
-		{
-			yamlConfig.buildAppSettings( settings );
-
-			if ( yamlConfig.get( "client.input" ) == null )
-			{
-				yamlConfig.buildInputSettings( );
-			}
-
-			yamlConfig.save( );
-		}
-		app.setDisplayFps( false );
-		app.setDisplayStatView( false );
-		app.setSettings( settings );
-		app.setShowSettings( false );
 		app.start( );
 	}
+
+	public ClientMain( )
+	{
+		setConfiguration( new MakhanaConfig( ) );
+
+		AppSettings settings = new AppSettings( true );
+		configuration.configureAppSettings( settings );
+
+		if ( configuration.get( "client.input.consoleKey" ) == null )
+		{
+			configuration.putDefaultKeys( );
+		}
+
+		setShowSettings( false );
+		setDisplayStatView( false );
+		setDisplayFps( false );
+		setSettings( settings );
+	}
+
+	private MakhanaConfig configuration;
 
 	/**
 	 * The logger for this class
@@ -383,8 +383,8 @@ public class ClientMain extends SimpleApplication
 	public void simpleInitApp( )
 	{
 		this.getContext( ).setTitle( "Makhana - Alpha" );
-		YamlConfig yamlConfig = YamlConfig.DEFAULT;
-		yamlConfig.buildAudioSettings( this.listener );
+
+		configuration.configureAudioSettings( this.listener );
 
 		startNifty( );
 
@@ -411,9 +411,9 @@ public class ClientMain extends SimpleApplication
 		masterConnection = new MasterConnectionManager( this );
 		gameConnection = new GameConnectionManager( this );
 
-		inputManager.addMapping( "showConsole", new KeyTrigger( ( Integer ) yamlConfig.get( "client.input.consoleKey" ) ) );
+		inputManager.addMapping( "showConsole", new KeyTrigger( ( Integer ) configuration.get( "client.input.consoleKey" ) ) );
 		inputManager.addMapping( "hideFPS", new KeyTrigger( KeyInput.KEY_F12 ) );
-		consoleEnabled = ( Boolean ) yamlConfig.get( "client.input.console" );
+		consoleEnabled = ( Boolean ) configuration.get( "client.input.console" );
 		inputManager.addListener( getBaseActionListener( ), "showConsole", "hideFPS" );
 	}
 
@@ -452,5 +452,22 @@ public class ClientMain extends SimpleApplication
 		NiftyFactory.createConsole( getNifty( ) );
 		stateManager.attach( ( AppState ) getNifty( ).getScreen( "consoleScreen" ).getScreenController( ) );
 		currentScreen = "start";
+	}
+
+	/**
+	 * @return the config
+	 */
+	public MakhanaConfig getConfiguration( )
+	{
+		return configuration;
+	}
+
+	/**
+	 * @param config
+	 *            the config to set
+	 */
+	public void setConfiguration( MakhanaConfig configuration )
+	{
+		this.configuration = configuration;
 	}
 }

@@ -16,7 +16,7 @@ import org.apache.commons.cli.ParseException;
 import com.cogitareforma.makhana.common.util.MakhanaConfig;
 import com.cogitareforma.makhana.gameserver.net.GameServerManager;
 import com.cogitareforma.makhana.gameserver.net.MasterConnectionManager;
-import com.jme3.app.SimpleApplication;
+import com.jme3.app.Application;
 import com.jme3.network.HostedConnection;
 import com.jme3.system.JmeContext;
 
@@ -25,11 +25,10 @@ import com.jme3.system.JmeContext;
  * Server. The actual server behavior is handled by Managers that are controlled
  * by this application.
  * 
- * @author Justin Kaufman
  * @author Elliott Butler
  * 
  */
-public class GameServer extends SimpleApplication
+public class GameServer extends Application
 {
 	public static void main( String[ ] args )
 	{
@@ -191,8 +190,9 @@ public class GameServer extends SimpleApplication
 	}
 
 	@Override
-	public void simpleInitApp( )
+	public void initialize( )
 	{
+		super.initialize( );
 		gameServerManager = new GameServerManager( this );
 
 		port = 7331; /* default */
@@ -282,11 +282,11 @@ public class GameServer extends SimpleApplication
 	}
 
 	@Override
-	public void simpleUpdate( float tpf )
+	public void update( )
 	{
+		super.update( );
+		float tpf = timer.getTimePerFrame( ) * speed;
 		gameServerManager.update( tpf );
-
-		super.simpleUpdate( tpf );
 	}
 
 	@Override

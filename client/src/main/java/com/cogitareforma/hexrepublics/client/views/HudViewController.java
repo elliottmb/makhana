@@ -16,9 +16,9 @@ import com.cogitareforma.makhana.common.entities.components.Player;
 import com.cogitareforma.makhana.common.entities.components.TileTrait;
 import com.cogitareforma.makhana.common.entities.components.WorldTrait;
 import com.cogitareforma.makhana.common.net.msg.ReadyUpRequest;
+import com.cogitareforma.makhana.common.util.MakhanaConfig;
 import com.cogitareforma.makhana.common.util.TraitEventListener;
 import com.cogitareforma.makhana.common.util.WorldFactory;
-import com.cogitareforma.makhana.common.util.YamlConfig;
 import com.jme3.app.Application;
 import com.jme3.app.state.AppStateManager;
 import com.jme3.collision.CollisionResults;
@@ -322,9 +322,9 @@ public class HudViewController extends GeneralPlayingController implements KeyIn
 	 */
 	public void bindKeys( )
 	{
-		YamlConfig yamlConfig = YamlConfig.DEFAULT;
-		scoreKey = ( Integer ) yamlConfig.get( "client.input.scoreKey" );
-		chatKey = ( Integer ) yamlConfig.get( "client.input.chatKey" );
+		MakhanaConfig config = getApp( ).getConfiguration( );
+		scoreKey = ( Integer ) config.get( "client.input.scoreKey" );
+		chatKey = ( Integer ) config.get( "client.input.chatKey" );
 	}
 
 	public void closeMenu( )
@@ -541,17 +541,17 @@ public class HudViewController extends GeneralPlayingController implements KeyIn
 	 */
 	public void refreshKeys( )
 	{
-		YamlConfig yamlConfig = YamlConfig.DEFAULT;
+		MakhanaConfig config = getApp( ).getConfiguration( );
 		getApp( ).getInputManager( ).clearMappings( );
 
-		getApp( ).getInputManager( ).addMapping( "showConsole", new KeyTrigger( ( Integer ) yamlConfig.get( "client.input.consoleKey" ) ) );
+		getApp( ).getInputManager( ).addMapping( "showConsole", new KeyTrigger( ( Integer ) config.get( "client.input.consoleKey" ) ) );
 		getApp( ).getInputManager( ).addMapping( "hideFPS", new KeyTrigger( KeyInput.KEY_F12 ) );
 		getApp( ).getInputManager( ).addListener( getApp( ).getBaseActionListener( ), "showConsole", "hideFPS" );
 
-		getApp( ).getInputManager( ).addMapping( "moveNorth", new KeyTrigger( ( Integer ) yamlConfig.get( "client.input.northKey" ) ) );
-		getApp( ).getInputManager( ).addMapping( "moveWest", new KeyTrigger( ( Integer ) yamlConfig.get( "client.input.westKey" ) ) );
-		getApp( ).getInputManager( ).addMapping( "moveEast", new KeyTrigger( ( Integer ) yamlConfig.get( "client.input.eastKey" ) ) );
-		getApp( ).getInputManager( ).addMapping( "moveSouth", new KeyTrigger( ( Integer ) yamlConfig.get( "client.input.southKey" ) ) );
+		getApp( ).getInputManager( ).addMapping( "moveNorth", new KeyTrigger( ( Integer ) config.get( "client.input.northKey" ) ) );
+		getApp( ).getInputManager( ).addMapping( "moveWest", new KeyTrigger( ( Integer ) config.get( "client.input.westKey" ) ) );
+		getApp( ).getInputManager( ).addMapping( "moveEast", new KeyTrigger( ( Integer ) config.get( "client.input.eastKey" ) ) );
+		getApp( ).getInputManager( ).addMapping( "moveSouth", new KeyTrigger( ( Integer ) config.get( "client.input.southKey" ) ) );
 		getApp( ).getInputManager( ).addMapping( "mouseClick", new MouseButtonTrigger( MouseInput.BUTTON_LEFT ) );
 		getApp( ).getInputManager( ).addMapping( "zoomIn", new MouseAxisTrigger( MouseInput.AXIS_WHEEL, false ) );
 		getApp( ).getInputManager( ).addMapping( "zoomOut", new MouseAxisTrigger( MouseInput.AXIS_WHEEL, true ) );

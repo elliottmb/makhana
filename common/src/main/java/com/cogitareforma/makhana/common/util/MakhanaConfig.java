@@ -66,7 +66,7 @@ public class MakhanaConfig extends ConfigObject
 		}
 	}
 
-	public void buildAppSettings( AppSettings settings )
+	public void configureAppSettings( AppSettings settings )
 	{
 		if ( settings == null )
 		{
@@ -143,7 +143,7 @@ public class MakhanaConfig extends ConfigObject
 		}
 	}
 
-	public void configureListener( Listener listener )
+	public void configureAudioSettings( Listener listener )
 	{
 		if ( listener == null )
 		{

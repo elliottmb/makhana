@@ -15,11 +15,11 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 
 import com.cogitareforma.makhana.common.data.ServerStatus;
 import com.cogitareforma.makhana.common.net.msg.ServerStatusRequest;
-import com.cogitareforma.makhana.common.util.YamlConfig;
+import com.cogitareforma.makhana.common.util.MakhanaConfig;
 import com.cogitareforma.makhana.masterserver.db.AccountRepository;
 import com.cogitareforma.makhana.masterserver.db.DatabaseConfig;
 import com.cogitareforma.makhana.masterserver.net.MasterServerManager;
-import com.jme3.app.SimpleApplication;
+import com.jme3.app.Application;
 import com.jme3.network.HostedConnection;
 import com.jme3.system.JmeContext;
 
@@ -28,10 +28,9 @@ import com.jme3.system.JmeContext;
  * NetworkClients and validates/handles their authentication and broadcasts
  * their chat messages.
  * 
- * @author Justin Kaufman
  * @author Elliott Butler
  */
-public class MasterServer extends SimpleApplication
+public class MasterServer extends Application
 {
 
 	public static void main( String[ ] args )
@@ -134,7 +133,7 @@ public class MasterServer extends SimpleApplication
 	}
 
 	@Override
-	public void simpleInitApp( )
+	public void initialize( )
 	{
 		serverManager = new MasterServerManager( this );
 
@@ -158,13 +157,13 @@ public class MasterServer extends SimpleApplication
 			e.printStackTrace( );
 		}
 
-		YamlConfig config = YamlConfig.DEFAULT;
-		Integer port = ( Integer ) config.get( "networkserver.port" );
+		MakhanaConfig configuration = new MakhanaConfig( );
+		Integer port = ( Integer ) configuration.get( "networkserver.port" );
 		if ( port == null )
 		{
-			port = new Integer( 1337 ); /* default */
-			config.put( "networkserver.port", port );
-			config.save( );
+			port = 1337; /* default */
+			configuration.put( "networkserver.port", 1337 );
+			configuration.save( );
 		}
 
 		serverManager.run( port );
@@ -172,9 +171,9 @@ public class MasterServer extends SimpleApplication
 	}
 
 	@Override
-	public void simpleUpdate( float tpf )
+	public void update( )
 	{
-		super.simpleUpdate( tpf );
+		super.update( );
 
 		Date currentTime = new Date( );
 		if ( lastUpdate.getTime( ) <= currentTime.getTime( ) - 300000 )
@@ -183,7 +182,6 @@ public class MasterServer extends SimpleApplication
 			logger.log( Level.INFO, "Pinging all active servers for their current server status" );
 			serverManager.requestCurrentServerStatuses( );
 		}
-
 	}
 
 	@Override
