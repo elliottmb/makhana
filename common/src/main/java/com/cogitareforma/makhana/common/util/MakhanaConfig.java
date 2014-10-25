@@ -29,14 +29,14 @@ public class MakhanaConfig extends ConfigObject
 	public MakhanaConfig( )
 	{
 		super( null );
+
+		// Put all the default values (flattened)
+		putAll( cs.parse( MakhanaConfig.class.getResource( "/default.groovy" ) ).flatten( ) );
 	}
 
 	public MakhanaConfig( File file )
 	{
-		super( null );
-
-		// Put all the default values (flattened)
-		putAll( cs.parse( MakhanaConfig.class.getResource( "/default.groovy" ) ).flatten( ) );
+		this( );
 
 		ConfigObject clientConfig;
 		try
@@ -49,11 +49,6 @@ public class MakhanaConfig extends ConfigObject
 		{
 			logger.log( Level.SEVERE, "Error loading configuration file.", e );
 		}
-	}
-
-	public MakhanaConfig( URL file )
-	{
-		super( file );
 	}
 
 	public void buildAppSettings( AppSettings settings )

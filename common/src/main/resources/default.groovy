@@ -1,1 +1,37 @@
-grails.webflow.stateless=false
+client {
+	graphics {
+		height=768
+		width=1360
+		fullscreen=false
+		vsync=false
+		samples=4
+	 	frequency=60
+	}
+	audio.mainvolume=19.0
+	input {
+		consoleKey=41
+		scoreKey=15
+		chatKey=64
+		northKey=17
+		southKey=31
+		westKey=30
+		eastKey=32
+		console=false
+	}
+}
+networkserver {
+	host="srv.westcoastgaming.net"
+	port=8993
+}
+mysqldb {
+	hostname=localhost
+	port=3306
+	database=network
+	username=network
+	password=demo
+}
+gameserver {
+	host=localhost
+	port=7331
+	name="Test Server"
+}
