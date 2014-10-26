@@ -67,7 +67,6 @@ project(":common") {
     dependencies {
 		compile fileTree(dir: '../libs', includes: ['*.jar']) 
 		compile fileTree(dir: '../libs/lib', includes: ['*.jar']) 
-		compile 'org.yaml:snakeyaml:1.13'
 		compile 'commons-cli:commons-cli:1.2'
 		compile 'org.apache.commons:commons-lang3:3.3.2'
 		compile 'org.mindrot:jbcrypt:0.3m'
