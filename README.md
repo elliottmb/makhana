@@ -12,7 +12,7 @@ The following are fetched via the gradle build script.
 * Apache Commons - Collections 3.2
 * Apache Commons - Lang 3.3.2
 * Apache Commons - IO 2.4
-* SnakeYAML 1.13
+* Groovy Language - All 2.3.+
 * JBCrypt 0.3m
 * Google Guava 17.0
 
@@ -25,7 +25,9 @@ The following are fetched via the gradle build script.
 
 ###Included Dependencies
 The following are included in the repository as they aren't available via maven/gradle.
+
 * jMonkeyEngine 3.0.9
 * Lemur
+* LemurProto
 * Zay-ES (Entity System)
 * Zay-ES-Net (Entity System Networking Extension)
