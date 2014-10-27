@@ -18,6 +18,7 @@ import com.simsilica.lemur.GuiGlobals;
 import com.simsilica.lemur.Panel;
 import com.simsilica.lemur.Slider;
 import com.simsilica.lemur.component.QuadBackgroundComponent;
+import com.simsilica.lemur.style.BaseStyles;
 import com.simsilica.lemur.style.Styles;
 
 public class LemurTest extends SimpleApplication
@@ -42,6 +43,10 @@ public class LemurTest extends SimpleApplication
 	{
 		screenManager = new ScreenManager( this, guiNode );
 		stateManager.attach( screenManager );
+		inputManager.deleteMapping( SimpleApplication.INPUT_MAPPING_CAMERA_POS );
+		inputManager.deleteMapping( SimpleApplication.INPUT_MAPPING_EXIT );
+		inputManager.deleteMapping( SimpleApplication.INPUT_MAPPING_HIDE_STATS );
+		inputManager.deleteMapping( SimpleApplication.INPUT_MAPPING_MEMORY );
 
 		// Initialize the globals access so that the defualt
 		// components can find what they need.
@@ -75,7 +80,7 @@ public class LemurTest extends SimpleApplication
 		screenManager.addScreen( new HudScreen( ) );
 		screenManager.setScreen( StartScreen.class );
 
-		inputManager.addMapping( "showConsole", new KeyTrigger( KeyInput.KEY_GRAVE ) );
+		inputManager.addMapping( "showConsole", new KeyTrigger( KeyInput.KEY_F1 ) );
 		inputManager.addListener( baseActionListener, "showConsole" );
 	}
 

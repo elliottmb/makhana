@@ -1,5 +1,6 @@
 package com.cogitareforma.makhana.client.ui;
 
+import java.util.ArrayList;
 import java.util.Set;
 
 import com.cogitareforma.makhana.common.ui.Screen;
@@ -7,7 +8,7 @@ import com.cogitareforma.makhana.common.ui.ScreenContext;
 import com.cogitareforma.makhana.common.ui.ScreenManager;
 import com.google.common.collect.Sets;
 import com.jme3.app.Application;
-import com.jme3.input.KeyInput;
+import com.jme3.input.KeyNames;
 import com.jme3.input.RawInputListener;
 import com.jme3.input.event.JoyAxisEvent;
 import com.jme3.input.event.JoyButtonEvent;
@@ -63,12 +64,13 @@ public class OptionsScreen extends Screen
 	private Button chatButton;
 	private Button scoreboardButton;
 	private Application app;
-	private char buttonKey;
+	private String buttonKey;
 	private RawInputListener list;
 	private Button currentButton;
 	private boolean buttonPressed;
-	private Set< Integer > avaiableKeys;
-	private char prevKey;
+	private Set< String > avaiableKeys;
+	private String prevKey;
+	private ArrayList< String > resolutions;
 
 	@Override
 	public void cleanup( )
@@ -215,7 +217,7 @@ public class OptionsScreen extends Screen
 				if ( !buttonPressed )
 				{
 					System.out.println( "North Clicked" );
-					prevKey = northButton.getText( ).charAt( 0 );
+					prevKey = northButton.getText( );
 					northButton.setText( "<Press Key>" );
 					activeListener( );
 					setButtonName( northButton );
@@ -244,7 +246,7 @@ public class OptionsScreen extends Screen
 				if ( !buttonPressed )
 				{
 					System.out.println( "North Clicked" );
-					prevKey = southButton.getText( ).charAt( 0 );
+					prevKey = southButton.getText( );
 					southButton.setText( "<Press Key>" );
 					activeListener( );
 					setButtonName( southButton );
@@ -273,7 +275,7 @@ public class OptionsScreen extends Screen
 				if ( !buttonPressed )
 				{
 					System.out.println( "North Clicked" );
-					prevKey = eastButton.getText( ).charAt( 0 );
+					prevKey = eastButton.getText( );
 					eastButton.setText( "<Press Key>" );
 					activeListener( );
 					setButtonName( eastButton );
@@ -302,7 +304,7 @@ public class OptionsScreen extends Screen
 				if ( !buttonPressed )
 				{
 					System.out.println( "North Clicked" );
-					prevKey = westButton.getText( ).charAt( 0 );
+					prevKey = westButton.getText( );
 					westButton.setText( "<Press Key>" );
 					activeListener( );
 					setButtonName( westButton );
@@ -331,7 +333,7 @@ public class OptionsScreen extends Screen
 				if ( !buttonPressed )
 				{
 					System.out.println( "North Clicked" );
-					prevKey = chatButton.getText( ).charAt( 0 );
+					prevKey = chatButton.getText( );
 					chatButton.setText( "<Press Key>" );
 					activeListener( );
 					setButtonName( chatButton );
@@ -360,7 +362,7 @@ public class OptionsScreen extends Screen
 				if ( !buttonPressed )
 				{
 					System.out.println( "North Clicked" );
-					prevKey = scoreboardButton.getText( ).charAt( 0 );
+					prevKey = scoreboardButton.getText( );
 					scoreboardButton.setText( "<Press Key>" );
 					activeListener( );
 					setButtonName( scoreboardButton );
@@ -384,15 +386,27 @@ public class OptionsScreen extends Screen
 	{
 		super.initialize( screenManager, app );
 		this.app = app;
-		buttonKey = ' ';
+		buttonKey = " ";
 
-		avaiableKeys = Sets.newHashSet( KeyInput.KEY_A, KeyInput.KEY_B, KeyInput.KEY_C, KeyInput.KEY_D, KeyInput.KEY_E, KeyInput.KEY_F,
-				KeyInput.KEY_G, KeyInput.KEY_H, KeyInput.KEY_I, KeyInput.KEY_J, KeyInput.KEY_K, KeyInput.KEY_L, KeyInput.KEY_M,
-				KeyInput.KEY_N, KeyInput.KEY_O, KeyInput.KEY_P, KeyInput.KEY_Q, KeyInput.KEY_R, KeyInput.KEY_S, KeyInput.KEY_T,
-				KeyInput.KEY_U, KeyInput.KEY_V, KeyInput.KEY_W, KeyInput.KEY_X, KeyInput.KEY_Y, KeyInput.KEY_Z, KeyInput.KEY_1,
-				KeyInput.KEY_2, KeyInput.KEY_3, KeyInput.KEY_4, KeyInput.KEY_5, KeyInput.KEY_6, KeyInput.KEY_7, KeyInput.KEY_8,
-				KeyInput.KEY_9, KeyInput.KEY_0, KeyInput.KEY_UP, KeyInput.KEY_DOWN, KeyInput.KEY_LEFT, KeyInput.KEY_RIGHT,
-				KeyInput.KEY_GRAVE, KeyInput.KEY_TAB );
+		avaiableKeys = Sets.newHashSet( "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T",
+				"U", "V", "W", "X", "Y", "Z", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "Up", "Down", "Left", "Right", "`", "Tab" );
+		resolutions = new ArrayList< String >( );
+		resolutions.add( "A" );
+		resolutions.add( "B" );
+		resolutions.add( "C" );
+		resolutions.add( "D" );
+		resolutions.add( "E" );
+		resolutions.add( "F" );
+		resolutions.add( "G" );
+		resolutions.add( "H" );
+		resolutions.add( "I" );
+		resolutions.add( "J" );
+		resolutions.add( "K" );
+		resolutions.add( "L" );
+		resolutions.add( "M" );
+		resolutions.add( "N" );
+		resolutions.add( "O" );
+		resolutions.add( "P" );
 
 		Camera cam = screenManager.getApp( ).getCamera( );
 		ScreenContext sc = screenManager.getScreenContext( );
@@ -417,7 +431,7 @@ public class OptionsScreen extends Screen
 		top.addChild( name );
 		top.addChild( buttons );
 
-		Container middle = new Container( new BoxLayout( Axis.X, FillMode.Even ), "glass" );
+		Container middle = new Container( new BoxLayout( Axis.X, FillMode.Even ) );
 		middle.setPreferredSize( new Vector3f( cam.getWidth( ) * .4f, cam.getHeight( ) * .05f, 0 ) );
 		middle.setLocalTranslation( cam.getWidth( ) * .05f, cam.getHeight( ) * 0.85f, 0 );
 		middle.setBackground( new QuadBackgroundComponent( ColorRGBA.Brown ) );
@@ -459,9 +473,9 @@ public class OptionsScreen extends Screen
 		res.setName( "Resolution" );
 		res.setInsets( new Insets3f( cam.getHeight( ) * .02f, 0, cam.getHeight( ) * .02f, 0 ) );
 		resRef = res.getModel( ).createReference( );
-		resLabel.setText( "Resolution: " + String.valueOf( resRef.get( ) ) );
+		resLabel.setText( "Resolution: " + resolutions.get( resRef.get( ).intValue( ) ) );
 
-		Checkbox fullscreen = new Checkbox( "FullScreen", "glass" );
+		Checkbox fullscreen = new Checkbox( "FullScreen" );
 		fullscreen.setFontSize( sc.getMediumFontSize( ) );
 		fullscreen.setInsets( new Insets3f( cam.getHeight( ) * .02f, 0, cam.getHeight( ) * .02f, 0 ) );
 
@@ -491,7 +505,7 @@ public class OptionsScreen extends Screen
 		musicVolumeRef = musicVolume.getModel( ).createReference( );
 		soundVolumeRef = soundsVolume.getModel( ).createReference( );
 
-		Checkbox console = new Checkbox( "Enable Dev Console: ", "glass" );
+		Checkbox console = new Checkbox( "Enable Dev Console", "glass" );
 		console.setFontSize( sc.getMediumFontSize( ) );
 		console.setInsets( new Insets3f( cam.getHeight( ) * .02f, 0, cam.getHeight( ) * .02f, 0 ) );
 
@@ -575,25 +589,27 @@ public class OptionsScreen extends Screen
 		getScreenNode( ).attachChild( current );
 	}
 
-	private char returnName( int number, char letter )
+	private String returnName( int number, char letter )
 	{
 		// TODO need to add back the old key to avaiableKeys.
-		System.out.println( ( int ) prevKey );
-		currentButton.getText( );
-		if ( avaiableKeys.contains( number ) )
+		// avaiableKeys.add( charMap.get( prevKey ) );
+		avaiableKeys.add( prevKey );
+		KeyNames key = new KeyNames( );
+		if ( avaiableKeys.contains( key.getName( number ) ) )
 		{
-			avaiableKeys.remove( number );
-			buttonKey = letter;
-			return letter;
+			avaiableKeys.remove( key.getName( number ) );
+
+			buttonKey = key.getName( number );
+			return buttonKey;
 		}
-		buttonKey = ' ';
+		buttonKey = " ";
 		return buttonKey;
 	}
 
 	private void activeListener( )
 	{
 		System.out.println( "Active Listener" );
-		buttonKey = ' ';
+		buttonKey = " ";
 		list = new RawInputListener( )
 		{
 			@Override
@@ -640,8 +656,6 @@ public class OptionsScreen extends Screen
 		};
 		app.getInputManager( ).addRawInputListener( list );
 		buttonPressed = true;
-		// button.setText( buttonKey );
-		// app.getInputManager().removeRawInputListener( list );
 	}
 
 	@Override
@@ -666,7 +680,7 @@ public class OptionsScreen extends Screen
 		if ( resRef.update( ) )
 		{
 			res.getModel( ).setValue( Math.round( resRef.get( ) ) );
-			resLabel.setText( "Resolution: " + String.valueOf( resRef.get( ) ) );
+			resLabel.setText( "Resolution: " + resolutions.get( resRef.get( ).intValue( ) ) );
 			System.out.println( "Resolution updated" );
 		}
 		if ( qualityRef.update( ) )
@@ -680,12 +694,12 @@ public class OptionsScreen extends Screen
 			System.out.println( "Music Volume updated" );
 		if ( soundVolumeRef.update( ) )
 			System.out.println( "Sound Volume updated" );
-		if ( buttonKey != ' ' )
+		if ( buttonKey != " " )
 		{
 			app.getInputManager( ).removeRawInputListener( list );
 			currentButton.setText( "" + buttonKey );
 			buttonPressed = false;
-			buttonKey = ' ';
+			buttonKey = " ";
 		}
 
 	}
