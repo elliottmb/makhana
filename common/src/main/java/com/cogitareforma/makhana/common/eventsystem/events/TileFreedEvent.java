@@ -1,16 +1,16 @@
 package com.cogitareforma.makhana.common.eventsystem.events;
 
 import com.cogitareforma.makhana.common.entities.components.TileTrait;
-import com.cogitareforma.makhana.common.eventsystem.EntityEventManager;
+import com.simsilica.es.EntityData;
 import com.simsilica.es.EntityId;
 
 public class TileFreedEvent extends TileEvent
 {
 	private EntityId oldOwner;
 
-	public TileFreedEvent( EntityEventManager entityEventManager, EntityId source, TileTrait tileTrait, EntityId oldOwner )
+	public TileFreedEvent( EntityData entityData, EntityId source, TileTrait tileTrait, EntityId oldOwner )
 	{
-		super( entityEventManager, source, tileTrait );
+		super( entityData, source, tileTrait );
 
 		this.oldOwner = oldOwner;
 	}

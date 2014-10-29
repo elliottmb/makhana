@@ -2,7 +2,7 @@ package com.cogitareforma.makhana.common.eventsystem.events;
 
 import com.cogitareforma.makhana.common.entities.components.Player;
 import com.cogitareforma.makhana.common.eventsystem.EntityEvent;
-import com.cogitareforma.makhana.common.eventsystem.EntityEventManager;
+import com.simsilica.es.EntityData;
 import com.simsilica.es.EntityId;
 
 public abstract class PlayerEvent extends EntityEvent
@@ -15,16 +15,16 @@ public abstract class PlayerEvent extends EntityEvent
 	/**
 	 * An event involving a Player entity
 	 * 
-	 * @param entityEventManager
-	 *            the entityEventManager which triggered this event
+	 * @param entityData
+	 *            the entityData for the entity
 	 * @param source
 	 *            the source entity
 	 * @param playerTrait
 	 *            player trait when the event was triggered
 	 */
-	public PlayerEvent( EntityEventManager entityEventManager, EntityId source, Player playerTrait )
+	public PlayerEvent( EntityData entityData, EntityId source, Player playerTrait )
 	{
-		super( entityEventManager, source );
+		super( entityData, source );
 		// TODO Auto-generated constructor stub
 		this.playerTrait = playerTrait;
 	}

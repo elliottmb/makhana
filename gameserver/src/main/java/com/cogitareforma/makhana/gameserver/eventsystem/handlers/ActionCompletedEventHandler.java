@@ -13,8 +13,8 @@ import com.cogitareforma.makhana.common.entities.components.Health;
 import com.cogitareforma.makhana.common.entities.components.LocationTrait;
 import com.cogitareforma.makhana.common.entities.components.StrengthTrait;
 import com.cogitareforma.makhana.common.entities.components.TileTrait;
-import com.cogitareforma.makhana.common.eventsystem.EntityEvent;
-import com.cogitareforma.makhana.common.eventsystem.EntityEventHandler;
+import com.cogitareforma.makhana.common.eventsystem.Event;
+import com.cogitareforma.makhana.common.eventsystem.EventHandler;
 import com.cogitareforma.makhana.gameserver.eventsystem.events.ActionCompletedEvent;
 import com.simsilica.es.ComponentFilter;
 import com.simsilica.es.CreatedBy;
@@ -23,7 +23,7 @@ import com.simsilica.es.EntityData;
 import com.simsilica.es.EntityId;
 import com.simsilica.es.filter.FieldFilter;
 
-public class ActionCompletedEventHandler implements EntityEventHandler
+public class ActionCompletedEventHandler implements EventHandler
 {
 	private final static Logger logger = Logger.getLogger( ActionCompletedEventHandler.class.getName( ) );
 
@@ -34,13 +34,13 @@ public class ActionCompletedEventHandler implements EntityEventHandler
 	};
 
 	@Override
-	public boolean handle( EntityEvent event )
+	public boolean handle( Event event )
 	{
 		if ( event instanceof ActionCompletedEvent )
 		{
 			ActionCompletedEvent actionCompleted = ( ActionCompletedEvent ) event;
 
-			EntityData entityData = actionCompleted.getEntityEventManager( ).getEntityData( );
+			EntityData entityData = actionCompleted.getEntityData( );
 			EntityId id = actionCompleted.getSource( );
 			ActionTrait at = actionCompleted.getAction( );
 

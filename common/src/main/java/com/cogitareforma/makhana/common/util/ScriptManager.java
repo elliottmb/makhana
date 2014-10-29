@@ -29,8 +29,8 @@ import org.codehaus.groovy.control.customizers.SecureASTCustomizer;
 import org.codehaus.groovy.runtime.InvokerHelper;
 import org.codehaus.groovy.syntax.Types;
 
-import com.cogitareforma.makhana.common.eventsystem.EntityEvent;
-import com.cogitareforma.makhana.common.eventsystem.EntityEventHandler;
+import com.cogitareforma.makhana.common.eventsystem.Event;
+import com.cogitareforma.makhana.common.eventsystem.EventHandler;
 import com.google.common.collect.ImmutableList;
 import com.simsilica.es.EntityData;
 import com.simsilica.es.EntityId;
@@ -43,7 +43,7 @@ public class ScriptManager
 			Math.class.getName( ), Date.class.getName( ), Map.class.getName( ), List.class.getName( ), Set.class.getName( ),
 			ArrayList.class.getName( ), Arrays.class.getName( ), HashMap.class.getName( ), HashSet.class.getName( ),
 			BigDecimal.class.getName( ), String.class.getName( ), Boolean.class.getName( ), Boolean.TYPE.getName( ),
-			EntityEventHandler.class.getName( ), EntityEvent.class.getName( ), EntitySet.class.getName( ), EntityId.class.getName( ),
+			EventHandler.class.getName( ), Event.class.getName( ), EntitySet.class.getName( ), EntityId.class.getName( ),
 			EntityData.class.getName( ), "java.lang.Math"
 	};
 
@@ -56,7 +56,7 @@ public class ScriptManager
 			"[[Z", "[[[Z", Boolean.TYPE.getName( ), BigDecimal.class.getName( ), Arrays.class.getName( ), Date.class.getName( ),
 			List.class.getName( ), Map.class.getName( ), Set.class.getName( ), Object.class.getName( ), String.class.getName( ),
 			"[[Ljava.lang.String;]", "java.lang.String", "[Ljava.lang.String;", InvokerHelper.class.getName( ),
-			EntityEventHandler.class.getName( ), EntityEvent.class.getName( ), EntitySet.class.getName( ), EntityId.class.getName( ),
+			EventHandler.class.getName( ), Event.class.getName( ), EntitySet.class.getName( ), EntityId.class.getName( ),
 			EntityData.class.getName( )
 	};
 

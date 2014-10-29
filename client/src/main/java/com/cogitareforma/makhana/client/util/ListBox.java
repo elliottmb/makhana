@@ -1,6 +1,7 @@
 package com.cogitareforma.makhana.client.util;
 
-import com.jme3.material.RenderState.BlendMode;
+import java.util.Set;
+
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
@@ -29,8 +30,6 @@ import com.simsilica.lemur.style.Attributes;
 import com.simsilica.lemur.style.ElementId;
 import com.simsilica.lemur.style.StyleDefaults;
 import com.simsilica.lemur.style.Styles;
-
-import java.util.Set;
 
 /**
  *

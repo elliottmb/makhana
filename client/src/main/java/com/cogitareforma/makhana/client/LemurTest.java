@@ -18,7 +18,6 @@ import com.simsilica.lemur.GuiGlobals;
 import com.simsilica.lemur.Panel;
 import com.simsilica.lemur.Slider;
 import com.simsilica.lemur.component.QuadBackgroundComponent;
-import com.simsilica.lemur.style.BaseStyles;
 import com.simsilica.lemur.style.Styles;
 
 public class LemurTest extends SimpleApplication

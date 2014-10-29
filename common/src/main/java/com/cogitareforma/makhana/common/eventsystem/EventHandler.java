@@ -1,9 +1,9 @@
 package com.cogitareforma.makhana.common.eventsystem;
 
-public interface EntityEventHandler extends Comparable< EntityEventHandler >
+public interface EventHandler extends Comparable< EventHandler >
 {
 	@Override
-	public default int compareTo( EntityEventHandler other )
+	public default int compareTo( EventHandler other )
 	{
 		return ( getPriority( ) < other.getPriority( ) ) ? -1 : ( ( getPriority( ) == other.getPriority( ) ) ? 0 : 1 );
 	}
@@ -32,6 +32,6 @@ public interface EntityEventHandler extends Comparable< EntityEventHandler >
 	 * @return true if the event has been handled completely and should cease,
 	 *         otherwise false
 	 */
-	public boolean handle( EntityEvent event );
+	public boolean handle( Event event );
 
 }

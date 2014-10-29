@@ -3,13 +3,13 @@ package com.cogitareforma.makhana.gameserver.eventsystem.handlers;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.cogitareforma.makhana.common.eventsystem.EntityEvent;
-import com.cogitareforma.makhana.common.eventsystem.EntityEventHandler;
+import com.cogitareforma.makhana.common.eventsystem.Event;
+import com.cogitareforma.makhana.common.eventsystem.EventHandler;
 import com.cogitareforma.makhana.common.eventsystem.events.TileCapturedEvent;
 import com.cogitareforma.makhana.common.eventsystem.events.TileClaimedEvent;
 import com.cogitareforma.makhana.common.eventsystem.events.TileFreedEvent;
 
-public class TileOwnerChangedEventHandler implements EntityEventHandler
+public class TileOwnerChangedEventHandler implements EventHandler
 {
 	private final static Logger logger = Logger.getLogger( TileOwnerChangedEventHandler.class.getName( ) );
 
@@ -20,7 +20,7 @@ public class TileOwnerChangedEventHandler implements EntityEventHandler
 	};
 
 	@Override
-	public boolean handle( EntityEvent event )
+	public boolean handle( Event event )
 	{
 		if ( event instanceof TileClaimedEvent )
 		{

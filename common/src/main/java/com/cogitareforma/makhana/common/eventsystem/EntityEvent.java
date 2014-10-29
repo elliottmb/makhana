@@ -1,21 +1,23 @@
 package com.cogitareforma.makhana.common.eventsystem;
 
+import com.simsilica.es.EntityData;
 import com.simsilica.es.EntityId;
 
-public class EntityEvent
+public class EntityEvent extends Event
 {
 	private EntityId source;
-	private EntityEventManager entityEventManager;
+	private EntityData entityData;
 
-	public EntityEvent( EntityEventManager entityEventManager, EntityId source )
+	public EntityEvent( EntityData entityData, EntityId source )
 	{
+		super( );
+		this.entityData = entityData;
 		this.source = source;
-		this.entityEventManager = entityEventManager;
 	}
 
-	public EntityEventManager getEntityEventManager( )
+	public EntityData getEntityData( )
 	{
-		return entityEventManager;
+		return entityData;
 	}
 
 	public EntityId getSource( )

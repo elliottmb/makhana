@@ -5,8 +5,8 @@ import java.util.logging.Logger;
 
 import com.cogitareforma.makhana.common.entities.components.CapitalTrait;
 import com.cogitareforma.makhana.common.entities.components.TileTrait;
-import com.cogitareforma.makhana.common.eventsystem.EntityEvent;
-import com.cogitareforma.makhana.common.eventsystem.EntityEventHandler;
+import com.cogitareforma.makhana.common.eventsystem.Event;
+import com.cogitareforma.makhana.common.eventsystem.EventHandler;
 import com.cogitareforma.makhana.gameserver.eventsystem.events.ServerPlayerJoinEvent;
 import com.simsilica.es.ComponentFilter;
 import com.simsilica.es.CreatedBy;
@@ -15,7 +15,7 @@ import com.simsilica.es.EntityId;
 import com.simsilica.es.filter.AndFilter;
 import com.simsilica.es.filter.FieldFilter;
 
-public class ServerPlayerJoinEventHandler implements EntityEventHandler
+public class ServerPlayerJoinEventHandler implements EventHandler
 {
 	private final static Logger logger = Logger.getLogger( ServerPlayerJoinEventHandler.class.getName( ) );
 
@@ -27,7 +27,7 @@ public class ServerPlayerJoinEventHandler implements EntityEventHandler
 	}
 
 	@Override
-	public boolean handle( EntityEvent event )
+	public boolean handle( Event event )
 	{
 		if ( event instanceof ServerPlayerJoinEvent )
 		{
@@ -35,7 +35,7 @@ public class ServerPlayerJoinEventHandler implements EntityEventHandler
 			if ( !joinEvent.isAlreadyExisting( ) )
 			{
 				EntityId playerEntity = joinEvent.getSource( );
-				EntityData entityData = joinEvent.getEntityEventManager( ).getEntityData( );
+				EntityData entityData = joinEvent.getEntityData( );
 
 				logger.log( Level.INFO, "Processing ServerPlayerJoinEvent for " + playerEntity );
 
