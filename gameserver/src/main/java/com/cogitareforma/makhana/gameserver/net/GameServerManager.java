@@ -15,10 +15,10 @@ import com.cogitareforma.makhana.common.entities.components.ActionTrait;
 import com.cogitareforma.makhana.common.entities.components.Player;
 import com.cogitareforma.makhana.common.entities.components.TileTrait;
 import com.cogitareforma.makhana.common.entities.components.WorldTrait;
-import com.cogitareforma.makhana.common.eventsystem.SortedEventManager;
 import com.cogitareforma.makhana.common.eventsystem.Event;
 import com.cogitareforma.makhana.common.eventsystem.EventHandler;
 import com.cogitareforma.makhana.common.eventsystem.EventManager;
+import com.cogitareforma.makhana.common.eventsystem.ThreadSafeEventManager;
 import com.cogitareforma.makhana.common.eventsystem.events.TileCapturedEvent;
 import com.cogitareforma.makhana.common.eventsystem.events.TileClaimedEvent;
 import com.cogitareforma.makhana.common.eventsystem.events.TileFreedEvent;
@@ -272,7 +272,7 @@ public class GameServerManager extends ServerManager< GameServer >
 
 			entityData = new DefaultEntityData( );
 			entityDataHostService = new EntityDataHostService( getServer( ), 0, entityData );
-			eventManager = new SortedEventManager( entityData );
+			eventManager = new ThreadSafeEventManager( getApp( ) );
 
 			eventManager.addEventHandler( new ActionCompletedEventHandler( ), ActionCompletedEvent.class );
 			eventManager.addEventHandler( new ServerPlayerJoinEventHandler( ), ServerPlayerJoinEvent.class );

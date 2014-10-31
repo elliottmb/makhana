@@ -50,10 +50,10 @@ public class GameConnectionListener implements ClientStateListener, ErrorListene
 		gController.gotoScreen( "lobby", false, true, false, null, null );
 
 		logger.log( Level.INFO, "Informing Master Server of in game status" );
-		MasterConnectionManager masterConnManager = manager.getApp( ).getMasterConnManager( );
+		MasterConnectionManager masterConnManager = manager.getApp( ).getMasterConnectionManager( );
 		if ( masterConnManager.isConnected( ) )
 		{
-			manager.getApp( ).getMasterConnManager( ).send( new ClientStatusMessage( true ) );
+			manager.getApp( ).getMasterConnectionManager( ).send( new ClientStatusMessage( true ) );
 		}
 	}
 
@@ -79,10 +79,10 @@ public class GameConnectionListener implements ClientStateListener, ErrorListene
 		manager.setRemoteEntityData( null );
 
 		logger.log( Level.INFO, "Informing Master Server of out of game status" );
-		MasterConnectionManager masterConnManager = manager.getApp( ).getMasterConnManager( );
+		MasterConnectionManager masterConnManager = manager.getApp( ).getMasterConnectionManager( );
 		if ( masterConnManager.isConnected( ) )
 		{
-			manager.getApp( ).getMasterConnManager( ).send( new ClientStatusMessage( false ) );
+			manager.getApp( ).getMasterConnectionManager( ).send( new ClientStatusMessage( false ) );
 		}
 	}
 

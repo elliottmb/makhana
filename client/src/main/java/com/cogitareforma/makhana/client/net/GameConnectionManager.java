@@ -147,7 +147,7 @@ public class GameConnectionManager extends ConnectionManager< ClientMain >
 	 */
 	public void sendMessage( String message )
 	{
-		send( new ChatMessage( getApp( ).getMasterConnManager( ).getSession( ), message ) );
+		send( new ChatMessage( getApp( ).getMasterConnectionManager( ).getSession( ), message ) );
 	}
 
 	/**

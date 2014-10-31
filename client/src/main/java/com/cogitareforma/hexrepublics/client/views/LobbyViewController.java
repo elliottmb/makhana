@@ -83,15 +83,15 @@ public class LobbyViewController extends GeneralPlayingController
 	{
 		// TODO: LOGIC GOES HERE!
 		// Issue #33
-		getApp( ).getGameConnManager( ).send( new ReadyUpRequest( true ) );
+		getApp( ).getGameConnectionManager( ).send( new ReadyUpRequest( true ) );
 		start( );
 	}
 
 	public void showPlayers( )
 	{
-		if ( getApp( ).getGameConnManager( ).isConnected( ) )
+		if ( getApp( ).getGameConnectionManager( ).isConnected( ) )
 		{
-			RemoteEntityData entityData = getApp( ).getGameConnManager( ).getRemoteEntityData( );
+			RemoteEntityData entityData = getApp( ).getGameConnectionManager( ).getRemoteEntityData( );
 			if ( entityData != null )
 			{
 				Set< EntityId > playerSet = entityData.findEntities( null, Player.class );

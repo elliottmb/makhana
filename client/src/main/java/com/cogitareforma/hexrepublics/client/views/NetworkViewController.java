@@ -54,7 +54,7 @@ public class NetworkViewController extends GeneralController implements KeyInput
 		RadioButton full = getApp( ).getNifty( ).getScreen( "network" ).findNiftyControl( "option-2", RadioButton.class );
 		RadioButton empty = getApp( ).getNifty( ).getScreen( "network" ).findNiftyControl( "option-3", RadioButton.class );
 		CheckBox hasPlayers = getApp( ).getNifty( ).getScreen( "network" ).findNiftyControl( "hasPlayer", CheckBox.class );
-		for ( ServerStatus stat : getApp( ).getMasterConnManager( ).getServers( ) )
+		for ( ServerStatus stat : getApp( ).getMasterConnectionManager( ).getServers( ) )
 		{
 			if ( search == true )
 			{
@@ -112,8 +112,8 @@ public class NetworkViewController extends GeneralController implements KeyInput
 		setScreenId( "network" );
 		super.initialize( stateManager, app );
 
-		getApp( ).getMasterConnManager( ).send( new UserListRequest( ) );
-		getApp( ).getMasterConnManager( ).send( new ServerListRequest( ) );
+		getApp( ).getMasterConnectionManager( ).send( new UserListRequest( ) );
+		getApp( ).getMasterConnectionManager( ).send( new ServerListRequest( ) );
 		logger.log( Level.INFO, "Initialised " + this.getClass( ) );
 		getApp( ).getNifty( ).getCurrentScreen( ).findElementByName( "chat" );
 		chat = getApp( ).getNifty( ).getCurrentScreen( ).findNiftyControl( "networkChat", Chat.class );
@@ -222,6 +222,6 @@ public class NetworkViewController extends GeneralController implements KeyInput
 
 	public void refreshServerList( )
 	{
-		getApp( ).getMasterConnManager( ).send( new ServerListRequest( ) );
+		getApp( ).getMasterConnectionManager( ).send( new ServerListRequest( ) );
 	}
 }

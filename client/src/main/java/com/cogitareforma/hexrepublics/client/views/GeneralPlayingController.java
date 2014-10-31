@@ -14,7 +14,7 @@ public abstract class GeneralPlayingController extends GeneralController
 			return null;
 		}, ( ) ->
 		{
-			getApp( ).getGameConnManager( ).close( );
+			getApp( ).getGameConnectionManager( ).close( );
 			postExitToNetwork( );
 			return null;
 		} );

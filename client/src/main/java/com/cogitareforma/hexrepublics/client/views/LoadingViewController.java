@@ -54,7 +54,7 @@ public class LoadingViewController extends GeneralPlayingController implements C
 		progressBar = getApp( ).getNifty( ).getScreen( getScreenId( ) ).findElementByName( "inner" );
 
 		byte seed = ( byte ) ( RandomUtils.nextInt( 0, 256 ) - 128 );
-		RemoteEntityData entityData = getApp( ).getGameConnManager( ).getRemoteEntityData( );
+		RemoteEntityData entityData = getApp( ).getGameConnectionManager( ).getRemoteEntityData( );
 		if ( entityData != null )
 		{
 			EntityId id = entityData.findEntity( null, WorldTrait.class );

@@ -1,4 +1,4 @@
-package com.cogitareforma.makhana.common.ui;
+package com.cogitareforma.makhana.client.ui;
 
 public class ScreenContext
 {

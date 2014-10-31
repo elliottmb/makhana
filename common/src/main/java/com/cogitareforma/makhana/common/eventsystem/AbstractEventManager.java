@@ -71,5 +71,5 @@ public abstract class AbstractEventManager< E, H > implements EventManager< E, H
 		list.remove( handler );
 	}
 
-	public abstract boolean triggerEvent( E event );
+	public abstract void triggerEvent( E event );
 }

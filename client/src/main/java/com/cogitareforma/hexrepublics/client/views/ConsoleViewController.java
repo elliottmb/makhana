@@ -55,10 +55,20 @@ public class ConsoleViewController extends GeneralController
 			}
 			else
 			{
-				if ( !getApp( ).authenticated( ) )
+				if ( getApp( ).getMasterConnectionManager( ) != null )
 				{
-					// console.output( arg0[ 1 ] + " " + arg0[ 2 ] );
-					getApp( ).sendLogin( arg0[ 1 ], arg0[ 2 ] );
+					if ( !getApp( ).getMasterConnectionManager( ).isLoggedIn( ) )
+					{
+						getApp( ).sendLogin( arg0[ 1 ], arg0[ 2 ] );
+					}
+					else
+					{
+						console.output( "Already Logged In" );
+					}
+				}
+				else
+				{
+					console.output( "No connection with the master server" );
 				}
 			}
 		};
@@ -73,29 +83,36 @@ public class ConsoleViewController extends GeneralController
 		};
 		ConsoleCommand account = ( String[ ] arg0 ) ->
 		{
-			if ( getApp( ).authenticated( ) )
+			if ( getApp( ).getMasterConnectionManager( ) != null )
 			{
-				console.output( getApp( ).getMasterConnManager( ).getSession( ).getDisplayName( ) );
+				if ( getApp( ).getMasterConnectionManager( ).isLoggedIn( ) )
+				{
+					console.output( getApp( ).getMasterConnectionManager( ).getSession( ).getDisplayName( ) );
+				}
+				else
+				{
+					console.output( "No user is logged in" );
+				}
 			}
 			else
 			{
-				console.output( "No user is logged in" );
+				console.output( "No connection with the master server" );
 			}
 		};
 		// Make args be a trait type
 		ConsoleCommand readyUpTester = ( String[ ] arg0 ) ->
 		{
-			if ( getApp( ).getGameConnManager( ).isConnected( ) )
+			if ( getApp( ).getGameConnectionManager( ).isConnected( ) )
 			{
 				if ( arg0.length >= 2 )
 				{
 					if ( "t".equalsIgnoreCase( arg0[ 1 ] ) || "true".equalsIgnoreCase( arg0[ 1 ] ) )
 					{
-						getApp( ).getGameConnManager( ).send( new ReadyUpRequest( true ) );
+						getApp( ).getGameConnectionManager( ).send( new ReadyUpRequest( true ) );
 					}
 					else if ( "f".equalsIgnoreCase( arg0[ 1 ] ) || "false".equalsIgnoreCase( arg0[ 1 ] ) )
 					{
-						getApp( ).getGameConnManager( ).send( new ReadyUpRequest( false ) );
+						getApp( ).getGameConnectionManager( ).send( new ReadyUpRequest( false ) );
 					}
 					else
 					{
@@ -117,7 +134,7 @@ public class ConsoleViewController extends GeneralController
 
 		ConsoleCommand entCreate = ( String[ ] arg0 ) ->
 		{
-			if ( getApp( ).getGameConnManager( ).isConnected( ) )
+			if ( getApp( ).getGameConnectionManager( ).isConnected( ) )
 			{
 				if ( arg0.length >= 2 )
 				{
@@ -132,7 +149,7 @@ public class ConsoleViewController extends GeneralController
 							ComponentFilter< TileTrait > yFilter = FieldFilter.create( TileTrait.class, "y", coord.getRight( ) );
 							@SuppressWarnings( "unchecked" )
 							ComponentFilter< TileTrait > completeFilter = AndFilter.create( TileTrait.class, xFilter, yFilter );
-							EntityId location = getApp( ).getGameConnManager( ).getRemoteEntityData( )
+							EntityId location = getApp( ).getGameConnectionManager( ).getRemoteEntityData( )
 									.findEntity( completeFilter, TileTrait.class );
 							System.out.println( location != null ? location.toString( ) : "null" );
 							ArrayList< EntityComponent > components = new ArrayList< EntityComponent >( );
@@ -155,7 +172,7 @@ public class ConsoleViewController extends GeneralController
 								compArray[ i ] = components.get( i );
 							}
 
-							getApp( ).getGameConnManager( ).send(
+							getApp( ).getGameConnectionManager( ).send(
 									new EntityCreationRequest( new LocationTrait( location, ( byte ) 0 ), compArray ) );
 						}
 					}
@@ -173,7 +190,7 @@ public class ConsoleViewController extends GeneralController
 		};
 		ConsoleCommand entDelete = ( String[ ] arg0 ) ->
 		{
-			if ( getApp( ).getGameConnManager( ).isConnected( ) )
+			if ( getApp( ).getGameConnectionManager( ).isConnected( ) )
 			{
 				if ( arg0.length != 2 )
 				{
@@ -181,7 +198,7 @@ public class ConsoleViewController extends GeneralController
 				}
 				else
 				{
-					getApp( ).getGameConnManager( ).send( new EntityDeletionRequest( new EntityId( Integer.parseInt( arg0[ 1 ] ) ) ) );
+					getApp( ).getGameConnectionManager( ).send( new EntityDeletionRequest( new EntityId( Integer.parseInt( arg0[ 1 ] ) ) ) );
 				}
 			}
 			else
@@ -204,7 +221,7 @@ public class ConsoleViewController extends GeneralController
 
 		ConsoleCommand connect = ( String[ ] arg0 ) ->
 		{
-			if ( getApp( ).getMasterConnManager( ).isLoggedIn( ) )
+			if ( getApp( ).getMasterConnectionManager( ).isLoggedIn( ) )
 			{
 				if ( arg0.length >= 2 )
 				{
@@ -224,7 +241,7 @@ public class ConsoleViewController extends GeneralController
 							}
 						}
 
-						getApp( ).getGameConnManager( ).connect( arg0[ 1 ], port );
+						getApp( ).getGameConnectionManager( ).connect( arg0[ 1 ], port );
 					}
 					else
 					{

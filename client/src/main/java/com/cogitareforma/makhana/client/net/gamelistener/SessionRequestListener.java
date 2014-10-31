@@ -45,7 +45,7 @@ public class SessionRequestListener implements MessageListener< Client >
 		if ( message instanceof SessionRequest )
 		{
 			logger.log( Level.INFO, "Received an Account request, sending account details to game server." );
-			manager.send( new SessionResponse( manager.getApp( ).getMasterConnManager( ).getSession( ) ) );
+			manager.send( new SessionResponse( manager.getApp( ).getMasterConnectionManager( ).getSession( ) ) );
 		}
 	}
 

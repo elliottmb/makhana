@@ -11,7 +11,6 @@ import com.cogitareforma.makhana.client.util.NiftyFactory;
 import com.cogitareforma.makhana.client.util.PlayerTraitListener;
 import com.cogitareforma.makhana.common.entities.components.Player;
 import com.cogitareforma.makhana.common.util.MakhanaConfig;
-import com.jme3.app.SimpleApplication;
 import com.jme3.app.state.AppState;
 import com.jme3.input.KeyInput;
 import com.jme3.input.controls.ActionListener;
@@ -32,7 +31,7 @@ import de.lessvoid.nifty.Nifty;
  * @author Elliott Butler
  * @author Ryan Grier
  */
-public class ClientMain extends SimpleApplication
+public class ClientMain extends OnlineClient
 {
 	public static void main( String[ ] args )
 	{
@@ -42,23 +41,8 @@ public class ClientMain extends SimpleApplication
 
 	public ClientMain( )
 	{
-		setConfiguration( new MakhanaConfig( ) );
-
-		AppSettings settings = new AppSettings( true );
-		configuration.configureAppSettings( settings );
-
-		if ( configuration.get( "client.input.consoleKey" ) == null )
-		{
-			configuration.putDefaultKeys( );
-		}
-
-		setShowSettings( false );
-		setDisplayStatView( false );
-		setDisplayFps( false );
-		setSettings( settings );
+		super( );
 	}
-
-	private MakhanaConfig configuration;
 
 	/**
 	 * The logger for this class
@@ -69,16 +53,6 @@ public class ClientMain extends SimpleApplication
 	 * The Client's Nifty Display instance.
 	 */
 	private NiftyJmeDisplay niftyDisplay;
-
-	/**
-	 * The Client's master connection manager.
-	 */
-	private MasterConnectionManager masterConnection;
-
-	/**
-	 * The Client's game server connection manager.
-	 */
-	private GameConnectionManager gameConnection;
 
 	/**
 	 * The Client's world manager.
@@ -127,21 +101,6 @@ public class ClientMain extends SimpleApplication
 	};
 
 	/**
-	 * Determines if the Client is logged in and connected to the MasterServer.
-	 * 
-	 * @return true if Client is logged in and connected to the MasterServer,
-	 *         else false.
-	 */
-	public boolean authenticated( )
-	{
-		if ( masterConnection != null )
-		{
-			return masterConnection.isLoggedIn( );
-		}
-		return false;
-	}
-
-	/**
 	 * Thread safe method that tries to connect to the given game sever.
 	 * 
 	 * @param host
@@ -154,7 +113,7 @@ public class ClientMain extends SimpleApplication
 		enqueue( ( ) ->
 		{
 			logger.log( Level.INFO, "Sending Game Server details to Connection Manager ( " + host + ":" + port + " )" );
-			gameConnection.connect( host, port );
+			getGameConnectionManager( ).connect( host, port );
 			return null;
 		} );
 	}
@@ -162,8 +121,8 @@ public class ClientMain extends SimpleApplication
 	@Override
 	public void destroy( )
 	{
-		masterConnection.close( );
-		gameConnection.close( );
+		getMasterConnectionManager( ).close( );
+		getGameConnectionManager( ).close( );
 		super.destroy( );
 	}
 
@@ -181,26 +140,6 @@ public class ClientMain extends SimpleApplication
 	public EntityManager getEntityManager( )
 	{
 		return entityManager;
-	}
-
-	/**
-	 * Returns Client's current game connection manager.
-	 * 
-	 * @return Client's game connection manager.
-	 */
-	public GameConnectionManager getGameConnManager( )
-	{
-		return gameConnection;
-	}
-
-	/**
-	 * Returns Client's current master connection manager.
-	 * 
-	 * @return Client's master connection manager.
-	 */
-	public MasterConnectionManager getMasterConnManager( )
-	{
-		return masterConnection;
 	}
 
 	/**
@@ -282,52 +221,9 @@ public class ClientMain extends SimpleApplication
 	{
 		enqueue( ( ) ->
 		{
-			if ( gameConnection.isConnected( ) )
+			if ( getGameConnectionManager( ).isConnected( ) )
 			{
-				gameConnection.sendMessage( message );
-			}
-			return null;
-		} );
-	}
-
-	/**
-	 * A thread safe method that sends a LoginRequest with the given accountname
-	 * and password to the master server on the next available update loop.
-	 * 
-	 * 
-	 * @param accountname
-	 *            the given account name
-	 * @param password
-	 *            the given password
-	 */
-	public void sendLogin( final String accountname, final String password )
-	{
-		enqueue( ( ) ->
-		{
-			if ( masterConnection.isConnected( ) )
-			{
-				logger.log( Level.INFO, "Attempting to login with accountname " + accountname );
-				// masterConnection.sendLogin( accountname, password, false );
-				// TODO
-				masterConnection.sendLogin( accountname, password );
-				logger.log( Level.INFO, "Account: " + masterConnection.getSession( ) );
-			}
-			return null;
-		} );
-	}
-
-	/**
-	 * A thread safe method that sends a LogoutRequest to the master server on
-	 * the next available update loop.
-	 */
-	public void sendLogout( )
-	{
-		enqueue( ( ) ->
-		{
-			if ( masterConnection.isConnected( ) )
-			{
-				logger.log( Level.INFO, "Attempting to logout" );
-				masterConnection.sendLogout( );
+				getGameConnectionManager( ).sendMessage( message );
 			}
 			return null;
 		} );
@@ -344,9 +240,12 @@ public class ClientMain extends SimpleApplication
 	{
 		enqueue( ( ) ->
 		{
-			if ( masterConnection.isConnected( ) )
+			if ( getMasterConnectionManager( ) != null )
 			{
-				masterConnection.sendMessage( message );
+				if ( getMasterConnectionManager( ).isConnected( ) )
+				{
+					getMasterConnectionManager( ).sendMessage( message );
+				}
 			}
 			return null;
 		} );
@@ -384,7 +283,7 @@ public class ClientMain extends SimpleApplication
 	{
 		this.getContext( ).setTitle( "Makhana - Alpha" );
 
-		configuration.configureAudioSettings( this.listener );
+		getConfiguration( ).configureAudioSettings( this.listener );
 
 		startNifty( );
 
@@ -408,12 +307,12 @@ public class ClientMain extends SimpleApplication
 		// test multiview for gui
 		guiViewPort.getCamera( ).setViewPort( 0f, 1f, 0f, 1f );
 
-		masterConnection = new MasterConnectionManager( this );
-		gameConnection = new GameConnectionManager( this );
+		setMasterConnectionManager( new MasterConnectionManager( this ) );
+		setGameConnectionManager( new GameConnectionManager( this ) );
 
-		inputManager.addMapping( "showConsole", new KeyTrigger( ( Integer ) configuration.get( "client.input.consoleKey" ) ) );
+		inputManager.addMapping( "showConsole", new KeyTrigger( ( Integer ) getConfiguration( ).get( "client.input.consoleKey" ) ) );
 		inputManager.addMapping( "hideFPS", new KeyTrigger( KeyInput.KEY_F12 ) );
-		consoleEnabled = ( Boolean ) configuration.get( "client.input.console" );
+		consoleEnabled = ( Boolean ) getConfiguration( ).get( "client.input.console" );
 		inputManager.addListener( getBaseActionListener( ), "showConsole", "hideFPS" );
 	}
 
@@ -454,20 +353,4 @@ public class ClientMain extends SimpleApplication
 		currentScreen = "start";
 	}
 
-	/**
-	 * @return the config
-	 */
-	public MakhanaConfig getConfiguration( )
-	{
-		return configuration;
-	}
-
-	/**
-	 * @param config
-	 *            the config to set
-	 */
-	public void setConfiguration( MakhanaConfig configuration )
-	{
-		this.configuration = configuration;
-	}
 }

@@ -97,7 +97,7 @@ public class StartViewController extends GeneralController implements KeyInputHa
 
 		this.loginButton = getApp( ).getNifty( ).getCurrentScreen( ).findNiftyControl( "startLogin", Button.class );
 
-		if ( !getApp( ).getMasterConnManager( ).isConnected( ) )
+		if ( !getApp( ).getMasterConnectionManager( ).isConnected( ) )
 		{
 			setLoginEnabled( false );
 		}
@@ -190,15 +190,24 @@ public class StartViewController extends GeneralController implements KeyInputHa
 			logger.log( Level.INFO, "Failed login attempt: Username and/or password must be non-empty" );
 			loginFail.setText( "Username and/or password must be non-empty" );
 		}
-		else if ( !getApp( ).authenticated( ) )
+		else
 		{
-			getApp( ).sendLogin( username.getText( ), password.getText( ) );
+			if ( getApp( ).getMasterConnectionManager( ) != null )
+			{
+				if ( !getApp( ).getMasterConnectionManager( ).isLoggedIn( ) )
+				{
+					getApp( ).sendLogin( username.getText( ), password.getText( ) );
+				}
+			}
 		}
 
-		if ( getApp( ).authenticated( ) )
+		if ( getApp( ).getMasterConnectionManager( ) != null )
 		{
-			loginFail.setText( "" );
-			gotoNetwork( );
+			if ( getApp( ).getMasterConnectionManager( ).isLoggedIn( ) )
+			{
+				loginFail.setText( "" );
+				gotoNetwork( );
+			}
 		}
 
 	}
@@ -209,13 +218,16 @@ public class StartViewController extends GeneralController implements KeyInputHa
 		super.update( tpf );
 		if ( getApp( ).getNifty( ).getCurrentScreen( ).getScreenId( ) == "start" )
 		{
-			if ( getApp( ).authenticated( ) )
+			if ( getApp( ).getMasterConnectionManager( ) != null )
 			{
-				loginFail.setText( "" );
-				gotoNetwork( );
+				if ( getApp( ).getMasterConnectionManager( ).isLoggedIn( ) )
+				{
+					loginFail.setText( "" );
+					gotoNetwork( );
+				}
 			}
 
-			if ( getApp( ).getMasterConnManager( ).isConnected( ) && getApp( ).getMasterConnManager( ).getPublicKey( ) != null )
+			if ( getApp( ).getMasterConnectionManager( ).isConnected( ) && getApp( ).getMasterConnectionManager( ).getPublicKey( ) != null )
 			{
 				if ( !loginButton.isEnabled( ) )
 				{

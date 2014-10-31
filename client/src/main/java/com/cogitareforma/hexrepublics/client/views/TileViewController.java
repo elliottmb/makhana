@@ -256,7 +256,7 @@ public class TileViewController extends GeneralPlayingController
 		current = getApp( ).getNifty( ).getCurrentScreen( ).findNiftyControl( "existBox", ListBox.class );
 		build = getApp( ).getNifty( ).getScreen( "tile" ).findNiftyControl( "buildBox", ListBox.class );
 		move = getApp( ).getNifty( ).createPopupWithId( "move", "move" );
-		entityData = getApp( ).getGameConnManager( ).getRemoteEntityData( );
+		entityData = getApp( ).getGameConnectionManager( ).getRemoteEntityData( );
 		ComponentFilter< TileTrait > xFilter = FieldFilter.create( TileTrait.class, "x", this.currentTile.getLeft( ) );
 		ComponentFilter< TileTrait > yFilter = FieldFilter.create( TileTrait.class, "y", this.currentTile.getRight( ) );
 		ComponentFilter< TileTrait > completeFilter = AndFilter.create( TileTrait.class, xFilter, yFilter );
@@ -372,7 +372,7 @@ public class TileViewController extends GeneralPlayingController
 				{
 					HashMap< String, Object > data = new HashMap< String, Object >( );
 					data.put( "newTile", nextTile );
-					getApp( ).getGameConnManager( ).send(
+					getApp( ).getGameConnectionManager( ).send(
 							new EntityActionRequest( currentUnit, new ActionTrait( getApp( ).getWorldManager( ).getCurrentTurn( ),
 									ComponentUtil.getMovementModifier( entityData, currentUnit ), ActionType.MOVE, data ) ) );
 				}
@@ -415,19 +415,19 @@ public class TileViewController extends GeneralPlayingController
 			ComponentFilter< TileTrait > yFilter = FieldFilter.create( TileTrait.class, "y", this.currentTile.getRight( ) );
 			@SuppressWarnings( "unchecked" )
 			ComponentFilter< TileTrait > completeFilter = AndFilter.create( TileTrait.class, xFilter, yFilter );
-			EntityId location = getApp( ).getGameConnManager( ).getRemoteEntityData( ).findEntity( completeFilter, TileTrait.class );
+			EntityId location = getApp( ).getGameConnectionManager( ).getRemoteEntityData( ).findEntity( completeFilter, TileTrait.class );
 			// BUILDINGS
 			if ( "Build Archery".equals( event.getSelection( ).get( 0 ) ) )
 			{
 				System.out.println( "Tyring to build Archery" );
-				getApp( ).getGameConnManager( ).send(
+				getApp( ).getGameConnectionManager( ).send(
 						new EntityCreationRequest( new LocationTrait( location, ( byte ) 0 ), new ArcheryTrait( ) ) );
 			}
 
 			if ( "Build Stables".equals( event.getSelection( ).get( 0 ) ) )
 			{
 				System.out.println( "Trying to build Stables" );
-				getApp( ).getGameConnManager( ).send(
+				getApp( ).getGameConnectionManager( ).send(
 						new EntityCreationRequest( new LocationTrait( location, ( byte ) 0 ), new StablesTrait( ) ) );
 			}
 
@@ -435,13 +435,13 @@ public class TileViewController extends GeneralPlayingController
 			if ( "Build Archer".equals( event.getSelection( ).get( 0 ) ) )
 			{
 				System.out.println( "Trying to build Archer" );
-				getApp( ).getGameConnManager( ).send(
+				getApp( ).getGameConnectionManager( ).send(
 						new EntityCreationRequest( new LocationTrait( location, ( byte ) 0 ), new ArcherTrait( ) ) );
 			}
 			if ( "Build Mounted Archer".equals( event.getSelection( ).get( 0 ) ) )
 			{
 				System.out.println( "Tyring to build Mounted Archer" );
-				getApp( ).getGameConnManager( ).send(
+				getApp( ).getGameConnectionManager( ).send(
 						new EntityCreationRequest( new LocationTrait( location, ( byte ) 0 ), new ArcherTrait( ), new MountedTrait( ) ) );
 			}
 

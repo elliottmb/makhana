@@ -1,7 +1,5 @@
 package com.cogitareforma.makhana.client.ui;
 
-import com.cogitareforma.makhana.common.ui.Screen;
-import com.cogitareforma.makhana.common.ui.ScreenManager;
 import com.jme3.app.Application;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;

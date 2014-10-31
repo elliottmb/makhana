@@ -351,7 +351,7 @@ public class HudViewController extends GeneralPlayingController implements KeyIn
 		if ( coord != null && getApp( ).getNifty( ).getScreen( "tile" ) == null && isOpen( ) )
 		{
 			this.currentTile = coord;
-			RemoteEntityData entityData = getApp( ).getGameConnManager( ).getRemoteEntityData( );
+			RemoteEntityData entityData = getApp( ).getGameConnectionManager( ).getRemoteEntityData( );
 			ComponentFilter< TileTrait > xFilter = FieldFilter.create( TileTrait.class, "x", this.currentTile.getLeft( ) );
 			ComponentFilter< TileTrait > yFilter = FieldFilter.create( TileTrait.class, "y", this.currentTile.getRight( ) );
 			@SuppressWarnings( "unchecked" )
@@ -363,7 +363,7 @@ public class HudViewController extends GeneralPlayingController implements KeyIn
 				Player pt = entityData.getComponent( cb.getCreatorId( ), Player.class );
 				if ( pt != null )
 				{
-					if ( getApp( ).getMasterConnManager( ).getSession( ).equals( pt.getSession( ) ) )
+					if ( getApp( ).getMasterConnectionManager( ).getSession( ).equals( pt.getSession( ) ) )
 					{
 						NiftyFactory.createTileView( getApp( ).getNifty( ) );
 
@@ -512,12 +512,12 @@ public class HudViewController extends GeneralPlayingController implements KeyIn
 			ComponentFilter< TileTrait > yFilter = FieldFilter.create( TileTrait.class, "y", coord.getRight( ) );
 			@SuppressWarnings( "unchecked" )
 			ComponentFilter< TileTrait > completeFilter = AndFilter.create( TileTrait.class, xFilter, yFilter );
-			if ( getApp( ).getGameConnManager( ).getRemoteEntityData( ) != null )
+			if ( getApp( ).getGameConnectionManager( ).getRemoteEntityData( ) != null )
 			{
-				EntityId tileId = getApp( ).getGameConnManager( ).getRemoteEntityData( ).findEntity( completeFilter, TileTrait.class );
+				EntityId tileId = getApp( ).getGameConnectionManager( ).getRemoteEntityData( ).findEntity( completeFilter, TileTrait.class );
 				if ( tileId != null )
 				{
-					Entity tileEntity = getApp( ).getGameConnManager( ).getRemoteEntityData( )
+					Entity tileEntity = getApp( ).getGameConnectionManager( ).getRemoteEntityData( )
 							.getEntity( tileId, TileTrait.class, Name.class, Health.class, CreatedBy.class );
 					if ( DebugGlobals.DEBUG_TILE_SELECTION_OUTPUT )
 					{
@@ -533,7 +533,7 @@ public class HudViewController extends GeneralPlayingController implements KeyIn
 	{
 		// TODO: server needs to make sure all players are ready before
 		// changing.
-		getApp( ).getGameConnManager( ).send( new ReadyUpRequest( true ) );
+		getApp( ).getGameConnectionManager( ).send( new ReadyUpRequest( true ) );
 	}
 
 	/**
@@ -562,7 +562,7 @@ public class HudViewController extends GeneralPlayingController implements KeyIn
 	public void setupScoreBoard( )
 	{
 		System.out.println( "Setting up scoreboard." );
-		RemoteEntityData entityData = getApp( ).getGameConnManager( ).getRemoteEntityData( );
+		RemoteEntityData entityData = getApp( ).getGameConnectionManager( ).getRemoteEntityData( );
 
 		if ( entityData != null )
 		{

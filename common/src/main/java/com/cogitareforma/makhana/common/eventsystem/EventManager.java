@@ -1,5 +1,12 @@
 package com.cogitareforma.makhana.common.eventsystem;
 
+/**
+ * 
+ * @author Elliott Butler
+ *
+ * @param <E>
+ * @param <H>
+ */
 public interface EventManager< E, H >
 {
 	/**
@@ -37,13 +44,10 @@ public interface EventManager< E, H >
 	public void removeEventHandler( H handler, @SuppressWarnings( "unchecked" ) Class< ? extends E >... eventTypes );
 
 	/**
-	 * Returns true if the event was handled by all appropriate event handlers,
-	 * otherwise it returns false. It will return false if there are no handlers
-	 * for the event, or one of them has canceled the event.
+	 * Passes the given event to all appropriate event handlers.
 	 * 
 	 * @param event
 	 *            the triggering event
-	 * @return true if the event was handled by all handlers, otherwise false
 	 */
-	public boolean triggerEvent( E event );
+	public void triggerEvent( E event );
 }

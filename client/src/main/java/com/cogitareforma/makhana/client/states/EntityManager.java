@@ -135,9 +135,9 @@ public class EntityManager extends AbstractAppState
 
 	public void update( float tpf )
 	{
-		if ( app.getGameConnManager( ).isConnected( ) )
+		if ( app.getGameConnectionManager( ).isConnected( ) )
 		{
-			EntityData entityData = app.getGameConnManager( ).getRemoteEntityData( );
+			EntityData entityData = app.getGameConnectionManager( ).getRemoteEntityData( );
 			if ( entityData != null )
 			{
 				for ( Set< Class< ? extends EntityComponent >> s : listenerMap.keySet( ) )

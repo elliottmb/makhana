@@ -1,11 +1,9 @@
 package com.cogitareforma.makhana.client.ui;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import com.cogitareforma.makhana.client.util.ListBox;
-import com.cogitareforma.makhana.common.ui.Screen;
-import com.cogitareforma.makhana.common.ui.ScreenContext;
-import com.cogitareforma.makhana.common.ui.ScreenManager;
 import com.jme3.app.Application;
 import com.jme3.input.KeyInput;
 import com.jme3.input.controls.ActionListener;
@@ -46,7 +44,8 @@ public class ConsoleScreen extends Screen
 		Camera cam = screenManager.getApp( ).getCamera( );
 		ScreenContext sc = screenManager.getScreenContext( );
 		// list = new ArrayList<String>();
-		consoleHistory = new VersionedList< String >( );
+		consoleHistory = new VersionedList< String >( Arrays.asList( "--------------------------", "Welcome to the Makhana Console",
+				"--------------------------" ) );
 		version = consoleHistory.getVersion( );
 
 		panel = new Container( new BoxLayout( Axis.Y, FillMode.None ) );
@@ -58,6 +57,7 @@ public class ConsoleScreen extends Screen
 		// DefaultCellRenderer< String > ren = new DefaultCellRenderer< String
 		// >();
 		listbox = new ListBox< String >( );
+		listbox.setModel( consoleHistory );
 		// listbox.setPreferredSize( new Vector3f( cam.getWidth( ) * .4f,
 		// cam.getHeight( ) * .70f, 0 ) );
 		panel.addChild( listbox );
@@ -80,6 +80,7 @@ public class ConsoleScreen extends Screen
 			consoleHistory.add( "DICKS" );
 			System.out.println( "SLDFHSODFBOSDFH" );
 			System.out.println( listbox.getModel( ) );
+			System.out.println( listbox.getVisibleItems( ) );
 		}
 	};
 
@@ -101,13 +102,14 @@ public class ConsoleScreen extends Screen
 	public void update( float tpf )
 	{
 		listbox.updateLogicalState( tpf );
+		listbox.updateGeometricState( );
 		if ( consoleHistory.getVersion( ) != version )
 		{
 			// listbox.setModel( consoleHistory );
-			panel.detachChild( listbox );
-			listbox = new ListBox< String >( consoleHistory );
-			panel.addChild( listbox );
-			version = consoleHistory.getVersion( );
+			// panel.detachChild( listbox );
+			// listbox = new ListBox< String >( consoleHistory );
+			// panel.addChild( listbox );
+			// version = consoleHistory.getVersion( );
 		}
 	}
 }

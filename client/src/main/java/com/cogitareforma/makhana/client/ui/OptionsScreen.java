@@ -3,9 +3,6 @@ package com.cogitareforma.makhana.client.ui;
 import java.util.ArrayList;
 import java.util.Set;
 
-import com.cogitareforma.makhana.common.ui.Screen;
-import com.cogitareforma.makhana.common.ui.ScreenContext;
-import com.cogitareforma.makhana.common.ui.ScreenManager;
 import com.google.common.collect.Sets;
 import com.jme3.app.Application;
 import com.jme3.input.KeyNames;
