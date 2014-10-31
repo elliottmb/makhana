@@ -5,10 +5,10 @@ import java.util.List;
 
 import com.simsilica.es.EntityData;
 
-public class CoreEventManager extends AbstractEventManager< Event, EventHandler >
+public class SortedEventManager extends AbstractEventManager< Event, EventHandler >
 {
 
-	public CoreEventManager( EntityData entityData )
+	public SortedEventManager( EntityData entityData )
 	{
 		super( );
 	}

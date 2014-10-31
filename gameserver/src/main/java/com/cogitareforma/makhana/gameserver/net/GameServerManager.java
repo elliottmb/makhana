@@ -15,7 +15,10 @@ import com.cogitareforma.makhana.common.entities.components.ActionTrait;
 import com.cogitareforma.makhana.common.entities.components.Player;
 import com.cogitareforma.makhana.common.entities.components.TileTrait;
 import com.cogitareforma.makhana.common.entities.components.WorldTrait;
-import com.cogitareforma.makhana.common.eventsystem.CoreEventManager;
+import com.cogitareforma.makhana.common.eventsystem.SortedEventManager;
+import com.cogitareforma.makhana.common.eventsystem.Event;
+import com.cogitareforma.makhana.common.eventsystem.EventHandler;
+import com.cogitareforma.makhana.common.eventsystem.EventManager;
 import com.cogitareforma.makhana.common.eventsystem.events.TileCapturedEvent;
 import com.cogitareforma.makhana.common.eventsystem.events.TileClaimedEvent;
 import com.cogitareforma.makhana.common.eventsystem.events.TileFreedEvent;
@@ -50,22 +53,22 @@ public class GameServerManager extends ServerManager< GameServer >
 	 */
 	private final static Logger logger = Logger.getLogger( GameServerManager.class.getName( ) );
 
-	private EntityData entityData;
-	private EntityDataHostService entityDataHostService;
-	private CoreEventManager entityEventManager;
-
 	private EntitySet actingEntitySet;
-	private EntitySet playerEntitySet;
-	private EntitySet ownedTileEntitySet;
 	private boolean advanceTurn;
-	private EntityId theWorld;
+	private EntityData entityData;
 
-	private Map< EntityId, EntityId > tileToOwnerMap;
-
+	private EntityDataHostService entityDataHostService;
+	private EventManager< Event, EventHandler > eventManager;
+	private EntitySet ownedTileEntitySet;
+	private EntitySet playerEntitySet;
 	/**
 	 * The server's status, used for informing the master server and clients.
 	 */
 	private ServerStatus status;
+
+	private EntityId theWorld;
+
+	private Map< EntityId, EntityId > tileToOwnerMap;
 
 	/**
 	 * Creates an instance of the GameServerManager with the supplied owning
@@ -118,8 +121,8 @@ public class GameServerManager extends ServerManager< GameServer >
 					if ( session.equals( playerTrait.getSession( ) ) )
 					{
 						logger.log( Level.WARNING, "Could not create an Entity, Player already exists" );
-						entityEventManager.triggerEvent( new ServerPlayerJoinEvent( entityData, e.getId( ), playerTrait,
-								getSessionManager( ).getConnections( ).size( ), true ) );
+						eventManager.triggerEvent( new ServerPlayerJoinEvent( entityData, e.getId( ), playerTrait, getSessionManager( )
+								.getConnections( ).size( ), true ) );
 						return;
 					}
 				}
@@ -128,7 +131,7 @@ public class GameServerManager extends ServerManager< GameServer >
 				logger.log( Level.INFO, "Creating an Entity for player: " + session.getDisplayName( ) + ", " + playerId );
 				Player playerTrait = new Player( session );
 				entityData.setComponent( playerId, playerTrait );
-				entityEventManager.triggerEvent( new ServerPlayerJoinEvent( entityData, playerId, playerTrait, getSessionManager( )
+				eventManager.triggerEvent( new ServerPlayerJoinEvent( entityData, playerId, playerTrait, getSessionManager( )
 						.getConnections( ).size( ), false ) );
 			}
 			else
@@ -237,7 +240,7 @@ public class GameServerManager extends ServerManager< GameServer >
 			close( );
 			entityDataHostService = null;
 			entityData = null;
-			entityEventManager = null;
+			eventManager = null;
 			status = null;
 		}
 
@@ -269,11 +272,11 @@ public class GameServerManager extends ServerManager< GameServer >
 
 			entityData = new DefaultEntityData( );
 			entityDataHostService = new EntityDataHostService( getServer( ), 0, entityData );
-			entityEventManager = new CoreEventManager( entityData );
+			eventManager = new SortedEventManager( entityData );
 
-			entityEventManager.addEventHandler( new ActionCompletedEventHandler( ), ActionCompletedEvent.class );
-			entityEventManager.addEventHandler( new ServerPlayerJoinEventHandler( ), ServerPlayerJoinEvent.class );
-			entityEventManager.addEventHandler( new TileOwnerChangedEventHandler( ), TileClaimedEvent.class, TileCapturedEvent.class,
+			eventManager.addEventHandler( new ActionCompletedEventHandler( ), ActionCompletedEvent.class );
+			eventManager.addEventHandler( new ServerPlayerJoinEventHandler( ), ServerPlayerJoinEvent.class );
+			eventManager.addEventHandler( new TileOwnerChangedEventHandler( ), TileClaimedEvent.class, TileCapturedEvent.class,
 					TileFreedEvent.class );
 
 			MakhanaConfig config = getApp( ).getConfiguration( );
@@ -408,7 +411,7 @@ public class GameServerManager extends ServerManager< GameServer >
 									if ( ( at.getStartTurn( ) + at.getDuration( ) ) - wt.getCurrentTurn( ) <= 1 )
 									{
 
-										entityEventManager.triggerEvent( new ActionCompletedEvent( entityData, e.getId( ), at ) );
+										eventManager.triggerEvent( new ActionCompletedEvent( entityData, e.getId( ), at ) );
 
 									}
 								}
@@ -437,8 +440,8 @@ public class GameServerManager extends ServerManager< GameServer >
 								TileTrait tileTrait = tileEntity.get( TileTrait.class );
 								CreatedBy createdBy = tileEntity.get( CreatedBy.class );
 
-								entityEventManager.triggerEvent( new TileClaimedEvent( entityData, tileId, tileTrait, createdBy
-										.getCreatorId( ) ) );
+								eventManager
+										.triggerEvent( new TileClaimedEvent( entityData, tileId, tileTrait, createdBy.getCreatorId( ) ) );
 
 								tileToOwnerMap.put( tileId, createdBy.getCreatorId( ) );
 							}
@@ -455,8 +458,8 @@ public class GameServerManager extends ServerManager< GameServer >
 									oldOwnerId = tileToOwnerMap.get( tileId );
 								}
 
-								entityEventManager.triggerEvent( new TileCapturedEvent( entityData, tileId, tileTrait, oldOwnerId,
-										createdBy.getCreatorId( ) ) );
+								eventManager.triggerEvent( new TileCapturedEvent( entityData, tileId, tileTrait, oldOwnerId, createdBy
+										.getCreatorId( ) ) );
 
 								tileToOwnerMap.put( tileId, createdBy.getCreatorId( ) );
 							}
@@ -472,7 +475,7 @@ public class GameServerManager extends ServerManager< GameServer >
 									oldOwnerId = tileToOwnerMap.get( tileId );
 								}
 
-								entityEventManager.triggerEvent( new TileFreedEvent( entityData, tileId, tileTrait, oldOwnerId ) );
+								eventManager.triggerEvent( new TileFreedEvent( entityData, tileId, tileTrait, oldOwnerId ) );
 
 								tileToOwnerMap.remove( tileId );
 							}
