@@ -1,5 +1,6 @@
 package com.cogitareforma.makhana.client;
 
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.cogitareforma.makhana.client.ui.ScreenManager;
@@ -37,6 +38,7 @@ public abstract class OfflineClient extends SimpleApplication
 
 		if ( getConfiguration( ).get( "client.input.console" ) == null )
 		{
+			logger.log( Level.INFO, "Putting default configuration values for input" );
 			getConfiguration( ).putDefaultKeys( );
 		}
 
@@ -70,6 +72,16 @@ public abstract class OfflineClient extends SimpleApplication
 		return screenManager;
 	}
 
+	@Override
+	public void initialize( )
+	{
+		logger.log( Level.INFO, "Initializaing base OfflineClient" );
+		screenManager.getScreenContext( ).recalculateScalars( ( Integer ) getConfiguration( ).get( "client.graphics.height" ),
+				( Integer ) getConfiguration( ).get( "client.graphics.width" ) );
+		super.initialize( );
+		// TODO
+	}
+
 	/**
 	 * @param configuration
 	 *            the configuration to set
@@ -86,13 +98,6 @@ public abstract class OfflineClient extends SimpleApplication
 	private void setEventManager( EventManager< Event, EventHandler > eventManager )
 	{
 		this.eventManager = eventManager;
-	}
-
-	@Override
-	public void initialize( )
-	{
-		super.initialize( );
-		// TODO
 	}
 
 	/**

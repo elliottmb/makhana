@@ -10,7 +10,6 @@ import com.cogitareforma.makhana.client.states.WorldManager;
 import com.cogitareforma.makhana.client.util.NiftyFactory;
 import com.cogitareforma.makhana.client.util.PlayerTraitListener;
 import com.cogitareforma.makhana.common.entities.components.Player;
-import com.cogitareforma.makhana.common.util.MakhanaConfig;
 import com.jme3.app.state.AppState;
 import com.jme3.input.KeyInput;
 import com.jme3.input.controls.ActionListener;
@@ -19,7 +18,6 @@ import com.jme3.math.ColorRGBA;
 import com.jme3.niftygui.NiftyJmeDisplay;
 import com.jme3.renderer.RenderManager;
 import com.jme3.scene.Spatial.CullHint;
-import com.jme3.system.AppSettings;
 
 import de.lessvoid.nifty.Nifty;
 

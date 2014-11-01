@@ -5,7 +5,6 @@ import com.cogitareforma.makhana.client.ui.HudScreen;
 import com.cogitareforma.makhana.client.ui.LoadingScreen;
 import com.cogitareforma.makhana.client.ui.NetworkScreen;
 import com.cogitareforma.makhana.client.ui.OptionsScreen;
-import com.cogitareforma.makhana.client.ui.ScreenManager;
 import com.cogitareforma.makhana.client.ui.StartScreen;
 import com.jme3.app.FlyCamAppState;
 import com.jme3.app.SimpleApplication;
@@ -20,14 +19,8 @@ import com.simsilica.lemur.Slider;
 import com.simsilica.lemur.component.QuadBackgroundComponent;
 import com.simsilica.lemur.style.Styles;
 
-public class LemurTest extends SimpleApplication
+public class LemurTest extends OfflineClient
 {
-
-	private Styles styles;
-
-	private ScreenManager screenManager;
-
-	private ConsoleScreen console;
 
 	public static void main( String[ ] args )
 	{
@@ -37,11 +30,34 @@ public class LemurTest extends SimpleApplication
 		app.setDisplayStatView( false );
 	}
 
+	private ConsoleScreen console;
+
+	private ActionListener baseActionListener = ( String name, boolean keyPressed, float tpf ) ->
+	{
+		if ( name.equals( "showConsole" ) && !keyPressed )
+		{
+			// TODO find out how to do this
+			if ( getScreenManager( ).showScreen( console ) == true )
+			{
+				getScreenManager( ).showScreen( console );
+			}
+			else
+			{
+				getScreenManager( ).hideScreen( console );
+			}
+		}
+	};
+
+	private Styles styles;
+
+	public LemurTest( )
+	{
+		super( );
+	}
+
 	@Override
 	public void simpleInitApp( )
 	{
-		screenManager = new ScreenManager( this, guiNode );
-		stateManager.attach( screenManager );
 		inputManager.deleteMapping( SimpleApplication.INPUT_MAPPING_CAMERA_POS );
 		inputManager.deleteMapping( SimpleApplication.INPUT_MAPPING_EXIT );
 		inputManager.deleteMapping( SimpleApplication.INPUT_MAPPING_HIDE_STATS );
@@ -71,33 +87,17 @@ public class LemurTest extends SimpleApplication
 		// BaseStyles.loadGlassStyle( ); // TODO: should be included but gets
 		// error: Groovy scripting engine not available.
 		console = new ConsoleScreen( );
-		screenManager.addScreen( new StartScreen( ) );
-		screenManager.addScreen( new OptionsScreen( ) );
-		screenManager.addScreen( new NetworkScreen( ) );
-		screenManager.addScreen( new LoadingScreen( ) );
-		screenManager.addScreen( console );
-		screenManager.addScreen( new HudScreen( ) );
-		screenManager.setScreen( StartScreen.class );
+		getScreenManager( ).addScreen( new StartScreen( ) );
+		getScreenManager( ).addScreen( new OptionsScreen( ) );
+		getScreenManager( ).addScreen( new NetworkScreen( ) );
+		getScreenManager( ).addScreen( new LoadingScreen( ) );
+		getScreenManager( ).addScreen( console );
+		getScreenManager( ).addScreen( new HudScreen( ) );
+		getScreenManager( ).setScreen( StartScreen.class );
 
 		inputManager.addMapping( "showConsole", new KeyTrigger( KeyInput.KEY_F1 ) );
 		inputManager.addListener( baseActionListener, "showConsole" );
 	}
-
-	private ActionListener baseActionListener = ( String name, boolean keyPressed, float tpf ) ->
-	{
-		if ( name.equals( "showConsole" ) && !keyPressed )
-		{
-			// TODO find out how to do this
-			if ( screenManager.showScreen( console ) == true )
-			{
-				screenManager.showScreen( console );
-			}
-			else
-			{
-				screenManager.hideScreen( console );
-			}
-		}
-	};
 
 	@Override
 	public void simpleUpdate( float tpf )

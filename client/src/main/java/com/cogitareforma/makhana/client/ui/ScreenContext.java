@@ -12,8 +12,9 @@ public class ScreenContext
 	public ScreenContext( ScreenManager screenManager )
 	{
 		this.screenManager = screenManager;
-		this.heightScalar = screenManager.getApp( ).getCamera( ).getHeight( ) * baseScalar;
-		this.widthScalar = screenManager.getApp( ).getCamera( ).getWidth( ) * baseScalar;
+
+		this.heightScalar = 1024 * baseScalar;
+		this.widthScalar = 768 * baseScalar;
 	}
 
 	// TODO: Write more helper methods! Use this class!
@@ -50,7 +51,12 @@ public class ScreenContext
 
 	public void recalculateScalars( )
 	{
-		this.heightScalar = screenManager.getApp( ).getCamera( ).getHeight( ) * baseScalar;
-		this.widthScalar = screenManager.getApp( ).getCamera( ).getWidth( ) * baseScalar;
+		recalculateScalars( screenManager.getApp( ).getCamera( ).getHeight( ), screenManager.getApp( ).getCamera( ).getWidth( ) );
+	}
+
+	public void recalculateScalars( int height, int width )
+	{
+		this.heightScalar = height * baseScalar;
+		this.widthScalar = width * baseScalar;
 	}
 }
