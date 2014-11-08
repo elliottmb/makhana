@@ -29,6 +29,7 @@ public class ConsoleScreen extends Screen
 	private ListBox< String > listbox;
 	private long version;
 	private Container panel;
+	private TextField text;
 
 	@Override
 	public void cleanup( )
@@ -45,7 +46,7 @@ public class ConsoleScreen extends Screen
 		ScreenContext sc = screenManager.getScreenContext( );
 		// list = new ArrayList<String>();
 		consoleHistory = new VersionedList< String >( Arrays.asList( "--------------------------", "Welcome to the Makhana Console",
-				"--------------------------" ) );
+				"--------------------------", "", "" ) );
 		version = consoleHistory.getVersion( );
 
 		panel = new Container( new BoxLayout( Axis.Y, FillMode.None ) );
@@ -58,11 +59,12 @@ public class ConsoleScreen extends Screen
 		// >();
 		listbox = new ListBox< String >( );
 		listbox.setModel( consoleHistory );
+		listbox.setVisibleItems( 15 );
 		// listbox.setPreferredSize( new Vector3f( cam.getWidth( ) * .4f,
 		// cam.getHeight( ) * .70f, 0 ) );
 		panel.addChild( listbox );
 
-		TextField text = new TextField( "dfsdfsdf" );
+		text = new TextField( " " );
 		text.setSingleLine( true );
 		text.setFontSize( sc.getMediumFontSize( ) );
 		panel.addChild( text );
@@ -77,8 +79,9 @@ public class ConsoleScreen extends Screen
 	{
 		if ( name.equals( "sendCommand" ) && !keyPressed )
 		{
-			consoleHistory.add( "DICKS" );
-			System.out.println( "SLDFHSODFBOSDFH" );
+			consoleHistory.add( text.getText( ) );
+			listbox.moveToLast( );
+			text.setText( " " );
 			System.out.println( listbox.getModel( ) );
 			System.out.println( listbox.getVisibleItems( ) );
 		}

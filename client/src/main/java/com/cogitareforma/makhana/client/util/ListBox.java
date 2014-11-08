@@ -231,6 +231,13 @@ public class ListBox< T > extends Panel
 		return model;
 	}
 
+	public void moveToLast( )
+	{
+		grid.setRow( maxIndex+1 );
+		resetModelRange( );
+		refreshSelector( );
+	}
+
 	public Slider getSlider( )
 	{
 		return slider;
