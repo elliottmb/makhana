@@ -233,7 +233,7 @@ public class ListBox< T > extends Panel
 
 	public void moveToLast( )
 	{
-		grid.setRow( maxIndex+1 );
+		grid.setRow( maxIndex + 1 );
 		resetModelRange( );
 		refreshSelector( );
 	}

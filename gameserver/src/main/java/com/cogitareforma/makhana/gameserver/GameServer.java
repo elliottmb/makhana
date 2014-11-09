@@ -193,6 +193,7 @@ public class GameServer extends Application
 	public void initialize( )
 	{
 		super.initialize( );
+
 		gameServerManager = new GameServerManager( this );
 
 		port = 7331; /* default */

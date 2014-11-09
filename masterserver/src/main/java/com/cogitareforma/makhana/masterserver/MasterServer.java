@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.sql.SQLException;
-import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -22,6 +21,8 @@ import com.cogitareforma.makhana.masterserver.net.MasterServerManager;
 import com.jme3.app.Application;
 import com.jme3.network.HostedConnection;
 import com.jme3.system.JmeContext;
+import com.jme3.system.NanoTimer;
+import com.jme3.system.Timer;
 
 /**
  * MasterServer contains the main method for a server that talks with
@@ -101,18 +102,25 @@ public class MasterServer extends Application
 	 */
 	private final static Logger logger = Logger.getLogger( MasterServer.class.getName( ) );
 
+	/**
+	 * 
+	 */
 	private AnnotationConfigApplicationContext configContext;
 
 	/**
-	 * Last time that servers were polled for their statuses
+	 * Timer for polling for server statuses
 	 */
-	private Date lastUpdate;
+	private Timer updateTimer;
 
 	/**
 	 * The Master Server's ServerManager
 	 */
 	private MasterServerManager serverManager;
 
+	/**
+	 * 
+	 * @return
+	 */
 	public AccountRepository getAccountRepository( )
 	{
 		if ( configContext != null )
@@ -135,6 +143,8 @@ public class MasterServer extends Application
 	@Override
 	public void initialize( )
 	{
+		super.initialize( );
+
 		serverManager = new MasterServerManager( this );
 
 		configContext = new AnnotationConfigApplicationContext( );
@@ -167,7 +177,7 @@ public class MasterServer extends Application
 		}
 
 		serverManager.run( port );
-		lastUpdate = new Date( );
+		updateTimer = new NanoTimer( );
 	}
 
 	@Override
@@ -175,10 +185,11 @@ public class MasterServer extends Application
 	{
 		super.update( );
 
-		Date currentTime = new Date( );
-		if ( lastUpdate.getTime( ) <= currentTime.getTime( ) - 300000 )
+		updateTimer.update( );
+
+		if ( updateTimer.getTimeInSeconds( ) >= 300 )
 		{
-			lastUpdate = currentTime;
+			updateTimer.reset( );
 			logger.log( Level.INFO, "Pinging all active servers for their current server status" );
 			serverManager.requestCurrentServerStatuses( );
 		}
@@ -188,6 +199,7 @@ public class MasterServer extends Application
 	public void stop( )
 	{
 		getMasterServerManager( ).close( );
+		updateTimer.reset( );
 		super.stop( );
 	}
 
