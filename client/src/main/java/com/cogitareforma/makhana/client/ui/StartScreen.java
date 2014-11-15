@@ -3,7 +3,6 @@ package com.cogitareforma.makhana.client.ui;
 import com.jme3.app.Application;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
-import com.jme3.renderer.Camera;
 import com.simsilica.lemur.Axis;
 import com.simsilica.lemur.Button;
 import com.simsilica.lemur.Button.ButtonAction;
@@ -33,6 +32,9 @@ public class StartScreen extends Screen
 	// private Container hud;
 	private Button playButton;
 
+	private Container buttonPanel;
+	private Label title;
+
 	@Override
 	public void cleanup( )
 	{
@@ -44,41 +46,36 @@ public class StartScreen extends Screen
 	{
 		super.initialize( screenManager, app );
 
-		Camera cam = app.getCamera( );
-
 		setUpButtons( screenManager );
 
-		float mediumFontSize = ScreenContext.getMediumFontSize( getScreenHeight( ) );
+		float mediumFontSize = getContext( ).getMediumFontSize( );
 
 		Panel background = new Panel( );
 		background.setBackground( new QuadBackgroundComponent( ColorRGBA.Gray ) );
-		background.setLocalTranslation( 0, cam.getHeight( ), 0 );
-		background.setPreferredSize( new Vector3f( cam.getWidth( ), cam.getHeight( ), 0 ) );
+		background.setLocalTranslation( 0, 1f, 0 );
+		background.setPreferredSize( new Vector3f( 0.5f, 0.5f, 0 ) );
 
-		Container buttonPanel = new Container( "glass" );
-		buttonPanel.setPreferredSize( new Vector3f( cam.getWidth( ) * .2f, cam.getHeight( ) * .2f, 0 ) );
+		buttonPanel = new Container( "glass" );
+		buttonPanel.setPreferredSize( new Vector3f( getContext( ).getWidth( ) * 0.2f, getContext( ).getHeight( ) * 0.2f, 0 ) );
 		buttonPanel.setBackground( new QuadBackgroundComponent( new ColorRGBA( 0, 0.5f, 0.5f, 0.5f ), 5, 5, 0.02f, false ) );
-		buttonPanel.setLocalTranslation( cam.getWidth( ) * .03f, cam.getHeight( ) * .2f, 0 );
+		buttonPanel.setLocalTranslation( getContext( ).getWidth( ) * 0.05f, getContext( ).getHeight( ) * 0.21f, 0 );
 
 		buttonPanel.addChild( playButton );
+		playButton.setBackground( new QuadBackgroundComponent( new ColorRGBA( 0, 0.2f, 0.5f, 0.5f ), 5, 5, 0.02f, false ) );
 		buttonPanel.addChild( optionsButton );
 		buttonPanel.addChild( exitButton );
 
-		Container titlePanel = new Container( "glass" );
-		titlePanel.setPreferredSize( new Vector3f( cam.getWidth( ) * .2f, 70f, 0 ) );
-		titlePanel.setBackground( new QuadBackgroundComponent( new ColorRGBA( 0, 0.5f, 0.5f, 0.5f ), 5, 5, 0.02f, false ) );
-		titlePanel.setLocalTranslation( cam.getWidth( ) * .7f, cam.getHeight( ) * .85f, 0 );
-		Label title = new Label( "Makhana" );
-		title.setFontSize( ScreenContext.getHeadingFontSize( getScreenHeight( ) ) );
-		titlePanel.addChild( title );
+		title = new Label( "Makhana" );
+		title.setLocalTranslation( getContext( ).getWidth( ) * 0.65f, getContext( ).getHeight( ) * 0.85f, 0f );
+		title.setFontSize( getContext( ).getHeadingFontSize( ) );
 
 		loginContainer = new Container( new BoxLayout( Axis.Y, FillMode.None ), "glass" );
-		loginContainer.setPreferredSize( new Vector3f( cam.getWidth( ) * .25f, cam.getHeight( ) * .35f, 0 ) );
 		loginContainer.setBackground( new QuadBackgroundComponent( new ColorRGBA( 0, 0.5f, 0.5f, 0.5f ), 5, 5, 0.02f, false ) );
-		loginContainer.setLocalTranslation( ( cam.getWidth( ) - loginContainer.getPreferredSize( ).x ) / 2f,
-				( cam.getHeight( ) + loginContainer.getPreferredSize( ).y ) / 2f, 0 );
+		loginContainer.setPreferredSize( new Vector3f( getContext( ).getWidth( ) * 0.25f, getContext( ).getHeight( ) * 0.35f, 0 ) );
+		loginContainer.setLocalTranslation( ( getContext( ).getWidth( ) - loginContainer.getPreferredSize( ).x ) / 2f, ( getContext( )
+				.getHeight( ) + loginContainer.getPreferredSize( ).y ) / 2f, 0 );
 
-		Insets3f textfieldInsets = new Insets3f( 0, 0, 16f * ScreenContext.getHeightScalar( getScreenHeight( ) ), 0 );
+		Insets3f textfieldInsets = new Insets3f( 0, 0, 16f * getContext( ).getScalar( ), 0 );
 		Label usernameLabel = new Label( "Username: ", "glass" );
 		usernameLabel.setFontSize( mediumFontSize );
 		loginContainer.addChild( usernameLabel );
@@ -100,7 +97,7 @@ public class StartScreen extends Screen
 		loginContainer.addChild( password );
 
 		Container buttons = new Container( new BoxLayout( Axis.X, FillMode.Even ) );
-		buttons.setPreferredSize( new Vector3f( cam.getWidth( ) * .05f, cam.getHeight( ) * .05f, 0 ) );
+		buttons.setPreferredSize( new Vector3f( getContext( ).getWidth( ) * .05f, getContext( ).getHeight( ) * .05f, 0 ) );
 		errors = new Label( "TEST" );
 		errors.setFontSize( mediumFontSize );
 		errors.setInsets( textfieldInsets );
@@ -110,14 +107,14 @@ public class StartScreen extends Screen
 		loginContainer.addChild( buttons );
 
 		loginStats = new Container( new BoxLayout( Axis.Y, FillMode.Proportional ), "glass" );
-		loginStats.setPreferredSize( new Vector3f( cam.getWidth( ) * .3f, cam.getHeight( ) * .1f, 0 ) );
-		loginStats.setLocalTranslation( cam.getWidth( ) * .7f, cam.getHeight( ) * .15f, 0 );
 		loginStats.setBackground( new QuadBackgroundComponent( new ColorRGBA( 0, 0.5f, 0.5f, 0.5f ), 5, 5, 0.02f, false ) );
+		loginStats.setPreferredSize( new Vector3f( getContext( ).getWidth( ) * .3f, getContext( ).getHeight( ) * .1f, 0 ) );
+		loginStats.setLocalTranslation( getContext( ).getWidth( ) * .7f, getContext( ).getHeight( ) * .15f, 0 );
 
 		Label loggedIn = new Label( "Logged in: TESTFUCK" );
-		loggedIn.setFontSize( ScreenContext.getSmallFontSize( getScreenHeight( ) ) );
+		loggedIn.setFontSize( getContext( ).getSmallFontSize( ) );
 		loggedIn.setTextHAlignment( HAlignment.Right );
-		logout.setFontSize( ScreenContext.getSmallFontSize( getScreenHeight( ) ) );
+		logout.setFontSize( getContext( ).getSmallFontSize( ) );
 		logout.setTextHAlignment( HAlignment.Right );
 
 		loginStats.addChild( loggedIn );
@@ -129,14 +126,28 @@ public class StartScreen extends Screen
 		login.setFontSize( mediumFontSize );
 		cancel.setFontSize( mediumFontSize );
 
-		getScreenNode( ).attachChild( titlePanel );
+		getScreenNode( ).attachChild( title );
 		getScreenNode( ).attachChild( buttonPanel );
+
 	}
 
 	@Override
 	public void reshape( int w, int h )
 	{
 		super.reshape( w, h );
+
+		buttonPanel.setPreferredSize( new Vector3f( getContext( ).getWidth( ) * 0.2f, getContext( ).getHeight( ) * 0.2f, 0 ) );
+		buttonPanel.setLocalTranslation( getContext( ).getWidth( ) * 0.05f, getContext( ).getHeight( ) * 0.21f, 0 );
+
+		title.setLocalTranslation( getContext( ).getWidth( ) * 0.65f, getContext( ).getHeight( ) * 0.85f, 0f );
+		title.setFontSize( getContext( ).getHeadingFontSize( ) );
+
+		loginContainer.setPreferredSize( new Vector3f( getContext( ).getWidth( ) * 0.25f, getContext( ).getHeight( ) * 0.35f, 0 ) );
+		loginContainer.setLocalTranslation( ( getContext( ).getWidth( ) - loginContainer.getPreferredSize( ).x ) / 2f, ( getContext( )
+				.getHeight( ) + loginContainer.getPreferredSize( ).y ) / 2f, 0 );
+
+		loginStats.setPreferredSize( new Vector3f( getContext( ).getWidth( ) * .3f, getContext( ).getHeight( ) * .1f, 0 ) );
+		loginStats.setLocalTranslation( getContext( ).getWidth( ) * .7f, getContext( ).getHeight( ) * .15f, 0 );
 		// TODO Auto-generated method stub
 	}
 

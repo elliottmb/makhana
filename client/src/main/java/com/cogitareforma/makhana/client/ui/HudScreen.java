@@ -1,7 +1,6 @@
 package com.cogitareforma.makhana.client.ui;
 
 import com.jme3.app.Application;
-import com.jme3.renderer.Camera;
 
 public class HudScreen extends Screen
 {
@@ -16,8 +15,6 @@ public class HudScreen extends Screen
 	public void initialize( ScreenManager screenManager, Application app )
 	{
 		super.initialize( screenManager, app );
-
-		Camera cam = app.getCamera( );
 	}
 
 	@Override

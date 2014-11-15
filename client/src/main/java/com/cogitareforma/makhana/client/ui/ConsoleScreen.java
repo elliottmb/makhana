@@ -75,8 +75,8 @@ public class ConsoleScreen extends Screen
 
 		panel = new Container( new BoxLayout( Axis.Y, FillMode.None ) );
 		panel.setBackground( new QuadBackgroundComponent( new ColorRGBA( 0, 0.5f, 0.5f, 0.5f ), 5, 5, 0.02f, false ) );
-		panel.setPreferredSize( new Vector3f( getScreenWidth( ) * .9f, getScreenHeight( ) * .75f, 0 ) );
-		panel.setLocalTranslation( getScreenWidth( ) * .05f, getScreenHeight( ) * 0.85f, 0 );
+		panel.setPreferredSize( new Vector3f( getContext( ).getWidth( ) * 0.9f, getContext( ).getHeight( ) * 0.75f, 0 ) );
+		panel.setLocalTranslation( getContext( ).getWidth( ) * 0.05f, getContext( ).getHeight( ) * 0.85f, 0 );
 		panel.setBackground( new QuadBackgroundComponent( ColorRGBA.Brown ) );
 
 		// DefaultCellRenderer< String > ren = new DefaultCellRenderer< String
@@ -90,7 +90,7 @@ public class ConsoleScreen extends Screen
 
 		text = new TextField( " " );
 		text.setSingleLine( true );
-		text.setFontSize( ScreenContext.getMediumFontSize( getScreenHeight( ) ) );
+		text.setFontSize( getContext( ).getMediumFontSize( ) );
 		panel.addChild( text );
 		// TODO add listener for enter button to send what is in text to
 		// the listbox

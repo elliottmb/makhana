@@ -15,7 +15,6 @@ import com.jme3.input.event.MouseMotionEvent;
 import com.jme3.input.event.TouchEvent;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
-import com.jme3.renderer.Camera;
 import com.simsilica.lemur.Axis;
 import com.simsilica.lemur.Button;
 import com.simsilica.lemur.Button.ButtonAction;
@@ -68,6 +67,10 @@ public class OptionsScreen extends Screen
 	private VersionedReference< Double > soundVolumeRef;
 	private Button southButton;
 	private Button westButton;
+
+	private Panel background;
+	private Container top;
+	private Container middle;
 
 	private void activeContainer( Container container )
 	{
@@ -166,22 +169,21 @@ public class OptionsScreen extends Screen
 		resolutions.add( "O" );
 		resolutions.add( "P" );
 
-		Camera cam = screenManager.getApp( ).getCamera( );
+		float mediumFontSize = getContext( ).getMediumFontSize( );
 
-		float mediumFontSize = ScreenContext.getMediumFontSize( getScreenHeight( ) );
-
-		Panel background = new Panel( );
+		background = new Panel( );
 		background.setBackground( new QuadBackgroundComponent( ColorRGBA.Gray ) );
-		background.setLocalTranslation( 0, cam.getHeight( ), 0 );
-		background.setPreferredSize( new Vector3f( cam.getWidth( ), cam.getHeight( ), 0 ) );
+		background.setLocalTranslation( 0, getContext( ).getHeight( ), 0 );
+		background.setPreferredSize( new Vector3f( getContext( ).getWidth( ), getContext( ).getHeight( ), 0 ) );
 		getScreenNode( ).attachChild( background );
 
-		Container top = new Container( new BoxLayout( Axis.X, FillMode.Proportional ), "glass" );
-		top.setLocalTranslation( 0, cam.getHeight( ), 0 );
+		top = new Container( new BoxLayout( Axis.X, FillMode.Proportional ), "glass" );
 		top.setBackground( new QuadBackgroundComponent( ColorRGBA.DarkGray ) );
-		top.setPreferredSize( new Vector3f( cam.getWidth( ), cam.getHeight( ) * 0.1f, 0 ) );
+		top.setLocalTranslation( 0, getContext( ).getHeight( ), 0 );
+		top.setPreferredSize( new Vector3f( getContext( ).getWidth( ), getContext( ).getHeight( ) * 0.1f, 0 ) );
+
 		Label name = new Label( "Options" );
-		name.scale( ScreenContext.getHeightScalar( getScreenHeight( ) ) );
+		name.setFontSize( mediumFontSize );
 		name.setPreferredSize( new Vector3f( 0.8f, 0, 0 ) );
 
 		Container buttons = new Container( new BoxLayout( Axis.X, FillMode.Even ), "glass" );
@@ -190,10 +192,10 @@ public class OptionsScreen extends Screen
 		top.addChild( name );
 		top.addChild( buttons );
 
-		Container middle = new Container( new BoxLayout( Axis.X, FillMode.Even ) );
-		middle.setPreferredSize( new Vector3f( cam.getWidth( ) * .4f, cam.getHeight( ) * .05f, 0 ) );
-		middle.setLocalTranslation( cam.getWidth( ) * .05f, cam.getHeight( ) * 0.85f, 0 );
+		middle = new Container( new BoxLayout( Axis.X, FillMode.Even ) );
 		middle.setBackground( new QuadBackgroundComponent( ColorRGBA.Brown ) );
+		middle.setPreferredSize( new Vector3f( getContext( ).getWidth( ) * .4f, getContext( ).getHeight( ) * .05f, 0 ) );
+		middle.setLocalTranslation( getContext( ).getWidth( ) * .05f, getContext( ).getHeight( ) * 0.85f, 0 );
 
 		setUpButtons( screenManager );
 
@@ -210,68 +212,68 @@ public class OptionsScreen extends Screen
 		inputButton.setFontSize( mediumFontSize );
 
 		graphics = new Container( new BoxLayout( Axis.Y, FillMode.None ) );
-		graphics.setPreferredSize( new Vector3f( cam.getWidth( ) * .9f, cam.getHeight( ) * .75f, 0 ) );
 		graphics.setBackground( new QuadBackgroundComponent( new ColorRGBA( .07f, .52f, .49f, 1 ) ) );
-		graphics.setLocalTranslation( cam.getWidth( ) * .05f, cam.getHeight( ) * 0.8f, 0 );
+		graphics.setPreferredSize( new Vector3f( getContext( ).getWidth( ) * .9f, getContext( ).getHeight( ) * .75f, 0 ) );
+		graphics.setLocalTranslation( getContext( ).getWidth( ) * .05f, getContext( ).getHeight( ) * 0.8f, 0 );
 
 		audio = new Container( new BoxLayout( Axis.Y, FillMode.None ) );
-		audio.setPreferredSize( new Vector3f( cam.getWidth( ) * .9f, cam.getHeight( ) * .75f, 0 ) );
 		audio.setBackground( new QuadBackgroundComponent( new ColorRGBA( .07f, .52f, .49f, 1 ) ) );
-		audio.setLocalTranslation( cam.getWidth( ) * .05f, cam.getHeight( ) * 0.8f, 0 );
+		audio.setPreferredSize( new Vector3f( getContext( ).getWidth( ) * .9f, getContext( ).getHeight( ) * .75f, 0 ) );
+		audio.setLocalTranslation( getContext( ).getWidth( ) * .05f, getContext( ).getHeight( ) * 0.8f, 0 );
 
 		// input = new Container( new BoxLayout( Axis.Y, FillMode.None ) );
 		input = new Container( new SpringGridLayout( Axis.X, Axis.Y, FillMode.None, FillMode.None ) );
-		input.setPreferredSize( new Vector3f( cam.getWidth( ) * .9f, cam.getHeight( ) * .75f, 0 ) );
 		input.setBackground( new QuadBackgroundComponent( new ColorRGBA( .07f, .52f, .49f, 1 ) ) );
-		input.setLocalTranslation( cam.getWidth( ) * .05f, cam.getHeight( ) * 0.8f, 0 );
+		input.setPreferredSize( new Vector3f( getContext( ).getWidth( ) * .9f, getContext( ).getHeight( ) * .75f, 0 ) );
+		input.setLocalTranslation( getContext( ).getWidth( ) * .05f, getContext( ).getHeight( ) * 0.8f, 0 );
 
 		resLabel = new Label( "" );
-		resLabel.scale( ScreenContext.getHeightScalar( getScreenHeight( ) ) );
+		resLabel.setFontSize( mediumFontSize );
 
 		res = new Slider( new DefaultRangedValueModel( 0, 15, 1 ), "glass" );
 		res.setName( "Resolution" );
-		res.setInsets( new Insets3f( cam.getHeight( ) * .02f, 0, cam.getHeight( ) * .02f, 0 ) );
+		res.setInsets( new Insets3f( getContext( ).getHeight( ) * .02f, 0, getContext( ).getHeight( ) * .02f, 0 ) );
 		resRef = res.getModel( ).createReference( );
 		resLabel.setText( "Resolution: " + resolutions.get( resRef.get( ).intValue( ) ) );
 
 		Checkbox fullscreen = new Checkbox( "FullScreen" );
 		fullscreen.setFontSize( mediumFontSize );
-		fullscreen.setInsets( new Insets3f( cam.getHeight( ) * .02f, 0, cam.getHeight( ) * .02f, 0 ) );
+		fullscreen.setInsets( new Insets3f( getContext( ).getHeight( ) * .02f, 0, getContext( ).getHeight( ) * .02f, 0 ) );
 
 		quality = new Slider( new DefaultRangedValueModel( 0, 4, 4 ), "glass" );
 		quality.setName( "Quality" );
-		quality.setInsets( new Insets3f( cam.getHeight( ) * .02f, 0, cam.getHeight( ) * .02f, 0 ) );
+		quality.setInsets( new Insets3f( getContext( ).getHeight( ) * .02f, 0, getContext( ).getHeight( ) * .02f, 0 ) );
 		qualityRef = quality.getModel( ).createReference( );
 
 		Checkbox vsync = new Checkbox( "VSync" );
 		vsync.setFontSize( mediumFontSize );
-		vsync.setInsets( new Insets3f( cam.getHeight( ) * .02f, 0, cam.getHeight( ) * .02f, 0 ) );
+		vsync.setInsets( new Insets3f( getContext( ).getHeight( ) * .02f, 0, getContext( ).getHeight( ) * .02f, 0 ) );
 
 		Label mainLabel = new Label( "Main Volume" );
-		mainLabel.scale( ScreenContext.getHeightScalar( getScreenHeight( ) ) );
+		mainLabel.setFontSize( mediumFontSize );
 		Label musicLabel = new Label( "Music Volume" );
-		musicLabel.scale( ScreenContext.getHeightScalar( getScreenHeight( ) ) );
+		musicLabel.setFontSize( mediumFontSize );
 		Label soundLabel = new Label( "Sound Volume" );
-		soundLabel.scale( ScreenContext.getHeightScalar( getScreenHeight( ) ) );
+		soundLabel.setFontSize( mediumFontSize );
 
 		Slider mainVolume = new Slider( new DefaultRangedValueModel( 0, 100, 100 ), "glass" );
-		mainVolume.setInsets( new Insets3f( cam.getHeight( ) * .02f, 0, cam.getHeight( ) * .02f, 0 ) );
+		mainVolume.setInsets( new Insets3f( getContext( ).getHeight( ) * .02f, 0, getContext( ).getHeight( ) * .02f, 0 ) );
 		Slider musicVolume = new Slider( new DefaultRangedValueModel( 0, 100, 100 ), "glass" );
-		musicVolume.setInsets( new Insets3f( cam.getHeight( ) * .02f, 0, cam.getHeight( ) * .02f, 0 ) );
+		musicVolume.setInsets( new Insets3f( getContext( ).getHeight( ) * .02f, 0, getContext( ).getHeight( ) * .02f, 0 ) );
 		Slider soundsVolume = new Slider( new DefaultRangedValueModel( 0, 100, 100 ), "glass" );
-		soundsVolume.setInsets( new Insets3f( cam.getHeight( ) * .02f, 0, cam.getHeight( ) * .02f, 0 ) );
+		soundsVolume.setInsets( new Insets3f( getContext( ).getHeight( ) * .02f, 0, getContext( ).getHeight( ) * .02f, 0 ) );
 		mainVolumeRef = mainVolume.getModel( ).createReference( );
 		musicVolumeRef = musicVolume.getModel( ).createReference( );
 		soundVolumeRef = soundsVolume.getModel( ).createReference( );
 
 		Checkbox console = new Checkbox( "Enable Dev Console", "glass" );
 		console.setFontSize( mediumFontSize );
-		console.setInsets( new Insets3f( cam.getHeight( ) * .02f, 0, cam.getHeight( ) * .02f, 0 ) );
+		console.setInsets( new Insets3f( getContext( ).getHeight( ) * .02f, 0, getContext( ).getHeight( ) * .02f, 0 ) );
 
-		Insets3f inputInsets = new Insets3f( 0, 0, ScreenContext.getHeightScalar( getScreenHeight( ) ) * 16f, 0 );
+		Insets3f inputInsets = new Insets3f( 0, 0, getContext( ).getScalar( ) * 16f, 0 );
 
 		Label northLabel = new Label( "Move North " );
-		northLabel.scale( ScreenContext.getHeightScalar( getScreenHeight( ) ) );
+		northLabel.setFontSize( mediumFontSize );
 		input.addChild( northLabel, 1, 1 );
 
 		northButton.setFontSize( mediumFontSize );
@@ -279,7 +281,7 @@ public class OptionsScreen extends Screen
 		input.addChild( northButton, 2, 1 );
 
 		Label southLabel = new Label( "Move South " );
-		southLabel.scale( ScreenContext.getHeightScalar( getScreenHeight( ) ) );
+		southLabel.setFontSize( mediumFontSize );
 		input.addChild( southLabel, 1, 2 );
 
 		southButton.setFontSize( mediumFontSize );
@@ -287,7 +289,7 @@ public class OptionsScreen extends Screen
 		input.addChild( southButton, 2, 2 );
 
 		Label eastLabel = new Label( "Move East " );
-		eastLabel.scale( ScreenContext.getHeightScalar( getScreenHeight( ) ) );
+		eastLabel.setFontSize( mediumFontSize );
 		input.addChild( eastLabel, 1, 3 );
 
 		eastButton.setFontSize( mediumFontSize );
@@ -295,7 +297,7 @@ public class OptionsScreen extends Screen
 		input.addChild( eastButton, 2, 3 );
 
 		Label westLabel = new Label( "Move West " );
-		westLabel.scale( ScreenContext.getHeightScalar( getScreenHeight( ) ) );
+		westLabel.setFontSize( mediumFontSize );
 		input.addChild( westLabel, 1, 4 );
 
 		westButton.setFontSize( mediumFontSize );
@@ -303,7 +305,7 @@ public class OptionsScreen extends Screen
 		input.addChild( westButton, 2, 4 );
 
 		Label chatLabel = new Label( "Chat       " );
-		chatLabel.scale( ScreenContext.getHeightScalar( getScreenHeight( ) ) );
+		chatLabel.setFontSize( mediumFontSize );
 		input.addChild( chatLabel, 1, 5 );
 
 		chatButton.setFontSize( mediumFontSize );
@@ -311,7 +313,7 @@ public class OptionsScreen extends Screen
 		input.addChild( chatButton, 2, 5 );
 
 		Label scoreLabel = new Label( "Scoreboard" );
-		scoreLabel.scale( ScreenContext.getHeightScalar( getScreenHeight( ) ) );
+		scoreLabel.setFontSize( mediumFontSize );
 		input.addChild( scoreLabel, 1, 6 );
 
 		scoreboardButton.setFontSize( mediumFontSize );
@@ -349,8 +351,27 @@ public class OptionsScreen extends Screen
 	@Override
 	public void reshape( int w, int h )
 	{
-		// TODO Auto-generated method stub
 		super.reshape( w, h );
+
+		// TODO Auto-generated method stub
+		background.setLocalTranslation( 0, getContext( ).getHeight( ), 0 );
+		background.setPreferredSize( new Vector3f( getContext( ).getWidth( ), getContext( ).getHeight( ), 0 ) );
+
+		top.setLocalTranslation( 0, getContext( ).getHeight( ), 0 );
+		top.setPreferredSize( new Vector3f( getContext( ).getWidth( ), getContext( ).getHeight( ) * 0.1f, 0 ) );
+
+		middle.setPreferredSize( new Vector3f( getContext( ).getWidth( ) * .4f, getContext( ).getHeight( ) * .05f, 0 ) );
+		middle.setLocalTranslation( getContext( ).getWidth( ) * .05f, getContext( ).getHeight( ) * 0.85f, 0 );
+
+		graphics.setPreferredSize( new Vector3f( getContext( ).getWidth( ) * .9f, getContext( ).getHeight( ) * .75f, 0 ) );
+		graphics.setLocalTranslation( getContext( ).getWidth( ) * .05f, getContext( ).getHeight( ) * 0.8f, 0 );
+
+		audio.setPreferredSize( new Vector3f( getContext( ).getWidth( ) * .9f, getContext( ).getHeight( ) * .75f, 0 ) );
+		audio.setLocalTranslation( getContext( ).getWidth( ) * .05f, getContext( ).getHeight( ) * 0.8f, 0 );
+
+		input.setPreferredSize( new Vector3f( getContext( ).getWidth( ) * .9f, getContext( ).getHeight( ) * .75f, 0 ) );
+		input.setLocalTranslation( getContext( ).getWidth( ) * .05f, getContext( ).getHeight( ) * 0.8f, 0 );
+
 	}
 
 	private String returnName( int number, char letter )

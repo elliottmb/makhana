@@ -69,26 +69,26 @@ public class NetworkScreen extends Screen
 	{
 		super.initialize( screenManager, app );
 
-		float mediumFontSize = ScreenContext.getMediumFontSize( getScreenHeight( ) );
+		float mediumFontSize = getContext( ).getMediumFontSize( );
 
 		setUpButtons( screenManager );
 
 		Panel background = new Panel( );
 		background.setBackground( new QuadBackgroundComponent( ColorRGBA.Gray ) );
-		background.setLocalTranslation( 0, getScreenHeight( ), 0 );
-		background.setPreferredSize( new Vector3f( getScreenWidth( ), getScreenHeight( ), 0 ) );
+		background.setLocalTranslation( 0, getContext( ).getHeight( ), 0 );
+		background.setPreferredSize( new Vector3f( getContext( ).getWidth( ), getContext( ).getHeight( ), 0 ) );
 		getScreenNode( ).attachChild( background );
 
 		Container top = new Container( new BoxLayout( Axis.X, FillMode.Proportional ), "glass" );
-		top.setLocalTranslation( 0, getScreenHeight( ), 0 );
+		top.setLocalTranslation( 0, getContext( ).getHeight( ), 0 );
 		top.setBackground( new QuadBackgroundComponent( ColorRGBA.DarkGray ) );
-		top.setPreferredSize( new Vector3f( getScreenWidth( ), getScreenHeight( ) * 0.1f, 0 ) );
+		top.setPreferredSize( new Vector3f( getContext( ).getWidth( ), getContext( ).getHeight( ) * 0.1f, 0 ) );
 		Label name = new Label( "Network" );
-		name.scale( ScreenContext.getHeightScalar( getScreenHeight( ) ) );
-		name.setPreferredSize( new Vector3f( 0.8f, 0, 0 ) );
+		name.scale( getContext( ).getScalar( ) );
+		name.setPreferredSize( new Vector3f( getContext( ).getWidth( ) * 0.8f, 0, 0 ) );
 
 		Container buttons = new Container( new BoxLayout( Axis.X, FillMode.Even ), "glass" );
-		buttons.setPreferredSize( new Vector3f( 0.05f, 0, 0 ) );
+		buttons.setPreferredSize( new Vector3f( getContext( ).getWidth( ) * 0.05f, 0, 0 ) );
 
 		top.addChild( name );
 		top.addChild( buttons );
@@ -99,11 +99,11 @@ public class NetworkScreen extends Screen
 		getScreenNode( ).attachChild( top );
 
 		Container tabs = new Container( new BoxLayout( Axis.X, FillMode.None ) );
-		tabs.setPreferredSize( new Vector3f( getScreenWidth( ) * .4f, getScreenHeight( ) * .05f, 0 ) );
-		tabs.setLocalTranslation( getScreenWidth( ) * .05f, getScreenHeight( ) * 0.85f, 0 );
+		tabs.setPreferredSize( new Vector3f( getContext( ).getWidth( ) * 0.4f, getContext( ).getHeight( ) * 0.05f, 0 ) );
+		tabs.setLocalTranslation( getContext( ).getWidth( ) * 0.05f, getContext( ).getHeight( ) * 0.85f, 0 );
 		tabs.setBackground( new QuadBackgroundComponent( ColorRGBA.Brown ) );
 
-		Insets3f buttonInsets = new Insets3f( 0, 0, 0, getScreenWidth( ) * 0.05f );
+		Insets3f buttonInsets = new Insets3f( 0, 0, 0, 0.05f );
 		servers.setFontSize( mediumFontSize );
 		servers.setInsets( buttonInsets );
 
@@ -118,8 +118,8 @@ public class NetworkScreen extends Screen
 		tabs.addChild( history );
 
 		label = new Container( new BoxLayout( Axis.X, FillMode.Even ) );
-		label.setPreferredSize( new Vector3f( getScreenWidth( ) * .9f, getScreenHeight( ) * .05f, 0 ) );
-		label.setLocalTranslation( getScreenWidth( ) * .05f, getScreenHeight( ) * .8f, 0 );
+		label.setPreferredSize( new Vector3f( getContext( ).getWidth( ) * 0.9f, getContext( ).getHeight( ) * 0.05f, 0 ) );
+		label.setLocalTranslation( getContext( ).getWidth( ) * 0.05f, getContext( ).getHeight( ) * 0.8f, 0 );
 		label.setBackground( new QuadBackgroundComponent( ColorRGBA.LightGray ) );
 
 		serverNameLabel = new Button( "Name" );
@@ -137,10 +137,10 @@ public class NetworkScreen extends Screen
 
 		serverContainer = new Container( new BoxLayout( Axis.Y, FillMode.Proportional ) );
 		serverContainer.setBackground( new QuadBackgroundComponent( ColorRGBA.DarkGray ) );
-		serverContainer.setPreferredSize( new Vector3f( getScreenWidth( ) * .9f, getScreenHeight( ) * .65f, 0 ) );
-		serverContainer.setLocalTranslation( getScreenWidth( ) * .05f, getScreenHeight( ) * 0.75f, 0 );
+		serverContainer.setPreferredSize( new Vector3f( getContext( ).getWidth( ) * 0.9f, getContext( ).getHeight( ) * 0.65f, 0 ) );
+		serverContainer.setLocalTranslation( getContext( ).getWidth( ) * 0.05f, getContext( ).getHeight( ) * 0.75f, 0 );
 
-		Vector3f serverCellSize = new Vector3f( getScreenWidth( ) * .9f, getScreenHeight( ) * 0.1125f, 0 );
+		Vector3f serverCellSize = new Vector3f( 0.9f, 0.1125f, 0 );
 
 		server1 = new Container( new BoxLayout( Axis.X, FillMode.Even ) );
 		server1.setBackground( new QuadBackgroundComponent( ColorRGBA.DarkGray ) );
@@ -280,8 +280,8 @@ public class NetworkScreen extends Screen
 		server8.addChild( server8Other );
 
 		Container pageButtons = new Container( new BoxLayout( Axis.X, FillMode.Even ) );
-		pageButtons.setPreferredSize( new Vector3f( getScreenWidth( ) * .15f, getScreenHeight( ) * .05f, 0 ) );
-		pageButtons.setLocalTranslation( getScreenWidth( ) * .8f, getScreenHeight( ) * .1f, 0 );
+		pageButtons.setPreferredSize( new Vector3f( getContext( ).getWidth( ) * 0.15f, getContext( ).getHeight( ) * 0.05f, 0 ) );
+		pageButtons.setLocalTranslation( getContext( ).getWidth( ) * 0.8f, getContext( ).getHeight( ) * 0.1f, 0 );
 		pageButtons.setBackground( new QuadBackgroundComponent( ColorRGBA.DarkGray ) );
 
 		firstPage.setFontSize( mediumFontSize );

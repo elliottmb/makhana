@@ -36,19 +36,19 @@ public class LoadingScreen extends Screen
 
 		Panel background = new Panel( );
 		background.setBackground( new QuadBackgroundComponent( ColorRGBA.Gray ) );
-		background.setLocalTranslation( 0, getScreenHeight( ), 0 );
-		background.setPreferredSize( new Vector3f( getScreenWidth( ), getScreenHeight( ), 0 ) );
+		background.setLocalTranslation( 0, 1f, 0 );
+		background.setPreferredSize( new Vector3f( 1f, 1f, 0 ) );
 		getScreenNode( ).attachChild( background );
 
 		Container bottom = new Container( new BoxLayout( Axis.X, FillMode.None ), "glass" );
-		bottom.setLocalTranslation( 0, getScreenHeight( ), 0 );
+		bottom.setLocalTranslation( 0, 1f, 0 );
 		bottom.setBackground( new QuadBackgroundComponent( ColorRGBA.DarkGray ) );
-		bottom.setPreferredSize( new Vector3f( getScreenWidth( ), getScreenHeight( ) * 0.1f, 0 ) );
+		bottom.setPreferredSize( new Vector3f( 1f, 0.1f, 0 ) );
 
 		bar = new ProgressBar( "glass" );
 		bar.setProgressPercent( 0 );
-		bar.setLocalTranslation( 0, getScreenHeight( ) * .1f, 0 );
-		bar.setPreferredSize( new Vector3f( getScreenWidth( ), getScreenHeight( ) * .1f, 0 ) );
+		bar.setLocalTranslation( 0, 0.1f, 0 );
+		bar.setPreferredSize( new Vector3f( 1f, 0.1f, 0 ) );
 		bar.setMessage( ( int ) ( bar.getProgressPercent( ) * 100 ) + "%" );
 
 		Button yes = new Button( "CLICK" );

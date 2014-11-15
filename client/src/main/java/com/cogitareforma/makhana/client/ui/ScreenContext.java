@@ -3,36 +3,55 @@ package com.cogitareforma.makhana.client.ui;
 public class ScreenContext
 {
 	private static final float baseScalar = 0.0016f;
+	private int height;
+	private int width;
 
 	// TODO: Write more helper methods! Use this class!
 
-	public static float getHeadingFontSize( int height )
+	public ScreenContext( int w, int h )
 	{
-		return height * 0.0512f;
+		this.width = w;
+		this.height = h;
 	}
 
-	public static float getHeightScalar( int height )
+	public float getHeadingFontSize( )
 	{
-		return height * baseScalar;
+		return 0.064f * height;
 	}
 
-	public static float getLargeFontSize( int height )
+	/**
+	 * @return the height
+	 */
+	public int getHeight( )
 	{
-		return height * 0.032f;
+		return height;
 	}
 
-	public static float getMediumFontSize( int height )
+	public float getLargeFontSize( )
 	{
-		return height * 0.0256f;
+		return 0.04f * height;
 	}
 
-	public static float getSmallFontSize( int height )
+	public float getMediumFontSize( )
 	{
-		return height * 0.0192f;
+		return 0.024f * height;
 	}
 
-	public static float getWidthScalar( int width )
+	public float getScalar( )
 	{
-		return width * baseScalar;
+		return baseScalar;
+	}
+
+	public float getSmallFontSize( )
+	{
+		return 0.016f * height;
+	}
+
+	/**
+	 * @return the width
+	 */
+	public int getWidth( )
+	{
+		return width;
 	}
 }
