@@ -25,6 +25,13 @@ public abstract class OfflineClient extends SimpleApplication
 
 	private ScreenManager screenManager;
 
+	@Override
+	public void reshape( int w, int h )
+	{
+		super.reshape( w, h );
+		screenManager.reshape( w, h );
+	}
+
 	public OfflineClient( )
 	{
 		super( );
@@ -76,8 +83,6 @@ public abstract class OfflineClient extends SimpleApplication
 	public void initialize( )
 	{
 		logger.log( Level.INFO, "Initializaing base OfflineClient" );
-		screenManager.getScreenContext( ).recalculateScalars( ( Integer ) getConfiguration( ).get( "client.graphics.height" ),
-				( Integer ) getConfiguration( ).get( "client.graphics.width" ) );
 		super.initialize( );
 		// TODO
 	}

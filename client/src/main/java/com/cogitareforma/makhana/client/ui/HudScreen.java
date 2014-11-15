@@ -17,8 +17,14 @@ public class HudScreen extends Screen
 	{
 		super.initialize( screenManager, app );
 
-		Camera cam = screenManager.getApp( ).getCamera( );
-		ScreenContext sc = screenManager.getScreenContext( );
+		Camera cam = app.getCamera( );
+	}
+
+	@Override
+	public void reshape( int w, int h )
+	{
+		// TODO Auto-generated method stub
+		super.reshape( w, h );
 	}
 
 	@Override

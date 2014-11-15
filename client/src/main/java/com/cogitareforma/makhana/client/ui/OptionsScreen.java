@@ -35,44 +35,354 @@ import com.simsilica.lemur.core.VersionedReference;
 
 public class OptionsScreen extends Screen
 {
-	private Label resLabel;
-	private Slider res;
-	private Slider quality;
-	private Button optionsExit;
-	private Button optionsApply;
+	private Application app;
+	private Container audio;
+	private Button audioButton;
+	private Set< String > avaiableKeys;
+	private String buttonKey;
 
-	private VersionedReference< Double > resRef;
-	private VersionedReference< Double > qualityRef;
+	private boolean buttonPressed;
+	private Button chatButton;
+	private Container current;
+	private Button currentButton;
+	private Button eastButton;
+	private Container graphics;
+	private Button graphicsButton;
+	private Container input;
+	private Button inputButton;
+
+	private RawInputListener list;
 	private VersionedReference< Double > mainVolumeRef;
 	private VersionedReference< Double > musicVolumeRef;
-	private VersionedReference< Double > soundVolumeRef;
-	private Container graphics;
-	private Container audio;
-	private Container input;
-	private Container current;
-
-	private Button graphicsButton;
-	private Button audioButton;
-	private Button inputButton;
 	private Button northButton;
-	private Button southButton;
-	private Button eastButton;
-	private Button westButton;
-	private Button chatButton;
-	private Button scoreboardButton;
-	private Application app;
-	private String buttonKey;
-	private RawInputListener list;
-	private Button currentButton;
-	private boolean buttonPressed;
-	private Set< String > avaiableKeys;
+	private Button optionsApply;
+	private Button optionsExit;
 	private String prevKey;
+	private Slider quality;
+	private VersionedReference< Double > qualityRef;
+	private Slider res;
+	private Label resLabel;
 	private ArrayList< String > resolutions;
+	private VersionedReference< Double > resRef;
+	private Button scoreboardButton;
+	private VersionedReference< Double > soundVolumeRef;
+	private Button southButton;
+	private Button westButton;
+
+	private void activeContainer( Container container )
+	{
+		if ( getScreenNode( ).hasChild( current ) )
+		{
+			if ( current == container )
+				return;
+			getScreenNode( ).detachChild( current );
+		}
+		current = container;
+		getScreenNode( ).attachChild( current );
+	}
+
+	private void activeListener( )
+	{
+		System.out.println( "Active Listener" );
+		buttonKey = " ";
+		list = new RawInputListener( )
+		{
+			@Override
+			public void beginInput( )
+			{
+			}
+
+			@Override
+			public void endInput( )
+			{
+			}
+
+			@Override
+			public void onJoyAxisEvent( JoyAxisEvent arg0 )
+			{
+			}
+
+			@Override
+			public void onJoyButtonEvent( JoyButtonEvent arg0 )
+			{
+			}
+
+			@Override
+			public void onKeyEvent( KeyInputEvent arg0 )
+			{
+				System.out.println( "Key: " + arg0 );
+				returnName( arg0.getKeyCode( ), arg0.getKeyChar( ) );
+			}
+
+			@Override
+			public void onMouseButtonEvent( MouseButtonEvent arg0 )
+			{
+			}
+
+			@Override
+			public void onMouseMotionEvent( MouseMotionEvent arg0 )
+			{
+			}
+
+			@Override
+			public void onTouchEvent( TouchEvent arg0 )
+			{
+			}
+		};
+		app.getInputManager( ).addRawInputListener( list );
+		buttonPressed = true;
+	}
 
 	@Override
 	public void cleanup( )
 	{
 		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void initialize( ScreenManager screenManager, Application app )
+	{
+		super.initialize( screenManager, app );
+		this.app = app;
+		buttonKey = " ";
+
+		avaiableKeys = Sets.newHashSet( "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T",
+				"U", "V", "W", "X", "Y", "Z", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "Up", "Down", "Left", "Right", "`", "Tab" );
+		resolutions = new ArrayList< String >( );
+		resolutions.add( "A" );
+		resolutions.add( "B" );
+		resolutions.add( "C" );
+		resolutions.add( "D" );
+		resolutions.add( "E" );
+		resolutions.add( "F" );
+		resolutions.add( "G" );
+		resolutions.add( "H" );
+		resolutions.add( "I" );
+		resolutions.add( "J" );
+		resolutions.add( "K" );
+		resolutions.add( "L" );
+		resolutions.add( "M" );
+		resolutions.add( "N" );
+		resolutions.add( "O" );
+		resolutions.add( "P" );
+
+		Camera cam = screenManager.getApp( ).getCamera( );
+
+		float mediumFontSize = ScreenContext.getMediumFontSize( getScreenHeight( ) );
+
+		Panel background = new Panel( );
+		background.setBackground( new QuadBackgroundComponent( ColorRGBA.Gray ) );
+		background.setLocalTranslation( 0, cam.getHeight( ), 0 );
+		background.setPreferredSize( new Vector3f( cam.getWidth( ), cam.getHeight( ), 0 ) );
+		getScreenNode( ).attachChild( background );
+
+		Container top = new Container( new BoxLayout( Axis.X, FillMode.Proportional ), "glass" );
+		top.setLocalTranslation( 0, cam.getHeight( ), 0 );
+		top.setBackground( new QuadBackgroundComponent( ColorRGBA.DarkGray ) );
+		top.setPreferredSize( new Vector3f( cam.getWidth( ), cam.getHeight( ) * 0.1f, 0 ) );
+		Label name = new Label( "Options" );
+		name.scale( ScreenContext.getHeightScalar( getScreenHeight( ) ) );
+		name.setPreferredSize( new Vector3f( 0.8f, 0, 0 ) );
+
+		Container buttons = new Container( new BoxLayout( Axis.X, FillMode.Even ), "glass" );
+		buttons.setPreferredSize( new Vector3f( 0.2f, 0, 0 ) );
+
+		top.addChild( name );
+		top.addChild( buttons );
+
+		Container middle = new Container( new BoxLayout( Axis.X, FillMode.Even ) );
+		middle.setPreferredSize( new Vector3f( cam.getWidth( ) * .4f, cam.getHeight( ) * .05f, 0 ) );
+		middle.setLocalTranslation( cam.getWidth( ) * .05f, cam.getHeight( ) * 0.85f, 0 );
+		middle.setBackground( new QuadBackgroundComponent( ColorRGBA.Brown ) );
+
+		setUpButtons( screenManager );
+
+		middle.addChild( graphicsButton );
+		middle.addChild( audioButton );
+		middle.addChild( inputButton );
+
+		optionsApply.setFontSize( mediumFontSize );
+		optionsExit.setFontSize( mediumFontSize );
+		buttons.addChild( optionsApply );
+		buttons.addChild( optionsExit );
+		graphicsButton.setFontSize( mediumFontSize );
+		audioButton.setFontSize( mediumFontSize );
+		inputButton.setFontSize( mediumFontSize );
+
+		graphics = new Container( new BoxLayout( Axis.Y, FillMode.None ) );
+		graphics.setPreferredSize( new Vector3f( cam.getWidth( ) * .9f, cam.getHeight( ) * .75f, 0 ) );
+		graphics.setBackground( new QuadBackgroundComponent( new ColorRGBA( .07f, .52f, .49f, 1 ) ) );
+		graphics.setLocalTranslation( cam.getWidth( ) * .05f, cam.getHeight( ) * 0.8f, 0 );
+
+		audio = new Container( new BoxLayout( Axis.Y, FillMode.None ) );
+		audio.setPreferredSize( new Vector3f( cam.getWidth( ) * .9f, cam.getHeight( ) * .75f, 0 ) );
+		audio.setBackground( new QuadBackgroundComponent( new ColorRGBA( .07f, .52f, .49f, 1 ) ) );
+		audio.setLocalTranslation( cam.getWidth( ) * .05f, cam.getHeight( ) * 0.8f, 0 );
+
+		// input = new Container( new BoxLayout( Axis.Y, FillMode.None ) );
+		input = new Container( new SpringGridLayout( Axis.X, Axis.Y, FillMode.None, FillMode.None ) );
+		input.setPreferredSize( new Vector3f( cam.getWidth( ) * .9f, cam.getHeight( ) * .75f, 0 ) );
+		input.setBackground( new QuadBackgroundComponent( new ColorRGBA( .07f, .52f, .49f, 1 ) ) );
+		input.setLocalTranslation( cam.getWidth( ) * .05f, cam.getHeight( ) * 0.8f, 0 );
+
+		resLabel = new Label( "" );
+		resLabel.scale( ScreenContext.getHeightScalar( getScreenHeight( ) ) );
+
+		res = new Slider( new DefaultRangedValueModel( 0, 15, 1 ), "glass" );
+		res.setName( "Resolution" );
+		res.setInsets( new Insets3f( cam.getHeight( ) * .02f, 0, cam.getHeight( ) * .02f, 0 ) );
+		resRef = res.getModel( ).createReference( );
+		resLabel.setText( "Resolution: " + resolutions.get( resRef.get( ).intValue( ) ) );
+
+		Checkbox fullscreen = new Checkbox( "FullScreen" );
+		fullscreen.setFontSize( mediumFontSize );
+		fullscreen.setInsets( new Insets3f( cam.getHeight( ) * .02f, 0, cam.getHeight( ) * .02f, 0 ) );
+
+		quality = new Slider( new DefaultRangedValueModel( 0, 4, 4 ), "glass" );
+		quality.setName( "Quality" );
+		quality.setInsets( new Insets3f( cam.getHeight( ) * .02f, 0, cam.getHeight( ) * .02f, 0 ) );
+		qualityRef = quality.getModel( ).createReference( );
+
+		Checkbox vsync = new Checkbox( "VSync" );
+		vsync.setFontSize( mediumFontSize );
+		vsync.setInsets( new Insets3f( cam.getHeight( ) * .02f, 0, cam.getHeight( ) * .02f, 0 ) );
+
+		Label mainLabel = new Label( "Main Volume" );
+		mainLabel.scale( ScreenContext.getHeightScalar( getScreenHeight( ) ) );
+		Label musicLabel = new Label( "Music Volume" );
+		musicLabel.scale( ScreenContext.getHeightScalar( getScreenHeight( ) ) );
+		Label soundLabel = new Label( "Sound Volume" );
+		soundLabel.scale( ScreenContext.getHeightScalar( getScreenHeight( ) ) );
+
+		Slider mainVolume = new Slider( new DefaultRangedValueModel( 0, 100, 100 ), "glass" );
+		mainVolume.setInsets( new Insets3f( cam.getHeight( ) * .02f, 0, cam.getHeight( ) * .02f, 0 ) );
+		Slider musicVolume = new Slider( new DefaultRangedValueModel( 0, 100, 100 ), "glass" );
+		musicVolume.setInsets( new Insets3f( cam.getHeight( ) * .02f, 0, cam.getHeight( ) * .02f, 0 ) );
+		Slider soundsVolume = new Slider( new DefaultRangedValueModel( 0, 100, 100 ), "glass" );
+		soundsVolume.setInsets( new Insets3f( cam.getHeight( ) * .02f, 0, cam.getHeight( ) * .02f, 0 ) );
+		mainVolumeRef = mainVolume.getModel( ).createReference( );
+		musicVolumeRef = musicVolume.getModel( ).createReference( );
+		soundVolumeRef = soundsVolume.getModel( ).createReference( );
+
+		Checkbox console = new Checkbox( "Enable Dev Console", "glass" );
+		console.setFontSize( mediumFontSize );
+		console.setInsets( new Insets3f( cam.getHeight( ) * .02f, 0, cam.getHeight( ) * .02f, 0 ) );
+
+		Insets3f inputInsets = new Insets3f( 0, 0, ScreenContext.getHeightScalar( getScreenHeight( ) ) * 16f, 0 );
+
+		Label northLabel = new Label( "Move North " );
+		northLabel.scale( ScreenContext.getHeightScalar( getScreenHeight( ) ) );
+		input.addChild( northLabel, 1, 1 );
+
+		northButton.setFontSize( mediumFontSize );
+		northButton.setInsets( inputInsets );
+		input.addChild( northButton, 2, 1 );
+
+		Label southLabel = new Label( "Move South " );
+		southLabel.scale( ScreenContext.getHeightScalar( getScreenHeight( ) ) );
+		input.addChild( southLabel, 1, 2 );
+
+		southButton.setFontSize( mediumFontSize );
+		southButton.setInsets( inputInsets );
+		input.addChild( southButton, 2, 2 );
+
+		Label eastLabel = new Label( "Move East " );
+		eastLabel.scale( ScreenContext.getHeightScalar( getScreenHeight( ) ) );
+		input.addChild( eastLabel, 1, 3 );
+
+		eastButton.setFontSize( mediumFontSize );
+		eastButton.setInsets( inputInsets );
+		input.addChild( eastButton, 2, 3 );
+
+		Label westLabel = new Label( "Move West " );
+		westLabel.scale( ScreenContext.getHeightScalar( getScreenHeight( ) ) );
+		input.addChild( westLabel, 1, 4 );
+
+		westButton.setFontSize( mediumFontSize );
+		westButton.setInsets( inputInsets );
+		input.addChild( westButton, 2, 4 );
+
+		Label chatLabel = new Label( "Chat       " );
+		chatLabel.scale( ScreenContext.getHeightScalar( getScreenHeight( ) ) );
+		input.addChild( chatLabel, 1, 5 );
+
+		chatButton.setFontSize( mediumFontSize );
+		chatButton.setInsets( inputInsets );
+		input.addChild( chatButton, 2, 5 );
+
+		Label scoreLabel = new Label( "Scoreboard" );
+		scoreLabel.scale( ScreenContext.getHeightScalar( getScreenHeight( ) ) );
+		input.addChild( scoreLabel, 1, 6 );
+
+		scoreboardButton.setFontSize( mediumFontSize );
+		scoreboardButton.setInsets( inputInsets );
+		input.addChild( scoreboardButton, 2, 6 );
+
+		activeContainer( graphics );
+
+		graphics.addChild( resLabel );
+		graphics.addChild( res );
+		graphics.addChild( fullscreen );
+		graphics.addChild( quality );
+		graphics.addChild( vsync );
+		audio.addChild( mainLabel );
+		audio.addChild( mainVolume );
+		audio.addChild( musicLabel );
+		audio.addChild( musicVolume );
+		audio.addChild( soundLabel );
+		audio.addChild( soundsVolume );
+		input.addChild( console, 1, 7 );
+		getScreenNode( ).attachChild( middle );
+		getScreenNode( ).attachChild( top );
+	}
+
+	private void printInput( )
+	{
+		System.out.println( northButton.getText( ) );
+		System.out.println( southButton.getText( ) );
+		System.out.println( eastButton.getText( ) );
+		System.out.println( westButton.getText( ) );
+		System.out.println( chatButton.getText( ) );
+		System.out.println( scoreboardButton.getText( ) );
+	}
+
+	@Override
+	public void reshape( int w, int h )
+	{
+		// TODO Auto-generated method stub
+		super.reshape( w, h );
+	}
+
+	private String returnName( int number, char letter )
+	{
+		// TODO need to add back the old key to avaiableKeys.
+		// avaiableKeys.add( charMap.get( prevKey ) );
+		avaiableKeys.add( prevKey );
+		KeyNames key = new KeyNames( );
+		if ( avaiableKeys.contains( key.getName( number ) ) )
+		{
+			avaiableKeys.remove( key.getName( number ) );
+
+			buttonKey = key.getName( number );
+			return buttonKey;
+		}
+		buttonKey = " ";
+		return buttonKey;
+	}
+
+	@Override
+	public void screenAttached( ScreenManager screenManager )
+	{
+	}
+
+	@Override
+	public void screenDetached( ScreenManager screenManager )
+	{
+	}
+
+	private void setButtonName( Button button )
+	{
+		currentButton = button;
 	}
 
 	@SuppressWarnings( "unchecked" )
@@ -366,308 +676,6 @@ public class OptionsScreen extends Screen
 				}
 			}
 		} );
-	}
-
-	private void printInput( )
-	{
-		System.out.println( northButton.getText( ) );
-		System.out.println( southButton.getText( ) );
-		System.out.println( eastButton.getText( ) );
-		System.out.println( westButton.getText( ) );
-		System.out.println( chatButton.getText( ) );
-		System.out.println( scoreboardButton.getText( ) );
-	}
-
-	@Override
-	public void initialize( ScreenManager screenManager, Application app )
-	{
-		super.initialize( screenManager, app );
-		this.app = app;
-		buttonKey = " ";
-
-		avaiableKeys = Sets.newHashSet( "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T",
-				"U", "V", "W", "X", "Y", "Z", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "Up", "Down", "Left", "Right", "`", "Tab" );
-		resolutions = new ArrayList< String >( );
-		resolutions.add( "A" );
-		resolutions.add( "B" );
-		resolutions.add( "C" );
-		resolutions.add( "D" );
-		resolutions.add( "E" );
-		resolutions.add( "F" );
-		resolutions.add( "G" );
-		resolutions.add( "H" );
-		resolutions.add( "I" );
-		resolutions.add( "J" );
-		resolutions.add( "K" );
-		resolutions.add( "L" );
-		resolutions.add( "M" );
-		resolutions.add( "N" );
-		resolutions.add( "O" );
-		resolutions.add( "P" );
-
-		Camera cam = screenManager.getApp( ).getCamera( );
-		ScreenContext sc = screenManager.getScreenContext( );
-
-		Panel background = new Panel( );
-		background.setBackground( new QuadBackgroundComponent( ColorRGBA.Gray ) );
-		background.setLocalTranslation( 0, cam.getHeight( ), 0 );
-		background.setPreferredSize( new Vector3f( cam.getWidth( ), cam.getHeight( ), 0 ) );
-		getScreenNode( ).attachChild( background );
-
-		Container top = new Container( new BoxLayout( Axis.X, FillMode.Proportional ), "glass" );
-		top.setLocalTranslation( 0, cam.getHeight( ), 0 );
-		top.setBackground( new QuadBackgroundComponent( ColorRGBA.DarkGray ) );
-		top.setPreferredSize( new Vector3f( cam.getWidth( ), cam.getHeight( ) * 0.1f, 0 ) );
-		Label name = new Label( "Options" );
-		name.scale( sc.getHeightScalar( ) );
-		name.setPreferredSize( new Vector3f( 0.8f, 0, 0 ) );
-
-		Container buttons = new Container( new BoxLayout( Axis.X, FillMode.Even ), "glass" );
-		buttons.setPreferredSize( new Vector3f( 0.2f, 0, 0 ) );
-
-		top.addChild( name );
-		top.addChild( buttons );
-
-		Container middle = new Container( new BoxLayout( Axis.X, FillMode.Even ) );
-		middle.setPreferredSize( new Vector3f( cam.getWidth( ) * .4f, cam.getHeight( ) * .05f, 0 ) );
-		middle.setLocalTranslation( cam.getWidth( ) * .05f, cam.getHeight( ) * 0.85f, 0 );
-		middle.setBackground( new QuadBackgroundComponent( ColorRGBA.Brown ) );
-
-		setUpButtons( screenManager );
-
-		middle.addChild( graphicsButton );
-		middle.addChild( audioButton );
-		middle.addChild( inputButton );
-
-		optionsApply.setFontSize( sc.getMediumFontSize( ) );
-		optionsExit.setFontSize( sc.getMediumFontSize( ) );
-		buttons.addChild( optionsApply );
-		buttons.addChild( optionsExit );
-		graphicsButton.setFontSize( sc.getMediumFontSize( ) );
-		audioButton.setFontSize( sc.getMediumFontSize( ) );
-		inputButton.setFontSize( sc.getMediumFontSize( ) );
-
-		graphics = new Container( new BoxLayout( Axis.Y, FillMode.None ) );
-		graphics.setPreferredSize( new Vector3f( cam.getWidth( ) * .9f, cam.getHeight( ) * .75f, 0 ) );
-		graphics.setBackground( new QuadBackgroundComponent( new ColorRGBA( .07f, .52f, .49f, 1 ) ) );
-		graphics.setLocalTranslation( cam.getWidth( ) * .05f, cam.getHeight( ) * 0.8f, 0 );
-
-		audio = new Container( new BoxLayout( Axis.Y, FillMode.None ) );
-		audio.setPreferredSize( new Vector3f( cam.getWidth( ) * .9f, cam.getHeight( ) * .75f, 0 ) );
-		audio.setBackground( new QuadBackgroundComponent( new ColorRGBA( .07f, .52f, .49f, 1 ) ) );
-		audio.setLocalTranslation( cam.getWidth( ) * .05f, cam.getHeight( ) * 0.8f, 0 );
-
-		// input = new Container( new BoxLayout( Axis.Y, FillMode.None ) );
-		input = new Container( new SpringGridLayout( Axis.X, Axis.Y, FillMode.None, FillMode.None ) );
-		input.setPreferredSize( new Vector3f( cam.getWidth( ) * .9f, cam.getHeight( ) * .75f, 0 ) );
-		input.setBackground( new QuadBackgroundComponent( new ColorRGBA( .07f, .52f, .49f, 1 ) ) );
-		input.setLocalTranslation( cam.getWidth( ) * .05f, cam.getHeight( ) * 0.8f, 0 );
-
-		resLabel = new Label( "" );
-		resLabel.scale( sc.getHeightScalar( ) );
-
-		res = new Slider( new DefaultRangedValueModel( 0, 15, 1 ), "glass" );
-		res.setName( "Resolution" );
-		res.setInsets( new Insets3f( cam.getHeight( ) * .02f, 0, cam.getHeight( ) * .02f, 0 ) );
-		resRef = res.getModel( ).createReference( );
-		resLabel.setText( "Resolution: " + resolutions.get( resRef.get( ).intValue( ) ) );
-
-		Checkbox fullscreen = new Checkbox( "FullScreen" );
-		fullscreen.setFontSize( sc.getMediumFontSize( ) );
-		fullscreen.setInsets( new Insets3f( cam.getHeight( ) * .02f, 0, cam.getHeight( ) * .02f, 0 ) );
-
-		quality = new Slider( new DefaultRangedValueModel( 0, 4, 4 ), "glass" );
-		quality.setName( "Quality" );
-		quality.setInsets( new Insets3f( cam.getHeight( ) * .02f, 0, cam.getHeight( ) * .02f, 0 ) );
-		qualityRef = quality.getModel( ).createReference( );
-
-		Checkbox vsync = new Checkbox( "VSync" );
-		vsync.setFontSize( sc.getMediumFontSize( ) );
-		vsync.setInsets( new Insets3f( cam.getHeight( ) * .02f, 0, cam.getHeight( ) * .02f, 0 ) );
-
-		Label mainLabel = new Label( "Main Volume" );
-		mainLabel.scale( sc.getHeightScalar( ) );
-		Label musicLabel = new Label( "Music Volume" );
-		musicLabel.scale( sc.getHeightScalar( ) );
-		Label soundLabel = new Label( "Sound Volume" );
-		soundLabel.scale( sc.getHeightScalar( ) );
-
-		Slider mainVolume = new Slider( new DefaultRangedValueModel( 0, 100, 100 ), "glass" );
-		mainVolume.setInsets( new Insets3f( cam.getHeight( ) * .02f, 0, cam.getHeight( ) * .02f, 0 ) );
-		Slider musicVolume = new Slider( new DefaultRangedValueModel( 0, 100, 100 ), "glass" );
-		musicVolume.setInsets( new Insets3f( cam.getHeight( ) * .02f, 0, cam.getHeight( ) * .02f, 0 ) );
-		Slider soundsVolume = new Slider( new DefaultRangedValueModel( 0, 100, 100 ), "glass" );
-		soundsVolume.setInsets( new Insets3f( cam.getHeight( ) * .02f, 0, cam.getHeight( ) * .02f, 0 ) );
-		mainVolumeRef = mainVolume.getModel( ).createReference( );
-		musicVolumeRef = musicVolume.getModel( ).createReference( );
-		soundVolumeRef = soundsVolume.getModel( ).createReference( );
-
-		Checkbox console = new Checkbox( "Enable Dev Console", "glass" );
-		console.setFontSize( sc.getMediumFontSize( ) );
-		console.setInsets( new Insets3f( cam.getHeight( ) * .02f, 0, cam.getHeight( ) * .02f, 0 ) );
-
-		Insets3f inputInsets = new Insets3f( 0, 0, sc.getHeightScalar( ) * 16f, 0 );
-
-		Label northLabel = new Label( "Move North " );
-		northLabel.scale( sc.getHeightScalar( ) );
-		input.addChild( northLabel, 1, 1 );
-
-		northButton.setFontSize( sc.getMediumFontSize( ) );
-		northButton.setInsets( inputInsets );
-		input.addChild( northButton, 2, 1 );
-
-		Label southLabel = new Label( "Move South " );
-		southLabel.scale( sc.getHeightScalar( ) );
-		input.addChild( southLabel, 1, 2 );
-
-		southButton.setFontSize( sc.getMediumFontSize( ) );
-		southButton.setInsets( inputInsets );
-		input.addChild( southButton, 2, 2 );
-
-		Label eastLabel = new Label( "Move East " );
-		eastLabel.scale( sc.getHeightScalar( ) );
-		input.addChild( eastLabel, 1, 3 );
-
-		eastButton.setFontSize( sc.getMediumFontSize( ) );
-		eastButton.setInsets( inputInsets );
-		input.addChild( eastButton, 2, 3 );
-
-		Label westLabel = new Label( "Move West " );
-		westLabel.scale( sc.getHeightScalar( ) );
-		input.addChild( westLabel, 1, 4 );
-
-		westButton.setFontSize( sc.getMediumFontSize( ) );
-		westButton.setInsets( inputInsets );
-		input.addChild( westButton, 2, 4 );
-
-		Label chatLabel = new Label( "Chat       " );
-		chatLabel.scale( sc.getHeightScalar( ) );
-		input.addChild( chatLabel, 1, 5 );
-
-		chatButton.setFontSize( sc.getMediumFontSize( ) );
-		chatButton.setInsets( inputInsets );
-		input.addChild( chatButton, 2, 5 );
-
-		Label scoreLabel = new Label( "Scoreboard" );
-		scoreLabel.scale( sc.getHeightScalar( ) );
-		input.addChild( scoreLabel, 1, 6 );
-
-		scoreboardButton.setFontSize( sc.getMediumFontSize( ) );
-		scoreboardButton.setInsets( inputInsets );
-		input.addChild( scoreboardButton, 2, 6 );
-
-		activeContainer( graphics );
-
-		graphics.addChild( resLabel );
-		graphics.addChild( res );
-		graphics.addChild( fullscreen );
-		graphics.addChild( quality );
-		graphics.addChild( vsync );
-		audio.addChild( mainLabel );
-		audio.addChild( mainVolume );
-		audio.addChild( musicLabel );
-		audio.addChild( musicVolume );
-		audio.addChild( soundLabel );
-		audio.addChild( soundsVolume );
-		input.addChild( console, 1, 7 );
-		getScreenNode( ).attachChild( middle );
-		getScreenNode( ).attachChild( top );
-	}
-
-	private void activeContainer( Container container )
-	{
-		if ( getScreenNode( ).hasChild( current ) )
-		{
-			if ( current == container )
-				return;
-			getScreenNode( ).detachChild( current );
-		}
-		current = container;
-		getScreenNode( ).attachChild( current );
-	}
-
-	private String returnName( int number, char letter )
-	{
-		// TODO need to add back the old key to avaiableKeys.
-		// avaiableKeys.add( charMap.get( prevKey ) );
-		avaiableKeys.add( prevKey );
-		KeyNames key = new KeyNames( );
-		if ( avaiableKeys.contains( key.getName( number ) ) )
-		{
-			avaiableKeys.remove( key.getName( number ) );
-
-			buttonKey = key.getName( number );
-			return buttonKey;
-		}
-		buttonKey = " ";
-		return buttonKey;
-	}
-
-	private void activeListener( )
-	{
-		System.out.println( "Active Listener" );
-		buttonKey = " ";
-		list = new RawInputListener( )
-		{
-			@Override
-			public void beginInput( )
-			{
-			}
-
-			@Override
-			public void endInput( )
-			{
-			}
-
-			@Override
-			public void onJoyAxisEvent( JoyAxisEvent arg0 )
-			{
-			}
-
-			@Override
-			public void onJoyButtonEvent( JoyButtonEvent arg0 )
-			{
-			}
-
-			@Override
-			public void onMouseButtonEvent( MouseButtonEvent arg0 )
-			{
-			}
-
-			@Override
-			public void onMouseMotionEvent( MouseMotionEvent arg0 )
-			{
-			}
-
-			@Override
-			public void onTouchEvent( TouchEvent arg0 )
-			{
-			}
-
-			@Override
-			public void onKeyEvent( KeyInputEvent arg0 )
-			{
-				System.out.println( "Key: " + arg0 );
-				returnName( arg0.getKeyCode( ), arg0.getKeyChar( ) );
-			}
-		};
-		app.getInputManager( ).addRawInputListener( list );
-		buttonPressed = true;
-	}
-
-	@Override
-	public void screenAttached( ScreenManager screenManager )
-	{
-	}
-
-	@Override
-	public void screenDetached( ScreenManager screenManager )
-	{
-	}
-
-	private void setButtonName( Button button )
-	{
-		currentButton = button;
 	}
 
 	@Override

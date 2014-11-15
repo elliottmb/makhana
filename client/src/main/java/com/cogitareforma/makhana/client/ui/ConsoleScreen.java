@@ -10,7 +10,6 @@ import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.KeyTrigger;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
-import com.jme3.renderer.Camera;
 import com.simsilica.lemur.Axis;
 import com.simsilica.lemur.Container;
 import com.simsilica.lemur.FillMode;
@@ -21,15 +20,41 @@ import com.simsilica.lemur.core.VersionedList;
 
 public class ConsoleScreen extends Screen
 {
+	private Application app;
+
+	VersionedList< String > consoleHistory;
 	// TODO for use when lemurproto is integrated.
 	ArrayList< String > list;
-	VersionedList< String > consoleHistory;
-
-	private Application app;
 	private ListBox< String > listbox;
-	private long version;
 	private Container panel;
 	private TextField text;
+
+	private long version;
+
+	private ActionListener consoleActionListener = ( String name, boolean keyPressed, float tpf ) ->
+	{
+		if ( name.equals( "sendCommand" ) && !keyPressed )
+		{
+			consoleHistory.add( text.getText( ) );
+			listbox.moveToLast( );
+
+			String[ ] tokenized = text.getText( ).trim( ).split( " " );
+			if ( tokenized.length >= 3 )
+			{
+				if ( tokenized[ 0 ].equalsIgnoreCase( "resize" ) )
+				{
+					System.out.println( "Hai!" );
+					app.getContext( ).getSettings( ).setWidth( Integer.parseInt( tokenized[ 1 ] ) );
+					app.getContext( ).getSettings( ).setHeight( Integer.parseInt( tokenized[ 2 ] ) );
+					app.restart( );
+				}
+			}
+			text.setText( " " );
+			System.out.println( listbox.getModel( ) );
+			System.out.println( listbox.getVisibleItems( ) );
+
+		}
+	};
 
 	@Override
 	public void cleanup( )
@@ -42,8 +67,7 @@ public class ConsoleScreen extends Screen
 	{
 		this.app = app;
 		super.initialize( screenManager, app );
-		Camera cam = screenManager.getApp( ).getCamera( );
-		ScreenContext sc = screenManager.getScreenContext( );
+
 		// list = new ArrayList<String>();
 		consoleHistory = new VersionedList< String >( Arrays.asList( "--------------------------", "Welcome to the Makhana Console",
 				"--------------------------", "", "" ) );
@@ -51,8 +75,8 @@ public class ConsoleScreen extends Screen
 
 		panel = new Container( new BoxLayout( Axis.Y, FillMode.None ) );
 		panel.setBackground( new QuadBackgroundComponent( new ColorRGBA( 0, 0.5f, 0.5f, 0.5f ), 5, 5, 0.02f, false ) );
-		panel.setPreferredSize( new Vector3f( cam.getWidth( ) * .9f, cam.getHeight( ) * .75f, 0 ) );
-		panel.setLocalTranslation( cam.getWidth( ) * .05f, cam.getHeight( ) * 0.85f, 0 );
+		panel.setPreferredSize( new Vector3f( getScreenWidth( ) * .9f, getScreenHeight( ) * .75f, 0 ) );
+		panel.setLocalTranslation( getScreenWidth( ) * .05f, getScreenHeight( ) * 0.85f, 0 );
 		panel.setBackground( new QuadBackgroundComponent( ColorRGBA.Brown ) );
 
 		// DefaultCellRenderer< String > ren = new DefaultCellRenderer< String
@@ -66,7 +90,7 @@ public class ConsoleScreen extends Screen
 
 		text = new TextField( " " );
 		text.setSingleLine( true );
-		text.setFontSize( sc.getMediumFontSize( ) );
+		text.setFontSize( ScreenContext.getMediumFontSize( getScreenHeight( ) ) );
 		panel.addChild( text );
 		// TODO add listener for enter button to send what is in text to
 		// the listbox
@@ -75,17 +99,13 @@ public class ConsoleScreen extends Screen
 		app.getInputManager( ).addListener( consoleActionListener, "sendCommand" );
 	}
 
-	private ActionListener consoleActionListener = ( String name, boolean keyPressed, float tpf ) ->
+	@Override
+	public void reshape( int w, int h )
 	{
-		if ( name.equals( "sendCommand" ) && !keyPressed )
-		{
-			consoleHistory.add( text.getText( ) );
-			listbox.moveToLast( );
-			text.setText( " " );
-			System.out.println( listbox.getModel( ) );
-			System.out.println( listbox.getVisibleItems( ) );
-		}
-	};
+		super.reshape( w, h );
+		// TODO Auto-generated method stub
+
+	}
 
 	@Override
 	public void screenAttached( ScreenManager screenManager )

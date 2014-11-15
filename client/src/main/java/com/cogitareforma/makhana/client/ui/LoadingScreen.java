@@ -3,7 +3,6 @@ package com.cogitareforma.makhana.client.ui;
 import com.jme3.app.Application;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
-import com.jme3.renderer.Camera;
 import com.simsilica.lemur.Axis;
 import com.simsilica.lemur.Button;
 import com.simsilica.lemur.Button.ButtonAction;
@@ -35,23 +34,21 @@ public class LoadingScreen extends Screen
 		super.initialize( screenManager, app );
 		this.screenManager = screenManager;
 
-		Camera cam = screenManager.getApp( ).getCamera( );
-
 		Panel background = new Panel( );
 		background.setBackground( new QuadBackgroundComponent( ColorRGBA.Gray ) );
-		background.setLocalTranslation( 0, cam.getHeight( ), 0 );
-		background.setPreferredSize( new Vector3f( cam.getWidth( ), cam.getHeight( ), 0 ) );
+		background.setLocalTranslation( 0, getScreenHeight( ), 0 );
+		background.setPreferredSize( new Vector3f( getScreenWidth( ), getScreenHeight( ), 0 ) );
 		getScreenNode( ).attachChild( background );
 
 		Container bottom = new Container( new BoxLayout( Axis.X, FillMode.None ), "glass" );
-		bottom.setLocalTranslation( 0, cam.getHeight( ), 0 );
+		bottom.setLocalTranslation( 0, getScreenHeight( ), 0 );
 		bottom.setBackground( new QuadBackgroundComponent( ColorRGBA.DarkGray ) );
-		bottom.setPreferredSize( new Vector3f( cam.getWidth( ), cam.getHeight( ) * 0.1f, 0 ) );
+		bottom.setPreferredSize( new Vector3f( getScreenWidth( ), getScreenHeight( ) * 0.1f, 0 ) );
 
 		bar = new ProgressBar( "glass" );
 		bar.setProgressPercent( 0 );
-		bar.setLocalTranslation( 0, cam.getHeight( ) * .1f, 0 );
-		bar.setPreferredSize( new Vector3f( cam.getWidth( ), cam.getHeight( ) * .1f, 0 ) );
+		bar.setLocalTranslation( 0, getScreenHeight( ) * .1f, 0 );
+		bar.setPreferredSize( new Vector3f( getScreenWidth( ), getScreenHeight( ) * .1f, 0 ) );
 		bar.setMessage( ( int ) ( bar.getProgressPercent( ) * 100 ) + "%" );
 
 		Button yes = new Button( "CLICK" );
@@ -78,6 +75,13 @@ public class LoadingScreen extends Screen
 		getScreenNode( ).attachChild( bottom );
 		getScreenNode( ).attachChild( bar );
 		enabled = false;
+	}
+
+	@Override
+	public void reshape( int w, int h )
+	{
+		// TODO Auto-generated method stub
+		super.reshape( w, h );
 	}
 
 	@Override

@@ -4,59 +4,35 @@ public class ScreenContext
 {
 	private static final float baseScalar = 0.0016f;
 
-	private float heightScalar;
-
-	private ScreenManager screenManager;
-	private float widthScalar;
-
-	public ScreenContext( ScreenManager screenManager )
-	{
-		this.screenManager = screenManager;
-
-		this.heightScalar = 1024 * baseScalar;
-		this.widthScalar = 768 * baseScalar;
-	}
-
 	// TODO: Write more helper methods! Use this class!
 
-	public float getHeadingFontSize( )
+	public static float getHeadingFontSize( int height )
 	{
-		return getHeightScalar( ) * 32;
+		return height * 0.0512f;
 	}
 
-	public float getHeightScalar( )
+	public static float getHeightScalar( int height )
 	{
-		return heightScalar;
+		return height * baseScalar;
 	}
 
-	public float getLargeFontSize( )
+	public static float getLargeFontSize( int height )
 	{
-		return getHeightScalar( ) * 20;
+		return height * 0.032f;
 	}
 
-	public float getMediumFontSize( )
+	public static float getMediumFontSize( int height )
 	{
-		return getHeightScalar( ) * 16;
+		return height * 0.0256f;
 	}
 
-	public float getSmallFontSize( )
+	public static float getSmallFontSize( int height )
 	{
-		return getHeightScalar( ) * 12;
+		return height * 0.0192f;
 	}
 
-	public float getWidthScalar( )
+	public static float getWidthScalar( int width )
 	{
-		return widthScalar;
-	}
-
-	public void recalculateScalars( )
-	{
-		recalculateScalars( screenManager.getApp( ).getCamera( ).getHeight( ), screenManager.getApp( ).getCamera( ).getWidth( ) );
-	}
-
-	public void recalculateScalars( int height, int width )
-	{
-		this.heightScalar = height * baseScalar;
-		this.widthScalar = width * baseScalar;
+		return width * baseScalar;
 	}
 }

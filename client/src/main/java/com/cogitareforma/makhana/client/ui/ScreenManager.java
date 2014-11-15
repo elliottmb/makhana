@@ -36,8 +36,6 @@ public class ScreenManager extends AbstractAppState
 
 	private Node rootGuiNode;
 
-	private ScreenContext screenContext;
-
 	private Node screenHolder;
 
 	/**
@@ -67,7 +65,6 @@ public class ScreenManager extends AbstractAppState
 		this.foregroundScreen = null;
 
 		this.screenHolder = new Node( "screenHolder" );
-		this.screenContext = new ScreenContext( this );
 
 		this.rootGuiNode = rootGuiNode;
 
@@ -172,11 +169,6 @@ public class ScreenManager extends AbstractAppState
 			}
 		}
 		return null;
-	}
-
-	public ScreenContext getScreenContext( )
-	{
-		return screenContext;
 	}
 
 	protected Screen[ ] getScreens( )
@@ -305,6 +297,17 @@ public class ScreenManager extends AbstractAppState
 
 			return false;
 
+		}
+	}
+
+	public void reshape( int w, int h )
+	{
+		synchronized ( screens )
+		{
+			for ( Screen screen : screens )
+			{
+				screen.reshape( w, h );
+			}
 		}
 	}
 

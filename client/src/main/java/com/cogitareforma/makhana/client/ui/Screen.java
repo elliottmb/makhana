@@ -8,7 +8,9 @@ public abstract class Screen
 
 	private boolean enabled = false;
 	protected boolean initialized = false;
+	private int screenHeight;
 	private Node screenNode;
+	private int screenWidth;
 
 	/**
 	 * Called by ScreenManager when transitioning this Screen from terminating
@@ -19,15 +21,33 @@ public abstract class Screen
 	 */
 	public abstract void cleanup( );
 
+	/**
+	 * @return the screenHeight
+	 */
+	protected int getScreenHeight( )
+	{
+		return screenHeight;
+	}
+
 	public Node getScreenNode( )
 	{
 		return screenNode;
+	}
+
+	/**
+	 * @return the screenWidth
+	 */
+	protected int getScreenWidth( )
+	{
+		return screenWidth;
 	}
 
 	public void initialize( ScreenManager screenManager, Application app )
 	{
 		initialized = true;
 		screenNode = new Node( );
+		setScreenWidth( app.getCamera( ).getWidth( ) );
+		setScreenHeight( app.getCamera( ).getHeight( ) );
 	}
 
 	public boolean isEnabled( )
@@ -38,6 +58,12 @@ public abstract class Screen
 	public boolean isInitialized( )
 	{
 		return initialized;
+	}
+
+	public void reshape( int w, int h )
+	{
+		setScreenWidth( w );
+		setScreenHeight( h );
 	}
 
 	/**
@@ -74,6 +100,24 @@ public abstract class Screen
 	public void setEnabled( boolean active )
 	{
 		enabled = active;
+	}
+
+	/**
+	 * @param screenHeight
+	 *            the screenHeight to set
+	 */
+	protected void setScreenHeight( int screenHeight )
+	{
+		this.screenHeight = screenHeight;
+	}
+
+	/**
+	 * @param screenWidth
+	 *            the screenWidth to set
+	 */
+	protected void setScreenWidth( int screenWidth )
+	{
+		this.screenWidth = screenWidth;
 	}
 
 	/**
