@@ -39,6 +39,11 @@ public class ConsoleScreen extends Screen
 			listbox.moveToLast( );
 
 			String[ ] tokenized = text.getText( ).trim( ).split( " " );
+
+			text.setText( " " );
+			System.out.println( listbox.getModel( ) );
+			System.out.println( listbox.getVisibleItems( ) );
+
 			if ( tokenized.length >= 3 )
 			{
 				if ( tokenized[ 0 ].equalsIgnoreCase( "resize" ) )
@@ -49,9 +54,6 @@ public class ConsoleScreen extends Screen
 					app.restart( );
 				}
 			}
-			text.setText( " " );
-			System.out.println( listbox.getModel( ) );
-			System.out.println( listbox.getVisibleItems( ) );
 
 		}
 	};
@@ -74,10 +76,9 @@ public class ConsoleScreen extends Screen
 		version = consoleHistory.getVersion( );
 
 		panel = new Container( new BoxLayout( Axis.Y, FillMode.None ) );
-		panel.setBackground( new QuadBackgroundComponent( new ColorRGBA( 0, 0.5f, 0.5f, 0.5f ), 5, 5, 0.02f, false ) );
+		panel.setBackground( new QuadBackgroundComponent( new ColorRGBA( 0.3f, 0.5f, 0.3f, 0.5f ), 5, 5, 0.02f, false ) );
 		panel.setPreferredSize( new Vector3f( getContext( ).getWidth( ) * 0.9f, getContext( ).getHeight( ) * 0.75f, 0 ) );
 		panel.setLocalTranslation( getContext( ).getWidth( ) * 0.05f, getContext( ).getHeight( ) * 0.85f, 0 );
-		panel.setBackground( new QuadBackgroundComponent( ColorRGBA.Brown ) );
 
 		// DefaultCellRenderer< String > ren = new DefaultCellRenderer< String
 		// >();
@@ -103,7 +104,9 @@ public class ConsoleScreen extends Screen
 	public void reshape( int w, int h )
 	{
 		super.reshape( w, h );
-		// TODO Auto-generated method stub
+
+		panel.setPreferredSize( new Vector3f( getContext( ).getWidth( ) * 0.9f, getContext( ).getHeight( ) * 0.75f, 0 ) );
+		panel.setLocalTranslation( getContext( ).getWidth( ) * 0.05f, getContext( ).getHeight( ) * 0.85f, 0 );
 
 	}
 

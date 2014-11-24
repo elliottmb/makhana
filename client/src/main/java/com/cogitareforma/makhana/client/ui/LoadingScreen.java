@@ -20,6 +20,8 @@ public class LoadingScreen extends Screen
 	private ProgressBar bar;
 	private boolean enabled;
 	private ScreenManager screenManager;
+	private Container top;
+	private Panel background;
 
 	@Override
 	public void cleanup( )
@@ -34,21 +36,20 @@ public class LoadingScreen extends Screen
 		super.initialize( screenManager, app );
 		this.screenManager = screenManager;
 
-		Panel background = new Panel( );
+		background = new Panel( );
 		background.setBackground( new QuadBackgroundComponent( ColorRGBA.Gray ) );
-		background.setLocalTranslation( 0, 1f, 0 );
-		background.setPreferredSize( new Vector3f( 1f, 1f, 0 ) );
-		getScreenNode( ).attachChild( background );
+		background.setLocalTranslation( 0, getContext( ).getHeight( ), 0 );
+		background.setPreferredSize( new Vector3f( getContext( ).getWidth( ), getContext( ).getHeight( ), 0 ) );
 
-		Container bottom = new Container( new BoxLayout( Axis.X, FillMode.None ), "glass" );
-		bottom.setLocalTranslation( 0, 1f, 0 );
-		bottom.setBackground( new QuadBackgroundComponent( ColorRGBA.DarkGray ) );
-		bottom.setPreferredSize( new Vector3f( 1f, 0.1f, 0 ) );
+		top = new Container( new BoxLayout( Axis.X, FillMode.None ), "glass" );
+		top.setBackground( new QuadBackgroundComponent( ColorRGBA.DarkGray ) );
+		top.setLocalTranslation( 0, getContext( ).getHeight( ), 0 );
+		top.setPreferredSize( new Vector3f( getContext( ).getWidth( ), getContext( ).getHeight( ) * 0.1f, 0 ) );
 
 		bar = new ProgressBar( "glass" );
 		bar.setProgressPercent( 0 );
-		bar.setLocalTranslation( 0, 0.1f, 0 );
-		bar.setPreferredSize( new Vector3f( 1f, 0.1f, 0 ) );
+		bar.setLocalTranslation( 0, getContext( ).getHeight( ) * 0.1f, 0 );
+		bar.setPreferredSize( new Vector3f( getContext( ).getWidth( ), getContext( ).getHeight( ) * 0.1f, 0 ) );
 		bar.setMessage( ( int ) ( bar.getProgressPercent( ) * 100 ) + "%" );
 
 		Button yes = new Button( "CLICK" );
@@ -59,7 +60,7 @@ public class LoadingScreen extends Screen
 				enabled = true;
 			}
 		} );
-		bottom.addChild( yes );
+		top.addChild( yes );
 		Button no = new Button( "RESET" );
 		no.addCommands( ButtonAction.Click, new Command< Button >( )
 		{
@@ -69,10 +70,10 @@ public class LoadingScreen extends Screen
 				bar.setMessage( ( int ) ( bar.getProgressPercent( ) * 100 ) + "%" );
 			}
 		} );
-		bottom.addChild( no );
+		top.addChild( no );
 
 		getScreenNode( ).attachChild( background );
-		getScreenNode( ).attachChild( bottom );
+		getScreenNode( ).attachChild( top );
 		getScreenNode( ).attachChild( bar );
 		enabled = false;
 	}
@@ -82,6 +83,16 @@ public class LoadingScreen extends Screen
 	{
 		// TODO Auto-generated method stub
 		super.reshape( w, h );
+
+		background.setLocalTranslation( 0, getContext( ).getHeight( ), 0 );
+		background.setPreferredSize( new Vector3f( getContext( ).getWidth( ), getContext( ).getHeight( ), 0 ) );
+
+		top.setLocalTranslation( 0, getContext( ).getHeight( ), 0 );
+		top.setPreferredSize( new Vector3f( getContext( ).getWidth( ), getContext( ).getHeight( ) * 0.1f, 0 ) );
+
+		bar.setLocalTranslation( 0, getContext( ).getHeight( ) * 0.1f, 0 );
+		bar.setPreferredSize( new Vector3f( getContext( ).getWidth( ), getContext( ).getHeight( ) * 0.1f, 0 ) );
+
 	}
 
 	@Override

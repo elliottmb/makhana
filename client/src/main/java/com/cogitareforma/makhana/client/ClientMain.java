@@ -116,14 +116,6 @@ public class ClientMain extends OnlineClient
 		} );
 	}
 
-	@Override
-	public void destroy( )
-	{
-		getMasterConnectionManager( ).close( );
-		getGameConnectionManager( ).close( );
-		super.destroy( );
-	}
-
 	/**
 	 * @return the baseActionListener
 	 */

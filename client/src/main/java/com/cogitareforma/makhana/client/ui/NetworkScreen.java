@@ -44,6 +44,9 @@ public class NetworkScreen extends Screen
 	private Button serverPlayersLabel;
 
 	private Button servers;
+	private Panel background;
+	private Container pageButtons;
+	private Container tabs;
 
 	private void activateServerLists( )
 	{
@@ -73,11 +76,10 @@ public class NetworkScreen extends Screen
 
 		setUpButtons( screenManager );
 
-		Panel background = new Panel( );
+		background = new Panel( );
 		background.setBackground( new QuadBackgroundComponent( ColorRGBA.Gray ) );
 		background.setLocalTranslation( 0, getContext( ).getHeight( ), 0 );
 		background.setPreferredSize( new Vector3f( getContext( ).getWidth( ), getContext( ).getHeight( ), 0 ) );
-		getScreenNode( ).attachChild( background );
 
 		Container top = new Container( new BoxLayout( Axis.X, FillMode.Proportional ), "glass" );
 		top.setLocalTranslation( 0, getContext( ).getHeight( ), 0 );
@@ -98,10 +100,10 @@ public class NetworkScreen extends Screen
 
 		getScreenNode( ).attachChild( top );
 
-		Container tabs = new Container( new BoxLayout( Axis.X, FillMode.None ) );
+		tabs = new Container( new BoxLayout( Axis.X, FillMode.None ) );
+		tabs.setBackground( new QuadBackgroundComponent( ColorRGBA.Brown ) );
 		tabs.setPreferredSize( new Vector3f( getContext( ).getWidth( ) * 0.4f, getContext( ).getHeight( ) * 0.05f, 0 ) );
 		tabs.setLocalTranslation( getContext( ).getWidth( ) * 0.05f, getContext( ).getHeight( ) * 0.85f, 0 );
-		tabs.setBackground( new QuadBackgroundComponent( ColorRGBA.Brown ) );
 
 		Insets3f buttonInsets = new Insets3f( 0, 0, 0, 0.05f );
 		servers.setFontSize( mediumFontSize );
@@ -118,9 +120,9 @@ public class NetworkScreen extends Screen
 		tabs.addChild( history );
 
 		label = new Container( new BoxLayout( Axis.X, FillMode.Even ) );
+		label.setBackground( new QuadBackgroundComponent( ColorRGBA.LightGray ) );
 		label.setPreferredSize( new Vector3f( getContext( ).getWidth( ) * 0.9f, getContext( ).getHeight( ) * 0.05f, 0 ) );
 		label.setLocalTranslation( getContext( ).getWidth( ) * 0.05f, getContext( ).getHeight( ) * 0.8f, 0 );
-		label.setBackground( new QuadBackgroundComponent( ColorRGBA.LightGray ) );
 
 		serverNameLabel = new Button( "Name" );
 		serverNameLabel.setFontSize( mediumFontSize );
@@ -279,10 +281,10 @@ public class NetworkScreen extends Screen
 		server8.addChild( server8Ping );
 		server8.addChild( server8Other );
 
-		Container pageButtons = new Container( new BoxLayout( Axis.X, FillMode.Even ) );
+		pageButtons = new Container( new BoxLayout( Axis.X, FillMode.Even ) );
+		pageButtons.setBackground( new QuadBackgroundComponent( ColorRGBA.DarkGray ) );
 		pageButtons.setPreferredSize( new Vector3f( getContext( ).getWidth( ) * 0.15f, getContext( ).getHeight( ) * 0.05f, 0 ) );
 		pageButtons.setLocalTranslation( getContext( ).getWidth( ) * 0.8f, getContext( ).getHeight( ) * 0.1f, 0 );
-		pageButtons.setBackground( new QuadBackgroundComponent( ColorRGBA.DarkGray ) );
 
 		firstPage.setFontSize( mediumFontSize );
 		prevPage.setFontSize( mediumFontSize );
@@ -299,6 +301,7 @@ public class NetworkScreen extends Screen
 
 		activateServerLists( );
 
+		getScreenNode( ).attachChild( background );
 		getScreenNode( ).attachChild( tabs );
 		getScreenNode( ).attachChild( label );
 		getScreenNode( ).attachChild( pageButtons );
@@ -315,6 +318,21 @@ public class NetworkScreen extends Screen
 	{
 		// TODO Auto-generated method stub
 		super.reshape( w, h );
+
+		background.setLocalTranslation( 0, getContext( ).getHeight( ), 0 );
+		background.setPreferredSize( new Vector3f( getContext( ).getWidth( ), getContext( ).getHeight( ), 0 ) );
+
+		tabs.setPreferredSize( new Vector3f( getContext( ).getWidth( ) * 0.4f, getContext( ).getHeight( ) * 0.05f, 0 ) );
+		tabs.setLocalTranslation( getContext( ).getWidth( ) * 0.05f, getContext( ).getHeight( ) * 0.85f, 0 );
+
+		label.setPreferredSize( new Vector3f( getContext( ).getWidth( ) * 0.9f, getContext( ).getHeight( ) * 0.05f, 0 ) );
+		label.setLocalTranslation( getContext( ).getWidth( ) * 0.05f, getContext( ).getHeight( ) * 0.8f, 0 );
+
+		serverContainer.setPreferredSize( new Vector3f( getContext( ).getWidth( ) * 0.9f, getContext( ).getHeight( ) * 0.65f, 0 ) );
+		serverContainer.setLocalTranslation( getContext( ).getWidth( ) * 0.05f, getContext( ).getHeight( ) * 0.75f, 0 );
+
+		pageButtons.setPreferredSize( new Vector3f( getContext( ).getWidth( ) * 0.15f, getContext( ).getHeight( ) * 0.05f, 0 ) );
+		pageButtons.setLocalTranslation( getContext( ).getWidth( ) * 0.8f, getContext( ).getHeight( ) * 0.1f, 0 );
 	}
 
 	@Override
