@@ -9,9 +9,8 @@ import com.simsilica.es.EntityComponent;
 @Serializable
 public class Position implements EntityComponent
 {
-	private Chunk chunk;
-	private Vector3f location;
 	private Quaternion facing;
+	private Vector3f location;
 
 	/**
 	 * Used by the serializer.
@@ -20,21 +19,15 @@ public class Position implements EntityComponent
 	{
 	}
 
-	public Position( Chunk chunk, Vector3f location, Quaternion facing )
+	public Position( Vector3f location, Quaternion facing )
 	{
-		this.chunk = chunk;
 		this.location = location;
 		this.facing = facing;
 	}
 
 	public Chunk getChunk( )
 	{
-		return chunk;
-	}
-
-	public Vector3f getLocation( )
-	{
-		return location;
+		return new Chunk( ( int ) location.x / 100, ( int ) location.y / 100 );
 	}
 
 	public Quaternion getFacing( )
@@ -42,17 +35,24 @@ public class Position implements EntityComponent
 		return facing;
 	}
 
+	public Vector3f getLocation( )
+	{
+		return location;
+	}
+
 	public int getQuadrant( )
 	{
-		if ( location.x != 0 || location.y != 0 )
+		float x = location.x / 100f;
+		float y = location.y / 100f;
+		if ( x != 0 || y != 0 )
 		{
-			if ( location.x >= 0 )
+			if ( x >= 0 )
 			{
-				return location.y >= 0 ? 1 : 4;
+				return y >= 0 ? 1 : 4;
 			}
 			else
 			{
-				return location.y >= 0 ? 2 : 3;
+				return y >= 0 ? 2 : 3;
 			}
 		}
 		return 0;
@@ -61,6 +61,6 @@ public class Position implements EntityComponent
 	@Override
 	public String toString( )
 	{
-		return "Position[" + chunk + ", " + location + ", " + facing + "]";
+		return "Position[" + getChunk( ) + ", " + getFacing( ) + ", " + getLocation( ) + "]";
 	}
 }

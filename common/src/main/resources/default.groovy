@@ -24,14 +24,14 @@ networkserver {
 	port=8993
 }
 mysqldb {
-	hostname=localhost
+	hostname="localhost"
 	port=3306
-	database=network
-	username=network
-	password=demo
+	database="network"
+	username="network"
+	password="demo"
 }
 gameserver {
-	host=localhost
+	host="localhost"
 	port=7331
 	name="Test Server"
 }

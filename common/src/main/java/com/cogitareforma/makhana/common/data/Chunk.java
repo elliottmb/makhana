@@ -5,8 +5,8 @@ import com.jme3.network.serializing.Serializable;
 @Serializable
 public class Chunk
 {
-	private short x;
-	private short y;
+	private int x;
+	private int y;
 
 	/**
 	 * Used by the serializer.
@@ -15,18 +15,18 @@ public class Chunk
 	{
 	}
 
-	public Chunk( short x, short y )
+	public Chunk( int x, int y )
 	{
 		this.x = x;
 		this.y = y;
 	}
 
-	public short getX( )
+	public int getX( )
 	{
 		return x;
 	}
 
-	public short getY( )
+	public int getY( )
 	{
 		return y;
 	}
