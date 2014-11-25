@@ -55,9 +55,10 @@ public class PhysicsObjectRequestListener implements MessageListener< HostedConn
 
 			entityData.setComponent( newEntity, physicsMessage.getPosition( ) );
 
-			PhysicsRigidBody prb = new PhysicsRigidBody( new SphereCollisionShape( 4f ), 1.5f );
+			PhysicsRigidBody prb = new PhysicsRigidBody( new SphereCollisionShape( 4f ), 15f );
 			prb.setPhysicsLocation( physicsMessage.getPosition( ).getLocation( ) );
 			prb.setLinearVelocity( physicsMessage.getPosition( ).getFacing( ).getRotationColumn( 2 ).mult( 3 ) );
+			prb.setFriction( 1.6f );
 
 			manager.getBulletAppState( ).getPhysicsSpace( ).add( prb );
 			manager.getPhysicsObjects( ).put( newEntity, prb );

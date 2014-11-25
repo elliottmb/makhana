@@ -655,18 +655,19 @@ public class WorldManager extends AbstractAppState
 		con.setLoading( 0.0f, "world" );
 		logger.log( Level.INFO, "Load level with seed: " + seed );
 		worldRoot = new Node( "worldRoot" );
-		con.setLoading( 0.25f, "terrain" );
+		con.setLoading( 0.45f, "terrain" );
 
 		logger.log( Level.INFO, "Load terrain" );
 		WorldFactory.attachTerrainToNode( app.getCamera( ), assetManager, worldRoot, seed.byteValue( ) );
-		con.setLoading( 0.5f, "lighting" );
+		con.setLoading( 0.65f, "lighting" );
 
 		logger.log( Level.INFO, "Load lighting" );
 		WorldFactory.attachLighting( worldRoot, app.getViewPort( ), assetManager );
-		con.setLoading( 0.75f, "hexagons" );
+		con.setLoading( 0.85f, "existing entities" );
 
-		logger.log( Level.INFO, "Load hexagon grid" );
-		WorldFactory.attachHexagonGridToNode( worldRoot, assetManager );
+		// Old leftover from hex republics
+		// logger.log( Level.INFO, "Load hexagon grid" );
+		// WorldFactory.attachHexagonGridToNode( worldRoot, assetManager );
 		con.setLoading( 1.0f, "Done" );
 	}
 

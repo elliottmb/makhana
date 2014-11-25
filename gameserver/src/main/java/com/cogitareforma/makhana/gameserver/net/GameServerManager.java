@@ -30,6 +30,7 @@ import com.cogitareforma.makhana.common.net.ServerManager;
 import com.cogitareforma.makhana.common.net.msg.ServerStatusResponse;
 import com.cogitareforma.makhana.common.util.MakhanaConfig;
 import com.cogitareforma.makhana.common.util.PackageUtils;
+import com.cogitareforma.makhana.common.util.WorldFactory;
 import com.cogitareforma.makhana.gameserver.GameServer;
 import com.cogitareforma.makhana.gameserver.eventsystem.events.ActionCompletedEvent;
 import com.cogitareforma.makhana.gameserver.eventsystem.events.ServerPlayerJoinEvent;
@@ -39,6 +40,7 @@ import com.cogitareforma.makhana.gameserver.eventsystem.handlers.TileOwnerChange
 import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.BulletAppState.ThreadingType;
 import com.jme3.bullet.collision.shapes.PlaneCollisionShape;
+import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.bullet.objects.PhysicsRigidBody;
 import com.jme3.math.FastMath;
 import com.jme3.math.Plane;
@@ -46,6 +48,7 @@ import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.network.MessageListener;
 import com.jme3.network.Network;
+import com.jme3.terrain.geomipmap.TerrainQuad;
 import com.simsilica.es.ComponentFilter;
 import com.simsilica.es.CreatedBy;
 import com.simsilica.es.Entity;
@@ -83,6 +86,8 @@ public class GameServerManager extends ServerManager< GameServer >
 	private BulletAppState bulletAppState;
 
 	private Map< EntityId, PhysicsRigidBody > physicsObjects;
+
+	TerrainQuad terrain;
 
 	/**
 	 * @return the bulletAppState
@@ -137,8 +142,13 @@ public class GameServerManager extends ServerManager< GameServer >
 		logger.log( Level.INFO, "Constructing initial world state" );
 		setTheWorld( getEntityData( ).createEntity( ) );
 		byte[ ] randomBytes = RandomUtils.nextBytes( 3 );
-		getEntityData( ).setComponent( getTheWorld( ), new WorldTrait( 0, randomBytes[ RandomUtils.nextInt( 0, 3 ) ], false ) );
+		byte seed = randomBytes[ RandomUtils.nextInt( 0, 3 ) ];
+		getEntityData( ).setComponent( getTheWorld( ), new WorldTrait( 0, seed, false ) );
 		advanceTurn = false;
+
+		terrain = WorldFactory.generateBaseTerrain( seed );
+		terrain.addControl( new RigidBodyControl( 0 ) );
+		bulletAppState.getPhysicsSpace( ).add( terrain );
 	}
 
 	public void createPlayerEntity( Session session )

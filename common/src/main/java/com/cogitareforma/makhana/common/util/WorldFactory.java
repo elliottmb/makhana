@@ -40,6 +40,8 @@ import com.jme3.util.BufferUtils;
  */
 public class WorldFactory
 {
+	private final static Logger logger = Logger.getLogger( WorldFactory.class.getName( ) );
+
 	public static void attachHexagonGridToNode( Node root, AssetManager am )
 	{
 		if ( root != null )
@@ -118,6 +120,13 @@ public class WorldFactory
 		node.attachChild( terrain );
 	}
 
+	public static TerrainQuad generateBaseTerrain( byte seed )
+	{
+		AbstractHeightMap heightMap = WorldFactory.buildHeightMap( seed );
+		TerrainQuad terrain = WorldFactory.buildBaseTerrain( heightMap );
+		return terrain;
+	}
+
 	private static AbstractHeightMap buildHeightMap( byte seed )
 	{
 		AbstractHeightMap heightMap = null;
@@ -144,7 +153,7 @@ public class WorldFactory
 		return hexagonMaterial;
 	}
 
-	private static TerrainQuad buildTerrain( AbstractHeightMap heightMap, Camera lodCamera )
+	private static TerrainQuad buildBaseTerrain( AbstractHeightMap heightMap )
 	{
 
 		logger.log( Level.INFO, "Constructing the terrain mesh" );
@@ -153,8 +162,15 @@ public class WorldFactory
 		terrain = new TerrainQuad( "terrain", patchSize, 1025, heightMap.getHeightMap( ) );
 
 		terrain.setLocalTranslation( 0, -3, 0 );
-		terrain.setLocalScale( 1f, 0.125f, 1f );
+		terrain.setLocalScale( 1f, 0.2f, 1f );
 		terrain.setShadowMode( RenderQueue.ShadowMode.Receive );
+
+		return terrain;
+	}
+
+	private static TerrainQuad buildTerrain( AbstractHeightMap heightMap, Camera lodCamera )
+	{
+		TerrainQuad terrain = buildBaseTerrain( heightMap );
 
 		logger.log( Level.INFO, "Constructing the terrain LOD" );
 		TerrainLodControl control = new TerrainLodControl( terrain, lodCamera );
@@ -249,7 +265,5 @@ public class WorldFactory
 
 		return new Texture2D( hbamg.renderAlphaMap( ) );
 	}
-
-	private final static Logger logger = Logger.getLogger( WorldFactory.class.getName( ) );
 
 }
