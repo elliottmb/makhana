@@ -60,14 +60,18 @@ public class ActionCompletedEventHandler implements EventHandler
 							ComponentFilter< LocationTrait > locFilter = FieldFilter.create( LocationTrait.class, "tile", newTile );
 							Set< EntityId > targetIdSet = entityData.findEntities( locFilter, LocationTrait.class );
 
-							ComponentFilter< LocationTrait > sourceLocFilter = FieldFilter.create( LocationTrait.class, "tile",
-									location.getTile( ) );
-							Set< EntityId > sourceIdSet = entityData.findEntities( sourceLocFilter, LocationTrait.class );
+							// ComponentFilter< LocationTrait > sourceLocFilter
+							// = FieldFilter.create( LocationTrait.class,
+							// "tile", location.getTile( ) );
+							// Set< EntityId > sourceIdSet =
+							// entityData.findEntities( sourceLocFilter,
+							// LocationTrait.class );
 
 							// Units at the target tile
 							int unitCount = ComponentUtil.countUnits( entityData, targetIdSet );
 							// Buildings at the target tile
-							int buildingCount = ComponentUtil.countBuildings( entityData, targetIdSet );
+							// int buildingCount = ComponentUtil.countBuildings(
+							// entityData, targetIdSet );
 
 							// Get info on the target tile
 							Entity tile = entityData.getEntity( newTile, CreatedBy.class, TileTrait.class );

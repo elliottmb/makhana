@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -13,6 +15,7 @@ import com.cogitareforma.makhana.common.data.ServerStatus;
 import com.cogitareforma.makhana.common.data.Session;
 import com.cogitareforma.makhana.common.entities.components.ActionTrait;
 import com.cogitareforma.makhana.common.entities.components.Player;
+import com.cogitareforma.makhana.common.entities.components.Position;
 import com.cogitareforma.makhana.common.entities.components.TileTrait;
 import com.cogitareforma.makhana.common.entities.components.WorldTrait;
 import com.cogitareforma.makhana.common.eventsystem.Event;
@@ -33,7 +36,14 @@ import com.cogitareforma.makhana.gameserver.eventsystem.events.ServerPlayerJoinE
 import com.cogitareforma.makhana.gameserver.eventsystem.handlers.ActionCompletedEventHandler;
 import com.cogitareforma.makhana.gameserver.eventsystem.handlers.ServerPlayerJoinEventHandler;
 import com.cogitareforma.makhana.gameserver.eventsystem.handlers.TileOwnerChangedEventHandler;
+import com.jme3.bullet.BulletAppState;
+import com.jme3.bullet.BulletAppState.ThreadingType;
+import com.jme3.bullet.collision.shapes.PlaneCollisionShape;
+import com.jme3.bullet.objects.PhysicsRigidBody;
 import com.jme3.math.FastMath;
+import com.jme3.math.Plane;
+import com.jme3.math.Quaternion;
+import com.jme3.math.Vector3f;
 import com.jme3.network.MessageListener;
 import com.jme3.network.Network;
 import com.simsilica.es.ComponentFilter;
@@ -70,6 +80,18 @@ public class GameServerManager extends ServerManager< GameServer >
 
 	private Map< EntityId, EntityId > tileToOwnerMap;
 
+	private BulletAppState bulletAppState;
+
+	private Map< EntityId, PhysicsRigidBody > physicsObjects;
+
+	/**
+	 * @return the bulletAppState
+	 */
+	public BulletAppState getBulletAppState( )
+	{
+		return bulletAppState;
+	}
+
 	/**
 	 * Creates an instance of the GameServerManager with the supplied owning
 	 * GameServer Application
@@ -80,6 +102,18 @@ public class GameServerManager extends ServerManager< GameServer >
 	public GameServerManager( GameServer app )
 	{
 		super( app );
+
+		bulletAppState = new BulletAppState( );
+		bulletAppState.setThreadingType( ThreadingType.PARALLEL );
+		app.getStateManager( ).attach( bulletAppState );
+
+		physicsObjects = new ConcurrentHashMap<>( );
+
+		PhysicsRigidBody floor = new PhysicsRigidBody( new PlaneCollisionShape( new Plane( new Vector3f( 0, 1, 0 ), 0 ) ), 0 );
+		floor.setPhysicsLocation( new Vector3f( 0f, -6, 0f ) );
+
+		bulletAppState.getPhysicsSpace( ).add( floor );
+
 	}
 
 	private void buildTiles( int terrainSize, float hexSize )
@@ -347,6 +381,26 @@ public class GameServerManager extends ServerManager< GameServer >
 		{
 			if ( getEntityData( ) != null )
 			{
+
+				for ( Entry< EntityId, PhysicsRigidBody > e : physicsObjects.entrySet( ) )
+				{
+
+					Vector3f location = e.getValue( ).getPhysicsLocation( );
+					Quaternion rotation = e.getValue( ).getPhysicsRotation( );
+
+					Position currentPosition = getEntityData( ).getComponent( e.getKey( ), Position.class );
+
+					// Threshold for updates.. may be removed
+					if ( currentPosition.getLocation( ).distance( location ) > 0.05 )
+					{
+						// System.out.println( e.getKey( ) + ", " + location +
+						// ", " + rotation + ", " + e.getValue(
+						// ).getLinearVelocity( ) );
+						getEntityData( ).setComponent( e.getKey( ), new Position( location, rotation ) );
+					}
+
+				}
+
 				if ( playerEntitySet != null )
 				{
 					if ( playerEntitySet.applyChanges( ) )
@@ -495,4 +549,13 @@ public class GameServerManager extends ServerManager< GameServer >
 			getEntityDataHostService( ).sendUpdates( );
 		}
 	}
+
+	/**
+	 * @return the physicsObjects
+	 */
+	public Map< EntityId, PhysicsRigidBody > getPhysicsObjects( )
+	{
+		return physicsObjects;
+	}
+
 }

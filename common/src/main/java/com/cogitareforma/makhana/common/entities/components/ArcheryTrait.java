@@ -9,7 +9,7 @@ import com.jme3.scene.Spatial;
 public class ArcheryTrait extends StaticTrait
 {
 	// TODO
-	private static Material material;
+	// private static Material material;
 
 	/**
 	 * Used by Serializer

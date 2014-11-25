@@ -118,11 +118,11 @@ public class ScriptManager
 
 		shell = new GroovyShell( binding, compilerConfig );
 
-		fileScripts = new LinkedList( );
-		stringScripts = new LinkedList( );
+		fileScripts = new LinkedList<>( );
+		stringScripts = new LinkedList<>( );
 	}
 
-	public Object run( File file, List arguments )
+	public Object run( File file, List< ? > arguments )
 	{
 		Object eval = null;
 		// TODO: Look into replacing Shell with GroovyScriptEngine

@@ -8,10 +8,13 @@ import org.apache.commons.lang3.tuple.Pair;
 import com.cogitareforma.makhana.common.entities.components.ArcherTrait;
 import com.cogitareforma.makhana.common.entities.components.ArcheryTrait;
 import com.cogitareforma.makhana.common.entities.components.LocationTrait;
+import com.cogitareforma.makhana.common.entities.components.Position;
 import com.cogitareforma.makhana.common.entities.components.TileTrait;
 import com.cogitareforma.makhana.common.net.msg.EntityCreationRequest;
 import com.cogitareforma.makhana.common.net.msg.EntityDeletionRequest;
+import com.cogitareforma.makhana.common.net.msg.PhysicsObjectRequest;
 import com.cogitareforma.makhana.common.net.msg.ReadyUpRequest;
+import com.jme3.math.Vector3f;
 import com.simsilica.es.ComponentFilter;
 import com.simsilica.es.EntityComponent;
 import com.simsilica.es.EntityId;
@@ -258,6 +261,23 @@ public class ConsoleViewController extends GeneralController
 				console.output( "Must be logged in to use this command" );
 			}
 		};
+
+		ConsoleCommand spawnTest = ( String[ ] arg0 ) ->
+		{
+			if ( getApp( ).getGameConnectionManager( ).isConnected( ) )
+			{
+				Vector3f cameraPosition = getApp( ).getCamera( ).getLocation( );
+				getApp( ).getGameConnectionManager( ).send(
+						new PhysicsObjectRequest( new Position( new Vector3f( cameraPosition.x, ( float ) Math.random( ) * 30,
+								cameraPosition.z - cameraPosition.y ), getApp( ).getCamera( ).getRotation( ) ) ) );
+				System.out.println( new Position( getApp( ).getCamera( ).getLocation( ), getApp( ).getCamera( ).getRotation( ) ) );
+
+			}
+			else
+			{
+				console.output( "Could not execute command, you are not connected to a game server" );
+			}
+		};
 		ConsoleCommand help = ( String[ ] arg0 ) ->
 		{
 			console.output( "Current commands:" );
@@ -282,6 +302,7 @@ public class ConsoleViewController extends GeneralController
 		consoleCommands.registerCommand( "connect", connect );
 		consoleCommands.registerCommand( "setready", readyUpTester );
 		consoleCommands.registerCommand( "sr", readyUpTester );
+		consoleCommands.registerCommand( "fire", spawnTest );
 		consoleCommands.enableCommandCompletion( true );
 	}
 

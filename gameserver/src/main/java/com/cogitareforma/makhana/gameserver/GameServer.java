@@ -280,6 +280,7 @@ public class GameServer extends Application
 		gameServerManager.run( port );
 
 		masterConnManager = new MasterConnectionManager( this );
+
 	}
 
 	@Override
@@ -287,6 +288,13 @@ public class GameServer extends Application
 	{
 		super.update( );
 		float tpf = timer.getTimePerFrame( ) * speed;
+
+		stateManager.update( tpf );
+		stateManager.render( renderManager );
+		renderManager.render( tpf, context.isRenderable( ) );
+
+		stateManager.postRender( );
+
 		gameServerManager.update( tpf );
 	}
 

@@ -39,6 +39,7 @@ public class EntityManager extends AbstractAppState
 		this.entitySetMap = new HashMap<>( );
 	}
 
+	@SuppressWarnings( "unchecked" )
 	public void addListener( TraitEventListener listener, Class< ? extends EntityComponent >... classes )
 	{
 		if ( listener instanceof ComponentFilterEventListener )
@@ -52,6 +53,7 @@ public class EntityManager extends AbstractAppState
 		}
 	}
 
+	@SuppressWarnings( "unchecked" )
 	public EntitySet getEntitySet( Class< ? extends EntityComponent >... classes )
 	{
 		Set< Class< ? extends EntityComponent >> setOfClasses = new HashSet<>( Arrays.asList( classes ) );
@@ -100,6 +102,7 @@ public class EntityManager extends AbstractAppState
 		return result;
 	}
 
+	@SuppressWarnings( "unchecked" )
 	public void removeListener( TraitEventListener listener, Class< ? extends EntityComponent >... classes )
 	{
 		if ( listener instanceof ComponentFilterEventListener )

@@ -13,6 +13,7 @@ import com.cogitareforma.makhana.common.entities.components.CapitalTrait;
 import com.cogitareforma.makhana.common.entities.components.Health;
 import com.cogitareforma.makhana.common.entities.components.LocationTrait;
 import com.cogitareforma.makhana.common.entities.components.MoveableTrait;
+import com.cogitareforma.makhana.common.entities.components.Position;
 import com.cogitareforma.makhana.common.entities.components.StaticTrait;
 import com.cogitareforma.makhana.common.entities.components.TileTrait;
 import com.cogitareforma.makhana.common.entities.components.WorldTrait;
@@ -396,6 +397,62 @@ public class WorldManager extends AbstractAppState
 		{
 		}
 	};
+
+	private TraitEventListener physicsListener = new TraitEventListener( )
+	{
+		@Override
+		public void onAdded( EntityData entityData, Set< Entity > entities )
+		{
+			for ( Entity e : entities )
+			{
+				EntityId id = e.getId( );
+				Position position = e.get( Position.class );
+
+				Spatial object = new Geometry( "Box" + id.toString( ), new Box( 8, 8, 8 ) );
+
+				object.setMaterial( matBuilding );
+
+				object.setShadowMode( RenderQueue.ShadowMode.CastAndReceive );
+
+				object.setLocalTranslation( position.getLocation( ) );
+				object.setLocalRotation( position.getFacing( ) );
+
+				buildings.put( id, object );
+				buildingRoot.attachChild( object );
+			}
+		}
+
+		@Override
+		public void onChanged( EntityData entityData, Set< Entity > entities )
+		{
+			for ( Entity e : entities )
+			{
+				EntityId id = e.getId( );
+
+				Spatial object = buildings.get( id );
+				if ( object != null )
+				{
+					Position position = e.get( Position.class );
+
+					object.setLocalTranslation( position.getLocation( ) );
+					object.setLocalRotation( position.getFacing( ) );
+				}
+			}
+		}
+
+		@Override
+		public void onRemoved( EntityData entityData, Set< Entity > entities )
+		{
+			for ( Entity e : entities )
+			{
+				Spatial buildingSpatial = buildings.remove( e.getId( ) );
+				if ( buildingSpatial != null )
+				{
+					buildingRoot.detachChild( buildingSpatial );
+				}
+			}
+		}
+	};
 	private Node worldRoot;
 
 	public WorldManager( ClientMain app, Node rootNode )
@@ -464,6 +521,7 @@ public class WorldManager extends AbstractAppState
 			entityManager.addListener( capitalListener, CapitalTrait.class );
 			entityManager.addListener( healthBarListener, Health.class );
 			entityManager.addListener( tileListener, CreatedBy.class, TileTrait.class );
+			entityManager.addListener( physicsListener, Position.class );
 		}
 
 	}
@@ -494,6 +552,7 @@ public class WorldManager extends AbstractAppState
 			entityManager.removeListener( capitalListener, CapitalTrait.class );
 			entityManager.removeListener( healthBarListener, Health.class );
 			entityManager.removeListener( tileListener, CreatedBy.class, TileTrait.class );
+			entityManager.removeListener( physicsListener, Position.class );
 		}
 	}
 

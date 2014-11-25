@@ -101,7 +101,7 @@ public class ListBox< T > extends Panel
 		if ( cellRenderer == null )
 		{
 			// Create a default one
-			cellRenderer = new DefaultCellRenderer( elementId.child( "item" ), style );
+			cellRenderer = new DefaultCellRenderer< T >( elementId.child( "item" ), style );
 		}
 		this.cellRenderer = cellRenderer;
 
