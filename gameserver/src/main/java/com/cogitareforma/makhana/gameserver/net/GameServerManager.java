@@ -151,6 +151,14 @@ public class GameServerManager extends ServerManager< GameServer >
 		bulletAppState.getPhysicsSpace( ).add( terrain );
 	}
 
+	/**
+	 * @return the terrain
+	 */
+	public TerrainQuad getTerrain( )
+	{
+		return terrain;
+	}
+
 	public void createPlayerEntity( Session session )
 	{
 		if ( getEntityData( ) != null )

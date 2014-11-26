@@ -7,6 +7,8 @@ import com.cogitareforma.makhana.common.net.msg.PhysicsObjectRequest;
 import com.cogitareforma.makhana.gameserver.net.GameServerManager;
 import com.jme3.bullet.collision.shapes.SphereCollisionShape;
 import com.jme3.bullet.objects.PhysicsRigidBody;
+import com.jme3.math.Vector2f;
+import com.jme3.math.Vector3f;
 import com.jme3.network.HostedConnection;
 import com.jme3.network.Message;
 import com.jme3.network.MessageListener;
@@ -55,8 +57,11 @@ public class PhysicsObjectRequestListener implements MessageListener< HostedConn
 
 			entityData.setComponent( newEntity, physicsMessage.getPosition( ) );
 
+			Vector3f messageLocation = physicsMessage.getPosition( ).getLocation( );
+			messageLocation = messageLocation.add( 0, manager.getTerrain( )
+					.getHeight( new Vector2f( messageLocation.x, messageLocation.z ) ), 0 );
 			PhysicsRigidBody prb = new PhysicsRigidBody( new SphereCollisionShape( 4f ), 15f );
-			prb.setPhysicsLocation( physicsMessage.getPosition( ).getLocation( ) );
+			prb.setPhysicsLocation( messageLocation );
 			prb.setLinearVelocity( physicsMessage.getPosition( ).getFacing( ).getRotationColumn( 2 ).mult( 3 ) );
 			prb.setFriction( 1.6f );
 
