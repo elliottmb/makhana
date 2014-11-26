@@ -50,24 +50,30 @@ public class PhysicsObjectRequestListener implements MessageListener< HostedConn
 		EntityData entityData = manager.getEntityData( );
 		if ( message instanceof PhysicsObjectRequest )
 		{
-			PhysicsObjectRequest physicsMessage = ( PhysicsObjectRequest ) message;
-			EntityId newEntity = entityData.createEntity( );
+			manager.getApp( ).enqueue(
+					( ) ->
+					{
+						PhysicsObjectRequest physicsMessage = ( PhysicsObjectRequest ) message;
+						EntityId newEntity = entityData.createEntity( );
 
-			logger.log( Level.INFO, "Creating entity at: " + physicsMessage.getPosition( ) );
+						logger.log( Level.INFO, "Creating entity at: " + physicsMessage.getPosition( ) );
 
-			entityData.setComponent( newEntity, physicsMessage.getPosition( ) );
+						entityData.setComponent( newEntity, physicsMessage.getPosition( ) );
 
-			Vector3f messageLocation = physicsMessage.getPosition( ).getLocation( );
-			messageLocation = messageLocation.add( 0, manager.getTerrain( )
-					.getHeight( new Vector2f( messageLocation.x, messageLocation.z ) ), 0 );
-			PhysicsRigidBody prb = new PhysicsRigidBody( new SphereCollisionShape( 4f ), 15f );
-			prb.setPhysicsLocation( messageLocation );
-			prb.setLinearVelocity( physicsMessage.getPosition( ).getFacing( ).getRotationColumn( 2 ).mult( 3 ) );
-			prb.setFriction( 1.6f );
+						Vector3f messageLocation = physicsMessage.getPosition( ).getLocation( );
+						messageLocation = messageLocation.add( 0,
+								manager.getTerrain( ).getHeight( new Vector2f( messageLocation.x, messageLocation.z ) ), 0 );
+						PhysicsRigidBody prb = new PhysicsRigidBody( new SphereCollisionShape( 4f ), 15f );
+						prb.setPhysicsLocation( messageLocation );
+						prb.setLinearVelocity( physicsMessage.getPosition( ).getFacing( ).getRotationColumn( 2 ).mult( 20 ) );
+						prb.setFriction( 1.6f );
 
-			manager.getBulletAppState( ).getPhysicsSpace( ).add( prb );
-			manager.getPhysicsObjects( ).put( newEntity, prb );
-			prb.activate( );
+						manager.getBulletAppState( ).getPhysicsSpace( ).add( prb );
+						manager.getPhysicsObjects( ).put( newEntity, prb );
+						prb.activate( );
+						return null;
+					} );
+
 		}
 
 	}
