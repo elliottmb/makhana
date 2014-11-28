@@ -3,6 +3,10 @@ package com.cogitareforma.makhana.client.net;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.cogitareforma.makhana.common.eventsystem.ClientNetworkEvent.ConnectionType;
+import com.cogitareforma.makhana.common.eventsystem.events.ClientConnectedEvent;
+import com.cogitareforma.makhana.common.eventsystem.events.ClientConnectionErrorEvent;
+import com.cogitareforma.makhana.common.eventsystem.events.ClientDisconnectedEvent;
 import com.jme3.network.Client;
 import com.jme3.network.ClientStateListener;
 import com.jme3.network.ErrorListener;
@@ -35,6 +39,7 @@ public class MasterConnectionListener implements ClientStateListener, ErrorListe
 	{
 		logger.log( Level.INFO, "Connected to the master server successfuly." );
 		// TODO Auto-generated method stub
+		manager.getApp( ).getEventManager( ).triggerEvent( new ClientConnectedEvent( client, ConnectionType.MASTER ) );
 
 	}
 
@@ -43,7 +48,7 @@ public class MasterConnectionListener implements ClientStateListener, ErrorListe
 	{
 		logger.log( Level.INFO, "Disconnected from the master server." );
 		// TODO Auto-generated method stub
-
+		manager.getApp( ).getEventManager( ).triggerEvent( new ClientDisconnectedEvent( client, ConnectionType.MASTER, info ) );
 	}
 
 	@Override
@@ -55,6 +60,9 @@ public class MasterConnectionListener implements ClientStateListener, ErrorListe
 			manager.close( );
 			return null;
 		} );
+
+		// TODO: Move the above function into a handler for the following event
+		manager.getApp( ).getEventManager( ).triggerEvent( new ClientConnectionErrorEvent( client, ConnectionType.MASTER, exception ) );
 	}
 
 }

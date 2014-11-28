@@ -5,8 +5,11 @@ import java.util.logging.Logger;
 
 import com.cogitareforma.hexrepublics.client.views.GeneralController;
 import com.cogitareforma.hexrepublics.client.views.HudViewController;
-import com.cogitareforma.hexrepublics.client.views.LobbyViewController;
 import com.cogitareforma.makhana.client.util.NiftyFactory;
+import com.cogitareforma.makhana.common.eventsystem.ClientNetworkEvent.ConnectionType;
+import com.cogitareforma.makhana.common.eventsystem.events.ClientConnectedEvent;
+import com.cogitareforma.makhana.common.eventsystem.events.ClientConnectionErrorEvent;
+import com.cogitareforma.makhana.common.eventsystem.events.ClientDisconnectedEvent;
 import com.cogitareforma.makhana.common.net.msg.ClientStatusMessage;
 import com.jme3.network.Client;
 import com.jme3.network.ClientStateListener;
@@ -44,10 +47,10 @@ public class GameConnectionListener implements ClientStateListener, ErrorListene
 		logger.log( Level.INFO, "Attaching RemoteEntityData." );
 		manager.setRemoteEntityData( new RemoteEntityData( manager.getClient( ), 0 ) );
 
-		// throw us into the game lobby!
+		// throw us into the game!
 		GeneralController gController = ( GeneralController ) manager.getApp( ).getNifty( ).getCurrentScreen( ).getScreenController( );
-		NiftyFactory.createGameLobby( manager.getApp( ).getNifty( ) );
-		gController.gotoScreen( "lobby", false, true, false, null, null );
+		NiftyFactory.createLoadingScreen( manager.getApp( ).getNifty( ) );
+		gController.gotoScreen( "loading", true, true, true, null, null );
 
 		logger.log( Level.INFO, "Informing Master Server of in game status" );
 		MasterConnectionManager masterConnManager = manager.getApp( ).getMasterConnectionManager( );
@@ -55,6 +58,9 @@ public class GameConnectionListener implements ClientStateListener, ErrorListene
 		{
 			manager.getApp( ).getMasterConnectionManager( ).send( new ClientStatusMessage( true ) );
 		}
+
+		// TODO: Move the above function into a handler for the following event
+		manager.getApp( ).getEventManager( ).triggerEvent( new ClientConnectedEvent( client, ConnectionType.GAME ) );
 	}
 
 	@Override
@@ -67,14 +73,6 @@ public class GameConnectionListener implements ClientStateListener, ErrorListene
 		{
 			hvc.exitToNetwork( );
 		}
-		else
-		{
-			LobbyViewController lvc = manager.getApp( ).getStateManager( ).getState( LobbyViewController.class );
-			if ( lvc != null )
-			{
-				lvc.back( );
-			}
-		}
 
 		manager.setRemoteEntityData( null );
 
@@ -84,6 +82,9 @@ public class GameConnectionListener implements ClientStateListener, ErrorListene
 		{
 			manager.getApp( ).getMasterConnectionManager( ).send( new ClientStatusMessage( false ) );
 		}
+
+		// TODO: Move the above function into a handler for the following event
+		manager.getApp( ).getEventManager( ).triggerEvent( new ClientDisconnectedEvent( client, ConnectionType.GAME, info ) );
 	}
 
 	@Override
@@ -95,5 +96,8 @@ public class GameConnectionListener implements ClientStateListener, ErrorListene
 			manager.close( );
 			return null;
 		} );
+
+		// TODO: Move the above function into a handler for the following event
+		manager.getApp( ).getEventManager( ).triggerEvent( new ClientConnectionErrorEvent( client, ConnectionType.GAME, exception ) );
 	}
 }

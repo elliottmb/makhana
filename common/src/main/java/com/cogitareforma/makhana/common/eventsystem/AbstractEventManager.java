@@ -1,9 +1,9 @@
 package com.cogitareforma.makhana.common.eventsystem;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public abstract class AbstractEventManager< E, H > implements EventManager< E, H >
@@ -12,7 +12,7 @@ public abstract class AbstractEventManager< E, H > implements EventManager< E, H
 
 	public AbstractEventManager( )
 	{
-		this.handlerMap = new HashMap<>( );
+		this.handlerMap = new ConcurrentHashMap<>( );
 	}
 
 	@Override

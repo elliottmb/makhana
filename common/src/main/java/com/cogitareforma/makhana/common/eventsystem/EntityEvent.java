@@ -3,7 +3,7 @@ package com.cogitareforma.makhana.common.eventsystem;
 import com.simsilica.es.EntityData;
 import com.simsilica.es.EntityId;
 
-public class EntityEvent extends Event
+public abstract class EntityEvent extends Event
 {
 	private EntityId source;
 	private EntityData entityData;
