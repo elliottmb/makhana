@@ -14,6 +14,11 @@ import com.simsilica.lemur.ProgressBar;
 import com.simsilica.lemur.component.BoxLayout;
 import com.simsilica.lemur.component.QuadBackgroundComponent;
 
+/**
+ * 
+ * @author Ryan Grier
+ *
+ */
 public class LoadingScreen extends Screen
 {
 

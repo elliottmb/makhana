@@ -2,6 +2,11 @@ package com.cogitareforma.makhana.client.ui;
 
 import com.jme3.app.Application;
 
+/**
+ * 
+ * @author Ryan Grier
+ *
+ */
 public class HudScreen extends Screen
 {
 

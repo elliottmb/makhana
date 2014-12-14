@@ -32,6 +32,11 @@ import com.simsilica.lemur.component.QuadBackgroundComponent;
 import com.simsilica.lemur.component.SpringGridLayout;
 import com.simsilica.lemur.core.VersionedReference;
 
+/**
+ * 
+ * @author Ryan Grier
+ *
+ */
 public class OptionsScreen extends Screen
 {
 	private Application app;

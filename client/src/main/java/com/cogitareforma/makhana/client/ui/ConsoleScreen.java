@@ -18,6 +18,11 @@ import com.simsilica.lemur.component.BoxLayout;
 import com.simsilica.lemur.component.QuadBackgroundComponent;
 import com.simsilica.lemur.core.VersionedList;
 
+/**
+ * 
+ * @author Ryan Grier
+ *
+ */
 public class ConsoleScreen extends Screen
 {
 	private Application app;

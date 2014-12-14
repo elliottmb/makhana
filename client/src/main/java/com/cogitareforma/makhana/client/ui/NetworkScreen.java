@@ -17,6 +17,11 @@ import com.simsilica.lemur.Panel;
 import com.simsilica.lemur.component.BoxLayout;
 import com.simsilica.lemur.component.QuadBackgroundComponent;
 
+/**
+ * 
+ * @author Ryan Grier
+ *
+ */
 public class NetworkScreen extends Screen
 {
 

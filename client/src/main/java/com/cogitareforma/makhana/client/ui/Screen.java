@@ -3,6 +3,11 @@ package com.cogitareforma.makhana.client.ui;
 import com.jme3.app.Application;
 import com.jme3.scene.Node;
 
+/**
+ * 
+ * @author Elliott Butler
+ *
+ */
 public abstract class Screen
 {
 

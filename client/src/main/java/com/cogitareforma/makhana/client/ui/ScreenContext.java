@@ -1,5 +1,10 @@
 package com.cogitareforma.makhana.client.ui;
 
+/**
+ * 
+ * @author Elliott Butler
+ *
+ */
 public class ScreenContext
 {
 	private static final float baseScalar = 0.0016f;
