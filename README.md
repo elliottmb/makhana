@@ -8,7 +8,6 @@ Building of this project relies on Gradle 1.10+ and JDK 1.8+
 The following are fetched via the gradle build script.
 ####Common Project (Used by Client, Gameserver, & Master)
 * jMonkeyEngine 3.0.+
-
 * Apache Commons - CLI 1.2
 * Apache Commons - Collections 3.2
 * Apache Commons - IO 2.4
