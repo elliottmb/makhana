@@ -7,10 +7,11 @@ import java.util.logging.Logger;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-import com.cogitareforma.makhana.client.util.NiftyFactory;
-import com.cogitareforma.makhana.common.data.ServerStatus;
-import com.cogitareforma.makhana.common.net.msg.ServerListRequest;
-import com.cogitareforma.makhana.common.net.msg.UserListRequest;
+import trendli.me.makhana.client.util.NiftyFactory;
+import trendli.me.makhana.common.data.ServerStatus;
+import trendli.me.makhana.common.net.msg.ServerListRequest;
+import trendli.me.makhana.common.net.msg.UserListRequest;
+
 import com.jme3.app.Application;
 import com.jme3.app.state.AppStateManager;
 

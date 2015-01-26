@@ -7,8 +7,9 @@ import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.cogitareforma.makhana.client.util.KeyBindings;
-import com.cogitareforma.makhana.common.util.MakhanaConfig;
+import trendli.me.makhana.client.util.KeyBindings;
+import trendli.me.makhana.common.util.MakhanaConfig;
+
 import com.jme3.app.Application;
 import com.jme3.app.state.AppStateManager;
 import com.jme3.audio.Listener;

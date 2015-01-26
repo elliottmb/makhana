@@ -5,8 +5,9 @@ import java.util.logging.Logger;
 
 import org.apache.commons.lang3.RandomUtils;
 
-import com.cogitareforma.makhana.client.util.NiftyFactory;
-import com.cogitareforma.makhana.common.entities.components.WorldTrait;
+import trendli.me.makhana.client.util.NiftyFactory;
+import trendli.me.makhana.common.entities.components.WorldTrait;
+
 import com.jme3.app.Application;
 import com.jme3.app.state.AppStateManager;
 import com.simsilica.es.EntityId;

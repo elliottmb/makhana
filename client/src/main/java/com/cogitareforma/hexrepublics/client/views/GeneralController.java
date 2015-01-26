@@ -4,7 +4,8 @@ import java.util.concurrent.Callable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.cogitareforma.makhana.client.ClientMain;
+import trendli.me.makhana.client.ClientMain;
+
 import com.jme3.app.Application;
 import com.jme3.app.state.AbstractAppState;
 import com.jme3.app.state.AppState;

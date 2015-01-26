@@ -5,15 +5,16 @@ import java.util.ArrayList;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 
-import com.cogitareforma.makhana.common.entities.components.ArcherTrait;
-import com.cogitareforma.makhana.common.entities.components.ArcheryTrait;
-import com.cogitareforma.makhana.common.entities.components.LocationTrait;
-import com.cogitareforma.makhana.common.entities.components.Position;
-import com.cogitareforma.makhana.common.entities.components.TileTrait;
-import com.cogitareforma.makhana.common.net.msg.EntityCreationRequest;
-import com.cogitareforma.makhana.common.net.msg.EntityDeletionRequest;
-import com.cogitareforma.makhana.common.net.msg.PhysicsObjectRequest;
-import com.cogitareforma.makhana.common.net.msg.ReadyUpRequest;
+import trendli.me.makhana.common.entities.components.ArcherTrait;
+import trendli.me.makhana.common.entities.components.ArcheryTrait;
+import trendli.me.makhana.common.entities.components.LocationTrait;
+import trendli.me.makhana.common.entities.components.Position;
+import trendli.me.makhana.common.entities.components.TileTrait;
+import trendli.me.makhana.common.net.msg.EntityCreationRequest;
+import trendli.me.makhana.common.net.msg.EntityDeletionRequest;
+import trendli.me.makhana.common.net.msg.PhysicsObjectRequest;
+import trendli.me.makhana.common.net.msg.ReadyUpRequest;
+
 import com.jme3.math.Vector3f;
 import com.simsilica.es.ComponentFilter;
 import com.simsilica.es.EntityComponent;

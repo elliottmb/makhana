@@ -6,19 +6,20 @@ import java.util.logging.Logger;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-import com.cogitareforma.makhana.client.DebugGlobals;
-import com.cogitareforma.makhana.client.states.EntityManager;
-import com.cogitareforma.makhana.client.util.NiftyFactory;
-import com.cogitareforma.makhana.common.entities.ComponentUtil;
-import com.cogitareforma.makhana.common.entities.components.Health;
-import com.cogitareforma.makhana.common.entities.components.LocationTrait;
-import com.cogitareforma.makhana.common.entities.components.Player;
-import com.cogitareforma.makhana.common.entities.components.TileTrait;
-import com.cogitareforma.makhana.common.entities.components.WorldTrait;
-import com.cogitareforma.makhana.common.net.msg.ReadyUpRequest;
-import com.cogitareforma.makhana.common.util.MakhanaConfig;
-import com.cogitareforma.makhana.common.util.TraitEventListener;
-import com.cogitareforma.makhana.common.util.WorldFactory;
+import trendli.me.makhana.client.DebugGlobals;
+import trendli.me.makhana.client.states.EntityManager;
+import trendli.me.makhana.client.util.NiftyFactory;
+import trendli.me.makhana.common.entities.ComponentUtil;
+import trendli.me.makhana.common.entities.components.Health;
+import trendli.me.makhana.common.entities.components.LocationTrait;
+import trendli.me.makhana.common.entities.components.Player;
+import trendli.me.makhana.common.entities.components.TileTrait;
+import trendli.me.makhana.common.entities.components.WorldTrait;
+import trendli.me.makhana.common.net.msg.ReadyUpRequest;
+import trendli.me.makhana.common.util.MakhanaConfig;
+import trendli.me.makhana.common.util.TraitEventListener;
+import trendli.me.makhana.common.util.WorldFactory;
+
 import com.jme3.app.Application;
 import com.jme3.app.state.AppStateManager;
 import com.jme3.collision.CollisionResults;
