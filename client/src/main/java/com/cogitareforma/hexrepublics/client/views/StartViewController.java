@@ -10,9 +10,17 @@ import com.jme3.app.state.AppStateManager;
 import com.jme3.audio.AudioNode;
 
 import de.lessvoid.nifty.Nifty;
+import de.lessvoid.nifty.builder.LayerBuilder;
+import de.lessvoid.nifty.builder.PanelBuilder;
+import de.lessvoid.nifty.builder.PopupBuilder;
+import de.lessvoid.nifty.builder.ScreenBuilder;
+import de.lessvoid.nifty.builder.TextBuilder;
 import de.lessvoid.nifty.controls.Button;
 import de.lessvoid.nifty.controls.Label;
 import de.lessvoid.nifty.controls.TextField;
+import de.lessvoid.nifty.controls.button.builder.ButtonBuilder;
+import de.lessvoid.nifty.controls.label.builder.LabelBuilder;
+import de.lessvoid.nifty.controls.textfield.builder.TextFieldBuilder;
 import de.lessvoid.nifty.elements.Element;
 import de.lessvoid.nifty.input.NiftyInputEvent;
 import de.lessvoid.nifty.input.keyboard.KeyboardInputEvent;
@@ -38,7 +46,225 @@ public class StartViewController extends GeneralController implements KeyInputHa
 	private TextField password;
 	private Label loginFail;
 	private AudioNode startMusic;
+	private ScreenBuilder startScreen = null;
 	Button loginButton;
+
+	public StartViewController( Nifty nifty )
+	{
+		startScreen = new ScreenBuilder( "start" )
+		{
+			{
+				// controller( new StartViewController( ) );
+
+				layer( new LayerBuilder( "layer" )
+				{
+
+					{
+						childLayoutCenter( );
+						backgroundColor( "#1a1a1aff" );
+
+						panel( new PanelBuilder( "startPanel" )
+						{
+
+							{
+								height( "100%" );
+								childLayoutCenter( );
+								style( "nifty-panel-blue" );
+
+								panel( new PanelBuilder( "" )
+								{
+
+									{
+										height( "25%" );
+										width( "25%" );
+										childLayoutCenter( );
+										alignCenter( );
+										valignTop( );
+										style( "nifty-panel-beige" );
+
+										text( new TextBuilder( )
+										{
+											{
+												text( "Makhana" );
+												font( "Interface/Fonts/Default.fnt" );
+												height( "100%" );
+												width( "100%" );
+											}
+										} );
+									}
+								} );
+
+								panel( new PanelBuilder( "startButtonsPanel" )
+								{
+
+									{
+										style( "nifty-panel-beige" );
+										alignCenter( );
+										valignCenter( );
+										childLayoutVertical( );
+
+										control( new ButtonBuilder( "startSingle", "Singleplayer" )
+										{
+
+											{
+												alignCenter( );
+												visibleToMouse( true );
+												interactOnClick( "gotoSinglePlayer( )" );
+											}
+										} );
+
+										control( new ButtonBuilder( "startLogin", "Multiplayer" )
+										{
+
+											{
+												alignCenter( );
+												visibleToMouse( true );
+												interactOnClick( "openLogin()" );
+											}
+										} );
+
+										control( new ButtonBuilder( "startSettings", "Settings" )
+										{
+											{
+												alignCenter( );
+												visibleToMouse( true );
+												interactOnClick( "openOptions()" );
+											}
+										} );
+
+										control( new ButtonBuilder( "startExit", "Exit" )
+										{
+
+											{
+												alignCenter( );
+												visibleToMouse( true );
+												interactOnClick( "quit()" );
+											}
+										} );
+									}
+								} );
+							}
+						} );
+					}
+				} );
+			}
+		};
+		// TODO change popup to hidden panel?
+		new PopupBuilder( "loginPopup" )
+		{
+			{
+				backgroundColor( "#0f0f0fff" );
+				childLayoutCenter( );
+				panel( new PanelBuilder( "loginPanel" )
+				{
+					{
+						style( "nifty-panel-brown" );
+						childLayoutVertical( );
+						width( "320px" );
+						alignCenter( );
+						valignCenter( );
+
+						panel( new PanelBuilder( "loginInputs" )
+						{
+							{
+								style( "nifty-panel-inset-beige" );
+								childLayoutVertical( );
+								panel( new PanelBuilder( "loginUsername" )
+								{
+									{
+										childLayoutHorizontal( );
+										height( "32px" );
+
+										control( new LabelBuilder( "labelUsername", "Username: " )
+										{
+											{
+												width( "25%" );
+											}
+										} );
+										control( new TextFieldBuilder( "username", "" )
+										{
+											{
+												alignCenter( );
+												maxLength( 32 );
+												width( "75%" );
+											}
+										} );
+									}
+								} );
+
+								panel( new PanelBuilder( "loginPassword" )
+								{
+									{
+										childLayoutHorizontal( );
+										height( "32px" );
+
+										control( new LabelBuilder( "labelPassword", "Password: " )
+										{
+											{
+												width( "25%" );
+											}
+										} );
+										control( new TextFieldBuilder( "password", "" )
+										{
+											{
+												alignCenter( );
+												maxLength( 32 );
+												width( "75%" );
+											}
+										} );
+									}
+								} );
+							}
+						} );
+
+						control( new LabelBuilder( "loginFail" )
+						{
+							{
+								alignCenter( );
+								valignBottom( );
+								height( "32px" );
+								width( "100%" );
+								wrap( true );
+								color( "#d2b290ff" );
+							}
+						} );
+
+						panel( new PanelBuilder( "loginButtons" )
+						{
+							{
+								backgroundColor( "#404040ff" );
+								childLayoutHorizontal( );
+								textHAlignCenter( );
+								alignCenter( );
+
+								control( new ButtonBuilder( "login", "Login" )
+								{
+									{
+										alignCenter( );
+										valignBottom( );
+										visibleToMouse( true );
+										interactOnClick( "startGame()" );
+									}
+								} );
+								control( new ButtonBuilder( "back", "Back" )
+								{
+									{
+										alignCenter( );
+										valignBottom( );
+										visibleToMouse( true );
+										interactOnClick( "closeLogin()" );
+									}
+								} );
+							}
+						} );
+
+					}
+				} );
+			}
+		};
+		startScreen.controller( this );
+		startScreen.build( nifty );
+	}
 
 	public void bind( Nifty nifty, Screen screen )
 	{

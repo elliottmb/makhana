@@ -23,9 +23,13 @@ import com.simsilica.es.filter.AndFilter;
 import com.simsilica.es.filter.FieldFilter;
 
 import de.lessvoid.nifty.Nifty;
+import de.lessvoid.nifty.builder.LayerBuilder;
+import de.lessvoid.nifty.builder.PanelBuilder;
+import de.lessvoid.nifty.builder.ScreenBuilder;
 import de.lessvoid.nifty.controls.Console;
 import de.lessvoid.nifty.controls.ConsoleCommands;
 import de.lessvoid.nifty.controls.ConsoleCommands.ConsoleCommand;
+import de.lessvoid.nifty.controls.console.builder.ConsoleBuilder;
 import de.lessvoid.nifty.controls.TextField;
 import de.lessvoid.nifty.screen.Screen;
 
@@ -34,9 +38,50 @@ public class ConsoleViewController extends GeneralController
 	private Console console;
 	private ConsoleCommands consoleCommands;
 
+	private ScreenBuilder consoleScreen = null;
+
+	public ConsoleViewController( Nifty nifty )
+	{
+		consoleScreen = new ScreenBuilder( "console" )
+		{
+			{
+				// controller( this );
+				layer( new LayerBuilder( "consoleLayer" )
+				{
+					{
+						childLayoutCenter( );
+						backgroundColor( "#00000000" );
+
+						panel( new PanelBuilder( "consolePanel" )
+						{
+							{
+								childLayoutCenter( );
+								width( "50%" );
+								height( "50%" );
+
+								control( new ConsoleBuilder( "console" )
+								{
+									{
+										width( "100%" );
+										lines( 25 );
+										alignCenter( );
+										valignCenter( );
+									}
+								} );
+							}
+						} );
+					}
+				} );
+			}
+		};
+		consoleScreen.controller( this );
+		consoleScreen.build( nifty );
+	}
+
 	@Override
 	public void bind( Nifty nifty, Screen screen )
 	{
+		// TODO change
 		console = nifty.getScreen( "consoleScreen" ).findNiftyControl( "console", Console.class );
 		consoleCommands = new ConsoleCommands( nifty, console );
 		consoleCommands.enableCommandCompletion( true );

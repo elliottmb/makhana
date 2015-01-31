@@ -1,12 +1,9 @@
 package trendli.me.makhana.client.util;
 
-import com.cogitareforma.hexrepublics.client.views.ConsoleViewController;
 import com.cogitareforma.hexrepublics.client.views.HudViewController;
 import com.cogitareforma.hexrepublics.client.views.LoadingViewController;
 import com.cogitareforma.hexrepublics.client.views.NetworkViewController;
-import com.cogitareforma.hexrepublics.client.views.OptionsViewController;
 import com.cogitareforma.hexrepublics.client.views.SinglePlayerViewController;
-import com.cogitareforma.hexrepublics.client.views.StartViewController;
 import com.cogitareforma.hexrepublics.client.views.TileViewController;
 
 import de.lessvoid.nifty.Nifty;
@@ -44,7 +41,7 @@ public class NiftyFactory
 		nifty.addScreen( "consoleScreen", new ScreenBuilder( "consoleScreen" )
 		{
 			{
-				controller( new ConsoleViewController( ) );
+				//controller( new ConsoleViewController( ) );
 				layer( new LayerBuilder( "consoleLayer" )
 				{
 					{
@@ -60,7 +57,6 @@ public class NiftyFactory
 
 								control( new ConsoleBuilder( "console" )
 								{
-
 									{
 										width( "100%" );
 										lines( 25 );
@@ -694,7 +690,7 @@ public class NiftyFactory
 		nifty.addScreen( "mainOptions", new ScreenBuilder( "mainOptions" )
 		{
 			{
-				controller( new OptionsViewController( ) );
+				//controller( new OptionsViewController( ) );
 
 				layer( new LayerBuilder( "layer" )
 				{
@@ -1628,7 +1624,7 @@ public class NiftyFactory
 		nifty.addScreen( "start", new ScreenBuilder( "start" )
 		{
 			{
-				controller( new StartViewController( ) );
+				//controller( new StartViewController( ) );
 
 				layer( new LayerBuilder( "layer" )
 				{
