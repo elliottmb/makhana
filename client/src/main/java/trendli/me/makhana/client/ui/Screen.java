@@ -26,6 +26,14 @@ public abstract class Screen
 	 */
 	public abstract void cleanup( );
 
+	/**
+	 * @return the context
+	 */
+	public ScreenContext getContext( )
+	{
+		return context;
+	}
+
 	public Node getScreenNode( )
 	{
 		return screenNode;
@@ -80,6 +88,15 @@ public abstract class Screen
 	public abstract void screenDetached( ScreenManager screenManager );
 
 	/**
+	 * @param context
+	 *            the context to set
+	 */
+	private void setContext( ScreenContext context )
+	{
+		this.context = context;
+	}
+
+	/**
 	 * Enable or disable the functionality of the Screen. The effect of this
 	 * call depends on implementation. A Screen starts as being disabled by
 	 * default. A disabled Screen does not get calls to update(float) and is not
@@ -101,21 +118,4 @@ public abstract class Screen
 	 *            Time since the last call to update(), in seconds.
 	 */
 	public abstract void update( float tpf );
-
-	/**
-	 * @return the context
-	 */
-	public ScreenContext getContext( )
-	{
-		return context;
-	}
-
-	/**
-	 * @param context
-	 *            the context to set
-	 */
-	private void setContext( ScreenContext context )
-	{
-		this.context = context;
-	}
 }

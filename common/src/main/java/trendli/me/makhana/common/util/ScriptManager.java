@@ -123,28 +123,6 @@ public class ScriptManager
 		stringScripts = new LinkedList<>( );
 	}
 
-	public Object run( File file, List< ? > arguments )
-	{
-		Object eval = null;
-		// TODO: Look into replacing Shell with GroovyScriptEngine
-		try
-		{
-			eval = shell.run( file, arguments );
-		}
-		catch ( CompilationFailedException e )
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace( );
-		}
-		catch ( IOException e )
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace( );
-		}
-
-		return eval;
-	}
-
 	public Object evaluate( String script )
 	{
 		Object eval = null;
@@ -181,6 +159,28 @@ public class ScriptManager
 	public Map< ?, ? > getVariables( )
 	{
 		return binding.getVariables( );
+	}
+
+	public Object run( File file, List< ? > arguments )
+	{
+		Object eval = null;
+		// TODO: Look into replacing Shell with GroovyScriptEngine
+		try
+		{
+			eval = shell.run( file, arguments );
+		}
+		catch ( CompilationFailedException e )
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace( );
+		}
+		catch ( IOException e )
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace( );
+		}
+
+		return eval;
 	}
 
 	public void setVariable( String name, Object value )

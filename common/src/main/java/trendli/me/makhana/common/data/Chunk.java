@@ -31,6 +31,11 @@ public class Chunk
 		return y;
 	}
 
+	public boolean isInRange( Chunk other, int radius )
+	{
+		return Math.pow( other.getX( ) - x, 2 ) + Math.pow( other.getY( ) - y, 2 ) < Math.pow( radius, 2 );
+	}
+
 	public boolean isNeighbor( Chunk other )
 	{
 		if ( other.getX( ) == x )
@@ -48,11 +53,6 @@ public class Chunk
 			}
 		}
 		return false;
-	}
-
-	public boolean isInRange( Chunk other, int radius )
-	{
-		return Math.pow( other.getX( ) - x, 2 ) + Math.pow( other.getY( ) - y, 2 ) < Math.pow( radius, 2 );
 	}
 
 	@Override

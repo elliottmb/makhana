@@ -35,11 +35,6 @@ public class Player implements EntityComponent
 		this.alive = isAlive;
 	}
 
-	public Session getSession( )
-	{
-		return session;
-	}
-
 	/**
 	 * @return the deaths
 	 */
@@ -54,6 +49,11 @@ public class Player implements EntityComponent
 	public int getKills( )
 	{
 		return kills;
+	}
+
+	public Session getSession( )
+	{
+		return session;
 	}
 
 	/**

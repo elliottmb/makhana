@@ -34,6 +34,14 @@ public abstract class EntityDamageEvent extends EntityEvent
 	}
 
 	/**
+	 * @return the amount of damage done to the entity
+	 */
+	public float getDamage( )
+	{
+		return damage;
+	}
+
+	/**
 	 * Returns the health trait associated to the entity when the event was
 	 * triggered
 	 * 
@@ -42,14 +50,6 @@ public abstract class EntityDamageEvent extends EntityEvent
 	public Health getHealthTrait( )
 	{
 		return healthTrait;
-	}
-
-	/**
-	 * @return the amount of damage done to the entity
-	 */
-	public float getDamage( )
-	{
-		return damage;
 	}
 
 }

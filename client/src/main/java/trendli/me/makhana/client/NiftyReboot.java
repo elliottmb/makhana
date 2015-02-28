@@ -3,15 +3,9 @@ package trendli.me.makhana.client;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import trendli.me.makhana.client.net.GameConnectionManager;
-import trendli.me.makhana.client.net.MasterConnectionManager;
-import trendli.me.makhana.client.states.EntityManager;
 import trendli.me.makhana.client.states.WorldManager;
 import trendli.me.makhana.client.util.NiftyFactory;
-import trendli.me.makhana.client.util.PlayerTraitListener;
-import trendli.me.makhana.common.entities.components.Player;
 
-import com.jme3.app.state.AppState;
 import com.jme3.input.KeyInput;
 import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.KeyTrigger;
@@ -27,25 +21,23 @@ import com.jme3.scene.Spatial.CullHint;
  * @author Elliott Butler
  * @author Ryan Grier
  */
-public class ClientMain extends OnlineClient
+public class NiftyReboot extends OfflineClient
 {
 	public static void main( String[ ] args )
 	{
-		ClientMain app = new ClientMain( );
+		NiftyReboot app = new NiftyReboot( );
 		app.start( );
 	}
 
 	/**
 	 * The logger for this class
 	 */
-	private final static Logger logger = Logger.getLogger( ClientMain.class.getName( ) );
+	private final static Logger logger = Logger.getLogger( NiftyReboot.class.getName( ) );
 
 	/**
-	 * The Client's world manager.
+	 * Boolean to control if console is enabled. Set by YamlConfig.
 	 */
-	private WorldManager worldManager;
-
-	private EntityManager entityManager;
+	public boolean consoleEnabled = false;
 
 	/**
 	 * Name of screen that should be returned to after closing the console.
@@ -53,9 +45,9 @@ public class ClientMain extends OnlineClient
 	public String currentScreen;
 
 	/**
-	 * Boolean to control if console is enabled. Set by YamlConfig.
+	 * The Client's world manager.
 	 */
-	public boolean consoleEnabled = false;
+	private WorldManager worldManager;
 
 	private ActionListener baseActionListener = ( String name, boolean keyPressed, float tpf ) ->
 	{
@@ -86,27 +78,9 @@ public class ClientMain extends OnlineClient
 		}
 	};
 
-	public ClientMain( )
+	public NiftyReboot( )
 	{
 		super( );
-	}
-
-	/**
-	 * Thread safe method that tries to connect to the given game sever.
-	 * 
-	 * @param host
-	 *            Name of game server to connect to.
-	 * @param port
-	 *            Port number of game server to connect to.
-	 */
-	public void connectToGameSever( final String host, final Integer port )
-	{
-		enqueue( ( ) ->
-		{
-			logger.log( Level.INFO, "Sending Game Server details to Connection Manager ( " + host + ":" + port + " )" );
-			getGameConnectionManager( ).connect( host, port );
-			return null;
-		} );
 	}
 
 	/**
@@ -115,14 +89,6 @@ public class ClientMain extends OnlineClient
 	public ActionListener getBaseActionListener( )
 	{
 		return baseActionListener;
-	}
-
-	/**
-	 * @return the entityManager
-	 */
-	public EntityManager getEntityManager( )
-	{
-		return entityManager;
 	}
 
 	/**
@@ -176,56 +142,6 @@ public class ClientMain extends OnlineClient
 	}
 
 	/**
-	 * A thread safe method that sends a NetworkChatMessage with the given
-	 * String to the game server on the next available update loop.
-	 * 
-	 * @param message
-	 *            the text message to send to the game server
-	 */
-	public void sendLobbyChat( final String message )
-	{
-		enqueue( ( ) ->
-		{
-			if ( getGameConnectionManager( ).isConnected( ) )
-			{
-				getGameConnectionManager( ).sendMessage( message );
-			}
-			return null;
-		} );
-	}
-
-	/**
-	 * A thread safe method that sends a NetworkChatMessage with the given
-	 * String to the master server on the next available update loop.
-	 * 
-	 * @param message
-	 *            the text message to send to the master server
-	 */
-	public void sendNetworkChat( final String message )
-	{
-		enqueue( ( ) ->
-		{
-			if ( getMasterConnectionManager( ) != null )
-			{
-				if ( getMasterConnectionManager( ).isConnected( ) )
-				{
-					getMasterConnectionManager( ).sendMessage( message );
-				}
-			}
-			return null;
-		} );
-	}
-
-	/**
-	 * @param entityManager
-	 *            the entityManager to set
-	 */
-	private void setEntityManager( EntityManager entityManager )
-	{
-		this.entityManager = entityManager;
-	}
-
-	/**
 	 * @param worldManager
 	 *            the worldManager to set
 	 */
@@ -249,14 +165,8 @@ public class ClientMain extends OnlineClient
 		flyCam.setMoveSpeed( 50 );
 		flyCam.setRotationSpeed( 15 );
 
-		setEntityManager( new EntityManager( this ) );
-		stateManager.attach( getEntityManager( ) );
-
-		// TODO: Remove after done testing
-		getEntityManager( ).addListener( new PlayerTraitListener( ), Player.class );
-
-		setWorldManager( new WorldManager( this, rootNode ) );
-		stateManager.attach( worldManager );
+		// setWorldManager( new WorldManager( this, rootNode ) );
+		// stateManager.attach( worldManager );
 
 		// Setup first view
 		viewPort.setBackgroundColor( ColorRGBA.DarkGray );
@@ -264,9 +174,6 @@ public class ClientMain extends OnlineClient
 
 		// test multiview for gui
 		guiViewPort.getCamera( ).setViewPort( 0f, 1f, 0f, 1f );
-
-		setMasterConnectionManager( new MasterConnectionManager( this ) );
-		setGameConnectionManager( new GameConnectionManager( this ) );
 
 		inputManager.addMapping( "showConsole", new KeyTrigger( ( Integer ) getConfiguration( ).get( "client.input.consoleKey" ) ) );
 		inputManager.addMapping( "hideFPS", new KeyTrigger( KeyInput.KEY_F12 ) );
@@ -292,12 +199,17 @@ public class ClientMain extends OnlineClient
 	 */
 	private void startNifty( )
 	{
+
 		NiftyFactory.createStartView( getNifty( ) );
-		stateManager.attach( ( AppState ) getNifty( ).getScreen( "start" ).getScreenController( ) );
+		// stateManager.attach( ( AppState ) getNifty( ).getScreen( "start"
+		// ).getScreenController( ) );
+		// stateManager.attach( ( AppState ) new StartViewController( getNifty(
+		// ) ) );
 		getNifty( ).gotoScreen( "start" );
 
-		NiftyFactory.createConsole( getNifty( ) );
-		stateManager.attach( ( AppState ) getNifty( ).getScreen( "consoleScreen" ).getScreenController( ) );
+		// NiftyFactory.createConsole( getNifty( ) );
+		// stateManager.attach( ( AppState ) getNifty( ).getScreen(
+		// "consoleScreen" ).getScreenController( ) );
 		currentScreen = "start";
 	}
 

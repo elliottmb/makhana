@@ -40,12 +40,17 @@ public class Session
 		this.displayName = displayName;
 	}
 
-	/**
-	 * @return the sessionId
-	 */
-	public long getSessionId( )
+	@Override
+	public boolean equals( Object obj )
 	{
-		return sessionId;
+		if ( obj == null )
+			return false;
+		if ( this == obj )
+			return true;
+		if ( obj.getClass( ) != getClass( ) )
+			return false;
+		Session acct = ( Session ) obj;
+		return new EqualsBuilder( ).append( sessionId, acct.sessionId ).isEquals( );
 	}
 
 	/**
@@ -54,6 +59,20 @@ public class Session
 	public String getDisplayName( )
 	{
 		return displayName;
+	}
+
+	/**
+	 * @return the sessionId
+	 */
+	public long getSessionId( )
+	{
+		return sessionId;
+	}
+
+	@Override
+	public int hashCode( )
+	{
+		return new HashCodeBuilder( ).append( sessionId ).toHashCode( );
 	}
 
 	/**
@@ -71,25 +90,6 @@ public class Session
 	public void setInGame( boolean inGame )
 	{
 		this.inGame = inGame;
-	}
-
-	@Override
-	public boolean equals( Object obj )
-	{
-		if ( obj == null )
-			return false;
-		if ( this == obj )
-			return true;
-		if ( obj.getClass( ) != getClass( ) )
-			return false;
-		Session acct = ( Session ) obj;
-		return new EqualsBuilder( ).append( sessionId, acct.sessionId ).isEquals( );
-	}
-
-	@Override
-	public int hashCode( )
-	{
-		return new HashCodeBuilder( ).append( sessionId ).toHashCode( );
 	}
 
 	@Override

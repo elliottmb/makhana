@@ -40,8 +40,6 @@ import com.jme3.util.BufferUtils;
  */
 public class WorldFactory
 {
-	private final static Logger logger = Logger.getLogger( WorldFactory.class.getName( ) );
-
 	public static void attachHexagonGridToNode( Node root, AssetManager am )
 	{
 		if ( root != null )
@@ -120,10 +118,18 @@ public class WorldFactory
 		node.attachChild( terrain );
 	}
 
-	public static TerrainQuad generateBaseTerrain( byte seed )
+	private static TerrainQuad buildBaseTerrain( AbstractHeightMap heightMap )
 	{
-		AbstractHeightMap heightMap = WorldFactory.buildHeightMap( seed );
-		TerrainQuad terrain = WorldFactory.buildBaseTerrain( heightMap );
+
+		logger.log( Level.INFO, "Constructing the terrain mesh" );
+		TerrainQuad terrain = null;
+		int patchSize = 129;
+		terrain = new TerrainQuad( "terrain", patchSize, 1025, heightMap.getHeightMap( ) );
+
+		terrain.setLocalTranslation( 0, -3, 0 );
+		terrain.setLocalScale( 1f, 0.2f, 1f );
+		terrain.setShadowMode( RenderQueue.ShadowMode.Receive );
+
 		return terrain;
 	}
 
@@ -151,21 +157,6 @@ public class WorldFactory
 		hexagonMaterial.setColor( "Color", new ColorRGBA( 0f, 0f, 0f, 0.3f ) );
 		hexagonMaterial.getAdditionalRenderState( ).setBlendMode( RenderState.BlendMode.Alpha );
 		return hexagonMaterial;
-	}
-
-	private static TerrainQuad buildBaseTerrain( AbstractHeightMap heightMap )
-	{
-
-		logger.log( Level.INFO, "Constructing the terrain mesh" );
-		TerrainQuad terrain = null;
-		int patchSize = 129;
-		terrain = new TerrainQuad( "terrain", patchSize, 1025, heightMap.getHeightMap( ) );
-
-		terrain.setLocalTranslation( 0, -3, 0 );
-		terrain.setLocalScale( 1f, 0.2f, 1f );
-		terrain.setShadowMode( RenderQueue.ShadowMode.Receive );
-
-		return terrain;
 	}
 
 	private static TerrainQuad buildTerrain( AbstractHeightMap heightMap, Camera lodCamera )
@@ -259,11 +250,20 @@ public class WorldFactory
 		return lineMesh;
 	}
 
+	public static TerrainQuad generateBaseTerrain( byte seed )
+	{
+		AbstractHeightMap heightMap = WorldFactory.buildHeightMap( seed );
+		TerrainQuad terrain = WorldFactory.buildBaseTerrain( heightMap );
+		return terrain;
+	}
+
 	private static Texture2D getHeightAlphaMap( AbstractHeightMap heightMap )
 	{
 		HeightBasedAlphaMapGenerator hbamg = new HeightBasedAlphaMapGenerator( heightMap );
 
 		return new Texture2D( hbamg.renderAlphaMap( ) );
 	}
+
+	private final static Logger logger = Logger.getLogger( WorldFactory.class.getName( ) );
 
 }

@@ -46,8 +46,7 @@ public class MasterConnectionManager extends ConnectionManager< GameServer >
 
 			/* add listeners */
 			logger.log( Level.FINE, "Registering message listeners with for network connection." );
-			List< Object > messageListeners = PackageUtils.createAllInPackage( "trendli.me.makhana.gameserver.net.listener.master",
-					this );
+			List< Object > messageListeners = PackageUtils.createAllInPackage( "trendli.me.makhana.gameserver.net.listener.master", this );
 			for ( Object messageListener : messageListeners )
 			{
 				getClient( ).addMessageListener( ( MessageListener ) messageListener );

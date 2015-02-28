@@ -182,6 +182,14 @@ public class MasterServer extends Application
 	}
 
 	@Override
+	public void stop( )
+	{
+		getMasterServerManager( ).close( );
+		updateTimer.reset( );
+		super.stop( );
+	}
+
+	@Override
 	public void update( )
 	{
 		super.update( );
@@ -194,14 +202,6 @@ public class MasterServer extends Application
 			logger.log( Level.INFO, "Pinging all active servers for their current server status" );
 			serverManager.requestCurrentServerStatuses( );
 		}
-	}
-
-	@Override
-	public void stop( )
-	{
-		getMasterServerManager( ).close( );
-		updateTimer.reset( );
-		super.stop( );
 	}
 
 }

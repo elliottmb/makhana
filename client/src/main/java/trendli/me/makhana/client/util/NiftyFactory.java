@@ -41,7 +41,7 @@ public class NiftyFactory
 		nifty.addScreen( "consoleScreen", new ScreenBuilder( "consoleScreen" )
 		{
 			{
-				//controller( new ConsoleViewController( ) );
+				// controller( new ConsoleViewController( ) );
 				layer( new LayerBuilder( "consoleLayer" )
 				{
 					{
@@ -690,7 +690,7 @@ public class NiftyFactory
 		nifty.addScreen( "mainOptions", new ScreenBuilder( "mainOptions" )
 		{
 			{
-				//controller( new OptionsViewController( ) );
+				// controller( new OptionsViewController( ) );
 
 				layer( new LayerBuilder( "layer" )
 				{
@@ -1624,7 +1624,7 @@ public class NiftyFactory
 		nifty.addScreen( "start", new ScreenBuilder( "start" )
 		{
 			{
-				//controller( new StartViewController( ) );
+				// controller( new StartViewController( ) );
 
 				layer( new LayerBuilder( "layer" )
 				{

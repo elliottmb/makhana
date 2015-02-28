@@ -28,14 +28,14 @@ public class Velocity implements EntityComponent
 		this.angular = angular;
 	}
 
-	public Vector3f getLinear( )
-	{
-		return linear;
-	}
-
 	public Vector3f getAngular( )
 	{
 		return angular;
+	}
+
+	public Vector3f getLinear( )
+	{
+		return linear;
 	}
 
 	@Override

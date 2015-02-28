@@ -135,6 +135,14 @@ public class GameServer extends Application
 	}
 
 	/**
+	 * @return the configuration
+	 */
+	public MakhanaConfig getConfiguration( )
+	{
+		return configuration;
+	}
+
+	/**
 	 * Returns the current GameServerManager instance
 	 * 
 	 * @return current GameServerManager instance
@@ -160,34 +168,6 @@ public class GameServer extends Application
 	public int getPort( )
 	{
 		return port;
-	}
-
-	/**
-	 * @return the onlineMode
-	 */
-	public boolean isOnlineMode( )
-	{
-		return onlineMode;
-	}
-
-	/**
-	 * Sets the parsed command line arguments
-	 * 
-	 * @param arguments
-	 *            parsed command line arguments
-	 */
-	public void setArguments( CommandLine arguments )
-	{
-		this.arguments = arguments;
-	}
-
-	/**
-	 * @param onlineMode
-	 *            the onlineMode to set
-	 */
-	public void setOnlineMode( boolean onlineMode )
-	{
-		this.onlineMode = onlineMode;
 	}
 
 	@Override
@@ -284,6 +264,51 @@ public class GameServer extends Application
 
 	}
 
+	/**
+	 * @return the onlineMode
+	 */
+	public boolean isOnlineMode( )
+	{
+		return onlineMode;
+	}
+
+	/**
+	 * Sets the parsed command line arguments
+	 * 
+	 * @param arguments
+	 *            parsed command line arguments
+	 */
+	public void setArguments( CommandLine arguments )
+	{
+		this.arguments = arguments;
+	}
+
+	/**
+	 * @param configuration
+	 *            the configuration to set
+	 */
+	public void setConfiguration( MakhanaConfig configuration )
+	{
+		this.configuration = configuration;
+	}
+
+	/**
+	 * @param onlineMode
+	 *            the onlineMode to set
+	 */
+	public void setOnlineMode( boolean onlineMode )
+	{
+		this.onlineMode = onlineMode;
+	}
+
+	@Override
+	public void stop( )
+	{
+		getGameServerManager( ).close( );
+		getMasterConnManager( ).close( );
+		super.stop( );
+	}
+
 	@Override
 	public void update( )
 	{
@@ -297,31 +322,6 @@ public class GameServer extends Application
 		stateManager.postRender( );
 
 		gameServerManager.update( tpf );
-	}
-
-	@Override
-	public void stop( )
-	{
-		getGameServerManager( ).close( );
-		getMasterConnManager( ).close( );
-		super.stop( );
-	}
-
-	/**
-	 * @return the configuration
-	 */
-	public MakhanaConfig getConfiguration( )
-	{
-		return configuration;
-	}
-
-	/**
-	 * @param configuration
-	 *            the configuration to set
-	 */
-	public void setConfiguration( MakhanaConfig configuration )
-	{
-		this.configuration = configuration;
 	}
 
 }

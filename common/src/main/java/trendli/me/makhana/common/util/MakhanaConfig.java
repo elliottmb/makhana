@@ -169,6 +169,14 @@ public class MakhanaConfig extends ConfigObject
 		}
 	}
 
+	/**
+	 * @return the file
+	 */
+	public File getFile( )
+	{
+		return file;
+	}
+
 	public void putAppSettings( AppSettings settings )
 	{
 		if ( settings == null )
@@ -222,14 +230,6 @@ public class MakhanaConfig extends ConfigObject
 		{
 			logger.log( Level.SEVERE, "Error saving configuration file.", e );
 		}
-	}
-
-	/**
-	 * @return the file
-	 */
-	public File getFile( )
-	{
-		return file;
 	}
 
 	/**

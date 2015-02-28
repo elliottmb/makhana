@@ -91,14 +91,6 @@ public class GameServerManager extends ServerManager< GameServer >
 	TerrainQuad terrain;
 
 	/**
-	 * @return the bulletAppState
-	 */
-	public BulletAppState getBulletAppState( )
-	{
-		return bulletAppState;
-	}
-
-	/**
 	 * Creates an instance of the GameServerManager with the supplied owning
 	 * GameServer Application
 	 * 
@@ -152,14 +144,6 @@ public class GameServerManager extends ServerManager< GameServer >
 		bulletAppState.getPhysicsSpace( ).add( terrain );
 	}
 
-	/**
-	 * @return the terrain
-	 */
-	public TerrainQuad getTerrain( )
-	{
-		return terrain;
-	}
-
 	public void createPlayerEntity( Session session )
 	{
 		if ( getEntityData( ) != null )
@@ -199,6 +183,14 @@ public class GameServerManager extends ServerManager< GameServer >
 	}
 
 	/**
+	 * @return the bulletAppState
+	 */
+	public BulletAppState getBulletAppState( )
+	{
+		return bulletAppState;
+	}
+
+	/**
 	 * Returns the managed EntityData instance
 	 * 
 	 * @return the managed EntityData instance
@@ -216,6 +208,14 @@ public class GameServerManager extends ServerManager< GameServer >
 	public EntityDataHostService getEntityDataHostService( )
 	{
 		return entityDataHostService;
+	}
+
+	/**
+	 * @return the physicsObjects
+	 */
+	public Map< EntityId, PhysicsRigidBody > getPhysicsObjects( )
+	{
+		return physicsObjects;
 	}
 
 	public EntityId getPlayerEntityId( Session session )
@@ -247,6 +247,14 @@ public class GameServerManager extends ServerManager< GameServer >
 	public ServerStatus getServerStatus( )
 	{
 		return status;
+	}
+
+	/**
+	 * @return the terrain
+	 */
+	public TerrainQuad getTerrain( )
+	{
+		return terrain;
 	}
 
 	/**
@@ -313,8 +321,7 @@ public class GameServerManager extends ServerManager< GameServer >
 			getServer( ).addConnectionListener( new ConnListener( this ) );
 
 			logger.log( Level.FINE, "Registering message listeners with server." );
-			List< Object > messageListeners = PackageUtils.createAllInPackage( "trendli.me.makhana.gameserver.net.listener.game",
-					this );
+			List< Object > messageListeners = PackageUtils.createAllInPackage( "trendli.me.makhana.gameserver.net.listener.game", this );
 			for ( Object messageListener : messageListeners )
 			{
 				getServer( ).addMessageListener( ( MessageListener ) messageListener );
@@ -567,14 +574,6 @@ public class GameServerManager extends ServerManager< GameServer >
 
 			getEntityDataHostService( ).sendUpdates( );
 		}
-	}
-
-	/**
-	 * @return the physicsObjects
-	 */
-	public Map< EntityId, PhysicsRigidBody > getPhysicsObjects( )
-	{
-		return physicsObjects;
 	}
 
 }

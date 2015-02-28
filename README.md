@@ -28,7 +28,5 @@ The following are fetched via the gradle build script.
 ###Included Dependencies
 The following are included in the repository as they aren't available via maven/gradle.
 
-* Lemur
-* LemurProto
 * Zay-ES (Entity System)
 * Zay-ES-Net (Entity System Networking Extension)

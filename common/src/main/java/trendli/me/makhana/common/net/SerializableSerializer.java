@@ -15,6 +15,51 @@ import java.nio.ByteBuffer;
 
 import com.jme3.network.serializing.Serializer;
 
+final class extObjectInputStream extends ObjectInputStream
+{
+
+	private static ClassLoader systemClassLoader = null;
+
+	extObjectInputStream( InputStream in ) throws IOException, StreamCorruptedException
+	{
+		super( in );
+	}
+
+	protected Class< ? > resolveClass( ObjectStreamClass v ) throws IOException, ClassNotFoundException
+	{
+
+		try
+		{
+			/*
+			 * Calling the super.resolveClass() first will let us pick up bug
+			 * fixes in the super class (e.g., 4171142).
+			 */
+			return super.resolveClass( v );
+		}
+		catch ( ClassNotFoundException cnfe )
+		{
+			/*
+			 * This is a workaround for bug 4224921.
+			 */
+			ClassLoader loader = Thread.currentThread( ).getContextClassLoader( );
+			if ( loader == null )
+			{
+				if ( systemClassLoader == null )
+				{
+					systemClassLoader = ClassLoader.getSystemClassLoader( );
+				}
+				loader = systemClassLoader;
+				if ( loader == null )
+				{
+					throw new ClassNotFoundException( v.getName( ) );
+				}
+			}
+
+			return Class.forName( v.getName( ), false, loader );
+		}
+	}
+}
+
 public class SerializableSerializer extends Serializer
 {
 
@@ -87,49 +132,4 @@ public class SerializableSerializer extends Serializer
 		}
 	}
 
-}
-
-final class extObjectInputStream extends ObjectInputStream
-{
-
-	private static ClassLoader systemClassLoader = null;
-
-	extObjectInputStream( InputStream in ) throws IOException, StreamCorruptedException
-	{
-		super( in );
-	}
-
-	protected Class< ? > resolveClass( ObjectStreamClass v ) throws IOException, ClassNotFoundException
-	{
-
-		try
-		{
-			/*
-			 * Calling the super.resolveClass() first will let us pick up bug
-			 * fixes in the super class (e.g., 4171142).
-			 */
-			return super.resolveClass( v );
-		}
-		catch ( ClassNotFoundException cnfe )
-		{
-			/*
-			 * This is a workaround for bug 4224921.
-			 */
-			ClassLoader loader = Thread.currentThread( ).getContextClassLoader( );
-			if ( loader == null )
-			{
-				if ( systemClassLoader == null )
-				{
-					systemClassLoader = ClassLoader.getSystemClassLoader( );
-				}
-				loader = systemClassLoader;
-				if ( loader == null )
-				{
-					throw new ClassNotFoundException( v.getName( ) );
-				}
-			}
-
-			return Class.forName( v.getName( ), false, loader );
-		}
-	}
 }

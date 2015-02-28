@@ -45,16 +45,6 @@ public class ChatMessage extends AbstractMessage
 	}
 
 	/**
-	 * Returns this NetworkChatMessage's session.
-	 * 
-	 * @return The session of the NetworkChatMessage.
-	 */
-	public Session getSession( )
-	{
-		return session;
-	}
-
-	/**
 	 * Returns this NetworkChatMessage's message.
 	 * 
 	 * @return the message of this NetworkChatMessage.
@@ -65,14 +55,13 @@ public class ChatMessage extends AbstractMessage
 	}
 
 	/**
-	 * Sets this NetworkChatMessage's account.
+	 * Returns this NetworkChatMessage's session.
 	 * 
-	 * @param account
-	 *            the account to set this NetworkChatMessage's account to.
+	 * @return The session of the NetworkChatMessage.
 	 */
-	public void setSession( Session session )
+	public Session getSession( )
 	{
-		this.session = session;
+		return session;
 	}
 
 	/**
@@ -84,6 +73,17 @@ public class ChatMessage extends AbstractMessage
 	public void setMessage( String message )
 	{
 		this.message = message;
+	}
+
+	/**
+	 * Sets this NetworkChatMessage's account.
+	 * 
+	 * @param account
+	 *            the account to set this NetworkChatMessage's account to.
+	 */
+	public void setSession( Session session )
+	{
+		this.session = session;
 	}
 
 }

@@ -28,6 +28,20 @@ public abstract class OnlineClient extends OfflineClient
 		super( );
 	}
 
+	@Override
+	public void destroy( )
+	{
+		if ( getMasterConnectionManager( ) != null )
+		{
+			getMasterConnectionManager( ).close( );
+		}
+		if ( getGameConnectionManager( ) != null )
+		{
+			getGameConnectionManager( ).close( );
+		}
+		super.destroy( );
+	}
+
 	/**
 	 * @return the gameConnection
 	 */
@@ -107,20 +121,6 @@ public abstract class OnlineClient extends OfflineClient
 	protected void setMasterConnectionManager( MasterConnectionManager masterConnectionManager )
 	{
 		this.masterConnectionManager = masterConnectionManager;
-	}
-
-	@Override
-	public void destroy( )
-	{
-		if ( getMasterConnectionManager( ) != null )
-		{
-			getMasterConnectionManager( ).close( );
-		}
-		if ( getGameConnectionManager( ) != null )
-		{
-			getGameConnectionManager( ).close( );
-		}
-		super.destroy( );
 	}
 
 }

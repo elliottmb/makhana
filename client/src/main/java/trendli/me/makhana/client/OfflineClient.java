@@ -11,7 +11,11 @@ import trendli.me.makhana.common.eventsystem.ThreadSafeEventManager;
 import trendli.me.makhana.common.util.MakhanaConfig;
 
 import com.jme3.app.SimpleApplication;
+import com.jme3.niftygui.NiftyJmeDisplay;
 import com.jme3.system.AppSettings;
+import com.simsilica.es.EntityData;
+
+import de.lessvoid.nifty.Nifty;
 
 public abstract class OfflineClient extends SimpleApplication
 {
@@ -26,12 +30,12 @@ public abstract class OfflineClient extends SimpleApplication
 
 	private ScreenManager screenManager;
 
-	@Override
-	public void reshape( int w, int h )
-	{
-		super.reshape( w, h );
-		screenManager.reshape( w, h );
-	}
+	private EntityData entityData;
+
+	/**
+	 * The Client's Nifty Display instance.
+	 */
+	private NiftyJmeDisplay niftyDisplay;
 
 	public OfflineClient( )
 	{
@@ -65,11 +69,37 @@ public abstract class OfflineClient extends SimpleApplication
 	}
 
 	/**
+	 * @return the entityData
+	 */
+	public EntityData getEntityData( )
+	{
+		return entityData;
+	}
+
+	/**
 	 * @return the eventManager
 	 */
 	public EventManager< Event, EventHandler > getEventManager( )
 	{
 		return eventManager;
+	}
+
+	/**
+	 * Returns the NiftyDisplay's Nifty instance
+	 * 
+	 * @return the current Nifty instance
+	 */
+	public Nifty getNifty( )
+	{
+		return getNiftyDisplay( ).getNifty( );
+	}
+
+	/**
+	 * @return the niftyDisplay
+	 */
+	public NiftyJmeDisplay getNiftyDisplay( )
+	{
+		return niftyDisplay;
 	}
 
 	/**
@@ -81,11 +111,10 @@ public abstract class OfflineClient extends SimpleApplication
 	}
 
 	@Override
-	public void initialize( )
+	public void reshape( int w, int h )
 	{
-		logger.log( Level.INFO, "Initializaing base OfflineClient" );
-		super.initialize( );
-		// TODO
+		super.reshape( w, h );
+		screenManager.reshape( w, h );
 	}
 
 	/**
@@ -98,12 +127,30 @@ public abstract class OfflineClient extends SimpleApplication
 	}
 
 	/**
+	 * @param entityData
+	 *            the entityData to set
+	 */
+	public void setEntityData( EntityData entityData )
+	{
+		this.entityData = entityData;
+	}
+
+	/**
 	 * @param eventManager
 	 *            the eventManager to set
 	 */
 	private void setEventManager( EventManager< Event, EventHandler > eventManager )
 	{
 		this.eventManager = eventManager;
+	}
+
+	/**
+	 * @param niftyDisplay
+	 *            the niftyDisplay to set
+	 */
+	public void setNiftyDisplay( NiftyJmeDisplay niftyDisplay )
+	{
+		this.niftyDisplay = niftyDisplay;
 	}
 
 	/**
@@ -115,5 +162,20 @@ public abstract class OfflineClient extends SimpleApplication
 		stateManager.detach( this.screenManager );
 		stateManager.attach( screenManager );
 		this.screenManager = screenManager;
+	}
+
+	@Override
+	public void simpleInitApp( )
+	{
+		logger.log( Level.INFO, "Initializaing base OfflineClient" );
+		logger.log( Level.INFO, "Starting up Nifty" );
+		guiNode.detachAllChildren( );
+		guiNode.attachChild( fpsText );
+
+		setNiftyDisplay( new NiftyJmeDisplay( assetManager, inputManager, audioRenderer, guiViewPort ) );
+		guiViewPort.addProcessor( getNiftyDisplay( ) );
+
+		getNifty( ).loadControlFile( "nifty-default-controls.xml" );
+		getNifty( ).loadStyleFile( "Interface/Styles/nifty-custom-styles.xml" );
 	}
 }

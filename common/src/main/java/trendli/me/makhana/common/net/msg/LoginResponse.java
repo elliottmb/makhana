@@ -50,6 +50,14 @@ public class LoginResponse extends AbstractMessage
 	}
 
 	/**
+	 * @return the notice
+	 */
+	public String getNotice( )
+	{
+		return notice;
+	}
+
+	/**
 	 * Returns this associated UserAccount with the server response.
 	 * 
 	 * @return the associated UserAccount
@@ -57,14 +65,6 @@ public class LoginResponse extends AbstractMessage
 	public Session getSession( )
 	{
 		return session;
-	}
-
-	/**
-	 * @return the notice
-	 */
-	public String getNotice( )
-	{
-		return notice;
 	}
 
 	/**

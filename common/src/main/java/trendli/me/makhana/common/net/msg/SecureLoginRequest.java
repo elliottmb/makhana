@@ -153,17 +153,6 @@ public class SecureLoginRequest extends AbstractMessage
 	}
 
 	/**
-	 * 
-	 * Returns the SealedObject containing the LoginCredentials object.
-	 * 
-	 * @return the Sealed LoginCredentials
-	 */
-	public SealedObject getSealedCredentials( )
-	{
-		return sealedCredentials;
-	}
-
-	/**
 	 * Decrypts and returns the LoginCredentials contained. If any failure
 	 * occurs during decryption, returns null;
 	 * 
@@ -195,6 +184,17 @@ public class SecureLoginRequest extends AbstractMessage
 		}
 
 		return null;
+	}
+
+	/**
+	 * 
+	 * Returns the SealedObject containing the LoginCredentials object.
+	 * 
+	 * @return the Sealed LoginCredentials
+	 */
+	public SealedObject getSealedCredentials( )
+	{
+		return sealedCredentials;
 	}
 
 	/**

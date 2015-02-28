@@ -18,19 +18,19 @@ public class TileCapturedEvent extends TileEvent
 	}
 
 	/**
-	 * @return the old owner, may be null
-	 */
-	public EntityId getOldOwner( )
-	{
-		return oldOwner;
-	}
-
-	/**
 	 * @return the new owner, may be null
 	 */
 	public EntityId getNewOwner( )
 	{
 		return newOwner;
+	}
+
+	/**
+	 * @return the old owner, may be null
+	 */
+	public EntityId getOldOwner( )
+	{
+		return oldOwner;
 	}
 
 }

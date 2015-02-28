@@ -48,6 +48,14 @@ public class WelcomeMessage extends AbstractMessage
 	}
 
 	/**
+	 * @return the notice
+	 */
+	public String getNotice( )
+	{
+		return notice;
+	}
+
+	/**
 	 * 
 	 * @return the public key
 	 */
@@ -70,14 +78,6 @@ public class WelcomeMessage extends AbstractMessage
 			logger.log( Level.SEVERE, e.getMessage( ) );
 		}
 		return null;
-	}
-
-	/**
-	 * @return the notice
-	 */
-	public String getNotice( )
-	{
-		return notice;
 	}
 
 	/**

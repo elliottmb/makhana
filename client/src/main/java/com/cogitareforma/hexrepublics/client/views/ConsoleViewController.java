@@ -29,8 +29,8 @@ import de.lessvoid.nifty.builder.ScreenBuilder;
 import de.lessvoid.nifty.controls.Console;
 import de.lessvoid.nifty.controls.ConsoleCommands;
 import de.lessvoid.nifty.controls.ConsoleCommands.ConsoleCommand;
-import de.lessvoid.nifty.controls.console.builder.ConsoleBuilder;
 import de.lessvoid.nifty.controls.TextField;
+import de.lessvoid.nifty.controls.console.builder.ConsoleBuilder;
 import de.lessvoid.nifty.screen.Screen;
 
 public class ConsoleViewController extends GeneralController
