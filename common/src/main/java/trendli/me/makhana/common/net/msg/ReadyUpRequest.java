@@ -11,39 +11,39 @@ import com.jme3.network.serializing.Serializable;
 @Serializable
 public class ReadyUpRequest extends AbstractMessage
 {
-	/**
-	 * Whether the message is to state that the player has toggled on "Ready Up"
-	 * or off
-	 */
-	private boolean isReady;
+    /**
+     * Whether the message is to state that the player has toggled on "Ready Up"
+     * or off
+     */
+    private boolean isReady;
 
-	/**
-	 * Used by serializer.
-	 */
-	public ReadyUpRequest( )
-	{
-	}
+    /**
+     * Used by serializer.
+     */
+    public ReadyUpRequest( )
+    {
+    }
 
-	public ReadyUpRequest( boolean isReady )
-	{
-		this.isReady = isReady;
-	}
+    public ReadyUpRequest( boolean isReady )
+    {
+        this.isReady = isReady;
+    }
 
-	/**
-	 * @return the isReady
-	 */
-	public boolean isReady( )
-	{
-		return isReady;
-	}
+    /**
+     * @return the isReady
+     */
+    public boolean isReady( )
+    {
+        return isReady;
+    }
 
-	/**
-	 * @param isReady
-	 *            the isReady to set
-	 */
-	public void setReady( boolean isReady )
-	{
-		this.isReady = isReady;
-	}
+    /**
+     * @param isReady
+     *            the isReady to set
+     */
+    public void setReady( boolean isReady )
+    {
+        this.isReady = isReady;
+    }
 
 }

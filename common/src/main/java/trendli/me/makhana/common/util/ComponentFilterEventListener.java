@@ -4,5 +4,5 @@ import com.simsilica.es.ComponentFilter;
 
 public interface ComponentFilterEventListener extends TraitEventListener
 {
-	public ComponentFilter< ? > getFilter( );
+    public ComponentFilter< ? > getFilter( );
 }

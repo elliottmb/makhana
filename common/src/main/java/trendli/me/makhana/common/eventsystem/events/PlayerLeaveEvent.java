@@ -8,9 +8,9 @@ import com.simsilica.es.EntityId;
 public class PlayerLeaveEvent extends PlayerEvent
 {
 
-	public PlayerLeaveEvent( EntityData entityData, EntityId source, Player playerTrait )
-	{
-		super( entityData, source, playerTrait );
-	}
+    public PlayerLeaveEvent( EntityData entityData, EntityId source, Player playerTrait )
+    {
+        super( entityData, source, playerTrait );
+    }
 
 }

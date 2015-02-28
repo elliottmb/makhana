@@ -20,46 +20,46 @@ import com.jme3.network.MessageListener;
 public class SessionListener implements MessageListener< Client >
 {
 
-	/**
-	 * The logger for this class.
-	 */
-	private final static Logger logger = Logger.getLogger( SessionListener.class.getName( ) );
+    /**
+     * The logger for this class.
+     */
+    private final static Logger logger = Logger.getLogger( SessionListener.class.getName( ) );
 
-	/**
-	 * The client's manager.
-	 */
-	private MasterConnectionManager manager;
+    /**
+     * The client's manager.
+     */
+    private MasterConnectionManager manager;
 
-	/**
-	 * The default constructor accepts the client's manager.
-	 * 
-	 * @param controller
-	 *            the client's manager
-	 */
-	public SessionListener( MasterConnectionManager manager )
-	{
-		this.manager = manager;
-	}
+    /**
+     * The default constructor accepts the client's manager.
+     * 
+     * @param controller
+     *            the client's manager
+     */
+    public SessionListener( MasterConnectionManager manager )
+    {
+        this.manager = manager;
+    }
 
-	@Override
-	public void messageReceived( Client source, Message message )
-	{
-		if ( message instanceof LoginResponse )
-		{
-			logger.log( Level.INFO, "Received an authentication response." );
-			LoginResponse response = ( LoginResponse ) message;
-			logger.log( Level.INFO, "Sending authentication response to the controller." );
-			manager.setSession( response.getSession( ) );
-			if ( response.getNotice( ) != null )
-			{
-				logger.log( Level.INFO, response.getNotice( ) );
-			}
-			if ( manager.getApp( ).getNifty( ).getCurrentScreen( ).getScreenController( ) instanceof StartViewController )
-			{
-				StartViewController svc = ( StartViewController ) manager.getApp( ).getNifty( ).getCurrentScreen( ).getScreenController( );
-				svc.setFailText( response.getNotice( ) );
-			}
-		}
+    @Override
+    public void messageReceived( Client source, Message message )
+    {
+        if ( message instanceof LoginResponse )
+        {
+            logger.log( Level.INFO, "Received an authentication response." );
+            LoginResponse response = ( LoginResponse ) message;
+            logger.log( Level.INFO, "Sending authentication response to the controller." );
+            manager.setSession( response.getSession( ) );
+            if ( response.getNotice( ) != null )
+            {
+                logger.log( Level.INFO, response.getNotice( ) );
+            }
+            if ( manager.getApp( ).getNifty( ).getCurrentScreen( ).getScreenController( ) instanceof StartViewController )
+            {
+                StartViewController svc = ( StartViewController ) manager.getApp( ).getNifty( ).getCurrentScreen( ).getScreenController( );
+                svc.setFailText( response.getNotice( ) );
+            }
+        }
 
-	}
+    }
 }

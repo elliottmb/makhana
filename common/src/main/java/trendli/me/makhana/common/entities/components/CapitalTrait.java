@@ -9,12 +9,12 @@ import com.jme3.network.serializing.Serializable;
 @Serializable
 public class CapitalTrait extends TypeTrait
 {
-	/**
-	 * Used by Serializer
-	 */
-	public CapitalTrait( )
-	{
+    /**
+     * Used by Serializer
+     */
+    public CapitalTrait( )
+    {
 
-	}
+    }
 
 }

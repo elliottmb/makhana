@@ -12,8 +12,8 @@ import com.jme3.network.serializing.Serializable;
 public class UserListRequest extends AbstractMessage
 {
 
-	public UserListRequest( )
-	{
-	}
+    public UserListRequest( )
+    {
+    }
 
 }

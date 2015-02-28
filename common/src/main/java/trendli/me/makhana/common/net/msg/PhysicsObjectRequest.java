@@ -13,22 +13,22 @@ import com.jme3.network.serializing.Serializable;
 @Serializable
 public class PhysicsObjectRequest extends AbstractMessage
 {
-	private Position position;
+    private Position position;
 
-	/**
-	 * Used by Serializer
-	 */
-	public PhysicsObjectRequest( )
-	{
-	}
+    /**
+     * Used by Serializer
+     */
+    public PhysicsObjectRequest( )
+    {
+    }
 
-	public PhysicsObjectRequest( Position position )
-	{
-		this.position = position;
-	}
+    public PhysicsObjectRequest( Position position )
+    {
+        this.position = position;
+    }
 
-	public Position getPosition( )
-	{
-		return position;
-	}
+    public Position getPosition( )
+    {
+        return position;
+    }
 }

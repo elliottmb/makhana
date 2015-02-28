@@ -19,35 +19,35 @@ import com.jme3.network.MessageListener;
 public class SessionRequestListener implements MessageListener< Client >
 {
 
-	/**
-	 * The logger for this class.
-	 */
-	private final static Logger logger = Logger.getLogger( SessionRequestListener.class.getName( ) );
+    /**
+     * The logger for this class.
+     */
+    private final static Logger logger = Logger.getLogger( SessionRequestListener.class.getName( ) );
 
-	/**
-	 * The client's manager.
-	 */
-	private GameConnectionManager manager;
+    /**
+     * The client's manager.
+     */
+    private GameConnectionManager manager;
 
-	/**
-	 * The default constructor accepts the client's manager.
-	 * 
-	 * @param manager
-	 *            the client's manager
-	 */
-	public SessionRequestListener( GameConnectionManager manager )
-	{
-		this.manager = manager;
-	}
+    /**
+     * The default constructor accepts the client's manager.
+     * 
+     * @param manager
+     *            the client's manager
+     */
+    public SessionRequestListener( GameConnectionManager manager )
+    {
+        this.manager = manager;
+    }
 
-	@Override
-	public void messageReceived( Client source, Message message )
-	{
-		if ( message instanceof SessionRequest )
-		{
-			logger.log( Level.INFO, "Received an Account request, sending account details to game server." );
-			manager.send( new SessionResponse( manager.getApp( ).getMasterConnectionManager( ).getSession( ) ) );
-		}
-	}
+    @Override
+    public void messageReceived( Client source, Message message )
+    {
+        if ( message instanceof SessionRequest )
+        {
+            logger.log( Level.INFO, "Received an Account request, sending account details to game server." );
+            manager.send( new SessionResponse( manager.getApp( ).getMasterConnectionManager( ).getSession( ) ) );
+        }
+    }
 
 }

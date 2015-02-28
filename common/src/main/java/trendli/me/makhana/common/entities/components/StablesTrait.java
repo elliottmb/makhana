@@ -8,27 +8,27 @@ import com.jme3.scene.Spatial;
 @Serializable
 public class StablesTrait extends StaticTrait
 {
-	// TODO
-	// private static Material material;
+    // TODO
+    // private static Material material;
 
-	/**
-	 * Used by Serializer
-	 */
-	public StablesTrait( )
-	{
+    /**
+     * Used by Serializer
+     */
+    public StablesTrait( )
+    {
 
-	}
+    }
 
-	@Override
-	public Material getMaterial( AssetManager assetManager )
-	{
-		// TODO
-		return null;
-	}
+    @Override
+    public Material getMaterial( AssetManager assetManager )
+    {
+        // TODO
+        return null;
+    }
 
-	@Override
-	public Spatial getSpatial( AssetManager assetManager )
-	{
-		return assetManager.loadModel( "Materials/stablePrototype.obj" );
-	}
+    @Override
+    public Spatial getSpatial( AssetManager assetManager )
+    {
+        return assetManager.loadModel( "Materials/stablePrototype.obj" );
+    }
 }

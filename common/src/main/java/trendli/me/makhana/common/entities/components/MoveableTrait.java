@@ -11,9 +11,9 @@ import com.jme3.network.serializing.Serializable;
 public abstract class MoveableTrait extends TypeTrait
 {
 
-	public float getMovementMultiplier( )
-	{
-		return 1.0f;
-	}
+    public float getMovementMultiplier( )
+    {
+        return 1.0f;
+    }
 
 }

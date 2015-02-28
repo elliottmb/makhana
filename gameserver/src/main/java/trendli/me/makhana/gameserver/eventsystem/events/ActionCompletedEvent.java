@@ -9,17 +9,17 @@ import com.simsilica.es.EntityId;
 public class ActionCompletedEvent extends EntityEvent
 {
 
-	private ActionTrait action;
+    private ActionTrait action;
 
-	public ActionCompletedEvent( EntityData entityData, EntityId source, ActionTrait action )
-	{
-		super( entityData, source );
-		this.action = action;
-	}
+    public ActionCompletedEvent( EntityData entityData, EntityId source, ActionTrait action )
+    {
+        super( entityData, source );
+        this.action = action;
+    }
 
-	public ActionTrait getAction( )
-	{
-		return action;
-	}
+    public ActionTrait getAction( )
+    {
+        return action;
+    }
 
 }

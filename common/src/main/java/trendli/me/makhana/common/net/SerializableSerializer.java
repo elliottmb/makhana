@@ -18,118 +18,118 @@ import com.jme3.network.serializing.Serializer;
 final class extObjectInputStream extends ObjectInputStream
 {
 
-	private static ClassLoader systemClassLoader = null;
+    private static ClassLoader systemClassLoader = null;
 
-	extObjectInputStream( InputStream in ) throws IOException, StreamCorruptedException
-	{
-		super( in );
-	}
+    extObjectInputStream( InputStream in ) throws IOException, StreamCorruptedException
+    {
+        super( in );
+    }
 
-	protected Class< ? > resolveClass( ObjectStreamClass v ) throws IOException, ClassNotFoundException
-	{
+    protected Class< ? > resolveClass( ObjectStreamClass v ) throws IOException, ClassNotFoundException
+    {
 
-		try
-		{
-			/*
-			 * Calling the super.resolveClass() first will let us pick up bug
-			 * fixes in the super class (e.g., 4171142).
-			 */
-			return super.resolveClass( v );
-		}
-		catch ( ClassNotFoundException cnfe )
-		{
-			/*
-			 * This is a workaround for bug 4224921.
-			 */
-			ClassLoader loader = Thread.currentThread( ).getContextClassLoader( );
-			if ( loader == null )
-			{
-				if ( systemClassLoader == null )
-				{
-					systemClassLoader = ClassLoader.getSystemClassLoader( );
-				}
-				loader = systemClassLoader;
-				if ( loader == null )
-				{
-					throw new ClassNotFoundException( v.getName( ) );
-				}
-			}
+        try
+        {
+            /*
+             * Calling the super.resolveClass() first will let us pick up bug
+             * fixes in the super class (e.g., 4171142).
+             */
+            return super.resolveClass( v );
+        }
+        catch ( ClassNotFoundException cnfe )
+        {
+            /*
+             * This is a workaround for bug 4224921.
+             */
+            ClassLoader loader = Thread.currentThread( ).getContextClassLoader( );
+            if ( loader == null )
+            {
+                if ( systemClassLoader == null )
+                {
+                    systemClassLoader = ClassLoader.getSystemClassLoader( );
+                }
+                loader = systemClassLoader;
+                if ( loader == null )
+                {
+                    throw new ClassNotFoundException( v.getName( ) );
+                }
+            }
 
-			return Class.forName( v.getName( ), false, loader );
-		}
-	}
+            return Class.forName( v.getName( ), false, loader );
+        }
+    }
 }
 
 public class SerializableSerializer extends Serializer
 {
 
-	@SuppressWarnings( "unchecked" )
-	@Override
-	public < T > T readObject( ByteBuffer data, Class< T > c ) throws IOException
-	{
-		// Read the null/non-null marker
-		if ( data.get( ) == 0x0 )
-			return null;
+    @SuppressWarnings( "unchecked" )
+    @Override
+    public < T > T readObject( ByteBuffer data, Class< T > c ) throws IOException
+    {
+        // Read the null/non-null marker
+        if ( data.get( ) == 0x0 )
+            return null;
 
-		byte[ ] byteArray = new byte[ data.remaining( ) ];
+        byte[ ] byteArray = new byte[ data.remaining( ) ];
 
-		data.get( byteArray );
+        data.get( byteArray );
 
-		// Create a stream pathway from b to a
-		ByteArrayInputStream b = new ByteArrayInputStream( byteArray );
-		ObjectInput a = new extObjectInputStream( b );
-		try
-		{
-			Object obj = a.readObject( );
-			return ( T ) obj;
-		}
-		catch ( Exception e )
-		{
-			throw new IOException( e.toString( ) );
-		}
-		finally
-		{
-			a.close( );
-		}
+        // Create a stream pathway from b to a
+        ByteArrayInputStream b = new ByteArrayInputStream( byteArray );
+        ObjectInput a = new extObjectInputStream( b );
+        try
+        {
+            Object obj = a.readObject( );
+            return ( T ) obj;
+        }
+        catch ( Exception e )
+        {
+            throw new IOException( e.toString( ) );
+        }
+        finally
+        {
+            a.close( );
+        }
 
-	}
+    }
 
-	@Override
-	public void writeObject( ByteBuffer buffer, Object object ) throws IOException
-	{
-		// Add the null/non-null marker
-		buffer.put( ( byte ) ( object != null ? 0x1 : 0x0 ) );
-		if ( object == null )
-		{
-			// Nothing left to do
-			return;
-		}
+    @Override
+    public void writeObject( ByteBuffer buffer, Object object ) throws IOException
+    {
+        // Add the null/non-null marker
+        buffer.put( ( byte ) ( object != null ? 0x1 : 0x0 ) );
+        if ( object == null )
+        {
+            // Nothing left to do
+            return;
+        }
 
-		if ( object instanceof Serializable )
-		{
-			// Create a stream pathway from a to b
-			ByteArrayOutputStream b = new ByteArrayOutputStream( );
-			ObjectOutput a = new ObjectOutputStream( b );
-			byte[ ] content;
-			try
-			{
-				// write and flush the object content to byte array
-				a.writeObject( object );
-				a.flush( );
-				content = b.toByteArray( );
-			}
-			catch ( Exception e )
-			{
-				throw new IOException( e.toString( ) );
-			}
-			finally
-			{
-				a.close( );
-			}
+        if ( object instanceof Serializable )
+        {
+            // Create a stream pathway from a to b
+            ByteArrayOutputStream b = new ByteArrayOutputStream( );
+            ObjectOutput a = new ObjectOutputStream( b );
+            byte[ ] content;
+            try
+            {
+                // write and flush the object content to byte array
+                a.writeObject( object );
+                a.flush( );
+                content = b.toByteArray( );
+            }
+            catch ( Exception e )
+            {
+                throw new IOException( e.toString( ) );
+            }
+            finally
+            {
+                a.close( );
+            }
 
-			buffer.put( content );
+            buffer.put( content );
 
-		}
-	}
+        }
+    }
 
 }

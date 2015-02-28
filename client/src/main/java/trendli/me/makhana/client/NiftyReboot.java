@@ -23,194 +23,176 @@ import com.jme3.scene.Spatial.CullHint;
  */
 public class NiftyReboot extends OfflineClient
 {
-	public static void main( String[ ] args )
-	{
-		NiftyReboot app = new NiftyReboot( );
-		app.start( );
-	}
+    public static void main( String[ ] args )
+    {
+        NiftyReboot app = new NiftyReboot( );
+        app.start( );
+    }
 
-	/**
-	 * The logger for this class
-	 */
-	private final static Logger logger = Logger.getLogger( NiftyReboot.class.getName( ) );
+    /**
+     * The logger for this class
+     */
+    private final static Logger logger = Logger.getLogger( NiftyReboot.class.getName( ) );
 
-	/**
-	 * Boolean to control if console is enabled. Set by YamlConfig.
-	 */
-	public boolean consoleEnabled = false;
+    /**
+     * Boolean to control if console is enabled. Set by YamlConfig.
+     */
+    public boolean consoleEnabled = false;
 
-	/**
-	 * Name of screen that should be returned to after closing the console.
-	 */
-	public String currentScreen;
+    /**
+     * The Client's world manager.
+     */
+    private WorldManager worldManager;
 
-	/**
-	 * The Client's world manager.
-	 */
-	private WorldManager worldManager;
+    private ActionListener baseActionListener = ( String name, boolean keyPressed, float tpf ) ->
+    {
+        if ( name.equals( "showConsole" ) && !keyPressed && consoleEnabled )
+        {
+            // TODO: REDO
+        }
+        if ( name.equals( "hideFPS" ) && !keyPressed )
+        {
+            if ( fpsText.getCullHint( ) == CullHint.Never )
+            {
+                setDisplayFps( false );
+                setDisplayStatView( false );
+            }
+            else
+            {
+                setDisplayFps( true );
+                setDisplayStatView( true );
+            }
+        }
+    };
 
-	private ActionListener baseActionListener = ( String name, boolean keyPressed, float tpf ) ->
-	{
-		if ( name.equals( "showConsole" ) && !keyPressed && consoleEnabled )
-		{
-			if ( "consoleScreen".equalsIgnoreCase( getNifty( ).getCurrentScreen( ).getScreenId( ) ) )
-			{
-				getNifty( ).gotoScreen( currentScreen );
-			}
-			else
-			{
-				currentScreen = getNifty( ).getCurrentScreen( ).getScreenId( );
-				getNifty( ).gotoScreen( "consoleScreen" );
-			}
-		}
-		if ( name.equals( "hideFPS" ) && !keyPressed )
-		{
-			if ( fpsText.getCullHint( ) == CullHint.Never )
-			{
-				setDisplayFps( false );
-				setDisplayStatView( false );
-			}
-			else
-			{
-				setDisplayFps( true );
-				setDisplayStatView( true );
-			}
-		}
-	};
+    public NiftyReboot( )
+    {
+        super( );
+    }
 
-	public NiftyReboot( )
-	{
-		super( );
-	}
+    /**
+     * @return the baseActionListener
+     */
+    public ActionListener getBaseActionListener( )
+    {
+        return baseActionListener;
+    }
 
-	/**
-	 * @return the baseActionListener
-	 */
-	public ActionListener getBaseActionListener( )
-	{
-		return baseActionListener;
-	}
+    /**
+     * @return the worldManager
+     */
+    public WorldManager getWorldManager( )
+    {
+        return worldManager;
+    }
 
-	/**
-	 * @return the worldManager
-	 */
-	public WorldManager getWorldManager( )
-	{
-		return worldManager;
-	}
+    /**
+     * Thread safe method that loads the games world by either the given seed or
+     * a random one.
+     * 
+     * @param seed
+     *            Seed to be used to generate the world. Can be null.
+     */
+    public void loadWorld( final Byte seed )
+    {
+        logger.log( Level.INFO, "ClientMain loadWorld: " + seed );
+        if ( seed == null )
+        {
+            enqueue( ( ) ->
+            {
 
-	/**
-	 * Thread safe method that loads the games world by either the given seed or
-	 * a random one.
-	 * 
-	 * @param seed
-	 *            Seed to be used to generate the world. Can be null.
-	 */
-	public void loadWorld( final Byte seed )
-	{
-		logger.log( Level.INFO, "ClientMain loadWorld: " + seed );
-		if ( seed == null )
-		{
-			enqueue( ( ) ->
-			{
+                worldManager.closeLevel( );
+                return null;
 
-				worldManager.closeLevel( );
-				return null;
+            } );
+            return;
+        }
+        new Thread( ( ) ->
+        {
+            try
+            {
+                worldManager.loadLevel( seed );
 
-			} );
-			return;
-		}
-		new Thread( ( ) ->
-		{
-			try
-			{
-				worldManager.loadLevel( seed );
+                enqueue( ( ) ->
+                {
 
-				enqueue( ( ) ->
-				{
+                    worldManager.attachLevel( );
+                    return null;
 
-					worldManager.attachLevel( );
-					return null;
+                } ).get( );
+            }
+            catch ( Exception e )
+            {
+                e.printStackTrace( );
+            }
+        } ).start( );
+    }
 
-				} ).get( );
-			}
-			catch ( Exception e )
-			{
-				e.printStackTrace( );
-			}
-		} ).start( );
-	}
+    /**
+     * @param worldManager
+     *            the worldManager to set
+     */
+    private void setWorldManager( WorldManager worldManager )
+    {
+        this.worldManager = worldManager;
+    }
 
-	/**
-	 * @param worldManager
-	 *            the worldManager to set
-	 */
-	private void setWorldManager( WorldManager worldManager )
-	{
-		this.worldManager = worldManager;
-	}
+    @Override
+    public void simpleInitApp( )
+    {
+        super.simpleInitApp( );
 
-	@Override
-	public void simpleInitApp( )
-	{
-		super.simpleInitApp( );
+        this.getContext( ).setTitle( "Makhana - Alpha" );
 
-		this.getContext( ).setTitle( "Makhana - Alpha" );
+        getConfiguration( ).configureAudioSettings( this.listener );
 
-		getConfiguration( ).configureAudioSettings( this.listener );
+        startNifty( );
 
-		startNifty( );
+        flyCam.setEnabled( false );
+        flyCam.setMoveSpeed( 50 );
+        flyCam.setRotationSpeed( 15 );
 
-		flyCam.setEnabled( false );
-		flyCam.setMoveSpeed( 50 );
-		flyCam.setRotationSpeed( 15 );
+        // setWorldManager( new WorldManager( this, rootNode ) );
+        // stateManager.attach( worldManager );
 
-		// setWorldManager( new WorldManager( this, rootNode ) );
-		// stateManager.attach( worldManager );
+        // Setup first view
+        viewPort.setBackgroundColor( ColorRGBA.DarkGray );
+        cam.setViewPort( 0f, 1f, 0f, 1f );
 
-		// Setup first view
-		viewPort.setBackgroundColor( ColorRGBA.DarkGray );
-		cam.setViewPort( 0f, 1f, 0f, 1f );
+        // test multiview for gui
+        guiViewPort.getCamera( ).setViewPort( 0f, 1f, 0f, 1f );
 
-		// test multiview for gui
-		guiViewPort.getCamera( ).setViewPort( 0f, 1f, 0f, 1f );
+        inputManager.addMapping( "showConsole", new KeyTrigger( ( Integer ) getConfiguration( ).get( "client.input.consoleKey" ) ) );
+        inputManager.addMapping( "hideFPS", new KeyTrigger( KeyInput.KEY_F12 ) );
+        consoleEnabled = ( Boolean ) getConfiguration( ).get( "client.input.console" );
+        inputManager.addListener( getBaseActionListener( ), "showConsole", "hideFPS" );
+    }
 
-		inputManager.addMapping( "showConsole", new KeyTrigger( ( Integer ) getConfiguration( ).get( "client.input.consoleKey" ) ) );
-		inputManager.addMapping( "hideFPS", new KeyTrigger( KeyInput.KEY_F12 ) );
-		consoleEnabled = ( Boolean ) getConfiguration( ).get( "client.input.console" );
-		inputManager.addListener( getBaseActionListener( ), "showConsole", "hideFPS" );
-	}
+    @Override
+    public void simpleRender( RenderManager rm )
+    {
+        // Unused currently
+    }
 
-	@Override
-	public void simpleRender( RenderManager rm )
-	{
-		// Unused currently
-	}
+    @Override
+    public void simpleUpdate( float tpf )
+    {
+        // Unused currently
+    }
 
-	@Override
-	public void simpleUpdate( float tpf )
-	{
-		// Unused currently
-	}
+    /**
+     * A method to initialize the NiftyDisplay instance and load our main screen
+     * and console screen.
+     */
+    private void startNifty( )
+    {
 
-	/**
-	 * A method to initialize the NiftyDisplay instance and load our main screen
-	 * and console screen.
-	 */
-	private void startNifty( )
-	{
-
-		// NiftyFactory.createStartView( getNifty( ) );
-		// stateManager.attach( ( AppState ) getNifty( ).getScreen( "start"
-		// ).getScreenController( ) );
-		// stateManager.attach( new StartViewController( getNifty( ) ) );
-		new StartViewController( this );
-		getNifty( ).gotoScreen( "start" );
-
-		// NiftyFactory.createConsole( getNifty( ) );
-		// stateManager.attach( ( AppState ) getNifty( ).getScreen(
-		// "consoleScreen" ).getScreenController( ) );
-		currentScreen = "start";
-	}
+        // NiftyFactory.createStartView( getNifty( ) );
+        // stateManager.attach( ( AppState ) getNifty( ).getScreen( "start"
+        // ).getScreenController( ) );
+        // stateManager.attach( new StartViewController( getNifty( ) ) );
+        new StartViewController( this );
+        getNifty( ).gotoScreen( "start" );
+    }
 
 }

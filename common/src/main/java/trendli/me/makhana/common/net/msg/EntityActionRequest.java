@@ -9,55 +9,55 @@ import com.simsilica.es.EntityId;
 public class EntityActionRequest extends EntityRequest
 {
 
-	private ActionTrait action;
-	private EntityId entityId;
+    private ActionTrait action;
+    private EntityId entityId;
 
-	/**
-	 * Used by Serializer
-	 */
-	public EntityActionRequest( )
-	{
+    /**
+     * Used by Serializer
+     */
+    public EntityActionRequest( )
+    {
 
-	}
+    }
 
-	public EntityActionRequest( EntityId id, ActionTrait action )
-	{
-		this.entityId = id;
-		this.action = action;
-	}
+    public EntityActionRequest( EntityId id, ActionTrait action )
+    {
+        this.entityId = id;
+        this.action = action;
+    }
 
-	/**
-	 * @return the action
-	 */
-	public ActionTrait getAction( )
-	{
-		return action;
-	}
+    /**
+     * @return the action
+     */
+    public ActionTrait getAction( )
+    {
+        return action;
+    }
 
-	/**
-	 * @return the id
-	 */
-	public EntityId getEntityId( )
-	{
-		return entityId;
-	}
+    /**
+     * @return the id
+     */
+    public EntityId getEntityId( )
+    {
+        return entityId;
+    }
 
-	/**
-	 * @param action
-	 *            the action to set
-	 */
-	public void setAction( ActionTrait action )
-	{
-		this.action = action;
-	}
+    /**
+     * @param action
+     *            the action to set
+     */
+    public void setAction( ActionTrait action )
+    {
+        this.action = action;
+    }
 
-	/**
-	 * @param id
-	 *            the id to set
-	 */
-	public void setEntityId( EntityId id )
-	{
-		this.entityId = id;
-	}
+    /**
+     * @param id
+     *            the id to set
+     */
+    public void setEntityId( EntityId id )
+    {
+        this.entityId = id;
+    }
 
 }

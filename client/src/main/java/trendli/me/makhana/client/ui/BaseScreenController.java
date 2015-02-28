@@ -12,68 +12,69 @@ import de.lessvoid.nifty.screen.ScreenController;
 
 public abstract class BaseScreenController implements ScreenController, EventHandler
 {
-	private final static Logger logger = Logger.getLogger( BaseScreenController.class.getName( ) );
-	private OfflineClient app;
-	private String screenId;
+    private final static Logger logger = Logger.getLogger( BaseScreenController.class.getName( ) );
 
-	public BaseScreenController( OfflineClient app )
-	{
-		this.app = app;
-	}
+    private OfflineClient app;
+    private String screenId;
 
-	@Override
-	public void bind( Nifty arg0, Screen arg1 )
-	{
-		// TODO Auto-generated method stub
-	}
+    public BaseScreenController( OfflineClient app )
+    {
+        this.app = app;
+    }
 
-	protected OfflineClient getApp( )
-	{
-		return app;
-	}
+    @Override
+    public void bind( Nifty arg0, Screen arg1 )
+    {
+        // TODO Auto-generated method stub
+    }
 
-	/**
-	 * @return the screenId
-	 */
-	public String getScreenId( )
-	{
-		return screenId;
-	}
+    protected OfflineClient getApp( )
+    {
+        return app;
+    }
 
-	public void gotoScreen( String nextScreenId, boolean detachCurrent, boolean attachNext, boolean removeCurrent,
-			Callable< Void > preHook, Callable< Void > postHook )
-	{
-		getApp( ).enqueue( ( ) ->
-		{
-			if ( getApp( ).getNifty( ).getScreen( nextScreenId ) != null )
-			{
-				logger.log( Level.INFO, "Going to screen " + nextScreenId );
-				// TODO: Refactor!
-			}
-			return null;
-		} );
-	}
+    /**
+     * @return the screenId
+     */
+    public String getScreenId( )
+    {
+        return screenId;
+    }
 
-	@Override
-	public void onEndScreen( )
-	{
-		logger.log( Level.INFO, getScreenId( ) + " screen ended." );
+    public void gotoScreen( String nextScreenId, boolean detachCurrent, boolean attachNext, boolean removeCurrent,
+            Callable< Void > preHook, Callable< Void > postHook )
+    {
+        getApp( ).enqueue( ( ) ->
+        {
+            if ( getApp( ).getNifty( ).getScreen( nextScreenId ) != null )
+            {
+                logger.log( Level.INFO, "Going to screen " + nextScreenId );
+                // TODO: Refactor!
+            }
+            return null;
+        } );
+    }
 
-	}
+    @Override
+    public void onEndScreen( )
+    {
+        logger.log( Level.INFO, getScreenId( ) + " screen ended." );
 
-	@Override
-	public void onStartScreen( )
-	{
+    }
 
-	}
+    @Override
+    public void onStartScreen( )
+    {
 
-	/**
-	 * @param screenId
-	 *            the screenId to set
-	 */
-	public void setScreenId( String screenId )
-	{
-		this.screenId = screenId;
-	}
+    }
+
+    /**
+     * @param screenId
+     *            the screenId to set
+     */
+    public void setScreenId( String screenId )
+    {
+        this.screenId = screenId;
+    }
 
 }

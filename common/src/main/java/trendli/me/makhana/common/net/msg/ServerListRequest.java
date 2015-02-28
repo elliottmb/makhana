@@ -11,11 +11,11 @@ import com.jme3.network.serializing.Serializable;
 public class ServerListRequest extends AbstractMessage
 {
 
-	/**
-	 * Used by serializer.
-	 */
-	public ServerListRequest( )
-	{
-	}
+    /**
+     * Used by serializer.
+     */
+    public ServerListRequest( )
+    {
+    }
 
 }

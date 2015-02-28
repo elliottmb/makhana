@@ -11,25 +11,25 @@ import com.jme3.network.serializing.Serializable;
 @Serializable
 public class ClientStatusMessage extends AbstractMessage
 {
-	private boolean inGame;
+    private boolean inGame;
 
-	/**
-	 * Used by serializer.
-	 */
-	public ClientStatusMessage( )
-	{
-		this( false );
-	}
+    /**
+     * Used by serializer.
+     */
+    public ClientStatusMessage( )
+    {
+        this( false );
+    }
 
-	public ClientStatusMessage( boolean inGame )
-	{
+    public ClientStatusMessage( boolean inGame )
+    {
 
-		this.inGame = inGame;
-	}
+        this.inGame = inGame;
+    }
 
-	public boolean isInGame( )
-	{
-		return inGame;
-	}
+    public boolean isInGame( )
+    {
+        return inGame;
+    }
 
 }

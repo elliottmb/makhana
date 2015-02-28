@@ -14,17 +14,17 @@ import org.springframework.stereotype.Component;
 @Component
 public class JdbcAccountRepository implements AccountRepository
 {
-	JdbcTemplate jdbcTemplate;
+    JdbcTemplate jdbcTemplate;
 
-	@Autowired
-	public JdbcAccountRepository( DataSource dataSource )
-	{
-		jdbcTemplate = new JdbcTemplate( dataSource );
-	}
+    @Autowired
+    public JdbcAccountRepository( DataSource dataSource )
+    {
+        jdbcTemplate = new JdbcTemplate( dataSource );
+    }
 
-	public Account getAccount( String accountname )
-	{
-		return jdbcTemplate.queryForObject( "select * from accounts where accountname = ?", new AccountRowMapper( ), accountname );
-	}
+    public Account getAccount( String accountname )
+    {
+        return jdbcTemplate.queryForObject( "select * from accounts where accountname = ?", new AccountRowMapper( ), accountname );
+    }
 
 }

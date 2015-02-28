@@ -14,16 +14,16 @@ import org.springframework.jdbc.core.ResultSetExtractor;
 public class AccountExtractor implements ResultSetExtractor< Account >
 {
 
-	@Override
-	public Account extractData( ResultSet resultSet ) throws SQLException, DataAccessException
-	{
-		Account account = new Account( );
+    @Override
+    public Account extractData( ResultSet resultSet ) throws SQLException, DataAccessException
+    {
+        Account account = new Account( );
 
-		account.setAccountId( resultSet.getInt( "id" ) );
-		account.setAccountName( resultSet.getString( "accountname" ) );
-		account.setServer( resultSet.getBoolean( "type" ) );
-		account.setHashedPassword( resultSet.getString( "password" ) );
+        account.setAccountId( resultSet.getInt( "id" ) );
+        account.setAccountName( resultSet.getString( "accountname" ) );
+        account.setServer( resultSet.getBoolean( "type" ) );
+        account.setHashedPassword( resultSet.getString( "password" ) );
 
-		return account;
-	}
+        return account;
+    }
 }

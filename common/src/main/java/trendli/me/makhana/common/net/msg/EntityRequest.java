@@ -12,11 +12,11 @@ import com.jme3.network.serializing.Serializable;
 public abstract class EntityRequest extends AbstractMessage
 {
 
-	/**
-	 * Used by Serializer
-	 */
-	public EntityRequest( )
-	{
+    /**
+     * Used by Serializer
+     */
+    public EntityRequest( )
+    {
 
-	}
+    }
 }

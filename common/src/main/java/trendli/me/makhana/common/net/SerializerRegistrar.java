@@ -21,64 +21,64 @@ import com.simsilica.es.net.EntitySerializers;
 public class SerializerRegistrar
 {
 
-	/**
-	 * Registers all serializable packages.
-	 */
-	public static void registerAllSerializable( )
-	{
-		try
-		{
-			// Load our Entity Components
-			PackageUtils.getAllClassNamesInPackage( "trendli.me.makhana.common.entities.components" ).forEach( consumingSerializer );
+    /**
+     * Registers all serializable packages.
+     */
+    public static void registerAllSerializable( )
+    {
+        try
+        {
+            // Load our Entity Components
+            PackageUtils.getAllClassNamesInPackage( "trendli.me.makhana.common.entities.components" ).forEach( consumingSerializer );
 
-			// Load our Data Types
-			PackageUtils.getAllClassNamesInPackage( "trendli.me.makhana.common.data" ).forEach( consumingSerializer );
+            // Load our Data Types
+            PackageUtils.getAllClassNamesInPackage( "trendli.me.makhana.common.data" ).forEach( consumingSerializer );
 
-			// Load our Network Messages
-			PackageUtils.getAllClassNamesInPackage( "trendli.me.makhana.common.net.msg" ).forEach( consumingSerializer );
+            // Load our Network Messages
+            PackageUtils.getAllClassNamesInPackage( "trendli.me.makhana.common.net.msg" ).forEach( consumingSerializer );
 
-			// Lazy Load Zay-ES Messages and Classes
-			EntitySerializers.initialize( );
+            // Lazy Load Zay-ES Messages and Classes
+            EntitySerializers.initialize( );
 
-			// Load our Entity Filters
-			Serializer fs = new FieldSerializer( );
-			PackageUtils.getAllClassNamesInPackage( "trendli.me.makhana.common.entities.filters" ).forEach( ( String className ) ->
-			{
-				try
-				{
-					logger.log( Level.FINEST, "Attempting to register class " + className + " with the Serializer" );
-					Serializer.registerClass( Class.forName( className ), fs );
-				}
-				catch ( Exception e )
-				{
-					logger.log( Level.SEVERE, "Unable to register class " + className + " with the Serializer" );
-				}
-			} );
+            // Load our Entity Filters
+            Serializer fs = new FieldSerializer( );
+            PackageUtils.getAllClassNamesInPackage( "trendli.me.makhana.common.entities.filters" ).forEach( ( String className ) ->
+            {
+                try
+                {
+                    logger.log( Level.FINEST, "Attempting to register class " + className + " with the Serializer" );
+                    Serializer.registerClass( Class.forName( className ), fs );
+                }
+                catch ( Exception e )
+                {
+                    logger.log( Level.SEVERE, "Unable to register class " + className + " with the Serializer" );
+                }
+            } );
 
-			Serializer.registerClass( Class.forName( "javax.crypto.SealedObject" ), new SerializableSerializer( ) );
-		}
-		catch ( Exception e )
-		{
-			logger.log( Level.SEVERE, "Unable to register classes to the Serializer.", e );
-		}
-	}
+            Serializer.registerClass( Class.forName( "javax.crypto.SealedObject" ), new SerializableSerializer( ) );
+        }
+        catch ( Exception e )
+        {
+            logger.log( Level.SEVERE, "Unable to register classes to the Serializer.", e );
+        }
+    }
 
-	/**
-	 * The logger for this class.
-	 */
-	private final static Logger logger = Logger.getLogger( SerializerRegistrar.class.getName( ) );
+    /**
+     * The logger for this class.
+     */
+    private final static Logger logger = Logger.getLogger( SerializerRegistrar.class.getName( ) );
 
-	private static Consumer< ? super String > consumingSerializer = ( String className ) ->
-	{
-		try
-		{
-			logger.log( Level.FINEST, "Attempting to register class " + className + " with the Serializer" );
-			Serializer.registerClass( Class.forName( className ) );
-		}
-		catch ( Exception e )
-		{
-			logger.log( Level.SEVERE, "Unable to register class " + className + " with the Serializer" );
-		}
-	};
+    private static Consumer< ? super String > consumingSerializer = ( String className ) ->
+    {
+        try
+        {
+            logger.log( Level.FINEST, "Attempting to register class " + className + " with the Serializer" );
+            Serializer.registerClass( Class.forName( className ) );
+        }
+        catch ( Exception e )
+        {
+            logger.log( Level.SEVERE, "Unable to register class " + className + " with the Serializer" );
+        }
+    };
 
 }

@@ -19,86 +19,86 @@ import com.simsilica.es.client.RemoteEntityData;
 
 public class GameConnectionListener implements ClientStateListener, ErrorListener< Client >
 {
-	/**
-	 * The logger for this class.
-	 */
-	private final static Logger logger = Logger.getLogger( GameConnectionListener.class.getName( ) );
+    /**
+     * The logger for this class.
+     */
+    private final static Logger logger = Logger.getLogger( GameConnectionListener.class.getName( ) );
 
-	/**
-	 * The client's manager.
-	 */
-	private GameConnectionManager manager;
+    /**
+     * The client's manager.
+     */
+    private GameConnectionManager manager;
 
-	/**
-	 * The default constructor accepts the client's manager.
-	 * 
-	 * @param manager
-	 *            the client's manager
-	 */
-	public GameConnectionListener( GameConnectionManager manager )
-	{
-		this.manager = manager;
-	}
+    /**
+     * The default constructor accepts the client's manager.
+     * 
+     * @param manager
+     *            the client's manager
+     */
+    public GameConnectionListener( GameConnectionManager manager )
+    {
+        this.manager = manager;
+    }
 
-	@Override
-	public void clientConnected( Client client )
-	{
-		logger.log( Level.INFO, "Connected to the game server successfuly." );
+    @Override
+    public void clientConnected( Client client )
+    {
+        logger.log( Level.INFO, "Connected to the game server successfuly." );
 
-		logger.log( Level.INFO, "Attaching RemoteEntityData." );
-		manager.setRemoteEntityData( new RemoteEntityData( manager.getClient( ), 0 ) );
+        logger.log( Level.INFO, "Attaching RemoteEntityData." );
+        manager.setRemoteEntityData( new RemoteEntityData( manager.getClient( ), 0 ) );
 
-		// throw us into the game!
-		GeneralController gController = ( GeneralController ) manager.getApp( ).getNifty( ).getCurrentScreen( ).getScreenController( );
-		NiftyFactory.createLoadingScreen( manager.getApp( ).getNifty( ) );
-		gController.gotoScreen( "loading", true, true, true, null, null );
+        // throw us into the game!
+        GeneralController gController = ( GeneralController ) manager.getApp( ).getNifty( ).getCurrentScreen( ).getScreenController( );
+        NiftyFactory.createLoadingScreen( manager.getApp( ).getNifty( ) );
+        gController.gotoScreen( "loading", true, true, true, null, null );
 
-		logger.log( Level.INFO, "Informing Master Server of in game status" );
-		MasterConnectionManager masterConnManager = manager.getApp( ).getMasterConnectionManager( );
-		if ( masterConnManager.isConnected( ) )
-		{
-			manager.getApp( ).getMasterConnectionManager( ).send( new ClientStatusMessage( true ) );
-		}
+        logger.log( Level.INFO, "Informing Master Server of in game status" );
+        MasterConnectionManager masterConnManager = manager.getApp( ).getMasterConnectionManager( );
+        if ( masterConnManager.isConnected( ) )
+        {
+            manager.getApp( ).getMasterConnectionManager( ).send( new ClientStatusMessage( true ) );
+        }
 
-		// TODO: Move the above function into a handler for the following event
-		manager.getApp( ).getEventManager( ).triggerEvent( new ClientConnectedEvent( client, ConnectionType.GAME ) );
-	}
+        // TODO: Move the above function into a handler for the following event
+        manager.getApp( ).getEventManager( ).triggerEvent( new ClientConnectedEvent( client, ConnectionType.GAME ) );
+    }
 
-	@Override
-	public void clientDisconnected( Client client, DisconnectInfo info )
-	{
-		logger.log( Level.INFO, "Disconnected from the game server." );
-		// TODO Auto-generated method stub
-		HudViewController hvc = manager.getApp( ).getStateManager( ).getState( HudViewController.class );
-		if ( hvc != null )
-		{
-			hvc.exitToNetwork( );
-		}
+    @Override
+    public void clientDisconnected( Client client, DisconnectInfo info )
+    {
+        logger.log( Level.INFO, "Disconnected from the game server." );
+        // TODO Auto-generated method stub
+        HudViewController hvc = manager.getApp( ).getStateManager( ).getState( HudViewController.class );
+        if ( hvc != null )
+        {
+            hvc.exitToNetwork( );
+        }
 
-		manager.setRemoteEntityData( null );
+        manager.setRemoteEntityData( null );
 
-		logger.log( Level.INFO, "Informing Master Server of out of game status" );
-		MasterConnectionManager masterConnManager = manager.getApp( ).getMasterConnectionManager( );
-		if ( masterConnManager.isConnected( ) )
-		{
-			manager.getApp( ).getMasterConnectionManager( ).send( new ClientStatusMessage( false ) );
-		}
+        logger.log( Level.INFO, "Informing Master Server of out of game status" );
+        MasterConnectionManager masterConnManager = manager.getApp( ).getMasterConnectionManager( );
+        if ( masterConnManager.isConnected( ) )
+        {
+            manager.getApp( ).getMasterConnectionManager( ).send( new ClientStatusMessage( false ) );
+        }
 
-		// TODO: Move the above function into a handler for the following event
-		manager.getApp( ).getEventManager( ).triggerEvent( new ClientDisconnectedEvent( client, ConnectionType.GAME, info ) );
-	}
+        // TODO: Move the above function into a handler for the following event
+        manager.getApp( ).getEventManager( ).triggerEvent( new ClientDisconnectedEvent( client, ConnectionType.GAME, info ) );
+    }
 
-	@Override
-	public void handleError( Client client, Throwable exception )
-	{
-		logger.log( Level.SEVERE, "A Game Server Connection error has occured. ", exception );
-		manager.getApp( ).enqueue( ( ) ->
-		{
-			manager.close( );
-			return null;
-		} );
+    @Override
+    public void handleError( Client client, Throwable exception )
+    {
+        logger.log( Level.SEVERE, "A Game Server Connection error has occured. ", exception );
+        manager.getApp( ).enqueue( ( ) ->
+        {
+            manager.close( );
+            return null;
+        } );
 
-		// TODO: Move the above function into a handler for the following event
-		manager.getApp( ).getEventManager( ).triggerEvent( new ClientConnectionErrorEvent( client, ConnectionType.GAME, exception ) );
-	}
+        // TODO: Move the above function into a handler for the following event
+        manager.getApp( ).getEventManager( ).triggerEvent( new ClientConnectionErrorEvent( client, ConnectionType.GAME, exception ) );
+    }
 }

@@ -14,56 +14,56 @@ import com.jme3.network.ErrorListener;
 
 public class MasterConnectionListener implements ClientStateListener, ErrorListener< Client >
 {
-	/**
-	 * The logger for this class.
-	 */
-	private final static Logger logger = Logger.getLogger( MasterConnectionListener.class.getName( ) );
+    /**
+     * The logger for this class.
+     */
+    private final static Logger logger = Logger.getLogger( MasterConnectionListener.class.getName( ) );
 
-	/**
-	 * The client's manager.
-	 */
-	private MasterConnectionManager manager;
+    /**
+     * The client's manager.
+     */
+    private MasterConnectionManager manager;
 
-	/**
-	 * The default constructor accepts the client's manager.
-	 * 
-	 * @param controller
-	 *            the client's manager
-	 */
-	public MasterConnectionListener( MasterConnectionManager manager )
-	{
-		this.manager = manager;
-	}
+    /**
+     * The default constructor accepts the client's manager.
+     * 
+     * @param controller
+     *            the client's manager
+     */
+    public MasterConnectionListener( MasterConnectionManager manager )
+    {
+        this.manager = manager;
+    }
 
-	@Override
-	public void clientConnected( Client client )
-	{
-		logger.log( Level.INFO, "Connected to the master server successfuly." );
-		// TODO Auto-generated method stub
-		manager.getApp( ).getEventManager( ).triggerEvent( new ClientConnectedEvent( client, ConnectionType.MASTER ) );
+    @Override
+    public void clientConnected( Client client )
+    {
+        logger.log( Level.INFO, "Connected to the master server successfuly." );
+        // TODO Auto-generated method stub
+        manager.getApp( ).getEventManager( ).triggerEvent( new ClientConnectedEvent( client, ConnectionType.MASTER ) );
 
-	}
+    }
 
-	@Override
-	public void clientDisconnected( Client client, DisconnectInfo info )
-	{
-		logger.log( Level.INFO, "Disconnected from the master server." );
-		// TODO Auto-generated method stub
-		manager.getApp( ).getEventManager( ).triggerEvent( new ClientDisconnectedEvent( client, ConnectionType.MASTER, info ) );
-	}
+    @Override
+    public void clientDisconnected( Client client, DisconnectInfo info )
+    {
+        logger.log( Level.INFO, "Disconnected from the master server." );
+        // TODO Auto-generated method stub
+        manager.getApp( ).getEventManager( ).triggerEvent( new ClientDisconnectedEvent( client, ConnectionType.MASTER, info ) );
+    }
 
-	@Override
-	public void handleError( Client client, Throwable exception )
-	{
-		logger.log( Level.SEVERE, "A Master Connection error has occured. ", exception );
-		manager.getApp( ).enqueue( ( ) ->
-		{
-			manager.close( );
-			return null;
-		} );
+    @Override
+    public void handleError( Client client, Throwable exception )
+    {
+        logger.log( Level.SEVERE, "A Master Connection error has occured. ", exception );
+        manager.getApp( ).enqueue( ( ) ->
+        {
+            manager.close( );
+            return null;
+        } );
 
-		// TODO: Move the above function into a handler for the following event
-		manager.getApp( ).getEventManager( ).triggerEvent( new ClientConnectionErrorEvent( client, ConnectionType.MASTER, exception ) );
-	}
+        // TODO: Move the above function into a handler for the following event
+        manager.getApp( ).getEventManager( ).triggerEvent( new ClientConnectionErrorEvent( client, ConnectionType.MASTER, exception ) );
+    }
 
 }

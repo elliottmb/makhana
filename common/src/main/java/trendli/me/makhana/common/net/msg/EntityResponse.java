@@ -12,74 +12,74 @@ import com.simsilica.es.EntityId;
 @Serializable
 public class EntityResponse extends AbstractMessage
 {
-	private String requestType;
-	private EntityId entityId;
-	private boolean successful;
+    private String requestType;
+    private EntityId entityId;
+    private boolean successful;
 
-	/**
-	 * Used by Serializer
-	 */
-	public EntityResponse( )
-	{
+    /**
+     * Used by Serializer
+     */
+    public EntityResponse( )
+    {
 
-	}
+    }
 
-	public EntityResponse( EntityId entityId, String requestType, boolean successful )
-	{
-		this.entityId = entityId;
-		this.requestType = requestType;
-		this.successful = successful;
-	}
+    public EntityResponse( EntityId entityId, String requestType, boolean successful )
+    {
+        this.entityId = entityId;
+        this.requestType = requestType;
+        this.successful = successful;
+    }
 
-	/**
-	 * @return the entityId
-	 */
-	public EntityId getEntityId( )
-	{
-		return entityId;
-	}
+    /**
+     * @return the entityId
+     */
+    public EntityId getEntityId( )
+    {
+        return entityId;
+    }
 
-	/**
-	 * @return the requestType
-	 */
-	public String getRequestType( )
-	{
-		return requestType;
-	}
+    /**
+     * @return the requestType
+     */
+    public String getRequestType( )
+    {
+        return requestType;
+    }
 
-	/**
-	 * @return the successful
-	 */
-	public boolean isSuccessful( )
-	{
-		return successful;
-	}
+    /**
+     * @return the successful
+     */
+    public boolean isSuccessful( )
+    {
+        return successful;
+    }
 
-	/**
-	 * @param entityId
-	 *            the entityId to set
-	 */
-	public void setEntityId( EntityId entityId )
-	{
-		this.entityId = entityId;
-	}
+    /**
+     * @param entityId
+     *            the entityId to set
+     */
+    public void setEntityId( EntityId entityId )
+    {
+        this.entityId = entityId;
+    }
 
-	/**
-	 * @param requestType
-	 *            the requestType to set
-	 */
-	public void setRequestType( String requestType )
-	{
-		this.requestType = requestType;
-	}
+    /**
+     * @param requestType
+     *            the requestType to set
+     */
+    public void setRequestType( String requestType )
+    {
+        this.requestType = requestType;
+    }
 
-	/**
-	 * @param successful
-	 *            the successful to set
-	 */
-	public void setSuccessful( boolean successful )
-	{
-		this.successful = successful;
-	}
+    /**
+     * @param successful
+     *            the successful to set
+     */
+    public void setSuccessful( boolean successful )
+    {
+        this.successful = successful;
+    }
 
 }

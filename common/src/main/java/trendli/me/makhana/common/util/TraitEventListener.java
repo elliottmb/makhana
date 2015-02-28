@@ -7,9 +7,9 @@ import com.simsilica.es.EntityData;
 
 public interface TraitEventListener
 {
-	public void onAdded( EntityData entityData, Set< Entity > entities );
+    public void onAdded( EntityData entityData, Set< Entity > entities );
 
-	public void onChanged( EntityData entityData, Set< Entity > entities );
+    public void onChanged( EntityData entityData, Set< Entity > entities );
 
-	public void onRemoved( EntityData entityData, Set< Entity > entities );
+    public void onRemoved( EntityData entityData, Set< Entity > entities );
 }

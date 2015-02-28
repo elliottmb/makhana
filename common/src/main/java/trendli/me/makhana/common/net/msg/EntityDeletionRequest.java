@@ -11,36 +11,36 @@ import com.simsilica.es.EntityId;
 @Serializable
 public class EntityDeletionRequest extends EntityRequest
 {
-	private EntityId entityId;
+    private EntityId entityId;
 
-	/**
-	 * Used by Serializer
-	 */
-	public EntityDeletionRequest( )
-	{
+    /**
+     * Used by Serializer
+     */
+    public EntityDeletionRequest( )
+    {
 
-	}
+    }
 
-	public EntityDeletionRequest( EntityId entityId )
-	{
-		this.entityId = entityId;
-	}
+    public EntityDeletionRequest( EntityId entityId )
+    {
+        this.entityId = entityId;
+    }
 
-	/**
-	 * @return the entityId
-	 */
-	public EntityId getEntityId( )
-	{
-		return entityId;
-	}
+    /**
+     * @return the entityId
+     */
+    public EntityId getEntityId( )
+    {
+        return entityId;
+    }
 
-	/**
-	 * @param entityId
-	 *            the entityId to set
-	 */
-	public void setEntityId( EntityId entityId )
-	{
-		this.entityId = entityId;
-	}
+    /**
+     * @param entityId
+     *            the entityId to set
+     */
+    public void setEntityId( EntityId entityId )
+    {
+        this.entityId = entityId;
+    }
 
 }

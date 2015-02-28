@@ -11,11 +11,11 @@ import com.jme3.network.serializing.Serializable;
 @Serializable
 public class StartGameMessage extends AbstractMessage
 {
-	/**
-	 * Used by serializer.
-	 */
-	public StartGameMessage( )
-	{
-	}
+    /**
+     * Used by serializer.
+     */
+    public StartGameMessage( )
+    {
+    }
 
 }

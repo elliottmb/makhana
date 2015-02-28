@@ -150,7 +150,7 @@ public class StartViewController extends BaseScreenController implements KeyInpu
 			}
 		};
 		// TODO change popup to hidden panel?
-		new PopupBuilder( "loginPopup" )
+		PopupBuilder popup = new PopupBuilder( "loginPopup" )
 		{
 			{
 				backgroundColor( "#0f0f0fff" );
@@ -264,6 +264,8 @@ public class StartViewController extends BaseScreenController implements KeyInpu
 		};
 		startScreen.controller( this );
 		startScreen.build( app.getNifty( ) );
+
+		popup.registerPopup( getApp( ).getNifty( ) );
 	}
 
 	public void bind( Nifty nifty, Screen screen )
@@ -334,6 +336,7 @@ public class StartViewController extends BaseScreenController implements KeyInpu
 	public void onStartScreen( )
 	{
 		logger.log( Level.INFO, "Start Screen Started" );
+		getApp( ).getNifty( ).createPopupWithId( "loginPopup", "loginPopup" );
 	}
 
 	public void openLogin( )

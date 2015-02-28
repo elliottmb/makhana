@@ -13,34 +13,34 @@ import com.jme3.network.MessageListener;
 public class UserListListener implements MessageListener< Client >
 {
 
-	private final static Logger logger = Logger.getLogger( UserListListener.class.getName( ) );
-	/**
-	 * The client's controller.
-	 */
-	private MasterConnectionManager manager;
+    private final static Logger logger = Logger.getLogger( UserListListener.class.getName( ) );
+    /**
+     * The client's controller.
+     */
+    private MasterConnectionManager manager;
 
-	/**
-	 * The default constructor accepts the client's manager.
-	 * 
-	 * @param manager
-	 *            the client's manager
-	 */
-	public UserListListener( MasterConnectionManager manager )
-	{
-		this.manager = manager;
-	}
+    /**
+     * The default constructor accepts the client's manager.
+     * 
+     * @param manager
+     *            the client's manager
+     */
+    public UserListListener( MasterConnectionManager manager )
+    {
+        this.manager = manager;
+    }
 
-	@Override
-	public void messageReceived( Client source, Message message )
-	{
-		if ( message instanceof UserListResponse )
-		{
-			logger.log( Level.INFO, "Received a UserList response." );
-			UserListResponse msg = ( UserListResponse ) message;
+    @Override
+    public void messageReceived( Client source, Message message )
+    {
+        if ( message instanceof UserListResponse )
+        {
+            logger.log( Level.INFO, "Received a UserList response." );
+            UserListResponse msg = ( UserListResponse ) message;
 
-			manager.receiveUserList( msg );
-		}
+            manager.receiveUserList( msg );
+        }
 
-	}
+    }
 
 }

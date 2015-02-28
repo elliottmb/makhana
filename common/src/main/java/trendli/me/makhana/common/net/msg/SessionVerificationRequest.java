@@ -13,49 +13,49 @@ import com.jme3.network.serializing.Serializable;
 @Serializable
 public class SessionVerificationRequest extends AbstractMessage
 {
-	/**
-	 * The user Session that the server has associated us with.
-	 */
-	private Session session;
+    /**
+     * The user Session that the server has associated us with.
+     */
+    private Session session;
 
-	/**
-	 * Used by serializer.
-	 */
-	public SessionVerificationRequest( )
-	{
-	}
+    /**
+     * Used by serializer.
+     */
+    public SessionVerificationRequest( )
+    {
+    }
 
-	/**
-	 * Constructs a new SessionVerificationRequest with the given Session to be
-	 * verified
-	 * 
-	 * @param session
-	 *            given session to be verified
-	 */
-	public SessionVerificationRequest( Session session )
-	{
-		this.session = session;
-	}
+    /**
+     * Constructs a new SessionVerificationRequest with the given Session to be
+     * verified
+     * 
+     * @param session
+     *            given session to be verified
+     */
+    public SessionVerificationRequest( Session session )
+    {
+        this.session = session;
+    }
 
-	/**
-	 * Returns the Session that needs to be verified
-	 * 
-	 * @return Session to be verified
-	 */
-	public Session getSession( )
-	{
-		return session;
-	}
+    /**
+     * Returns the Session that needs to be verified
+     * 
+     * @return Session to be verified
+     */
+    public Session getSession( )
+    {
+        return session;
+    }
 
-	/**
-	 * Sets the Session that needs to be verified
-	 * 
-	 * @param session
-	 *            Session to be verified
-	 */
-	public void setSession( Session session )
-	{
-		this.session = session;
-	}
+    /**
+     * Sets the Session that needs to be verified
+     * 
+     * @param session
+     *            Session to be verified
+     */
+    public void setSession( Session session )
+    {
+        this.session = session;
+    }
 
 }

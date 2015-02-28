@@ -19,31 +19,31 @@ import com.jme3.network.MessageListener;
 public class UserListListener implements MessageListener< HostedConnection >
 {
 
-	private final static Logger logger = Logger.getLogger( UserListListener.class.getName( ) );
-	private MasterServerManager server;
+    private final static Logger logger = Logger.getLogger( UserListListener.class.getName( ) );
+    private MasterServerManager server;
 
-	public UserListListener( MasterServerManager server )
-	{
-		this.server = server;
-	}
+    public UserListListener( MasterServerManager server )
+    {
+        this.server = server;
+    }
 
-	@Override
-	public void messageReceived( HostedConnection source, Message message )
-	{
-		Session loggedInUser = server.getSessionManager( ).get( source );
-		if ( message instanceof UserListRequest )
-		{
-			if ( loggedInUser == null )
-			{
-				/*
-				 * User is either null, is not the same as the logged in user,
-				 * or is a game server
-				 */
-				return;
-			}
-			logger.log( Level.INFO, "Recieved a UserListRequest from " + source.getAddress( ) );
-			server.broadcastUserList( );
-		}
-	}
+    @Override
+    public void messageReceived( HostedConnection source, Message message )
+    {
+        Session loggedInUser = server.getSessionManager( ).get( source );
+        if ( message instanceof UserListRequest )
+        {
+            if ( loggedInUser == null )
+            {
+                /*
+                 * User is either null, is not the same as the logged in user,
+                 * or is a game server
+                 */
+                return;
+            }
+            logger.log( Level.INFO, "Recieved a UserListRequest from " + source.getAddress( ) );
+            server.broadcastUserList( );
+        }
+    }
 
 }

@@ -19,38 +19,38 @@ import trendli.me.makhana.common.util.MakhanaConfig;
 @Configuration
 public class DatabaseConfig
 {
-	/**
-	 * The logger for this class.
-	 */
-	private final static Logger logger = Logger.getLogger( DatabaseConfig.class.getName( ) );
+    /**
+     * The logger for this class.
+     */
+    private final static Logger logger = Logger.getLogger( DatabaseConfig.class.getName( ) );
 
-	@Bean
-	public AccountRepository accountRepository( )
-	{
-		return new JdbcAccountRepository( dataSource( ) );
-	}
+    @Bean
+    public AccountRepository accountRepository( )
+    {
+        return new JdbcAccountRepository( dataSource( ) );
+    }
 
-	@Bean
-	public DataSource dataSource( )
-	{
-		MakhanaConfig config = new MakhanaConfig( );
-		config.save( );
+    @Bean
+    public DataSource dataSource( )
+    {
+        MakhanaConfig config = new MakhanaConfig( );
+        config.save( );
 
-		DriverManagerDataSource dataSource = new DriverManagerDataSource( );
-		dataSource.setDriverClassName( "com.mysql.jdbc.Driver" );
-		dataSource.setUrl( String.format( "jdbc:mysql://%s:%s/%s",
-				( config.get( "mysqldb.hostname" ) != null ) ? ( String ) config.get( "mysqldb.hostname" ) : "localhost", ( config
-						.get( "mysqldb.port" ) != null ) ? config.get( "mysqldb.port" ) : 3306,
-				( config.get( "mysqldb.database" ) != null ) ? config.get( "mysqldb.database" ) : "network" ) );
-		dataSource.setUsername( ( config.get( "mysqldb.username" ) != null ) ? ( String ) config.get( "mysqldb.username" ) : "root" );
-		dataSource.setPassword( ( config.get( "mysqldb.password" ) != null ) ? ( String ) config.get( "mysqldb.password" ) : "" );
+        DriverManagerDataSource dataSource = new DriverManagerDataSource( );
+        dataSource.setDriverClassName( "com.mysql.jdbc.Driver" );
+        dataSource.setUrl( String.format( "jdbc:mysql://%s:%s/%s",
+                ( config.get( "mysqldb.hostname" ) != null ) ? ( String ) config.get( "mysqldb.hostname" ) : "localhost", ( config
+                        .get( "mysqldb.port" ) != null ) ? config.get( "mysqldb.port" ) : 3306,
+                ( config.get( "mysqldb.database" ) != null ) ? config.get( "mysqldb.database" ) : "network" ) );
+        dataSource.setUsername( ( config.get( "mysqldb.username" ) != null ) ? ( String ) config.get( "mysqldb.username" ) : "root" );
+        dataSource.setPassword( ( config.get( "mysqldb.password" ) != null ) ? ( String ) config.get( "mysqldb.password" ) : "" );
 
-		logger.log( Level.INFO, String.format( "Creating a DataSource with hostname: %s, port: %s, database: %s, username: %s", ( config
-				.get( "mysqldb.hostname" ) != null ) ? ( String ) config.get( "mysqldb.hostname" ) : "localhost", ( config
-				.get( "mysqldb.port" ) != null ) ? config.get( "mysqldb.port" ) : 3306,
-				( config.get( "mysqldb.database" ) != null ) ? config.get( "mysqldb.database" ) : "network" ), ( config
-				.get( "mysqldb.username" ) != null ) ? ( String ) config.get( "mysqldb.username" ) : "root" );
+        logger.log( Level.INFO, String.format( "Creating a DataSource with hostname: %s, port: %s, database: %s, username: %s", ( config
+                .get( "mysqldb.hostname" ) != null ) ? ( String ) config.get( "mysqldb.hostname" ) : "localhost", ( config
+                .get( "mysqldb.port" ) != null ) ? config.get( "mysqldb.port" ) : 3306,
+                ( config.get( "mysqldb.database" ) != null ) ? config.get( "mysqldb.database" ) : "network" ), ( config
+                .get( "mysqldb.username" ) != null ) ? ( String ) config.get( "mysqldb.username" ) : "root" );
 
-		return dataSource;
-	}
+        return dataSource;
+    }
 }

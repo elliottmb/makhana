@@ -10,28 +10,28 @@ import com.simsilica.es.EntityComponent;
 @Serializable
 public class Health implements EntityComponent
 {
-	private float health;
+    private float health;
 
-	/**
-	 * Used by the serializer
-	 */
-	public Health( )
-	{
-	}
+    /**
+     * Used by the serializer
+     */
+    public Health( )
+    {
+    }
 
-	public Health( float health )
-	{
-		this.health = health;
-	}
+    public Health( float health )
+    {
+        this.health = health;
+    }
 
-	public float getHealth( )
-	{
-		return health;
-	}
+    public float getHealth( )
+    {
+        return health;
+    }
 
-	@Override
-	public String toString( )
-	{
-		return "Health[" + health + "]";
-	}
+    @Override
+    public String toString( )
+    {
+        return "Health[" + health + "]";
+    }
 }

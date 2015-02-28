@@ -8,27 +8,27 @@ import com.simsilica.es.EntityId;
 
 public class ServerPlayerJoinEvent extends PlayerJoinEvent
 {
-	private int playerCount;
-	private boolean alreadyExisting;
+    private int playerCount;
+    private boolean alreadyExisting;
 
-	public ServerPlayerJoinEvent( EntityData entityData, EntityId source, Player playerTrait, int playerCount, boolean alreadyExisting )
-	{
-		super( entityData, source, playerTrait );
-		this.playerCount = playerCount;
-		this.alreadyExisting = alreadyExisting;
-	}
+    public ServerPlayerJoinEvent( EntityData entityData, EntityId source, Player playerTrait, int playerCount, boolean alreadyExisting )
+    {
+        super( entityData, source, playerTrait );
+        this.playerCount = playerCount;
+        this.alreadyExisting = alreadyExisting;
+    }
 
-	public int getPlayerCount( )
-	{
-		return playerCount;
-	}
+    public int getPlayerCount( )
+    {
+        return playerCount;
+    }
 
-	/**
-	 * @return the alreadyExisting
-	 */
-	public boolean isAlreadyExisting( )
-	{
-		return alreadyExisting;
-	}
+    /**
+     * @return the alreadyExisting
+     */
+    public boolean isAlreadyExisting( )
+    {
+        return alreadyExisting;
+    }
 
 }

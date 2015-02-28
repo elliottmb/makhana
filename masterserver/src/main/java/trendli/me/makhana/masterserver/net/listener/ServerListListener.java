@@ -16,41 +16,41 @@ import com.jme3.network.MessageListener;
 
 public class ServerListListener implements MessageListener< HostedConnection >
 {
-	private final static Logger logger = Logger.getLogger( UserListListener.class.getName( ) );
-	private MasterServerManager server;
+    private final static Logger logger = Logger.getLogger( UserListListener.class.getName( ) );
+    private MasterServerManager server;
 
-	public ServerListListener( MasterServerManager server )
-	{
-		this.server = server;
-	}
+    public ServerListListener( MasterServerManager server )
+    {
+        this.server = server;
+    }
 
-	public void broadcastServerList( HostedConnection conn )
-	{
-		logger.log( Level.INFO, "Sending updated ServerList to requesting client " + conn.getAddress( ) );
+    public void broadcastServerList( HostedConnection conn )
+    {
+        logger.log( Level.INFO, "Sending updated ServerList to requesting client " + conn.getAddress( ) );
 
-		ArrayList< ServerStatus > servers = server.getServerStatusManager( ).getAll( );
-		conn.send( new ServerListResponse( servers ) );
+        ArrayList< ServerStatus > servers = server.getServerStatusManager( ).getAll( );
+        conn.send( new ServerListResponse( servers ) );
 
-	}
+    }
 
-	@Override
-	public void messageReceived( HostedConnection source, Message message )
-	{
+    @Override
+    public void messageReceived( HostedConnection source, Message message )
+    {
 
-		if ( message instanceof ServerListRequest )
-		{
-			logger.log( Level.INFO, "Recieved a ServerListRequest from " + source.getAddress( ) );
+        if ( message instanceof ServerListRequest )
+        {
+            logger.log( Level.INFO, "Recieved a ServerListRequest from " + source.getAddress( ) );
 
-			Session loggedInUser = server.getSessionManager( ).get( source );
-			if ( loggedInUser == null )
-			{
-				/*
-				 * Account is either null, or is a game server
-				 */
-				return;
-			}
+            Session loggedInUser = server.getSessionManager( ).get( source );
+            if ( loggedInUser == null )
+            {
+                /*
+                 * Account is either null, or is a game server
+                 */
+                return;
+            }
 
-			broadcastServerList( source );
-		}
-	}
+            broadcastServerList( source );
+        }
+    }
 }

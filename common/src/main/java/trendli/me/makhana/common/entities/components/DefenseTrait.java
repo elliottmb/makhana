@@ -11,26 +11,26 @@ import com.simsilica.es.EntityComponent;
 public class DefenseTrait implements EntityComponent
 {
 
-	private float defense;
+    private float defense;
 
-	public DefenseTrait( )
-	{
+    public DefenseTrait( )
+    {
 
-	}
+    }
 
-	public DefenseTrait( float defense )
-	{
-		this.defense = defense;
-	}
+    public DefenseTrait( float defense )
+    {
+        this.defense = defense;
+    }
 
-	public float getDefense( )
-	{
-		return defense;
-	}
+    public float getDefense( )
+    {
+        return defense;
+    }
 
-	@Override
-	public String toString( )
-	{
-		return "DefenseTrait[" + defense + "]";
-	}
+    @Override
+    public String toString( )
+    {
+        return "DefenseTrait[" + defense + "]";
+    }
 }

@@ -12,32 +12,32 @@ import com.simsilica.es.EntityComponent;
 public class TileTrait implements EntityComponent
 {
 
-	private int x;
-	private int y;
+    private int x;
+    private int y;
 
-	public TileTrait( )
-	{
-	}
+    public TileTrait( )
+    {
+    }
 
-	public TileTrait( int x, int y )
-	{
-		this.x = x;
-		this.y = y;
-	}
+    public TileTrait( int x, int y )
+    {
+        this.x = x;
+        this.y = y;
+    }
 
-	public int getX( )
-	{
-		return x;
-	}
+    public int getX( )
+    {
+        return x;
+    }
 
-	public int getY( )
-	{
-		return y;
-	}
+    public int getY( )
+    {
+        return y;
+    }
 
-	@Override
-	public String toString( )
-	{
-		return "TileTrait[" + x + ", " + y + "]";
-	}
+    @Override
+    public String toString( )
+    {
+        return "TileTrait[" + x + ", " + y + "]";
+    }
 }

@@ -19,37 +19,37 @@ import com.jme3.network.MessageListener;
 public class WelcomeListener implements MessageListener< Client >
 {
 
-	/**
-	 * The logger for this class.
-	 */
-	private final static Logger logger = Logger.getLogger( WelcomeListener.class.getName( ) );
+    /**
+     * The logger for this class.
+     */
+    private final static Logger logger = Logger.getLogger( WelcomeListener.class.getName( ) );
 
-	/**
-	 * The client's manager.
-	 */
-	private MasterConnectionManager manager;
+    /**
+     * The client's manager.
+     */
+    private MasterConnectionManager manager;
 
-	/**
-	 * The default constructor accepts the client's manager.
-	 * 
-	 * @param controller
-	 *            the client's manager
-	 */
-	public WelcomeListener( MasterConnectionManager manager )
-	{
-		this.manager = manager;
-	}
+    /**
+     * The default constructor accepts the client's manager.
+     * 
+     * @param controller
+     *            the client's manager
+     */
+    public WelcomeListener( MasterConnectionManager manager )
+    {
+        this.manager = manager;
+    }
 
-	@Override
-	public void messageReceived( Client source, Message message )
-	{
-		if ( message instanceof WelcomeMessage )
-		{
-			logger.log( Level.INFO, "Received a welcoem message." );
-			WelcomeMessage welcomeMessage = ( WelcomeMessage ) message;
-			logger.log( Level.INFO, welcomeMessage.getNotice( ) );
-			logger.log( Level.INFO, String.format( "Setting Manager's public key: %s", welcomeMessage.getPublicKey( ) ) );
-			manager.setPublicKey( welcomeMessage.getPublicKey( ) );
-		}
-	}
+    @Override
+    public void messageReceived( Client source, Message message )
+    {
+        if ( message instanceof WelcomeMessage )
+        {
+            logger.log( Level.INFO, "Received a welcoem message." );
+            WelcomeMessage welcomeMessage = ( WelcomeMessage ) message;
+            logger.log( Level.INFO, welcomeMessage.getNotice( ) );
+            logger.log( Level.INFO, String.format( "Setting Manager's public key: %s", welcomeMessage.getPublicKey( ) ) );
+            manager.setPublicKey( welcomeMessage.getPublicKey( ) );
+        }
+    }
 }

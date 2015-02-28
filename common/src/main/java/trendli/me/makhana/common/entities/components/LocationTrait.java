@@ -12,36 +12,36 @@ import com.simsilica.es.EntityId;
 @Serializable
 public class LocationTrait implements EntityComponent
 {
-	private EntityId tile;
-	private byte position;
+    private EntityId tile;
+    private byte position;
 
-	/**
-	 * Used by the serializer
-	 */
-	public LocationTrait( )
-	{
+    /**
+     * Used by the serializer
+     */
+    public LocationTrait( )
+    {
 
-	}
+    }
 
-	public LocationTrait( EntityId tile, byte position )
-	{
-		this.tile = tile;
-		this.position = position;
-	}
+    public LocationTrait( EntityId tile, byte position )
+    {
+        this.tile = tile;
+        this.position = position;
+    }
 
-	public byte getPosition( )
-	{
-		return position;
-	}
+    public byte getPosition( )
+    {
+        return position;
+    }
 
-	public EntityId getTile( )
-	{
-		return tile;
-	}
+    public EntityId getTile( )
+    {
+        return tile;
+    }
 
-	@Override
-	public String toString( )
-	{
-		return "LocationTrait[" + tile + "," + position + "]";
-	}
+    @Override
+    public String toString( )
+    {
+        return "LocationTrait[" + tile + "," + position + "]";
+    }
 }

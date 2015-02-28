@@ -11,26 +11,26 @@ import com.simsilica.es.EntityComponent;
 public class StrengthTrait implements EntityComponent
 {
 
-	private float strength;
+    private float strength;
 
-	public StrengthTrait( )
-	{
+    public StrengthTrait( )
+    {
 
-	}
+    }
 
-	public StrengthTrait( float strength )
-	{
-		this.strength = strength;
-	}
+    public StrengthTrait( float strength )
+    {
+        this.strength = strength;
+    }
 
-	public float getStrength( )
-	{
-		return strength;
-	}
+    public float getStrength( )
+    {
+        return strength;
+    }
 
-	@Override
-	public String toString( )
-	{
-		return "StrengthTrait[" + strength + "]";
-	}
+    @Override
+    public String toString( )
+    {
+        return "StrengthTrait[" + strength + "]";
+    }
 }

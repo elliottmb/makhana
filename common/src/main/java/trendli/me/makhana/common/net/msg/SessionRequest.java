@@ -11,11 +11,11 @@ import com.jme3.network.serializing.Serializable;
 @Serializable
 public class SessionRequest extends AbstractMessage
 {
-	/**
-	 * Used by serializer.
-	 */
-	public SessionRequest( )
-	{
-	}
+    /**
+     * Used by serializer.
+     */
+    public SessionRequest( )
+    {
+    }
 
 }

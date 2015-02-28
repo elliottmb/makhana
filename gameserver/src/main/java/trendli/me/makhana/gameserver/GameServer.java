@@ -31,297 +31,297 @@ import com.jme3.system.JmeContext;
  */
 public class GameServer extends Application
 {
-	public static void main( String[ ] args )
-	{
-		GameServer gameServer = new GameServer( );
+    public static void main( String[ ] args )
+    {
+        GameServer gameServer = new GameServer( );
 
-		Options options = new Options( );
-		options.addOption( "p", "port", true, "the port this server will bind to (optional)" );
-		options.addOption( "o", "offline", true, "toggle whether account checking should be run (optional)" );
+        Options options = new Options( );
+        options.addOption( "p", "port", true, "the port this server will bind to (optional)" );
+        options.addOption( "o", "offline", true, "toggle whether account checking should be run (optional)" );
 
-		CommandLineParser parser = new BasicParser( );
+        CommandLineParser parser = new BasicParser( );
 
-		try
-		{
-			gameServer.setArguments( parser.parse( options, args ) );
-		}
-		catch ( ParseException exp )
-		{
-			logger.log( Level.SEVERE, "Issue handling command line arguments", exp );
-		}
+        try
+        {
+            gameServer.setArguments( parser.parse( options, args ) );
+        }
+        catch ( ParseException exp )
+        {
+            logger.log( Level.SEVERE, "Issue handling command line arguments", exp );
+        }
 
-		gameServer.start( JmeContext.Type.Headless );
+        gameServer.start( JmeContext.Type.Headless );
 
-		BufferedReader in = new BufferedReader( new InputStreamReader( System.in ) );
-		String line = null;
-		try
-		{
-			while ( ( line = in.readLine( ) ) != null )
-			{
-				if ( "exit".equals( line ) || "quit".equals( line ) || "stop".equals( line ) )
-				{
-					break;
-				}
-				if ( "status".equals( line ) )
-				{
-					List< HostedConnection > connections = gameServer.getGameServerManager( ).getSessionManager( ).getConnections( );
-					if ( connections.size( ) > 0 )
-					{
-						StringBuilder sb = new StringBuilder( );
-						sb.append( connections.size( ) + " Authenticated sessions: \n" );
-						for ( HostedConnection hc : connections )
-						{
-							sb.append( String.format( "%s: %s - %s \n", hc.getId( ), hc.getAddress( ), gameServer.getGameServerManager( )
-									.getSessionManager( ).get( hc ) ) );
-						}
-						logger.log( Level.INFO, sb.toString( ) );
-					}
-					else
-					{
-						logger.log( Level.INFO, "No authenticated sessions." );
-					}
-				}
-				if ( "restart".equals( line ) )
-				{
-					gameServer.restart( );
-				}
-			}
-		}
-		catch ( IOException e )
-		{
-			logger.log( Level.SEVERE, "Error handling console input", e );
-		}
-		logger.log( Level.INFO, "Shutting down" );
-		gameServer.stop( );
-	}
+        BufferedReader in = new BufferedReader( new InputStreamReader( System.in ) );
+        String line = null;
+        try
+        {
+            while ( ( line = in.readLine( ) ) != null )
+            {
+                if ( "exit".equals( line ) || "quit".equals( line ) || "stop".equals( line ) )
+                {
+                    break;
+                }
+                if ( "status".equals( line ) )
+                {
+                    List< HostedConnection > connections = gameServer.getGameServerManager( ).getSessionManager( ).getConnections( );
+                    if ( connections.size( ) > 0 )
+                    {
+                        StringBuilder sb = new StringBuilder( );
+                        sb.append( connections.size( ) + " Authenticated sessions: \n" );
+                        for ( HostedConnection hc : connections )
+                        {
+                            sb.append( String.format( "%s: %s - %s \n", hc.getId( ), hc.getAddress( ), gameServer.getGameServerManager( )
+                                    .getSessionManager( ).get( hc ) ) );
+                        }
+                        logger.log( Level.INFO, sb.toString( ) );
+                    }
+                    else
+                    {
+                        logger.log( Level.INFO, "No authenticated sessions." );
+                    }
+                }
+                if ( "restart".equals( line ) )
+                {
+                    gameServer.restart( );
+                }
+            }
+        }
+        catch ( IOException e )
+        {
+            logger.log( Level.SEVERE, "Error handling console input", e );
+        }
+        logger.log( Level.INFO, "Shutting down" );
+        gameServer.stop( );
+    }
 
-	private MakhanaConfig configuration;
+    private MakhanaConfig configuration;
 
-	/**
-	 * The logger for this class.
-	 */
-	private final static Logger logger = Logger.getLogger( GameServer.class.getName( ) );
+    /**
+     * The logger for this class.
+     */
+    private final static Logger logger = Logger.getLogger( GameServer.class.getName( ) );
 
-	/**
-	 * The supplied command line arguments parsed into a more usable form
-	 */
-	private CommandLine arguments;
+    /**
+     * The supplied command line arguments parsed into a more usable form
+     */
+    private CommandLine arguments;
 
-	/**
-	 * The server connection manager to the clients
-	 */
-	private GameServerManager gameServerManager;
+    /**
+     * The server connection manager to the clients
+     */
+    private GameServerManager gameServerManager;
 
-	/**
-	 * The client connection manager to the Master Server
-	 */
-	private MasterConnectionManager masterConnManager;
+    /**
+     * The client connection manager to the Master Server
+     */
+    private MasterConnectionManager masterConnManager;
 
-	/**
-	 * The port the server will be hosted on
-	 */
-	private int port;
+    /**
+     * The port the server will be hosted on
+     */
+    private int port;
 
-	private boolean onlineMode;
+    private boolean onlineMode;
 
-	/**
-	 * Returns the parsed command line arguments
-	 * 
-	 * @return parsed command line arguments
-	 */
-	public CommandLine getArguments( )
-	{
-		return arguments;
-	}
+    /**
+     * Returns the parsed command line arguments
+     * 
+     * @return parsed command line arguments
+     */
+    public CommandLine getArguments( )
+    {
+        return arguments;
+    }
 
-	/**
-	 * @return the configuration
-	 */
-	public MakhanaConfig getConfiguration( )
-	{
-		return configuration;
-	}
+    /**
+     * @return the configuration
+     */
+    public MakhanaConfig getConfiguration( )
+    {
+        return configuration;
+    }
 
-	/**
-	 * Returns the current GameServerManager instance
-	 * 
-	 * @return current GameServerManager instance
-	 */
-	public GameServerManager getGameServerManager( )
-	{
-		return gameServerManager;
-	}
+    /**
+     * Returns the current GameServerManager instance
+     * 
+     * @return current GameServerManager instance
+     */
+    public GameServerManager getGameServerManager( )
+    {
+        return gameServerManager;
+    }
 
-	/**
-	 * Returns the current GameMasterConnManager instance
-	 * 
-	 * @return current GameMasterConnManager instance
-	 */
-	public MasterConnectionManager getMasterConnManager( )
-	{
-		return masterConnManager;
-	}
+    /**
+     * Returns the current GameMasterConnManager instance
+     * 
+     * @return current GameMasterConnManager instance
+     */
+    public MasterConnectionManager getMasterConnManager( )
+    {
+        return masterConnManager;
+    }
 
-	/**
-	 * @return the port
-	 */
-	public int getPort( )
-	{
-		return port;
-	}
+    /**
+     * @return the port
+     */
+    public int getPort( )
+    {
+        return port;
+    }
 
-	@Override
-	public void initialize( )
-	{
-		super.initialize( );
+    @Override
+    public void initialize( )
+    {
+        super.initialize( );
 
-		gameServerManager = new GameServerManager( this );
+        gameServerManager = new GameServerManager( this );
 
-		port = 7331; /* default */
+        port = 7331; /* default */
 
-		this.configuration = new MakhanaConfig( );
+        this.configuration = new MakhanaConfig( );
 
-		onlineMode = true;
+        onlineMode = true;
 
-		if ( configuration.containsKey( "gameserver.port" ) )
-		{
-			Object portValue = configuration.get( "gameserver.port" );
-			if ( portValue instanceof Integer )
-			{
-				port = ( Integer ) portValue;
-				logger.log( Level.INFO, "Configuration port value was: " + portValue );
-			}
-			else
-			{
-				logger.log( Level.WARNING, "Configuration port value could not be parsed, defaulting to 7331" );
-			}
-		}
-		else
-		{
-			logger.log( Level.WARNING, "Configuration port value not set, defaulting to 7331" );
-		}
-		configuration.put( "gameserver.port", port );
+        if ( configuration.containsKey( "gameserver.port" ) )
+        {
+            Object portValue = configuration.get( "gameserver.port" );
+            if ( portValue instanceof Integer )
+            {
+                port = ( Integer ) portValue;
+                logger.log( Level.INFO, "Configuration port value was: " + portValue );
+            }
+            else
+            {
+                logger.log( Level.WARNING, "Configuration port value could not be parsed, defaulting to 7331" );
+            }
+        }
+        else
+        {
+            logger.log( Level.WARNING, "Configuration port value not set, defaulting to 7331" );
+        }
+        configuration.put( "gameserver.port", port );
 
-		if ( configuration.containsKey( "gameserver.online" ) )
-		{
-			Object onlineValue = configuration.get( "gameserver.port" );
-			if ( onlineValue instanceof Boolean )
-			{
-				onlineMode = ( Boolean ) onlineValue;
-				logger.log( Level.INFO, "Configuration onlineMode value was: " + onlineValue );
-			}
-			else
-			{
-				logger.log( Level.WARNING, "Configuration online mode value could not be parsed, defaulting to online" );
-			}
-		}
-		else
-		{
-			logger.log( Level.WARNING, "Configuration online mode value not set, defaulting to online" );
-		}
-		configuration.put( "gameserver.online", onlineMode );
+        if ( configuration.containsKey( "gameserver.online" ) )
+        {
+            Object onlineValue = configuration.get( "gameserver.port" );
+            if ( onlineValue instanceof Boolean )
+            {
+                onlineMode = ( Boolean ) onlineValue;
+                logger.log( Level.INFO, "Configuration onlineMode value was: " + onlineValue );
+            }
+            else
+            {
+                logger.log( Level.WARNING, "Configuration online mode value could not be parsed, defaulting to online" );
+            }
+        }
+        else
+        {
+            logger.log( Level.WARNING, "Configuration online mode value not set, defaulting to online" );
+        }
+        configuration.put( "gameserver.online", onlineMode );
 
-		configuration.save( );
+        configuration.save( );
 
-		if ( getArguments( ).hasOption( "p" ) )
-		{
-			String value = getArguments( ).getOptionValue( "p" );
-			try
-			{
-				int intValue = Integer.parseInt( value );
-				if ( intValue < 65535 && intValue > 0 )
-				{
-					port = intValue;
-					logger.log( Level.INFO, "Using command line argument port value: " + port );
-				}
-				else
-				{
-					logger.log( Level.WARNING, "Command line argument port value is out of range, defaulting to configuration" );
-				}
-			}
-			catch ( NumberFormatException e )
-			{
-				logger.log( Level.WARNING, "Command line argument port value could not be parsed, defaulting to configuration" );
-			}
-		}
+        if ( getArguments( ).hasOption( "p" ) )
+        {
+            String value = getArguments( ).getOptionValue( "p" );
+            try
+            {
+                int intValue = Integer.parseInt( value );
+                if ( intValue < 65535 && intValue > 0 )
+                {
+                    port = intValue;
+                    logger.log( Level.INFO, "Using command line argument port value: " + port );
+                }
+                else
+                {
+                    logger.log( Level.WARNING, "Command line argument port value is out of range, defaulting to configuration" );
+                }
+            }
+            catch ( NumberFormatException e )
+            {
+                logger.log( Level.WARNING, "Command line argument port value could not be parsed, defaulting to configuration" );
+            }
+        }
 
-		if ( getArguments( ).hasOption( "o" ) )
-		{
-			String value = getArguments( ).getOptionValue( "o" );
-			if ( value != null )
-			{
-				onlineMode = Boolean.parseBoolean( value );
-			}
-			else
-			{
-				logger.log( Level.WARNING, "Command line argument online mode value is undefined, defaulting to configuration" );
-			}
-		}
+        if ( getArguments( ).hasOption( "o" ) )
+        {
+            String value = getArguments( ).getOptionValue( "o" );
+            if ( value != null )
+            {
+                onlineMode = Boolean.parseBoolean( value );
+            }
+            else
+            {
+                logger.log( Level.WARNING, "Command line argument online mode value is undefined, defaulting to configuration" );
+            }
+        }
 
-		gameServerManager.run( port );
+        gameServerManager.run( port );
 
-		masterConnManager = new MasterConnectionManager( this );
+        masterConnManager = new MasterConnectionManager( this );
 
-	}
+    }
 
-	/**
-	 * @return the onlineMode
-	 */
-	public boolean isOnlineMode( )
-	{
-		return onlineMode;
-	}
+    /**
+     * @return the onlineMode
+     */
+    public boolean isOnlineMode( )
+    {
+        return onlineMode;
+    }
 
-	/**
-	 * Sets the parsed command line arguments
-	 * 
-	 * @param arguments
-	 *            parsed command line arguments
-	 */
-	public void setArguments( CommandLine arguments )
-	{
-		this.arguments = arguments;
-	}
+    /**
+     * Sets the parsed command line arguments
+     * 
+     * @param arguments
+     *            parsed command line arguments
+     */
+    public void setArguments( CommandLine arguments )
+    {
+        this.arguments = arguments;
+    }
 
-	/**
-	 * @param configuration
-	 *            the configuration to set
-	 */
-	public void setConfiguration( MakhanaConfig configuration )
-	{
-		this.configuration = configuration;
-	}
+    /**
+     * @param configuration
+     *            the configuration to set
+     */
+    public void setConfiguration( MakhanaConfig configuration )
+    {
+        this.configuration = configuration;
+    }
 
-	/**
-	 * @param onlineMode
-	 *            the onlineMode to set
-	 */
-	public void setOnlineMode( boolean onlineMode )
-	{
-		this.onlineMode = onlineMode;
-	}
+    /**
+     * @param onlineMode
+     *            the onlineMode to set
+     */
+    public void setOnlineMode( boolean onlineMode )
+    {
+        this.onlineMode = onlineMode;
+    }
 
-	@Override
-	public void stop( )
-	{
-		getGameServerManager( ).close( );
-		getMasterConnManager( ).close( );
-		super.stop( );
-	}
+    @Override
+    public void stop( )
+    {
+        getGameServerManager( ).close( );
+        getMasterConnManager( ).close( );
+        super.stop( );
+    }
 
-	@Override
-	public void update( )
-	{
-		super.update( );
-		float tpf = timer.getTimePerFrame( ) * speed;
+    @Override
+    public void update( )
+    {
+        super.update( );
+        float tpf = timer.getTimePerFrame( ) * speed;
 
-		stateManager.update( tpf );
-		stateManager.render( renderManager );
-		renderManager.render( tpf, context.isRenderable( ) );
+        stateManager.update( tpf );
+        stateManager.render( renderManager );
+        renderManager.render( tpf, context.isRenderable( ) );
 
-		stateManager.postRender( );
+        stateManager.postRender( );
 
-		gameServerManager.update( tpf );
-	}
+        gameServerManager.update( tpf );
+    }
 
 }

@@ -8,17 +8,17 @@ import com.simsilica.es.EntityId;
 
 public class TileEvent extends EntityEvent
 {
-	private TileTrait tileTrait;
+    private TileTrait tileTrait;
 
-	public TileEvent( EntityData entityData, EntityId source, TileTrait tileTrait )
-	{
-		super( entityData, source );
+    public TileEvent( EntityData entityData, EntityId source, TileTrait tileTrait )
+    {
+        super( entityData, source );
 
-		this.tileTrait = tileTrait;
-	}
+        this.tileTrait = tileTrait;
+    }
 
-	public TileTrait getTileTrait( )
-	{
-		return tileTrait;
-	}
+    public TileTrait getTileTrait( )
+    {
+        return tileTrait;
+    }
 }

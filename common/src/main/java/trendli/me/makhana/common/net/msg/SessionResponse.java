@@ -14,39 +14,39 @@ import com.jme3.network.serializing.Serializable;
 public class SessionResponse extends AbstractMessage
 {
 
-	/**
-	 * The session that the server has associated us with.
-	 */
-	private Session session;
+    /**
+     * The session that the server has associated us with.
+     */
+    private Session session;
 
-	/**
-	 * Used by the serializer.
-	 */
-	public SessionResponse( )
-	{
-	}
+    /**
+     * Used by the serializer.
+     */
+    public SessionResponse( )
+    {
+    }
 
-	public SessionResponse( Session session )
-	{
-		this.session = session;
-	}
+    public SessionResponse( Session session )
+    {
+        this.session = session;
+    }
 
-	public Session getSession( )
-	{
-		return session;
-	}
+    public Session getSession( )
+    {
+        return session;
+    }
 
-	public void setSession( Session session )
-	{
-		this.session = session;
-	}
+    public void setSession( Session session )
+    {
+        this.session = session;
+    }
 
-	/**
-	 * Returns a string representation of this DAO.
-	 */
-	public String toString( )
-	{
-		return "session=" + ( ( session == null ) ? "null" : session.toString( ) );
-	}
+    /**
+     * Returns a string representation of this DAO.
+     */
+    public String toString( )
+    {
+        return "session=" + ( ( session == null ) ? "null" : session.toString( ) );
+    }
 
 }

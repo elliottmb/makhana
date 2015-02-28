@@ -9,13 +9,13 @@ package trendli.me.makhana.masterserver.db;
 public interface AccountRepository
 {
 
-	/**
-	 * Returns the user account from this database by accountname reference.
-	 * 
-	 * @param accountName
-	 *            the accountname of the account to return
-	 * @return the user account with the specified accountname
-	 */
-	public Account getAccount( String accountName );
+    /**
+     * Returns the user account from this database by accountname reference.
+     * 
+     * @param accountName
+     *            the accountname of the account to return
+     * @return the user account with the specified accountname
+     */
+    public Account getAccount( String accountName );
 
 }

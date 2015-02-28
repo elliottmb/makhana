@@ -8,28 +8,28 @@ import com.jme3.scene.Spatial;
 @Serializable
 public class ArcheryTrait extends StaticTrait
 {
-	// TODO
-	// private static Material material;
+    // TODO
+    // private static Material material;
 
-	/**
-	 * Used by Serializer
-	 */
-	public ArcheryTrait( )
-	{
+    /**
+     * Used by Serializer
+     */
+    public ArcheryTrait( )
+    {
 
-	}
+    }
 
-	@Override
-	public Material getMaterial( AssetManager assetManager )
-	{
-		// TODO
-		return null;
-	}
+    @Override
+    public Material getMaterial( AssetManager assetManager )
+    {
+        // TODO
+        return null;
+    }
 
-	@Override
-	public Spatial getSpatial( AssetManager assetManager )
-	{
-		return assetManager.loadModel( "Materials/archery.obj" );
-	}
+    @Override
+    public Spatial getSpatial( AssetManager assetManager )
+    {
+        return assetManager.loadModel( "Materials/archery.obj" );
+    }
 
 }

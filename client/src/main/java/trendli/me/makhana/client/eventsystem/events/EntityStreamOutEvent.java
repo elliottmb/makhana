@@ -8,9 +8,9 @@ import com.simsilica.es.EntityId;
 public class EntityStreamOutEvent extends EntityEvent
 {
 
-	public EntityStreamOutEvent( EntityData entityData, EntityId source )
-	{
-		super( entityData, source );
-	}
+    public EntityStreamOutEvent( EntityData entityData, EntityId source )
+    {
+        super( entityData, source );
+    }
 
 }
