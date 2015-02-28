@@ -4,7 +4,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import trendli.me.makhana.client.states.WorldManager;
-import trendli.me.makhana.client.util.NiftyFactory;
+import trendli.me.makhana.client.ui.StartViewController;
 
 import com.jme3.input.KeyInput;
 import com.jme3.input.controls.ActionListener;
@@ -200,11 +200,11 @@ public class NiftyReboot extends OfflineClient
 	private void startNifty( )
 	{
 
-		NiftyFactory.createStartView( getNifty( ) );
+		// NiftyFactory.createStartView( getNifty( ) );
 		// stateManager.attach( ( AppState ) getNifty( ).getScreen( "start"
 		// ).getScreenController( ) );
-		// stateManager.attach( ( AppState ) new StartViewController( getNifty(
-		// ) ) );
+		// stateManager.attach( new StartViewController( getNifty( ) ) );
+		new StartViewController( this );
 		getNifty( ).gotoScreen( "start" );
 
 		// NiftyFactory.createConsole( getNifty( ) );
