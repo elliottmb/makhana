@@ -10,10 +10,8 @@ import java.util.logging.Logger;
 import trendli.me.makhana.client.OfflineClient;
 import trendli.me.makhana.client.util.KeyBindings;
 import trendli.me.makhana.common.eventsystem.Event;
-import trendli.me.makhana.common.eventsystem.EventHandler;
 import trendli.me.makhana.common.util.MakhanaConfig;
 
-import com.cogitareforma.hexrepublics.client.views.HudViewController;
 import com.jme3.app.Application;
 import com.jme3.app.state.AppStateManager;
 import com.jme3.audio.Listener;
@@ -139,7 +137,7 @@ public class OptionsViewController extends BaseScreenController
                                                 alignCenter( );
                                                 valignCenter( );
                                                 visibleToMouse( true );
-                                                interactOnClick( "exitMainOptions()" );
+                                                interactOnClick( "exitOptions()" );
                                             }
                                         } );
                                     }
@@ -629,18 +627,9 @@ public class OptionsViewController extends BaseScreenController
         return button.getText( );
     }
 
-    public void exitMainOptions( )
+    public void exitOptions( )
     {
-        if ( getApp( ).getNifty( ).getScreen( "hud" ) != null )
-        {
-            HudViewController hud = ( HudViewController ) getApp( ).getNifty( ).getScreen( "hud" ).getScreenController( );
-            hud.refreshKeys( );
-            gotoScreen( "hud", true, false, true, null, null );
-        }
-        else
-        {
-            gotoScreen( "start", true, false, true, null, null );
-        }
+        gotoScreen( "mainMenu", null, null );
     }
 
     /**
@@ -725,6 +714,13 @@ public class OptionsViewController extends BaseScreenController
     {
         String select = this.graphic.getSelection( );
         System.out.println( select );
+    }
+
+    @Override
+    public boolean handle( Event event )
+    {
+        // TODO Auto-generated method stub
+        return false;
     }
 
     /**
@@ -916,13 +912,6 @@ public class OptionsViewController extends BaseScreenController
     {
         Button button = getApp( ).getNifty( ).getCurrentScreen( ).findNiftyControl( keyButton, Button.class );
         button.setText( KeyBindings.getKeyName( ( int ) getApp( ).getConfiguration( ).get( yamlKey ) ) );
-    }
-
-    @Override
-    public boolean handle( Event event )
-    {
-        // TODO Auto-generated method stub
-        return false;
     }
 
 }

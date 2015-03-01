@@ -6,7 +6,6 @@ import java.util.logging.Logger;
 import trendli.me.makhana.client.OfflineClient;
 import trendli.me.makhana.client.util.NiftyFactory;
 import trendli.me.makhana.common.eventsystem.Event;
-import trendli.me.makhana.common.eventsystem.EventHandler;
 
 import com.jme3.audio.AudioNode;
 
@@ -32,26 +31,26 @@ import de.lessvoid.nifty.screen.Screen;
  * @author Ryan Grier
  * @author Elliott Butler
  */
-public class StartViewController extends BaseScreenController implements KeyInputHandler
+public class MainMenuController extends BaseScreenController implements KeyInputHandler
 {
 
     /**
      * The logger for this class.
      */
-    private final static Logger logger = Logger.getLogger( StartViewController.class.getName( ) );
+    private final static Logger logger = Logger.getLogger( MainMenuController.class.getName( ) );
 
     private Element login;
     private TextField username;
     private TextField password;
     private Label loginFail;
     private AudioNode startMusic;
-    private ScreenBuilder startScreen = null;
+    private ScreenBuilder mainMenuScreen = null;
     Button loginButton;
 
-    public StartViewController( OfflineClient app )
+    public MainMenuController( OfflineClient app )
     {
         super( app );
-        startScreen = new ScreenBuilder( "start" )
+        mainMenuScreen = new ScreenBuilder( "mainMenu" )
         {
             {
                 // controller( new StartViewController( ) );
@@ -149,7 +148,9 @@ public class StartViewController extends BaseScreenController implements KeyInpu
                 } );
             }
         };
-        // TODO change popup to hidden panel?
+        mainMenuScreen.controller( this );
+        mainMenuScreen.build( app.getNifty( ) );
+
         PopupBuilder popup = new PopupBuilder( "loginPopup" )
         {
             {
@@ -262,14 +263,17 @@ public class StartViewController extends BaseScreenController implements KeyInpu
                 } );
             }
         };
-        startScreen.controller( this );
-        startScreen.build( app.getNifty( ) );
-
         popup.registerPopup( getApp( ).getNifty( ) );
+
+        startMusic = new AudioNode( getApp( ).getAssetManager( ), "Sounds/mainMellody.wav", false );
+        startMusic.setLooping( true );
+        startMusic.setPositional( false );
     }
 
     public void bind( Nifty nifty, Screen screen )
     {
+        System.out.println( "Binding! " + nifty.toString( ) + " " + screen.toString( ) );
+        getApp( ).getNifty( ).createPopupWithId( "loginPopup", "loginPopup" );
     }
 
     public void closeLogin( )
@@ -280,7 +284,7 @@ public class StartViewController extends BaseScreenController implements KeyInpu
     public void gotoNetwork( )
     {
         NiftyFactory.createNetworkView( getApp( ).getNifty( ) );
-        gotoScreen( "network", true, true, true, null, ( ) ->
+        gotoScreen( "network", null, ( ) ->
         {
             getApp( ).getAudioRenderer( ).stopSource( startMusic );
             return null;
@@ -290,7 +294,7 @@ public class StartViewController extends BaseScreenController implements KeyInpu
     public void gotoSinglePlayer( )
     {
         NiftyFactory.createSinglePlayerLobby( getApp( ).getNifty( ) );
-        gotoScreen( "singlePlayerLobby", true, true, true, null, ( ) ->
+        gotoScreen( "singlePlayerLobby", null, ( ) ->
         {
             getApp( ).getAudioRenderer( ).stopSource( startMusic );
             return null;
@@ -324,12 +328,14 @@ public class StartViewController extends BaseScreenController implements KeyInpu
     public void onEndScreen( )
     {
         logger.log( Level.INFO, "Start Screen Stopped" );
+        getApp( ).getAudioRenderer( ).stopSource( startMusic );
     }
 
     public void onStartScreen( )
     {
         logger.log( Level.INFO, "Start Screen Started" );
-        getApp( ).getNifty( ).createPopupWithId( "loginPopup", "loginPopup" );
+
+        getApp( ).getAudioRenderer( ).playSource( startMusic );
     }
 
     public void openLogin( )
@@ -342,9 +348,8 @@ public class StartViewController extends BaseScreenController implements KeyInpu
      */
     public void openOptions( )
     {
-        NiftyFactory.createMainOptions( getApp( ).getNifty( ) );
         // gotoScreen( "mainOptions", false, true, false, null, null );
-        getApp( ).getNifty( ).gotoScreen( "mainOptions" );
+        gotoScreen( "options", null, null );
     }
 
     /**

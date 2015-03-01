@@ -41,14 +41,14 @@ public abstract class BaseScreenController implements ScreenController, EventHan
         return screenId;
     }
 
-    public void gotoScreen( String nextScreenId, boolean detachCurrent, boolean attachNext, boolean removeCurrent,
-            Callable< Void > preHook, Callable< Void > postHook )
+    public void gotoScreen( String nextScreenId, Callable< Void > preHook, Callable< Void > postHook )
     {
         getApp( ).enqueue( ( ) ->
         {
             if ( getApp( ).getNifty( ).getScreen( nextScreenId ) != null )
             {
                 logger.log( Level.INFO, "Going to screen " + nextScreenId );
+                getApp( ).getNifty( ).gotoScreen( nextScreenId );
                 // TODO: Refactor!
             }
             return null;
