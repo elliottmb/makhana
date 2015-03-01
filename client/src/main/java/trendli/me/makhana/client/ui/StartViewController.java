@@ -277,13 +277,6 @@ public class StartViewController extends BaseScreenController implements KeyInpu
         getApp( ).getNifty( ).closePopup( "loginPopup" );
     }
 
-    @Override
-    public int compareTo( EventHandler o )
-    {
-        // TODO Auto-generated method stub
-        return 0;
-    }
-
     public void gotoNetwork( )
     {
         NiftyFactory.createNetworkView( getApp( ).getNifty( ) );
@@ -350,7 +343,8 @@ public class StartViewController extends BaseScreenController implements KeyInpu
     public void openOptions( )
     {
         NiftyFactory.createMainOptions( getApp( ).getNifty( ) );
-        gotoScreen( "mainOptions", false, true, false, null, null );
+        // gotoScreen( "mainOptions", false, true, false, null, null );
+        getApp( ).getNifty( ).gotoScreen( "mainOptions" );
     }
 
     /**
