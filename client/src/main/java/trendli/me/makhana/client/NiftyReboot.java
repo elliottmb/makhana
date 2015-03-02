@@ -4,6 +4,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import trendli.me.makhana.client.states.WorldManager;
+import trendli.me.makhana.client.ui.ConsoleController;
 import trendli.me.makhana.client.ui.GameSetupController;
 import trendli.me.makhana.client.ui.MainMenuController;
 import trendli.me.makhana.client.ui.OptionsController;
@@ -39,7 +40,7 @@ public class NiftyReboot extends OfflineClient
     /**
      * Boolean to control if console is enabled. Set by YamlConfig.
      */
-    public boolean consoleEnabled = false;
+    public boolean consoleEnabled = true;
 
     /**
      * The Client's world manager.
@@ -50,7 +51,18 @@ public class NiftyReboot extends OfflineClient
     {
         if ( name.equals( "showConsole" ) && !keyPressed && consoleEnabled )
         {
-            // TODO: REDO
+            // TODO: Reopening messes up being able to type in box.
+            if ( getNifty( ).getTopMostPopup( ) != null )
+            {
+                if ( getNifty( ).getTopMostPopup( ).getId( ).equals( "consolePopup" ) )
+                {
+                    getNifty( ).closePopup( "consolePopup" );
+                }
+            }
+            else
+            {
+                getNifty( ).showPopup( getNifty( ).getCurrentScreen( ), "consolePopup", null );
+            }
         }
         if ( name.equals( "hideFPS" ) && !keyPressed )
         {
@@ -164,9 +176,12 @@ public class NiftyReboot extends OfflineClient
         // test multiview for gui
         guiViewPort.getCamera( ).setViewPort( 0f, 1f, 0f, 1f );
 
-        inputManager.addMapping( "showConsole", new KeyTrigger( ( Integer ) getConfiguration( ).get( "client.input.consoleKey" ) ) );
+        inputManager.addMapping( "showConsole", new KeyTrigger( KeyInput.KEY_GRAVE ) );
+        // inputManager.addMapping( "showConsole", new KeyTrigger( ( Integer )
+        // getConfiguration( ).get( "client.input.consoleKey" ) ) );
         inputManager.addMapping( "hideFPS", new KeyTrigger( KeyInput.KEY_F12 ) );
-        consoleEnabled = ( Boolean ) getConfiguration( ).get( "client.input.console" );
+        // consoleEnabled = ( Boolean ) getConfiguration( ).get(
+        // "client.input.console" );
         inputManager.addListener( getBaseActionListener( ), "showConsole", "hideFPS" );
     }
 
@@ -196,7 +211,9 @@ public class NiftyReboot extends OfflineClient
         new MainMenuController( this );
         new OptionsController( this );
         new GameSetupController( this );
+        new ConsoleController( this );
         getNifty( ).gotoScreen( "mainMenu" );
+        getNifty( ).createPopupWithId( "consolePopup", "consolePopup" );
     }
 
 }
