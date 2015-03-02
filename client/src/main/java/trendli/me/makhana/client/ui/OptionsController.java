@@ -39,12 +39,12 @@ import de.lessvoid.nifty.screen.Screen;
  * 
  * @author Ryan Grier
  */
-public class OptionsViewController extends BaseScreenController
+public class OptionsController extends BaseScreenController
 {
     /**
      * The logger for this class.
      */
-    private final static Logger logger = Logger.getLogger( OptionsViewController.class.getName( ) );
+    private final static Logger logger = Logger.getLogger( OptionsController.class.getName( ) );
     private DropDown< String > graphic;
     private CheckBox fullscreen;
     private Slider mainVolume;
@@ -74,7 +74,7 @@ public class OptionsViewController extends BaseScreenController
 
     private ScreenBuilder optionsScreen = null;
 
-    public OptionsViewController( OfflineClient app )
+    public OptionsController( OfflineClient app )
     {
         super( app );
         optionsScreen = new ScreenBuilder( "options" )

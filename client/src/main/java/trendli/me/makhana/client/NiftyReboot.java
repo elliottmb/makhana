@@ -4,9 +4,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import trendli.me.makhana.client.states.WorldManager;
+import trendli.me.makhana.client.ui.GameSetupController;
 import trendli.me.makhana.client.ui.MainMenuController;
-import trendli.me.makhana.client.ui.OptionsViewController;
-import trendli.me.makhana.client.ui.SinglePlayerViewController;
+import trendli.me.makhana.client.ui.OptionsController;
 
 import com.jme3.input.KeyInput;
 import com.jme3.input.controls.ActionListener;
@@ -194,8 +194,8 @@ public class NiftyReboot extends OfflineClient
         // ).getScreenController( ) );
         // stateManager.attach( new StartViewController( getNifty( ) ) );
         new MainMenuController( this );
-        new OptionsViewController( this );
-        new SinglePlayerViewController( this );
+        new OptionsController( this );
+        new GameSetupController( this );
         getNifty( ).gotoScreen( "mainMenu" );
     }
 

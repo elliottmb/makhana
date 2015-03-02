@@ -284,18 +284,18 @@ public class MainMenuController extends BaseScreenController implements KeyInput
     {
         gotoScreen( "network", null, ( ) ->
         {
-            getApp( ).getAudioRenderer( ).stopSource( startMusic );
-            return null;
-        } );
+            // getApp( ).getAudioRenderer( ).stopSource( startMusic );
+                return null;
+            } );
     }
 
     public void gotoSinglePlayer( )
     {
-        gotoScreen( "singlePlayerLobby", null, ( ) ->
+        gotoScreen( "gameSetup", null, ( ) ->
         {
-            getApp( ).getAudioRenderer( ).stopSource( startMusic );
-            return null;
-        } );
+            // getApp( ).getAudioRenderer( ).stopSource( startMusic );
+                return null;
+            } );
     }
 
     @Override

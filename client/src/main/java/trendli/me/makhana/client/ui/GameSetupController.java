@@ -19,12 +19,12 @@ import de.lessvoid.nifty.controls.button.builder.ButtonBuilder;
 import de.lessvoid.nifty.controls.dropdown.builder.DropDownBuilder;
 import de.lessvoid.nifty.controls.label.builder.LabelBuilder;
 
-public class SinglePlayerViewController extends BaseScreenController
+public class GameSetupController extends BaseScreenController
 {
     /**
      * The logger for this class.
      */
-    private final static Logger logger = Logger.getLogger( SinglePlayerViewController.class.getName( ) );
+    private final static Logger logger = Logger.getLogger( GameSetupController.class.getName( ) );
 
     private Nifty nifty;
 
@@ -32,12 +32,12 @@ public class SinglePlayerViewController extends BaseScreenController
     private DropDown< String > worldSize;
     private DropDown< String > maxTurns;
 
-    public SinglePlayerViewController( OfflineClient app )
+    public GameSetupController( OfflineClient app )
     {
         super( app );
         // TODO Auto-generated constructor stub
 
-        ScreenBuilder singlePlayerScreen = new ScreenBuilder( "singlePlayerLobby" )
+        ScreenBuilder gameSetupBuilder = new ScreenBuilder( "gameSetup" )
         {
             {
                 layer( new LayerBuilder( "" )
@@ -214,8 +214,8 @@ public class SinglePlayerViewController extends BaseScreenController
                 } );
             }
         };
-        singlePlayerScreen.controller( this );
-        singlePlayerScreen.build( app.getNifty( ) );
+        gameSetupBuilder.controller( this );
+        gameSetupBuilder.build( app.getNifty( ) );
     }
 
     public void back( )
@@ -234,12 +234,12 @@ public class SinglePlayerViewController extends BaseScreenController
     @SuppressWarnings( "unchecked" )
     public void initialize( AppStateManager stateManager, Application app )
     {
-        setScreenId( "singlePlayerLobby" );
+        setScreenId( "gameSetup" );
         // super.initialize( stateManager, app );
         this.nifty = getApp( ).getNifty( );
-        this.AIDropDown = nifty.getScreen( "singlePlayerLobby" ).findNiftyControl( "AIOptions", DropDown.class );
-        this.worldSize = nifty.getScreen( "singlePlayerLobby" ).findNiftyControl( "worldSizeOptions", DropDown.class );
-        this.maxTurns = nifty.getScreen( "singlePlayerLobby" ).findNiftyControl( "maxTurnssOptions", DropDown.class );
+        this.AIDropDown = nifty.getScreen( "gameSetup" ).findNiftyControl( "AIOptions", DropDown.class );
+        this.worldSize = nifty.getScreen( "gameSetup" ).findNiftyControl( "worldSizeOptions", DropDown.class );
+        this.maxTurns = nifty.getScreen( "gameSetup" ).findNiftyControl( "maxTurnssOptions", DropDown.class );
         startOfflineGameserver( );
     }
 

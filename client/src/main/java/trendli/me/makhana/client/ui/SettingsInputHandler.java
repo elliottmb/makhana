@@ -18,10 +18,10 @@ public class SettingsInputHandler implements RawInputListener
      */
     private final static Logger logger = Logger.getLogger( SettingsInputHandler.class.getName( ) );
 
-    private OptionsViewController appState;
+    private OptionsController appState;
     private String eventId;
 
-    public SettingsInputHandler( OptionsViewController state, String eventId )
+    public SettingsInputHandler( OptionsController state, String eventId )
     {
         this.appState = state;
         this.eventId = eventId;
