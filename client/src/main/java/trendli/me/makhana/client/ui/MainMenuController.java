@@ -4,7 +4,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import trendli.me.makhana.client.OfflineClient;
-import trendli.me.makhana.client.util.NiftyFactory;
 import trendli.me.makhana.common.eventsystem.Event;
 
 import com.jme3.audio.AudioNode;
@@ -283,7 +282,6 @@ public class MainMenuController extends BaseScreenController implements KeyInput
 
     public void gotoNetwork( )
     {
-        NiftyFactory.createNetworkView( getApp( ).getNifty( ) );
         gotoScreen( "network", null, ( ) ->
         {
             getApp( ).getAudioRenderer( ).stopSource( startMusic );
@@ -293,7 +291,6 @@ public class MainMenuController extends BaseScreenController implements KeyInput
 
     public void gotoSinglePlayer( )
     {
-        NiftyFactory.createSinglePlayerLobby( getApp( ).getNifty( ) );
         gotoScreen( "singlePlayerLobby", null, ( ) ->
         {
             getApp( ).getAudioRenderer( ).stopSource( startMusic );

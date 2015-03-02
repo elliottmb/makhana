@@ -3,7 +3,6 @@ package trendli.me.makhana.client;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import trendli.me.makhana.client.ui.ScreenManager;
 import trendli.me.makhana.common.eventsystem.Event;
 import trendli.me.makhana.common.eventsystem.EventHandler;
 import trendli.me.makhana.common.eventsystem.EventManager;
@@ -28,8 +27,6 @@ public abstract class OfflineClient extends SimpleApplication
 
     private EventManager< Event, EventHandler > eventManager;
 
-    private ScreenManager screenManager;
-
     private EntityData entityData;
 
     /**
@@ -42,7 +39,6 @@ public abstract class OfflineClient extends SimpleApplication
         super( );
 
         setConfiguration( new MakhanaConfig( ) );
-        setScreenManager( new ScreenManager( this, guiNode ) );
         setEventManager( new ThreadSafeEventManager( this ) );
 
         AppSettings settings = new AppSettings( true );
@@ -103,21 +99,6 @@ public abstract class OfflineClient extends SimpleApplication
     }
 
     /**
-     * @return the screenManager
-     */
-    public ScreenManager getScreenManager( )
-    {
-        return screenManager;
-    }
-
-    @Override
-    public void reshape( int w, int h )
-    {
-        super.reshape( w, h );
-        screenManager.reshape( w, h );
-    }
-
-    /**
      * @param configuration
      *            the configuration to set
      */
@@ -151,17 +132,6 @@ public abstract class OfflineClient extends SimpleApplication
     public void setNiftyDisplay( NiftyJmeDisplay niftyDisplay )
     {
         this.niftyDisplay = niftyDisplay;
-    }
-
-    /**
-     * @param screenManager
-     *            the screenManager to set
-     */
-    private void setScreenManager( ScreenManager screenManager )
-    {
-        stateManager.detach( this.screenManager );
-        stateManager.attach( screenManager );
-        this.screenManager = screenManager;
     }
 
     @Override

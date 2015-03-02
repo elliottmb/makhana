@@ -5,6 +5,7 @@ package trendli.me.makhana.client.ui;
  * @author Elliott Butler
  *
  */
+@Deprecated
 public class ScreenContext
 {
     private static final float baseScalar = 0.0016f;

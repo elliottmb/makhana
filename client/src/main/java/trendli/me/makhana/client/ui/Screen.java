@@ -8,6 +8,7 @@ import com.jme3.scene.Node;
  * @author Elliott Butler
  *
  */
+@Deprecated
 public abstract class Screen
 {
 

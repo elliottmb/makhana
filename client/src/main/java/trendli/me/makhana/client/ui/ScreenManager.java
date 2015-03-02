@@ -15,6 +15,7 @@ import com.jme3.util.SafeArrayList;
  * @author Elliott Butler
  *
  */
+@Deprecated
 public class ScreenManager extends AbstractAppState
 {
 

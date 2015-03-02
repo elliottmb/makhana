@@ -6,6 +6,7 @@ import java.util.logging.Logger;
 import trendli.me.makhana.client.states.WorldManager;
 import trendli.me.makhana.client.ui.MainMenuController;
 import trendli.me.makhana.client.ui.OptionsViewController;
+import trendli.me.makhana.client.ui.SinglePlayerViewController;
 
 import com.jme3.input.KeyInput;
 import com.jme3.input.controls.ActionListener;
@@ -194,6 +195,7 @@ public class NiftyReboot extends OfflineClient
         // stateManager.attach( new StartViewController( getNifty( ) ) );
         new MainMenuController( this );
         new OptionsViewController( this );
+        new SinglePlayerViewController( this );
         getNifty( ).gotoScreen( "mainMenu" );
     }
 
