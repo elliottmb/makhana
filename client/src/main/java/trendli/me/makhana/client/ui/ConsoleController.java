@@ -8,8 +8,8 @@ import de.lessvoid.nifty.builder.PanelBuilder;
 import de.lessvoid.nifty.builder.PopupBuilder;
 import de.lessvoid.nifty.controls.Console;
 import de.lessvoid.nifty.controls.ConsoleCommands;
-import de.lessvoid.nifty.controls.TextField;
 import de.lessvoid.nifty.controls.ConsoleCommands.ConsoleCommand;
+import de.lessvoid.nifty.controls.TextField;
 import de.lessvoid.nifty.controls.console.builder.ConsoleBuilder;
 import de.lessvoid.nifty.screen.Screen;
 
@@ -32,7 +32,7 @@ public class ConsoleController extends BaseScreenController
                     {
                         style( "nifty-panel-brown" );
                         childLayoutCenter( );
-                        //width( "320px" );
+                        // width( "320px" );
                         alignCenter( );
                         valignCenter( );
                         panel( new PanelBuilder( "consolePanel" )
@@ -63,7 +63,7 @@ public class ConsoleController extends BaseScreenController
 
     public void bind( Nifty nifty, Screen screen )
     {
-        //TODO bind doesnt run for pop up. 
+        // TODO bind doesnt run for pop up.
         System.out.println( "Binding! " + nifty.toString( ) + " " + screen.toString( ) );
         console = nifty.getScreen( "consoleScreen" ).findNiftyControl( "console", Console.class );
         consoleCommands = new ConsoleCommands( nifty, console );
@@ -72,7 +72,7 @@ public class ConsoleController extends BaseScreenController
         console.getTextField( ).setFocus( );
         bindCommands( );
     }
-    
+
     public void bindCommands( )
     {
         ConsoleCommand test = ( String[ ] arg0 ) ->
@@ -89,12 +89,12 @@ public class ConsoleController extends BaseScreenController
         consoleCommands.registerCommand( "help", help );
         consoleCommands.enableCommandCompletion( true );
     }
-    
-    public void onStartScreen( )
+
+    @Override
+    public int compareTo( EventHandler arg0 )
     {
-        TextField consoleInput = getApp( ).getNifty( ).getCurrentScreen( ).findNiftyControl( "console", Console.class ).getTextField( );
-        consoleInput.setText( consoleInput.getRealText( ).replace( "`", "" ) );
-        consoleInput.setCursorPosition( consoleInput.getRealText( ).length( ) );
+        // TODO Auto-generated method stub
+        return 0;
     }
 
     @Override
@@ -104,11 +104,11 @@ public class ConsoleController extends BaseScreenController
         return false;
     }
 
-    @Override
-    public int compareTo( EventHandler arg0 )
+    public void onStartScreen( )
     {
-        // TODO Auto-generated method stub
-        return 0;
+        TextField consoleInput = getApp( ).getNifty( ).getCurrentScreen( ).findNiftyControl( "console", Console.class ).getTextField( );
+        consoleInput.setText( consoleInput.getRealText( ).replace( "`", "" ) );
+        consoleInput.setCursorPosition( consoleInput.getRealText( ).length( ) );
     }
 
 }

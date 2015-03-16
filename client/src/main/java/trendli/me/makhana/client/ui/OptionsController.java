@@ -4,7 +4,6 @@ import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.util.LinkedHashMap;
 import java.util.Map.Entry;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import trendli.me.makhana.client.OfflineClient;
@@ -12,8 +11,6 @@ import trendli.me.makhana.client.util.KeyBindings;
 import trendli.me.makhana.common.eventsystem.Event;
 import trendli.me.makhana.common.util.MakhanaConfig;
 
-import com.jme3.app.Application;
-import com.jme3.app.state.AppStateManager;
 import com.jme3.audio.Listener;
 import com.jme3.input.KeyInput;
 import com.jme3.input.event.KeyInputEvent;
@@ -612,7 +609,21 @@ public class OptionsController extends BaseScreenController
 
     public void bind( Nifty nifty, Screen screen )
     {
+        super.bind( nifty, screen );
 
+        this.graphic = getScreen( ).findNiftyControl( "graphicsOptions", DropDown.class );
+        this.fullscreen = getScreen( ).findNiftyControl( "graphicsFullscreen", CheckBox.class );
+        this.mainVolume = getScreen( ).findNiftyControl( "mainVolumeSlider", Slider.class );
+        this.console = getScreen( ).findNiftyControl( "consoleCheckBox", CheckBox.class );
+        fillGraphicsOptions( );
+        for ( int i = 0; i < keys.length; i++ )
+        {
+            k.put( keys[ i ], values[ i ] );
+        }
+        fillkeys( );
+        graphic.selectItem( getApp( ).getContext( ).getSettings( ).getWidth( ) + "x" + getApp( ).getContext( ).getSettings( ).getHeight( ) );
+        mainVolume.setValue( ( getApp( ).getListener( ).getVolume( ) ) * 50.0f );
+        keyBinds = new KeyBindings( getApp( ).getConfiguration( ) );
     }
 
     /**
@@ -790,36 +801,6 @@ public class OptionsController extends BaseScreenController
         return false;
     }
 
-    // TODO: Fix/Refactor
-    public void initialize( AppStateManager stateManager, Application app )
-    {
-
-        logger.log( Level.INFO, "Initialised " + this.getClass( ) );
-        if ( getApp( ).getNifty( ).getScreen( "mainOptions" ).isRunning( ) )
-        {
-            this.graphic = getApp( ).getNifty( ).getScreen( "mainOptions" ).findNiftyControl( "graphicsOptions", DropDown.class );
-            this.fullscreen = getApp( ).getNifty( ).getScreen( "mainOptions" ).findNiftyControl( "graphicsFullscreen", CheckBox.class );
-            this.mainVolume = getApp( ).getNifty( ).getScreen( "mainOptions" ).findNiftyControl( "mainVolumeSlider", Slider.class );
-            this.console = getApp( ).getNifty( ).getScreen( "mainOptions" ).findNiftyControl( "consoleCheckBox", CheckBox.class );
-            fillGraphicsOptions( );
-            // TODO: Fix/Refactor
-            // getApp( ).currentScreen = "mainOptions";
-        }
-        else
-        {
-            // TODO: Fix/Refactor
-            // getApp( ).currentScreen = "options";
-        }
-        for ( int i = 0; i < keys.length; i++ )
-        {
-            k.put( keys[ i ], values[ i ] );
-        }
-        fillkeys( );
-        graphic.selectItem( getApp( ).getContext( ).getSettings( ).getWidth( ) + "x" + getApp( ).getContext( ).getSettings( ).getHeight( ) );
-        mainVolume.setValue( ( getApp( ).getListener( ).getVolume( ) ) * 50.0f );
-        keyBinds = new KeyBindings( getApp( ).getConfiguration( ) );
-    }
-
     /**
      * Receives KeyInputEvent and puts corresponding text on the correct button.
      * 
@@ -873,12 +854,12 @@ public class OptionsController extends BaseScreenController
 
     public void onEndScreen( )
     {
-
+        super.onEndScreen( );
     }
 
     public void onStartScreen( )
     {
-
+        super.onStartScreen( );
     }
 
     /**

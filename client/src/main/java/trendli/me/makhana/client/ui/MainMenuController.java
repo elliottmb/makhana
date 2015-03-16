@@ -271,7 +271,7 @@ public class MainMenuController extends BaseScreenController implements KeyInput
 
     public void bind( Nifty nifty, Screen screen )
     {
-        System.out.println( "Binding! " + nifty.toString( ) + " " + screen.toString( ) );
+        super.bind( nifty, screen );
         getApp( ).getNifty( ).createPopupWithId( "loginPopup", "loginPopup" );
     }
 

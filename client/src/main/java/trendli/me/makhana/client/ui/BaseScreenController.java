@@ -15,7 +15,9 @@ public abstract class BaseScreenController implements ScreenController, EventHan
     private final static Logger logger = Logger.getLogger( BaseScreenController.class.getName( ) );
 
     private OfflineClient app;
-    private String screenId;
+    private Screen screen;
+
+    private Nifty nifty;
 
     public BaseScreenController( OfflineClient app )
     {
@@ -23,9 +25,11 @@ public abstract class BaseScreenController implements ScreenController, EventHan
     }
 
     @Override
-    public void bind( Nifty arg0, Screen arg1 )
+    public void bind( Nifty nifty, Screen screen )
     {
-        // TODO Auto-generated method stub
+        logger.log( Level.INFO, screen.getScreenId( ) + " bound." );
+        this.nifty = nifty;
+        this.screen = screen;
     }
 
     protected OfflineClient getApp( )
@@ -34,11 +38,19 @@ public abstract class BaseScreenController implements ScreenController, EventHan
     }
 
     /**
-     * @return the screenId
+     * @return the nifty
      */
-    public String getScreenId( )
+    protected Nifty getNifty( )
     {
-        return screenId;
+        return nifty;
+    }
+
+    /**
+     * @return the screen
+     */
+    protected Screen getScreen( )
+    {
+        return screen;
     }
 
     public void gotoScreen( String nextScreenId, Callable< Void > preHook, Callable< Void > postHook )
@@ -58,23 +70,14 @@ public abstract class BaseScreenController implements ScreenController, EventHan
     @Override
     public void onEndScreen( )
     {
-        logger.log( Level.INFO, getScreenId( ) + " screen ended." );
+        logger.log( Level.INFO, screen.getScreenId( ) + " screen ended." );
 
     }
 
     @Override
     public void onStartScreen( )
     {
-
-    }
-
-    /**
-     * @param screenId
-     *            the screenId to set
-     */
-    public void setScreenId( String screenId )
-    {
-        this.screenId = screenId;
+        logger.log( Level.INFO, screen.getScreenId( ) + " screen started." );
     }
 
 }

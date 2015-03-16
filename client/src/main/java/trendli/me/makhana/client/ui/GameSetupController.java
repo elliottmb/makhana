@@ -5,10 +5,6 @@ import java.util.logging.Logger;
 
 import trendli.me.makhana.client.OfflineClient;
 import trendli.me.makhana.common.eventsystem.Event;
-
-import com.jme3.app.Application;
-import com.jme3.app.state.AppStateManager;
-
 import de.lessvoid.nifty.Nifty;
 import de.lessvoid.nifty.builder.LayerBuilder;
 import de.lessvoid.nifty.builder.PanelBuilder;
@@ -18,6 +14,7 @@ import de.lessvoid.nifty.controls.DropDown;
 import de.lessvoid.nifty.controls.button.builder.ButtonBuilder;
 import de.lessvoid.nifty.controls.dropdown.builder.DropDownBuilder;
 import de.lessvoid.nifty.controls.label.builder.LabelBuilder;
+import de.lessvoid.nifty.screen.Screen;
 
 public class GameSetupController extends BaseScreenController
 {
@@ -25,8 +22,6 @@ public class GameSetupController extends BaseScreenController
      * The logger for this class.
      */
     private final static Logger logger = Logger.getLogger( GameSetupController.class.getName( ) );
-
-    private Nifty nifty;
 
     private DropDown< String > AIDropDown;
     private DropDown< String > worldSize;
@@ -225,22 +220,21 @@ public class GameSetupController extends BaseScreenController
     }
 
     @Override
+    public void bind( Nifty nifty, Screen screen )
+    {
+        super.bind( nifty, screen );
+
+        this.AIDropDown = getScreen( ).findNiftyControl( "AIOptions", DropDown.class );
+        this.worldSize = getScreen( ).findNiftyControl( "worldSizeOptions", DropDown.class );
+        this.maxTurns = getScreen( ).findNiftyControl( "maxTurnssOptions", DropDown.class );
+        startOfflineGameserver( );
+    }
+
+    @Override
     public boolean handle( Event event )
     {
         // TODO Auto-generated method stub
         return false;
-    }
-
-    @SuppressWarnings( "unchecked" )
-    public void initialize( AppStateManager stateManager, Application app )
-    {
-        setScreenId( "gameSetup" );
-        // super.initialize( stateManager, app );
-        this.nifty = getApp( ).getNifty( );
-        this.AIDropDown = nifty.getScreen( "gameSetup" ).findNiftyControl( "AIOptions", DropDown.class );
-        this.worldSize = nifty.getScreen( "gameSetup" ).findNiftyControl( "worldSizeOptions", DropDown.class );
-        this.maxTurns = nifty.getScreen( "gameSetup" ).findNiftyControl( "maxTurnssOptions", DropDown.class );
-        startOfflineGameserver( );
     }
 
     public void onEndScreen( )
