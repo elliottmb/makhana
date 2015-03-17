@@ -33,6 +33,7 @@ public class EntityManager extends AbstractAppState
 
     public EntityManager( ClientMain app )
     {
+    	//Bryant was here
         this.app = app;
         this.filterListenerMap = new ConcurrentHashMap<>( );
         this.filterSetMap = new ConcurrentHashMap<>( );
