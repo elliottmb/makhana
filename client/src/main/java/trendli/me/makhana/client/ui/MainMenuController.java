@@ -14,7 +14,6 @@ import de.lessvoid.nifty.builder.PanelBuilder;
 import de.lessvoid.nifty.builder.PopupBuilder;
 import de.lessvoid.nifty.builder.ScreenBuilder;
 import de.lessvoid.nifty.builder.TextBuilder;
-import de.lessvoid.nifty.controls.Button;
 import de.lessvoid.nifty.controls.Label;
 import de.lessvoid.nifty.controls.TextField;
 import de.lessvoid.nifty.controls.button.builder.ButtonBuilder;
@@ -43,13 +42,11 @@ public class MainMenuController extends BaseScreenController implements KeyInput
     private TextField password;
     private Label loginFail;
     private AudioNode startMusic;
-    private ScreenBuilder mainMenuScreen = null;
-    Button loginButton;
 
     public MainMenuController( OfflineClient app )
     {
         super( app );
-        mainMenuScreen = new ScreenBuilder( "mainMenu" )
+        ScreenBuilder mainMenuScreen = new ScreenBuilder( "mainMenu" )
         {
             {
                 // controller( new StartViewController( ) );
@@ -101,7 +98,19 @@ public class MainMenuController extends BaseScreenController implements KeyInput
                                         valignCenter( );
                                         childLayoutVertical( );
 
-                                        control( new ButtonBuilder( "startSingle", "Singleplayer" )
+                                        control( new ButtonBuilder( "startContinue", "Continue Game" )
+                                        {
+
+                                            {
+                                                alignCenter( );
+                                                visibleToMouse( true );
+
+                                                // interactOnClick(
+                                                // "gotoSinglePlayer( )" );
+                                            }
+                                        } );
+
+                                        control( new ButtonBuilder( "startSingle", "Start Game" )
                                         {
 
                                             {
@@ -111,7 +120,7 @@ public class MainMenuController extends BaseScreenController implements KeyInput
                                             }
                                         } );
 
-                                        control( new ButtonBuilder( "startLogin", "Multiplayer" )
+                                        control( new ButtonBuilder( "startEditor", "Level Editor" )
                                         {
 
                                             {
@@ -121,7 +130,7 @@ public class MainMenuController extends BaseScreenController implements KeyInput
                                             }
                                         } );
 
-                                        control( new ButtonBuilder( "startSettings", "Settings" )
+                                        control( new ButtonBuilder( "startOptions", "Options" )
                                         {
                                             {
                                                 alignCenter( );
@@ -360,21 +369,6 @@ public class MainMenuController extends BaseScreenController implements KeyInput
     public void setFailText( String notice )
     {
         loginFail.setText( notice );
-    }
-
-    private void setLoginEnabled( boolean enabled )
-    {
-        System.out.println( "setLoginEnabled entered" );
-        System.out.println( "setLoginEnabled correct screen and value of " + enabled );
-        loginButton.setEnabled( enabled );
-        if ( enabled )
-        {
-            loginButton.setText( "Multiplayer" );
-        }
-        else
-        {
-            loginButton.setText( "Offline" );
-        }
     }
 
     /**
