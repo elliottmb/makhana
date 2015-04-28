@@ -66,34 +66,20 @@ public class MainTest extends SimpleApplication implements ActionListener
         // flyCam.setEnabled( true );
         flyCam.setMoveSpeed( 40f );
 
-        Spatial dirt = ( Spatial ) CrumbType.Dirt.getSpatial( assetManager ); // assetManager.loadModel(
-                                                                              // "Models/single-layer-dirt.obj"
-                                                                              // );
-        // System.out.println(dirt.getClass( ));
-        Spatial grass = ( Spatial ) CrumbType.Grass.getSpatial( assetManager ); // assetManager.loadModel(
-                                                                                // "Models/single-layer-grass.obj"
-                                                                                // );
-        // System.out.println(grass.getClass( ));
-        Spatial road = ( Spatial ) CrumbType.Grass.getSpatial( assetManager ); // assetManager.loadModel(
-                                                                               // "Models/partial-layer-road-straight.obj"
-                                                                               // );
-        // System.out.println(road.getClass( ));
-        Spatial beach = ( Spatial ) CrumbType.Beach_Concave_Grass.getSpatial( assetManager ); // assetManager.loadModel(
-        // "Models/single-layer-beach-concave.obj"
-        // );
-        // System.out.println(beach.getClass( ));
-        Spatial water = ( Spatial ) CrumbType.Water.getSpatial( assetManager ); // assetManager.loadModel(
-        // "Models/single-layer-water.obj"
-        // );
-        // System.out.println(water.getClass( ));
-        Spatial roadRamp = ( Spatial ) CrumbType.Grass.getSpatial( assetManager ); // assetManager.loadModel(
-                                                                                   // "Models/partial-layer-road-ramp.obj"
-                                                                                   // );
-        // System.out.println(roadRamp.getClass( ));
-        Spatial grassRamp = ( Spatial ) CrumbType.Grass.getSpatial( assetManager ); // assetManager.loadModel(
-                                                                                    // "Models/partial-layer-grass-ramp.obj"
-                                                                                    // );
-        // System.out.println(grassRamp.getClass( ));
+        Spatial dirt = ( Spatial ) CrumbType.Dirt.getSpatial( assetManager );
+
+        Spatial grass = ( Spatial ) CrumbType.Grass.getSpatial( assetManager );
+
+        Spatial road = ( Spatial ) CrumbType.Road.getSpatial( assetManager );
+
+        Spatial beach = ( Spatial ) CrumbType.Beach_Concave_Grass.getSpatial( assetManager );
+
+        Spatial water = ( Spatial ) CrumbType.Water.getSpatial( assetManager );
+
+        Spatial roadRamp = ( Spatial ) CrumbType.Road_Slope.getSpatial( assetManager );
+
+        Spatial grassRamp = ( Spatial ) CrumbType.Grass_Slope.getSpatial( assetManager );
+
         Spatial grassWater = ( Spatial ) CrumbType.Grass.getSpatial( assetManager ); // assetManager.loadModel(
                                                                                      // "Models/single-layer-grass-edge.obj"
                                                                                      // );
@@ -273,14 +259,14 @@ public class MainTest extends SimpleApplication implements ActionListener
 
         DirectionalLight sun = new DirectionalLight( );
         sun.setDirection( new Vector3f( -0.1f, -0.7f, -1.0f ).normalizeLocal( ) );
-        sun.setColor( ColorRGBA.White );
+        sun.setColor( ColorRGBA.White.mult( 0.75f ) );
         rootNode.addLight( sun );
 
         AmbientLight al = new AmbientLight( );
-        al.setColor( ColorRGBA.White.mult( .8f ) );
+        al.setColor( new ColorRGBA( 0.95f, 0.95f, 1f, 1f ) );
         rootNode.addLight( al );
 
-        // viewPort.setBackgroundColor( new ColorRGBA( 0.75f, 0.92f, 1f, 1f ) );
+        viewPort.setBackgroundColor( new ColorRGBA( 0.75f, 0.92f, 1f, 1f ) );
 
         // Texture west = assetManager.loadTexture( "Textures/dunes_left.jpg" );
         // Texture east = assetManager.loadTexture( "Textures/dunes_right.jpg"

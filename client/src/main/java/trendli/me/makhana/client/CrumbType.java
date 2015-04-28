@@ -4,6 +4,7 @@ import java.nio.FloatBuffer;
 
 import com.jme3.asset.AssetManager;
 import com.jme3.material.Material;
+import com.jme3.renderer.queue.RenderQueue.ShadowMode;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.VertexBuffer.Type;
@@ -17,12 +18,18 @@ public class CrumbType
     public static CrumbType Chocolate = new CrumbType( "Models/ground.obj", 0, 0, false );
     // Dirt
     public static CrumbType Dirt = new CrumbType( "Models/ground.obj", 1, 0, false );
+    public static CrumbType Dirt_Slope = new CrumbType( "Models/ground_slope.obj", 1, 0, false );
     // Road
-    public static CrumbType Licorce = new CrumbType( "Models/ground.obj", 0, 0, false );
+    public static CrumbType Road = new CrumbType( "Models/road.obj", 0, 0, false );
+    // Road Sloped
+    public static CrumbType Road_Slope = new CrumbType( "Models/road_slope.obj", 0, 0, false );
     // Grass
     public static CrumbType Grass = new CrumbType( "Models/ground.obj", 2, 0, false );
-    // Grass
-    public static CrumbType Beach_Concave_Grass = new CrumbType( "Models/beach-concave.obj", 0, 0, false );
+    public static CrumbType Grass_Slope = new CrumbType( "Models/ground_slope.obj", 2, 0, false );
+
+    public static CrumbType Beach_Concave_Dirt = new CrumbType( "Models/beach-concave.obj", 0, 8, false );
+
+    public static CrumbType Beach_Concave_Grass = new CrumbType( "Models/beach-concave.obj", 1, 8, false );
     // Sand
     public static CrumbType Lemon = new CrumbType( "Models/ground.obj", 0, 0, false );
     // Leaves
@@ -67,6 +74,8 @@ public class CrumbType
             Geometry geo = ( Geometry ) spatial;
 
             FloatBuffer textureBuffer = geo.getMesh( ).getFloatBuffer( Type.TexCoord );
+
+            spatial.setShadowMode( ShadowMode.CastAndReceive );
 
             for ( int i = 0; i < textureBuffer.limit( ) / 2; i++ )
             {
