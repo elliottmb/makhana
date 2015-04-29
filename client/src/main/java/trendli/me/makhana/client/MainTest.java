@@ -25,16 +25,6 @@ import com.jme3.system.AppSettings;
  */
 public class MainTest extends SimpleApplication implements ActionListener
 {
-    private BetterCharacterControl player;
-    private BulletAppState bulletAppState;
-    private Vector3f walkDirection = new Vector3f( );
-    private boolean left = false, right = false, up = false, down = false;
-    private boolean testPhysics = true;
-    private boolean firstPerson = false;
-    private boolean testNewFullMap = true;
-    private CameraNode camNode;
-    private Node playerNode;
-
     public static void main( String[ ] args )
     {
         MainTest app = new MainTest( );
@@ -47,17 +37,16 @@ public class MainTest extends SimpleApplication implements ActionListener
 
     }
 
-    @Override
-    public void simpleInitApp( )
-    {
-        bulletAppState = new BulletAppState( );
-        stateManager.attach( bulletAppState );
-        if ( testNewFullMap )
-        {
-            createMap( );
-        }
+    private BetterCharacterControl player;
+    private BulletAppState bulletAppState;
+    private Vector3f walkDirection = new Vector3f( );
+    private boolean left = false, right = false, up = false, down = false;
+    private boolean testPhysics = true;
+    private boolean firstPerson = false;
+    private boolean testNewFullMap = true;
+    private CameraNode camNode;
 
-    }
+    private Node playerNode;
 
     private void createMap( )
     {
@@ -66,35 +55,35 @@ public class MainTest extends SimpleApplication implements ActionListener
         // flyCam.setEnabled( true );
         flyCam.setMoveSpeed( 40f );
 
-        Spatial dirt = ( Spatial ) CrumbType.Dirt.getSpatial( assetManager );
+        Spatial dirt = ( Spatial ) Crumb.Dirt.getSpatial( assetManager );
 
-        Spatial grass = ( Spatial ) CrumbType.Grass.getSpatial( assetManager );
+        Spatial grass = ( Spatial ) Crumb.Grass.getSpatial( assetManager );
 
-        Spatial road = ( Spatial ) CrumbType.Road.getSpatial( assetManager );
+        Spatial road = ( Spatial ) Crumb.Road.getSpatial( assetManager );
 
-        Spatial beach = ( Spatial ) CrumbType.Beach_Concave_Grass.getSpatial( assetManager );
+        Spatial beach = ( Spatial ) Crumb.Beach_Concave_Grass.getSpatial( assetManager );
 
-        Spatial water = ( Spatial ) CrumbType.Water.getSpatial( assetManager );
+        Spatial water = ( Spatial ) Crumb.Water.getSpatial( assetManager );
 
-        Spatial roadRamp = ( Spatial ) CrumbType.Road_Slope.getSpatial( assetManager );
+        Spatial roadRamp = ( Spatial ) Crumb.Road_Slope.getSpatial( assetManager );
 
-        Spatial grassRamp = ( Spatial ) CrumbType.Grass_Slope.getSpatial( assetManager );
+        Spatial grassRamp = ( Spatial ) Crumb.Grass_Slope.getSpatial( assetManager );
 
-        Spatial grassWater = ( Spatial ) CrumbType.Grass.getSpatial( assetManager ); // assetManager.loadModel(
-                                                                                     // "Models/single-layer-grass-edge.obj"
-                                                                                     // );
-        // System.out.println(grassWater.getClass( ));
-        Spatial office = ( Spatial ) CrumbType.Grass.getSpatial( assetManager ); // assetManager.loadModel(
-                                                                                 // "Models/single-slice-office.obj"
+        Spatial grassWater = ( Spatial ) Crumb.Grass.getSpatial( assetManager ); // assetManager.loadModel(
+                                                                                 // "Models/single-layer-grass-edge.obj"
                                                                                  // );
+        // System.out.println(grassWater.getClass( ));
+        Spatial office = ( Spatial ) Crumb.Grass.getSpatial( assetManager ); // assetManager.loadModel(
+                                                                             // "Models/single-slice-office.obj"
+                                                                             // );
         // System.out.println(office.getClass( ));
-        Spatial bigTree = ( Spatial ) CrumbType.Grass.getSpatial( assetManager ); // assetManager.loadModel(
-                                                                                  // "Models/large-tree.obj"
-                                                                                  // );
+        Spatial bigTree = ( Spatial ) Crumb.Grass.getSpatial( assetManager ); // assetManager.loadModel(
+                                                                              // "Models/large-tree.obj"
+                                                                              // );
         // System.out.println(bigTree.getClass( ));
-        Spatial smallTree = ( Spatial ) CrumbType.Grass.getSpatial( assetManager ); // assetManager.loadModel(
-                                                                                    // "Models/small-tree.obj"
-                                                                                    // );
+        Spatial smallTree = ( Spatial ) Crumb.Grass.getSpatial( assetManager ); // assetManager.loadModel(
+                                                                                // "Models/small-tree.obj"
+                                                                                // );
         // System.out.println(smallTree.getClass( ));
         Spatial temp;
         /* First layer */
@@ -258,7 +247,7 @@ public class MainTest extends SimpleApplication implements ActionListener
         bulletAppState.getPhysicsSpace( ).add( player );
 
         DirectionalLight sun = new DirectionalLight( );
-        sun.setDirection( new Vector3f( -0.1f, -0.7f, -1.0f ).normalizeLocal( ) );
+        sun.setDirection( new Vector3f( -1, -4, -1 ).normalizeLocal( ) );
         sun.setColor( ColorRGBA.White.mult( 0.75f ) );
         rootNode.addLight( sun );
 
@@ -282,24 +271,6 @@ public class MainTest extends SimpleApplication implements ActionListener
         // Spatial sky = SkyFactory.createSky( assetManager, east, west, south,
         // north, top, bottom, Vector3f.UNIT_XYZ );
         // rootNode.attachChild( sky );
-    }
-
-    private void setUpKeys( )
-    {
-        inputManager.addMapping( "Left", new KeyTrigger( KeyInput.KEY_A ) );
-        inputManager.addMapping( "Right", new KeyTrigger( KeyInput.KEY_D ) );
-        inputManager.addMapping( "Up", new KeyTrigger( KeyInput.KEY_W ) );
-        inputManager.addMapping( "Down", new KeyTrigger( KeyInput.KEY_S ) );
-        inputManager.addMapping( "Jump", new KeyTrigger( KeyInput.KEY_SPACE ) );
-        inputManager.addMapping( "Warp", new KeyTrigger( KeyInput.KEY_Q ) );
-        inputManager.addMapping( "Crouch", new KeyTrigger( KeyInput.KEY_LCONTROL ) );
-        inputManager.addListener( this, "Left" );
-        inputManager.addListener( this, "Right" );
-        inputManager.addListener( this, "Up" );
-        inputManager.addListener( this, "Down" );
-        inputManager.addListener( this, "Jump" );
-        inputManager.addListener( this, "Warp" );
-        inputManager.addListener( this, "Crouch" );
     }
 
     public void onAction( String binding, boolean value, float tpf )
@@ -367,6 +338,36 @@ public class MainTest extends SimpleApplication implements ActionListener
                 player.setDucked( false );
             }
         }
+    }
+
+    private void setUpKeys( )
+    {
+        inputManager.addMapping( "Left", new KeyTrigger( KeyInput.KEY_A ) );
+        inputManager.addMapping( "Right", new KeyTrigger( KeyInput.KEY_D ) );
+        inputManager.addMapping( "Up", new KeyTrigger( KeyInput.KEY_W ) );
+        inputManager.addMapping( "Down", new KeyTrigger( KeyInput.KEY_S ) );
+        inputManager.addMapping( "Jump", new KeyTrigger( KeyInput.KEY_SPACE ) );
+        inputManager.addMapping( "Warp", new KeyTrigger( KeyInput.KEY_Q ) );
+        inputManager.addMapping( "Crouch", new KeyTrigger( KeyInput.KEY_LCONTROL ) );
+        inputManager.addListener( this, "Left" );
+        inputManager.addListener( this, "Right" );
+        inputManager.addListener( this, "Up" );
+        inputManager.addListener( this, "Down" );
+        inputManager.addListener( this, "Jump" );
+        inputManager.addListener( this, "Warp" );
+        inputManager.addListener( this, "Crouch" );
+    }
+
+    @Override
+    public void simpleInitApp( )
+    {
+        bulletAppState = new BulletAppState( );
+        stateManager.attach( bulletAppState );
+        if ( testNewFullMap )
+        {
+            createMap( );
+        }
+
     }
 
     @Override
