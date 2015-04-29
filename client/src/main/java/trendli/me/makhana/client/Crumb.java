@@ -4,15 +4,67 @@ import java.nio.FloatBuffer;
 
 import com.jme3.asset.AssetManager;
 import com.jme3.material.Material;
-import com.jme3.math.ColorRGBA;
 import com.jme3.renderer.queue.RenderQueue.ShadowMode;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.VertexBuffer.Type;
 import com.jme3.texture.Texture;
 
-public class Crumb
+public enum Crumb
 {
+
+    WATER( "Models/ground.obj", Flavor.BLUE_RASPBERRY, false ),
+
+    DIRT( "Models/ground.obj", Flavor.CHOCOLATE, false ),
+
+    DIRT_SLOPE( "Models/ground_slope.obj", Flavor.CHOCOLATE, false ),
+
+    ROAD( "Models/road.obj", Flavor.BLUE_RASPBERRY, false ),
+
+    ROAD_SLOPE( "Models/road_slope.obj", Flavor.BLUE_RASPBERRY, false ),
+
+    GRASS( "Models/ground.obj", Flavor.LIME, false ),
+
+    GRASS_SLOPE( "Models/ground_slope.obj", Flavor.LIME, false ),
+
+    GRASS_EDGE( "Models/ground_edge.obj", Flavor.LIME, false ),
+
+    BEACH_CONCAVE_DIRT( "Models/beach-concave.obj", Flavor.LEMON_CHOCOLATE, false ),
+
+    BEACH_CONCAVE_GRASS( "Models/beach-concave.obj", Flavor.LEMON_LIME, false ),
+
+    TREE_PINE_LD( "Models/tree_pine.obj", Flavor.WINTERGREEN_DARK_ROAST, false ),
+
+    TREE_PINE_LL( "Models/tree_pine.obj", Flavor.WINTERGREEN_LIGHT_ROAST, false ),
+
+    TREE_PINE_DD( "Models/tree_pine.obj", Flavor.MINT_DARK_ROAST, false ),
+
+    TREE_PINE_DL( "Models/tree_pine.obj", Flavor.MINT_LIGHT_ROAST, false ),
+
+    TREE_PINE_ROUND_LD( "Models/tree_pine_round.obj", Flavor.WINTERGREEN_DARK_ROAST, false ),
+
+    TREE_PINE_ROUND_LL( "Models/tree_pine_round.obj", Flavor.WINTERGREEN_LIGHT_ROAST, false ),
+
+    TREE_PINE_ROUND_DD( "Models/tree_pine_round.obj", Flavor.MINT_DARK_ROAST, false ),
+
+    TREE_PINE_ROUND_DL( "Models/tree_pine_round.obj", Flavor.MINT_LIGHT_ROAST, false ),
+
+    TREE_PINE_ROUND_SMALL_LD( "Models/tree_pine_round_small.obj", Flavor.WINTERGREEN_DARK_ROAST, false ),
+
+    TREE_PINE_ROUND_SMALL_LL( "Models/tree_pine_round_small.obj", Flavor.WINTERGREEN_LIGHT_ROAST, false ),
+
+    TREE_PINE_ROUND_SMALL_DD( "Models/tree_pine_round_small.obj", Flavor.MINT_DARK_ROAST, false ),
+
+    TREE_PINE_ROUND_SMALL_DL( "Models/tree_pine_round_small.obj", Flavor.MINT_LIGHT_ROAST, false ),
+
+    TREE_SQUARE_LD( "Models/tree_square.obj", Flavor.WINTERGREEN_DARK_ROAST, false ),
+
+    TREE_SQUARE_LL( "Models/tree_square.obj", Flavor.WINTERGREEN_LIGHT_ROAST, false ),
+
+    TREE_SQUARE_DD( "Models/tree_square.obj", Flavor.MINT_DARK_ROAST, false ),
+
+    TREE_SQUARE_DL( "Models/tree_square.obj", Flavor.MINT_LIGHT_ROAST, false );
+
     public static void updateTextureCoordinates( Geometry geo, Flavor flavor )
     {
         FloatBuffer textureBuffer = geo.getMesh( ).getFloatBuffer( Type.TexCoord );
@@ -30,24 +82,6 @@ public class Crumb
             textureBuffer.put( i * 2 + 1, y );
         }
     }
-
-    public static Crumb Water = new Crumb( "Models/ground.obj", Flavor.BLUE_RASPBERRY, false );
-
-    public static Crumb Dirt = new Crumb( "Models/ground.obj", Flavor.CHOCOLATE, false );
-
-    public static Crumb Dirt_Slope = new Crumb( "Models/ground_slope.obj", Flavor.CHOCOLATE, false );
-
-    public static Crumb Road = new Crumb( "Models/road.obj", Flavor.BLUE_RASPBERRY, false );
-
-    public static Crumb Road_Slope = new Crumb( "Models/road_slope.obj", Flavor.BLUE_RASPBERRY, false );
-
-    public static Crumb Grass = new Crumb( "Models/ground.obj", Flavor.LIME, false );
-
-    public static Crumb Grass_Slope = new Crumb( "Models/ground_slope.obj", Flavor.LIME, false );
-
-    public static Crumb Beach_Concave_Dirt = new Crumb( "Models/beach-concave.obj", Flavor.LEMON_CHOCOLATE, false );
-
-    public static Crumb Beach_Concave_Grass = new Crumb( "Models/beach-concave.obj", Flavor.LEMON_LIME, false );
 
     private final String modelPath;
     private Spatial spatial;

@@ -55,36 +55,35 @@ public class MainTest extends SimpleApplication implements ActionListener
         // flyCam.setEnabled( true );
         flyCam.setMoveSpeed( 40f );
 
-        Spatial dirt = ( Spatial ) Crumb.Dirt.getSpatial( assetManager );
+        Spatial dirt = ( Spatial ) Crumb.DIRT.getSpatial( assetManager );
 
-        Spatial grass = ( Spatial ) Crumb.Grass.getSpatial( assetManager );
+        Spatial grass = ( Spatial ) Crumb.GRASS.getSpatial( assetManager );
 
-        Spatial road = ( Spatial ) Crumb.Road.getSpatial( assetManager );
+        Spatial road = ( Spatial ) Crumb.ROAD.getSpatial( assetManager );
 
-        Spatial beach = ( Spatial ) Crumb.Beach_Concave_Grass.getSpatial( assetManager );
+        Spatial beach = ( Spatial ) Crumb.BEACH_CONCAVE_GRASS.getSpatial( assetManager );
 
-        Spatial water = ( Spatial ) Crumb.Water.getSpatial( assetManager );
+        Spatial water = ( Spatial ) Crumb.WATER.getSpatial( assetManager );
 
-        Spatial roadRamp = ( Spatial ) Crumb.Road_Slope.getSpatial( assetManager );
+        Spatial roadRamp = ( Spatial ) Crumb.ROAD_SLOPE.getSpatial( assetManager );
 
-        Spatial grassRamp = ( Spatial ) Crumb.Grass_Slope.getSpatial( assetManager );
+        Spatial grassRamp = ( Spatial ) Crumb.GRASS_SLOPE.getSpatial( assetManager );
 
-        Spatial grassWater = ( Spatial ) Crumb.Grass.getSpatial( assetManager ); // assetManager.loadModel(
-                                                                                 // "Models/single-layer-grass-edge.obj"
-                                                                                 // );
-        // System.out.println(grassWater.getClass( ));
-        Spatial office = ( Spatial ) Crumb.Grass.getSpatial( assetManager ); // assetManager.loadModel(
+        Spatial grassWater = ( Spatial ) Crumb.GRASS_EDGE.getSpatial( assetManager );
+
+        // TODO:
+        Spatial office = ( Spatial ) Crumb.GRASS.getSpatial( assetManager ); // assetManager.loadModel(
                                                                              // "Models/single-slice-office.obj"
                                                                              // );
         // System.out.println(office.getClass( ));
-        Spatial bigTree = ( Spatial ) Crumb.Grass.getSpatial( assetManager ); // assetManager.loadModel(
-                                                                              // "Models/large-tree.obj"
-                                                                              // );
-        // System.out.println(bigTree.getClass( ));
-        Spatial smallTree = ( Spatial ) Crumb.Grass.getSpatial( assetManager ); // assetManager.loadModel(
-                                                                                // "Models/small-tree.obj"
-                                                                                // );
-        // System.out.println(smallTree.getClass( ));
+        Spatial pineTree = ( Spatial ) Crumb.TREE_PINE_LD.getSpatial( assetManager );
+
+        Spatial squareTree = ( Spatial ) Crumb.TREE_SQUARE_DD.getSpatial( assetManager );
+
+        Spatial roundPineTree = ( Spatial ) Crumb.TREE_PINE_ROUND_DL.getSpatial( assetManager );
+
+        Spatial smallRoundPineTree = ( Spatial ) Crumb.TREE_PINE_ROUND_SMALL_LL.getSpatial( assetManager );
+
         Spatial temp;
         /* First layer */
         for ( int x = 0; x < 10; x++ )
@@ -203,12 +202,20 @@ public class MainTest extends SimpleApplication implements ActionListener
         temp.setLocalTranslation( 20f, 1f, 20f );
         landNode.attachChild( temp );
 
-        temp = bigTree.clone( );
+        temp = pineTree.clone( );
         temp.setLocalTranslation( 24f, 2f, 24f );
         landNode.attachChild( temp );
 
-        temp = smallTree.clone( );
+        temp = squareTree.clone( );
         temp.setLocalTranslation( 28f, 2f, 28f );
+        landNode.attachChild( temp );
+
+        temp = roundPineTree.clone( );
+        temp.setLocalTranslation( 27f, 2f, 24f );
+        landNode.attachChild( temp );
+
+        temp = smallRoundPineTree.clone( );
+        temp.setLocalTranslation( 31f, 2f, 28f );
         landNode.attachChild( temp );
 
         rootNode.attachChild( landNode );
