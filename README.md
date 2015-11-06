@@ -30,3 +30,7 @@ The following are included in the repository as they aren't available via maven/
 
 * Zay-ES (Entity System)
 * Zay-ES-Net (Entity System Networking Extension)
+
+### License
+
+Apache License 2.0 License.
